@@ -2,9 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-.grid-rows-10 {
-  grid-template-rows: repeat(10, minmax(0, 1fr));
+.grid-rows-10-keyb {
+  grid-template-rows: repeat(10, 1.5rem);
 }
-.grid-cols-15 {
-  grid-template-columns: repeat(15, minmax(0, 1fr));
+.grid-cols-15-keyb {
+  grid-template-columns: repeat(15, 1.5rem);
+}
+.grid-rows-6-keyb {
+  grid-template-rows: repeat(6, 1.5rem);
+}
+.grid-cols-6-keyb {
+  grid-template-columns: repeat(6, 1.5rem);
 }
