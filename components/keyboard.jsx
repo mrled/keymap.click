@@ -8,6 +8,7 @@ import {
   rightThumbKeys,
 } from "../lib/keys";
 import { Key } from "./key";
+import { KeyInfo } from "./keyInfo";
 
 export const Keyboard = () => {
   const [pressedKey, setPressedKey] = useState({});
@@ -43,14 +44,11 @@ export const Keyboard = () => {
             close
           </button>
         </div>
-        {pressedKey.info ? (
-          <>
-            <Key keyData={pressedKey} standalone={true} />
-            <p>{pressedKey.info}</p>
-          </>
-        ) : (
-          "Select a key"
-        )}
+          {pressedKey.info ? (
+            <KeyInfo keyData={pressedKey} />
+          ) : (
+            "Select a key"
+          )}
       </>
     );
   };
