@@ -106,13 +106,17 @@ export const Keyboard = () => {
       <div className="flex flex-col md:flex-row">
         <div className="w-full md:w-4/6 md:mr-8 md:px-4">
           {introTextDiv()}
-          <div>
+          <div className="flex flex-row">
             {boardGrid(15, 10, leftHandKeys)}
             {boardGrid(6, 6, leftThumbKeys, "keyboard-left-thumb-cluster")}
           </div>
-          <div>
+          <br/>
+          <br/>
+          <br/>
+          <br/>
+          <div className="flex flex-row-reverse">
+            {boardGrid(15, 10, rightHandKeys, "")}
             {boardGrid(6, 6, rightThumbKeys, "keyboard-right-thumb-cluster")}
-            {boardGrid(15, 10, rightHandKeys)}
           </div>
         </div>
         <div
