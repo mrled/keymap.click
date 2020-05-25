@@ -53,37 +53,6 @@ export const Keyboard = () => {
     );
   };
 
-  const boardSection = (sectionTitle, cols, rows, keys) => {
-    return (
-      <>
-        <div className="">
-          <h2 className="text-2xl">{sectionTitle}</h2>
-          <div
-            className={classnames(
-              `grid grid-cols-${cols}-keyb grid-rows-${rows}-keyb p-5 pl-0`
-            )}
-          >
-            {keys.map((keyData) => {
-              return (
-                <Key keyData={keyData} onClick={() => setPressedKey(keyData)} />
-              );
-            })}
-          </div>
-        </div>
-      </>
-    );
-  };
-
-  const infoTextBox = () => {
-    return (
-      <>
-        <footer className="sticky bottom-0 left-0 w-full border-t bg-white border-grey p-4">
-          {infoText()}
-        </footer>
-      </>
-    );
-  };
-
   const introTextDiv = () => {
     return (
       <>
@@ -113,15 +82,38 @@ export const Keyboard = () => {
     );
   };
 
+  const boardGrid = (cols, rows, keys, appendClasses="") => {
+    return (
+      <>
+        <div
+          className={classnames(
+            `grid grid-cols-${cols}-keyb grid-rows-${rows}-keyb`,
+            appendClasses,
+          )}
+        >
+          {keys.map((keyData) => {
+            return (
+              <Key keyData={keyData} onClick={() => setPressedKey(keyData)} />
+            );
+          })}
+        </div>
+      </>
+    )
+  }
+
   return (
     <>
       <div className="flex flex-col md:flex-row">
         <div className="w-full md:w-4/6 md:mr-8 md:px-4">
           {introTextDiv()}
-          {boardSection("Left hand board", 15, 10, leftHandKeys)}
-          {boardSection("Left thumb cluster", 6, 6, leftThumbKeys)}
-          {boardSection("Right hand board", 15, 10, rightHandKeys)}
-          {boardSection("Right thumb cluster", 6, 6, rightThumbKeys)}
+          <div>
+            {boardGrid(15, 10, leftHandKeys)}
+            {boardGrid(6, 6, leftThumbKeys, "keyboard-left-thumb-cluster")}
+          </div>
+          <div>
+            {boardGrid(6, 6, rightThumbKeys, "keyboard-right-thumb-cluster")}
+            {boardGrid(15, 10, rightHandKeys)}
+          </div>
         </div>
         <div
           className={classnames(
