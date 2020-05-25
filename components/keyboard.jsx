@@ -33,22 +33,17 @@ export const Keyboard = () => {
     </>)
   }
 
-  const keyClassNames = (col, row, colStart, rowStart) => {
-    return classnames(
-      `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart} hover:bg-gray-400 cursor-pointer p-1 flex justify-center items-center rounded-sm text-xs`,
-      {
-        "bg-gray-400 border border-blue-500 shadow-outline": false, /* TODO: should be true when this key is selected */
-        "bg-gray-200 border border-gray-500 focus:outline-none": true /* TODO: should be true when this key is not selected */
-      }
-    )
-  }
-
+  /* Return a list of elements to represent keys on the keyboard.
+   * Includes both <button> elements for actual keys,
+   * as well as blank <div> elements for empty spaces on the keyboard.
+   */
   const keyButtons = (keybKey) => {
     const {
       idx,
       key,
       size=[2, 2],
       startPos=['auto', 'auto'],
+      fontSize="text-xl",
     } = keybKey
     const [col, row] = size
     const [colStart, rowStart] = startPos
@@ -56,7 +51,14 @@ export const Keyboard = () => {
       <button
         key={idx}
         onClick={() => setPressedKey(keybKey)}
-        className={keyClassNames(col, row, colStart, rowStart)}
+        className={classnames(
+          `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart} hover:bg-blue-600 bg-blue-700 text-white cursor-pointer p-1 flex justify-center items-center rounded-sm ${fontSize} font-mono`,
+          {
+            "bg-gray-400 border border-blue-500 shadow-outline": false, /* TODO: should be true when this key is selected */
+            "bg-gray-200 border border-gray-500 focus:outline-none": true /* TODO: should be true when this key is not selected */
+          }
+        )
+      }
       >{key}</button>
     ) : (
       <div
@@ -66,56 +68,32 @@ export const Keyboard = () => {
     )
   }
 
-  const leftHandBoard = () => {
+  const boardSection = (floatOrientation, sectionTitle, cols, rows, keys) => {
     return (<>
-      <div className="float-left">
-        <h2 className="text-2xl">Left hand board</h2>
-        <div className="grid grid-cols-15-keyb grid-rows-10-keyb p-5">
-          {leftHandKeys.map(keyButtons)}
+      <div className={classnames(`float-${floatOrientation}`)}>
+        <h2 className="text-2xl text-blue-600">{sectionTitle}</h2>
+        <div className={classnames(`grid grid-cols-${cols}-keyb grid-rows-${rows}-keyb p-5`)}>
+          {keys.map(keyButtons)}
         </div>
       </div>
     </>)
   }
 
-  const leftThumbBoard = () => {
+  const infoTextBox = () => {
     return (<>
-      <div className="float-right">
-        <h2 className="text-2xl">Left thumb cluster</h2>
-        <div className="grid grid-cols-6-keyb grid-rows-6-keyb p-5">
-          {leftThumbKeys.map(keyButtons)}
-        </div>
-      </div>
-    </>)
-  }
-  const rightHandBoard = () => {
-    return (<>
-      <div className="float-right">
-        <h2 className="text-2xl">Right hand board</h2>
-        <div className="grid grid-cols-15-keyb grid-rows-10-keyb p-5">
-          {rightHandKeys.map(keyButtons)}
-        </div>
-      </div>
+      <footer className="sticky bottom-0 left-0 w-full border-t bg-gray-600 text-white border-grey p-4">
+        {infoText()}
+      </footer>
     </>)
   }
 
-  const rightThumbBoard = () => {
-    return (<>
-      <div className="float-left">
-        <h2 className="text-2xl">Right thumb cluster</h2>
-        <div className="grid grid-cols-6-keyb grid-rows-6-keyb p-5">
-          {rightThumbKeys.map(keyButtons)}
-        </div>
-      </div>
-    </>)
-  }
-
-  return (
-    <div>
-      <div className="pb-12">{infoText()}</div>
-      {leftHandBoard()}
-      {leftThumbBoard()}
-      {rightHandBoard()}
-      {rightThumbBoard()}
+  return (<>
+    <div className="flex flex-col h-full">
+      {boardSection('left', 'Left hand board', 15, 10, leftHandKeys)}
+      {boardSection('right', 'Left thumb cluster', 6, 6, leftThumbKeys)}
+      {boardSection('right', 'Right hand board', 15, 10, rightHandKeys)}
+      {boardSection('left', 'Right thumb cluster', 6, 6, rightThumbKeys)}
+      {infoTextBox()}
     </div>
-  )
+  </> )
 }
