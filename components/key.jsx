@@ -7,18 +7,14 @@ import classnames from "classnames";
  *   standalone:  Return with classes for standalone rendering,
  *                rather than the default which returns with classes for rendering in a grid
  */
-export const Key = (props) => {
-  const {
-    keyData,
-    onClick=null,
-    standalone=false,
-  } = props
+export const Key = ({ keyData, onClick=null, standalone=false }) => {
   const {
     idx,
     legend,
     size=[2, 2],
     startPos=['auto', 'auto'],
     fontSize="text-xl",
+    extraClasses='',
   } = keyData
   const [col, row] = size
   const [colStart, rowStart] = startPos
@@ -31,7 +27,8 @@ export const Key = (props) => {
     {
       "bg-gray-400 border border-blue-500 shadow-outline": false, /* TODO: should be true when this key is selected */
       "bg-gray-200 border border-gray-500 focus:outline-none": true /* TODO: should be true when this key is not selected */
-    }
+    },
+    extraClasses
   )
 
   return (
