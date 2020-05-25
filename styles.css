@@ -4,3 +4,15 @@
 /* purgecss end ignore */
 @tailwind utilities;
 
+@variants responsive {
+  .mh-screen-90 {
+    max-height: 90vh;
+  }
+
+  .t-20 {
+    top: 20px;
+  }
+  .h-auto {
+    height: auto;
+  }
+}
