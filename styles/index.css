@@ -43,10 +43,15 @@
 
 .keyboard-left-thumb-cluster {
   position: relative;
-  left: calc(var(--keyboard-grid-unit) * 13.5);
-  bottom: calc(var(--keyboard-grid-unit) * 3.9);
-  transform-origin: 0 var(--keyboard-grid-unit);
+  top: calc(var(--keyboard-grid-unit) * 6);
+  right: calc(var(--keyboard-grid-unit) * 2);
+  transform-origin: 0 calc(var(--keyboard-grid-unit) * 2);
   transform: rotate(25deg);
 }
 .keyboard-right-thumb-cluster {
+  position: relative;
+  top: calc(var(--keyboard-grid-unit) * 6);
+  right: calc(var(--keyboard-grid-unit) * -2);
+  transform-origin: calc(var(--keyboard-grid-unit) * 6) calc(var(--keyboard-grid-unit) * 2);
+  transform: rotate(-25deg);
 }
