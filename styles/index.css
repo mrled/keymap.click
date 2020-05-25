@@ -14,3 +14,25 @@
 .grid-cols-6-keyb {
   grid-template-columns: repeat(6, 1.5rem);
 }
+
+.standalone-key {
+  display: inline-block;
+}
+.standalone-key-w-1 {
+  width: 1.5rem;
+}
+.standalone-key-w-2 {
+  width: 3rem;
+}
+.standalone-key-w-3 {
+  width: 4.5rem;
+}
+.standalone-key-h-2 {
+  height: 3rem;
+}
+.standalone-key-h-3 {
+  height: 4.5rem;
+}
+.standalone-key-h-4 {
+  height: 6rem;
+}
