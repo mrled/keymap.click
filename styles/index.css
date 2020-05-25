@@ -40,3 +40,13 @@
 .standalone-key-h-4 {
   height: calc(var(--keyboard-grid-unit) * 4);
 }
+
+.keyboard-left-thumb-cluster {
+  position: relative;
+  left: calc(var(--keyboard-grid-unit) * 13.5);
+  bottom: calc(var(--keyboard-grid-unit) * 3.9);
+  transform-origin: 0 var(--keyboard-grid-unit);
+  transform: rotate(25deg);
+}
+.keyboard-right-thumb-cluster {
+}
