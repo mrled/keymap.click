@@ -13,7 +13,7 @@ export const Key = ({ keyData, onClick=null, standalone=false }) => {
     legend,
     size=[2, 2],
     startPos=['auto', 'auto'],
-    fontSize="text-xl",
+    fontSize="text-xs",
     extraClasses='',
   } = keyData
   const [col, row] = size

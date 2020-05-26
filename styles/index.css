@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --keyboard-grid-unit: 1.5rem;
+  --keyboard-grid-unit: 1.0rem;
 }
 
 .grid-rows-10-keyb {
