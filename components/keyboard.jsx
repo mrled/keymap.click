@@ -114,6 +114,10 @@ export const Keyboard = () => {
           <br/>
           <br/>
           <br/>
+          <br/>
+          <br/>
+          <br/>
+          <br/>
           <div className="flex flex-row-reverse">
             {boardGrid(15, 10, rightHandKeys, "")}
             {boardGrid(6, 6, rightThumbKeys, "keyboard-right-thumb-cluster")}
