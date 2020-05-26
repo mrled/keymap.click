@@ -52,7 +52,7 @@ export const Keyboard = () => {
         key={idx}
         onClick={() => setPressedKey(keybKey)}
         className={classnames(
-          `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart} hover:bg-blue-600 bg-blue-700 text-white cursor-pointer p-1 flex justify-center items-center rounded-sm ${fontSize} font-mono`,
+          `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart} hover:bg-gray-400 cursor-pointer p-1 flex justify-center items-center rounded-sm ${fontSize} font-mono`,
           {
             "bg-gray-400 border border-blue-500 shadow-outline": false, /* TODO: should be true when this key is selected */
             "bg-gray-200 border border-gray-500 focus:outline-none": true /* TODO: should be true when this key is not selected */
@@ -71,7 +71,7 @@ export const Keyboard = () => {
   const boardSection = (floatOrientation, sectionTitle, cols, rows, keys) => {
     return (<>
       <div className={classnames(`float-${floatOrientation}`)}>
-        <h2 className="text-2xl text-blue-600">{sectionTitle}</h2>
+        <h2 className="text-2xl">{sectionTitle}</h2>
         <div className={classnames(`grid grid-cols-${cols}-keyb grid-rows-${rows}-keyb p-5`)}>
           {keys.map(keyButtons)}
         </div>
@@ -81,7 +81,7 @@ export const Keyboard = () => {
 
   const infoTextBox = () => {
     return (<>
-      <footer className="sticky bottom-0 left-0 w-full border-t bg-gray-600 text-white border-grey p-4">
+      <footer className="sticky bottom-0 left-0 w-full border-t bg-white border-grey p-4">
         {infoText()}
       </footer>
     </>)
@@ -90,7 +90,7 @@ export const Keyboard = () => {
   const introTextDiv = () => {
     return (<>
       <div className="pb-20">
-        <h1 className="text-2xl text-blue-600">keyblay: Experiments in keyboard layouts</h1>
+        <h1 className="text-2xl">keyblay: Experiments in keyboard layouts</h1>
         <p className="p-1">This is a work in progress.</p>
         <p className="p-1">
           I am building this to show off keyboard layouts for my ErgoDox,
