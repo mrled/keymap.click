@@ -2,6 +2,12 @@
 
 Experiments in keyboard layout demonstration
 
+You might be able to see it in action here:
+<https://keyblay.now.sh>
+
+That site is used for development,
+and may not always be working.
+
 ![Screenshot](docs/screenshot.png?raw=true "Screenshot")
 
 ## What is this?
