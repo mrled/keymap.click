@@ -17,7 +17,11 @@ export const Keyboard = () => {
     .slice(0)
     .concat(leftThumbKeys, rightHandKeys, rightThumbKeys);
   allKeys.forEach((keyData, idx) => {
-    keyData.idx = idx;
+    const side = keyData.board[0] == "right" ? "r" : "l";
+    const cluster = keyData.board[1] == "finger" ? "f" : "t";
+    const keyId = `${side}-${cluster}-${keyData.startPos[0]}-${keyData.startPos[1]}`;
+    keyData.reactKey = keyId;
+    keyData.id = keyId;
   });
 
   const handleKeyDown = (e) => {
@@ -45,7 +49,7 @@ export const Keyboard = () => {
           </button>
         </div>
           {pressedKey.info ? (
-            <KeyInfo keyData={pressedKey} />
+            <KeyInfo id={pressedKey.id} keyData={pressedKey} />
           ) : (
             "Select a key"
           )}
@@ -93,7 +97,7 @@ export const Keyboard = () => {
         >
           {keys.map((keyData) => {
             return (
-              <Key keyData={keyData} onClick={() => setPressedKey(keyData)} />
+              <Key id={keyData.id} key={keyData.reactKey} keyData={keyData} onClick={() => setPressedKey(keyData)} />
             );
           })}
         </div>

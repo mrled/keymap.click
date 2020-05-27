@@ -7,9 +7,8 @@ import classnames from "classnames";
  *   standalone:  Return with classes for standalone rendering,
  *                rather than the default which returns with classes for rendering in a grid
  */
-export const Key = ({ keyData, onClick=null, standalone=false }) => {
+export const Key = ({ keyData, onClick=null, standalone=false, id=null }) => {
   const {
-    idx,
     legend,
     size=[2, 2],
     startPos=['auto', 'auto'],
@@ -33,7 +32,7 @@ export const Key = ({ keyData, onClick=null, standalone=false }) => {
 
   return (
     <button
-      key={idx}
+      id={id}
       onClick={onClick}
       className={classes}
     >{legend}</button>
