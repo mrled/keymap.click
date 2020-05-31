@@ -9,6 +9,7 @@ import {
 } from "../lib/keys";
 import { Key } from "./key";
 import { KeyInfo } from "./keyInfo";
+import { LineCanvas } from "./diagram";
 
 export const Keyboard = () => {
   const [pressedKey, setPressedKey] = useState({});
@@ -61,18 +62,18 @@ export const Keyboard = () => {
     return (
       <>
         <div className="pb-20">
-          <h1 className="text-3xl border-b pb-8 mb-8">
+          <h1 className="text-3xl pb-8 mb-8 debug-bg-orange">
             keyblay: Experiments in keyboard layouts
           </h1>
-          <p className="p-1">This is a work in progress.</p>
-          <p className="p-1">
+          <p className="p-1 debug-bg-orange">This is a work in progress.</p>
+          <p className="p-1 debug-bg-orange">
             I am building this to show off keyboard layouts for my ErgoDox, and
             provide explanations for why I made the layout decisions I made. The
             ErgoDox-EZ has been a huge part of my strategy for dealing with RSI,
             and I want to be able to visually explain to others how it helped
             me.
           </p>
-          <p className="p-1">
+          <p className="p-1 debug-bg-orange">
             I am building it on GitHub. Issues and contributions welcome.{" "}
             <a
               className="text-blue-600 underline"
@@ -107,10 +108,11 @@ export const Keyboard = () => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row">
-        <div className="w-full md:w-4/6 md:mr-8 md:px-4">
+      <div className="flex flex-col md:flex-row relative debug-border-purple">
+        <div className="w-full md:w-4/6 md:mr-8 md:px-4 relative debug-border-green">
           {introTextDiv()}
-          <div className="flex flex-row">
+          {/* TODO: thumb clusters partially occlude the GUI key on each half b/c of rotation */}
+          <div className="flex flex-row debug-bg-teal">
             <div className="flex flex-row">
               {boardGrid(15, 10, leftHandKeys)}
               {boardGrid(6, 6, leftThumbKeys, "keyboard-left-thumb-cluster")}
@@ -123,7 +125,7 @@ export const Keyboard = () => {
         </div>
         <div
           className={classnames(
-            "w-full h-auto md:h-full right-0 left-0 md:left-auto md:w-4/12 md:mh-screen-90 md:t-20 fixed md:sticky",
+            "w-full h-auto md:h-full right-0 left-0 md:left-auto md:w-4/12 md:mh-screen-90 md:t-20 fixed md:sticky debug-bg-yellow",
             {
               "bottom-0": pressedKey.info,
               "hidden md:block": !pressedKey.info,
@@ -137,6 +139,10 @@ export const Keyboard = () => {
             {infoText()}
           </div>
         </div>
+        <div className="w-full md:w-4/6 md:mr-8 md:px-4 absolute pointer-events-none h-full debug-border-red top-0 left-0">
+          <LineCanvas  />
+        </div>
+
       </div>
     </>
   );
