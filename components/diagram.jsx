@@ -1,6 +1,9 @@
 import { useRef, useEffect } from "react";
 
-export const LineCanvas = ({position1, position2}) => {
+/* Draw lines on the canvas between coordinates
+ * lines: A list of pairs of DOMRect objects as you might get from getBoundingClientRect()
+ */
+export const LineCanvas = () => {
 
   /* useRef(null) seems to return a ref to this component
    */
@@ -71,6 +74,17 @@ export const LineCanvas = ({position1, position2}) => {
     context.lineTo(640, 1024)
     context.lineTo(0, 0)
     context.stroke()
+
+    context.beginPath()
+    console.log(`The lines object is a ${typeof lines}`)
+    console.log(lines)
+    lines.forEach(line => {
+      let [source, target] = line
+      context.moveTo(source.x, source.y)
+      context.lineTo(target.x, target.y)
+    })
+    context.stroke()
+
   }, [canvasRef])
   return (
     <canvas ref={canvasRef} />
