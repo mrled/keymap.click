@@ -13,7 +13,11 @@ import {
   KeyInfo,
   KeyInformation,
 } from "./keyInfo";
-import { LineCanvas } from "./diagram";
+import {
+  ConnectorCanvas,
+  LineCanvas,
+  Point,
+} from "./diagram";
 
 const IntroText = () => {
   return (
@@ -73,6 +77,8 @@ const KeyboardGrid = ({ cols, rows, keys, onClickEach=()=>{}, gridAppendClasses=
 export const Keyboard = ({ maxWidth=1024 }) => {
   const [pressedKey, setPressedKey] = useState({});
 
+  var lineCanvasComponent = <ConnectorCanvas connections={[[new Point(45, 45), new Point(45, 150)]]} />
+
   const allKeys = leftHandKeys
     .slice(0)
     .concat(leftThumbKeys, rightHandKeys, rightThumbKeys);
@@ -103,7 +109,7 @@ export const Keyboard = ({ maxWidth=1024 }) => {
 
   useEffect(() => {
     const renderedKeyPointers = document.getElementsByClassName('key-info-connect-from')
-    var lines = []
+    var connections = []
     for (let keyPointer of renderedKeyPointers) {
       const sourceCoords = keyPointer.getBoundingClientRect()
       const kicfPrefix = 'key-info-connect-from-'  // TODO: can I put magic string like this in a central place somewhere?
@@ -116,9 +122,11 @@ export const Keyboard = ({ maxWidth=1024 }) => {
         const targetKey = document.getElementById(targetKeyId)
         const targetCoords = targetKey.getBoundingClientRect()
         console.log(`Draw on the canvas from source at ${sourceCoords.x}, ${sourceCoords.y} to dest key with ID ${targetKeyId} at ${targetCoords.x},${targetCoords.y}`)
-        lines.push([sourceCoords, targetCoords])
+        connections.push([sourceCoords, targetCoords])
       })
     }
+    console.log(lineCanvasComponent)
+    lineCanvasComponent.setConnections(connections)
   }, [pressedKey]) // Passing pressedKey in this array means to call useEffect every time pressedKey changes state
 
   const parsedPressedKeyInfo = parseKeyInfo(pressedKey.info);
@@ -167,7 +175,7 @@ export const Keyboard = ({ maxWidth=1024 }) => {
             * md:w-4/6 md:mr-8 md:px-4
             */}
           <div className="w-full absolute pointer-events-none h-full debug-border-red-disabled top-0 left-0">
-              <LineCanvas  />
+              {lineCanvasComponent}
           </div>
 
         </div>

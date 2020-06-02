@@ -37,3 +37,6 @@ Also, might be worth understanding that the rules can be broken sometimes.
 
 I had also found this stuff on "lifting state up" that might be worth a closer look.
 <https://reactjs.org/docs/lifting-state-up.html>.
+
+I found this helpful:
+<https://reactjs.org/docs/refs-and-the-dom.html>
