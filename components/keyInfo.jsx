@@ -69,7 +69,7 @@ export const KeyInfoInner = ({ keyData, parsedKeyInfo }) => {
   );
 }
 
-/* Return a KeyInfo component, wrapped in a <KeyInfoWrapper>
+/* Return a KeyInfoInner component, wrapped in a <KeyInfo> component
  * styled nicely for the parent <Keyboard> component
  */
 export const KeyInfo = ({ keyData, parsedKeyInfo, keyButtonOnClick=()=>{} }) => {
