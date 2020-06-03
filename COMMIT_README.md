@@ -40,3 +40,13 @@ I had also found this stuff on "lifting state up" that might be worth a closer l
 
 I found this helpful:
 <https://reactjs.org/docs/refs-and-the-dom.html>
+
+## update 20200602 - partially working
+
+Holy shit, it's partially working.
+
+It looks like the lines are not getting drawn in the right place.
+But they ARE getting drawn at the right length and angle.
+This means they look offset from where they should be.
+
+They also don't change on scroll, which is a problem.
