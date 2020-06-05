@@ -1,5 +1,7 @@
 import { useRef, useEffect } from "react";
 
+import log from 'loglevel';
+
 export class Point {
   constructor(x, y) {
     this.x = x
@@ -40,10 +42,10 @@ export class ConnectorCanvas extends React.Component {
 
     /* Draw each connection
      */
-    console.log(`The lines object is a ${typeof this.state.connections}`)
-    console.log(this.state.connections)
+    log.debug(`The lines object is a ${typeof this.state.connections}, and it logs as:`)
+    log.debug(this.state.connections)
     if (!this.state.connections) {
-      console.log("No connections to set")
+      log.debug("No connections to set")
       return;
     }
     context.strokeStyle = "green"

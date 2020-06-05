@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+
 import classnames from "classnames";
+import log from "loglevel";
 
 import {
   leftHandKeys,
@@ -111,7 +113,7 @@ const getKeyConnections = () => {
     targetKeyIds.forEach(targetKeyId => {
       const targetKey = document.getElementById(targetKeyId)
       const targetCoords = targetKey.getBoundingClientRect()
-      console.log(`Draw on the canvas from source at ${sourceCoords.x}, ${sourceCoords.y} to dest key with ID ${targetKeyId} at ${targetCoords.x},${targetCoords.y}`)
+      log.debug(`Draw on the canvas from source at ${sourceCoords.x}, ${sourceCoords.y} to dest key with ID ${targetKeyId} at ${targetCoords.x},${targetCoords.y}`)
       connections.push([sourceCoords, targetCoords])
     })
   }
@@ -155,7 +157,7 @@ export const Keyboard = ({ maxWidth=1024 }) => {
    */
   useEffect(() => {
     const connections = getKeyConnections()
-    console.log(connectorCanvasRef)
+    log.debug(connectorCanvasRef)
     connectorCanvasRef.current.setConnections(connections)
   }, [pressedKey]) // Passing pressedKey in this array means to call useEffect every time pressedKey changes state
 

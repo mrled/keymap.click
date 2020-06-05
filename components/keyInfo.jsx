@@ -1,5 +1,7 @@
 import { Key } from "./key";
 
+import log from "loglevel";
+
 /* Parse a keyInfo property
   * Return an array of JSX <span> elements.
     Each <span> element represents either regular text,
@@ -36,16 +38,16 @@ export const parseKeyInfo = (keyInfo) => {
     );
     //var origLastMatchEndIdx = lastMatchEndIdx;
     lastMatchEndIdx = match.index + wholeMatch.length;
-    //console.log(`Processing match. wholeMatch: ${wholeMatch}, identifier: ${identifier}, side: ${side}, cluster: ${cluster}, col: ${col}, row: ${row}, match.index: ${match.index}, origLastMatchEndIdx: ${origLastMatchEndIdx}, lastMatchEndIdx: ${lastMatchEndIdx}, wholeMatch.length: ${wholeMatch.length}`)
+    //log.debug(`Processing match. wholeMatch: ${wholeMatch}, identifier: ${identifier}, side: ${side}, cluster: ${cluster}, col: ${col}, row: ${row}, match.index: ${match.index}, origLastMatchEndIdx: ${origLastMatchEndIdx}, lastMatchEndIdx: ${lastMatchEndIdx}, wholeMatch.length: ${wholeMatch.length}`)
   }
   output.push(
     <span key="match-idx-final">
       {keyInfo.slice(lastMatchEndIdx, keyInfo.length)}
     </span>
   );
-  console.log(`All done. lastMatchEndIdx: ${lastMatchEndIdx}, keyInfo.length: ${keyInfo.length}`)
+  log.debug(`All done. lastMatchEndIdx: ${lastMatchEndIdx}, keyInfo.length: ${keyInfo.length}`)
 
-  console.log(typeof output)
+  log.debug(typeof output)
 
   return output;
 }
