@@ -29,10 +29,33 @@ export class ConnectorCanvas extends React.Component {
      * while canvas.{w/h} is the _internal_ dimensions for drawing on.
      * The following code scales all pixels on the canvas properly to the DOM's pixel size.
      */
+    const origBoundingRect = canvas.getBoundingClientRect()
+    log.debug(
+      "Original canvas dimensions:",
+      "canvas.style.width:", canvas.style.width, ";",
+      "canvas.style.height:", canvas.style.height, ";",
+      "canvas.width:", canvas.width, ";",
+      "canvas.height:", canvas.height, ";",
+      "canvas.offsetWidth:", canvas.offsetWidth, ";",
+      "canvas.offsetHeight:", canvas.offsetHeight, ";",
+      "canvas.getBoundingClientRect():", origBoundingRect, ";",
+    )
     canvas.style.width = '100%'
     canvas.style.height = '100%'
-    canvas.width = canvas.offsetWidth
-    canvas.height = canvas.offsetHeight
+    //canvas.width = canvas.offsetWidth
+    //canvas.height = canvas.offsetHeight
+    canvas.width = origBoundingRect.width
+    canvas.height = origBoundingRect.height
+    log.debug(
+      "Updated canvas dimensions:",
+      "canvas.style.width:", canvas.style.width, ";",
+      "canvas.style.height:", canvas.style.height, ";",
+      "canvas.width:", canvas.width, ";",
+      "canvas.height:", canvas.height, ";",
+      "canvas.offsetWidth:", canvas.offsetWidth, ";",
+      "canvas.offsetHeight:", canvas.offsetHeight, ";",
+      "canvas.getBoundingClientRect():", canvas.getBoundingClientRect(), ";",
+    )
 
     /* Clear the canvas completely before drawing
       * Without this, fast refresh during development will show old paths and new paths
