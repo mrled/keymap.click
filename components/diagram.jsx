@@ -45,7 +45,7 @@ export class Diagram extends React.Component {
       log.debug("No connections to set")
       return;
     }
-    context.strokeStyle = "green"
+    context.strokeStyle = "#68d391"
     context.lineWidth = 1
     context.beginPath()
     this.state.connections.forEach(connection => {
