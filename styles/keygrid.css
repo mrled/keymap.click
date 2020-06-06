@@ -1,0 +1,57 @@
+/* Key, board, and grid styles
+ * We use a base --keyboard-grid-unit variable, which lets us scale easily
+ */
+
+:root {
+--keyboard-grid-unit: 1.0rem;
+}
+
+.grid-rows-10-keyb {
+grid-template-rows: repeat(10, var(--keyboard-grid-unit));
+}
+.grid-cols-15-keyb {
+grid-template-columns: repeat(15, var(--keyboard-grid-unit));
+}
+.grid-rows-6-keyb {
+grid-template-rows: repeat(6, var(--keyboard-grid-unit));
+}
+.grid-cols-6-keyb {
+grid-template-columns: repeat(6, var(--keyboard-grid-unit));
+}
+
+.standalone-key {
+display: inline-block;
+}
+.standalone-key-w-1 {
+width: var(--keyboard-grid-unit);
+}
+.standalone-key-w-2 {
+width: calc(var(--keyboard-grid-unit) * 2);
+}
+.standalone-key-w-3 {
+width: calc(var(--keyboard-grid-unit) * 3);
+}
+.standalone-key-h-2 {
+height: calc(var(--keyboard-grid-unit) * 2);
+}
+.standalone-key-h-3 {
+height: calc(var(--keyboard-grid-unit) * 3);
+}
+.standalone-key-h-4 {
+height: calc(var(--keyboard-grid-unit) * 4);
+}
+
+.keyboard-left-thumb-cluster {
+transform:
+    translateX(calc(var(--keyboard-grid-unit) * -2))
+    translateY(calc(var(--keyboard-grid-unit) * 6))
+    rotate(25deg);
+transform-origin: 0 calc(var(--keyboard-grid-unit) * 2);
+}
+.keyboard-right-thumb-cluster {
+transform:
+    translateX(calc(var(--keyboard-grid-unit) * 2))
+    translateY(calc(var(--keyboard-grid-unit) * 6))
+    rotate(-25deg);
+transform-origin: calc(var(--keyboard-grid-unit) * 6) calc(var(--keyboard-grid-unit) * 2);
+}
