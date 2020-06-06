@@ -139,15 +139,20 @@ export const Keyboard = ({ maxWidth=1024 }) => {
 
   const parsedPressedKeyInfo = parseKeyInfo(pressedKey.info);
 
+  const outerWrapperDivStyle = {
+    maxWidth: maxWidth,
+  }
+
   return (
     <>
       <div
-        style={{maxWidth: {maxWidth}}}
+        style={outerWrapperDivStyle}
         className="my-8 md:my-24 container mx-auto text-sm md:text-base p-4 debug-bg-red-disabled"
+        id="keyblay-debug-outer-wrapper-div"
       >
-        <div className="w-full h-full debug-bg-purple-disabled">
-          <div className="flex flex-col md:flex-row relative debug-border-purple-disabled">
-            <div className="w-full md:w-4/6 md:mr-8 md:px-4 relative debug-border-green-disabled">
+        <div className="w-full h-full debug-bg-purple-disabled" id="keyblay-debug-content-wrapper-div">
+          <div className="flex flex-col md:flex-row debug-border-purple-disabled">
+            <div className="w-full md:w-4/6 md:mr-8 md:px-4 debug-border-green-disabled">
               <IntroText />
               <div className="flex flex-row debug-bg-teal-disabled">
                 <div className="flex flex-row">
@@ -178,13 +183,10 @@ export const Keyboard = ({ maxWidth=1024 }) => {
             </div>
 
           </div>
-          {/* Initially I also had this styling, copied from the sister div:
-            * md:w-4/6 md:mr-8 md:px-4
+          {/* We place the canvas last and therefore we do not need to specify a z-index -
+            * it is naturally on top of the other content.
             */}
-          <div className="w-full absolute pointer-events-none h-full debug-border-red-disabled top-0 left-0">
-              <ConnectorCanvas ref={connectorCanvasRef} />
-          </div>
-
+          <ConnectorCanvas ref={connectorCanvasRef} />
         </div>
       </div>
     </>

@@ -22,40 +22,21 @@ export class ConnectorCanvas extends React.Component {
 
   updateCanvas() {
     const canvas = this.refs.canvas
+    const container = this.refs.container
     const context = canvas.getContext('2d')
 
     /* Without setting the h/w here, canvas will be some arbitrary small size
      * canvas.style.{w/h} is the CSS 'style' property of the element in the DOM,
      * while canvas.{w/h} is the _internal_ dimensions for drawing on.
-     * The following code scales all pixels on the canvas properly to the DOM's pixel size.
+     * We want our canvas to cover the entire screen,
+     * so this relies on the container being position: absolute in the top left
+     * and width/height at 100%,
+     * while the canvas should also be position: absolute and overflow: visible.
      */
-    const origBoundingRect = canvas.getBoundingClientRect()
-    log.debug(
-      "Original canvas dimensions:",
-      "canvas.style.width:", canvas.style.width, ";",
-      "canvas.style.height:", canvas.style.height, ";",
-      "canvas.width:", canvas.width, ";",
-      "canvas.height:", canvas.height, ";",
-      "canvas.offsetWidth:", canvas.offsetWidth, ";",
-      "canvas.offsetHeight:", canvas.offsetHeight, ";",
-      "canvas.getBoundingClientRect():", origBoundingRect, ";",
-    )
-    canvas.style.width = '100%'
-    canvas.style.height = '100%'
-    //canvas.width = canvas.offsetWidth
-    //canvas.height = canvas.offsetHeight
-    canvas.width = origBoundingRect.width
-    canvas.height = origBoundingRect.height
-    log.debug(
-      "Updated canvas dimensions:",
-      "canvas.style.width:", canvas.style.width, ";",
-      "canvas.style.height:", canvas.style.height, ";",
-      "canvas.width:", canvas.width, ";",
-      "canvas.height:", canvas.height, ";",
-      "canvas.offsetWidth:", canvas.offsetWidth, ";",
-      "canvas.offsetHeight:", canvas.offsetHeight, ";",
-      "canvas.getBoundingClientRect():", canvas.getBoundingClientRect(), ";",
-    )
+    canvas.style.width = `${container.scrollWidth}px`
+    canvas.style.height = `${container.scrollHeight}px`
+    canvas.width = container.scrollWidth
+    canvas.height = container.scrollHeight
 
     /* Clear the canvas completely before drawing
       * Without this, fast refresh during development will show old paths and new paths
@@ -64,6 +45,8 @@ export class ConnectorCanvas extends React.Component {
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     /* Draw each connection
+     * Now that the canvas is the size of the entire screen,
+     * we can easily just draw lines connecting the bounding rectangles of the sources/targets.
      */
     log.debug(`The lines object is a ${typeof this.state.connections}, and it logs as:`)
     log.debug(this.state.connections)
@@ -92,7 +75,9 @@ export class ConnectorCanvas extends React.Component {
 
   render() {
     return (
-      <canvas ref="canvas" />
+      <div ref="container" id="keyblay-debug-canvas-container" className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <canvas ref="canvas" id="keyblay-debug-canvas" className="absolute overflow-visible" />
+      </div>
     )
   }
 
