@@ -42,18 +42,18 @@
 }
 
 .keyboard-left-thumb-cluster {
-  position: relative;
-  top: calc(var(--keyboard-grid-unit) * 6);
-  right: calc(var(--keyboard-grid-unit) * 2);
+  transform:
+    translateX(calc(var(--keyboard-grid-unit) * -2))
+    translateY(calc(var(--keyboard-grid-unit) * 6))
+    rotate(25deg);
   transform-origin: 0 calc(var(--keyboard-grid-unit) * 2);
-  transform: rotate(25deg);
 }
 .keyboard-right-thumb-cluster {
-  position: relative;
-  top: calc(var(--keyboard-grid-unit) * 6);
-  right: calc(var(--keyboard-grid-unit) * -2);
+  transform:
+    translateX(calc(var(--keyboard-grid-unit) * 2))
+    translateY(calc(var(--keyboard-grid-unit) * 6))
+    rotate(-25deg);
   transform-origin: calc(var(--keyboard-grid-unit) * 6) calc(var(--keyboard-grid-unit) * 2);
-  transform: rotate(-25deg);
 }
 
 /* Useful for debugging layout problems
