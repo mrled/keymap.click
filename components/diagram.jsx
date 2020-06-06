@@ -1,15 +1,6 @@
-import { useRef, useEffect } from "react";
-
 import log from 'loglevel';
 
-export class Point {
-  constructor(x, y) {
-    this.x = x
-    this.y = y
-  }
-}
-
-export class ConnectorCanvas extends React.Component {
+export class Diagram extends React.Component {
 
   constructor(props) {
     super(props)
