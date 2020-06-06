@@ -10,6 +10,9 @@ import {
   rightThumbKeys,
 } from "../lib/keys";
 import {
+  getKeyConnections,
+} from "../lib/keyConnections";
+import {
   Diagram,
 } from "./diagram";
 import {
@@ -22,53 +25,6 @@ import {
   parseKeyInfo,
   KeyInfo,
 } from "./keyInfo";
-
-/* Return a list of connections that need to be drawn as lines on the diagram.
- * Scan the whole DOM for every pointer to a keyboard key.
- *   Assumes that each pointer has at least two CSS classes set -
- *   A class literally called 'key-info-connect-from', to identify it as a pointer, and
- *   a class called key-info-connect-from-{target id}, to contain the target of the pointer.
- *   For example, key-info-connet-from-l-f-1-1 points to the key identified by l-f-1-1,
- *   which is in the _l_eft half, _f_inger cluster, column 1, row 1.
- *   A key pointer can point to more than one key.
- * Returns a list of connections.
- * Each connection is a list containing a pair of [source, target] coordinates.
- *   The target must be identified with a CSS id of the key id -
- *   for our above example, that would require a key on the board with a CSS id of l-f-1-1.
- * Each coordinate is a DOMRect.
- */
-const getKeyConnections = () => {
-  // TODO: can I put magic strings like this in a central place somewhere?
-  const kicfClass = 'key-info-connect-from'
-  const kicfPrefix = 'key-info-connect-from-'
-
-  // A list of all the key pointers in the DOM
-  const renderedKeyPointers = document.getElementsByClassName(kicfClass)
-
-  var connections = []
-  for (let keyPointer of renderedKeyPointers) {
-    const sourceCoords = keyPointer.getBoundingClientRect()
-
-    // Convert the key pointer class names to a list of bare key pointers,
-    // e.g. key-info-connect-from-l-f-1-1 => l-f-1-1
-    const targetKeyIds = keyPointer
-      .className
-      .split(' ')
-      .filter(cls => cls.startsWith(kicfPrefix))
-      .map(cls => cls.slice(kicfPrefix.length))
-
-    targetKeyIds.forEach(targetKeyId => {
-      const targetKey = document.getElementById(targetKeyId)
-      const targetCoords = targetKey.getBoundingClientRect()
-      log.debug(
-        `Draw on the canvas from source at ${sourceCoords.x},${sourceCoords.y}`,
-        `to dest key with ID ${targetKeyId} at ${targetCoords.x},${targetCoords.y}`
-      )
-      connections.push([sourceCoords, targetCoords])
-    })
-  }
-  return connections;
-}
 
 export const Keyboard = ({ maxWidth=1024 }) => {
   const [pressedKey, setPressedKey] = useState({});
