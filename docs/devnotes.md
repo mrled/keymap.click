@@ -7,6 +7,8 @@ All my debugging / experimentation code has been since
 `3e00aed009f13645131df596041a7d8fd7e49419`.
 Compare against that.
 
+✅ not going to bother with that - just move forward lol
+
 The latest eureka moment was the second useEffect in the Keyboard component,
 the one that passes `[pressedKey]`.
 Josh helped me a TON with this one, thank uuuuuu.
@@ -41,6 +43,8 @@ I had also found this stuff on "lifting state up" that might be worth a closer l
 I found this helpful:
 <https://reactjs.org/docs/refs-and-the-dom.html>
 
+✅ this is all solved with some state in a class component and understanding refs and hooks better
+
 ## update 20200602 - partially working
 
 Holy shit, it's partially working.
@@ -72,7 +76,7 @@ export function absolutifyBoundingClientRect(rect) {
 }
 ```
 
-Status: not yet implemented
+Status: not yet implemented... is this necessary?
 
 ### I'm not redrawing the canvas based on scroll position
 
@@ -97,11 +101,15 @@ it looks like `.getClientRects()` will return an array of bounding rects,
 where split text will get one for the upper and one for the lower line.
 This would let me connect my line to the text directly.
 
+✅ Done
+
 ### Should connect to a different place on the key / text
 
 Right now it's connecting to the upper left corner;
 I think it would be nice to connect to lower corner, bottom middle, or something else,
 especially for the text references.
+
+✅ Done
 
 ### getBoundingClientRect() is supposed to return post-transform values
 
@@ -111,6 +119,8 @@ Here's a bug from 10 years ago
 
 Seems to indicate that my expectation that `getBoundingClientRect` ought to return the _post_
 transform values is correct.
+
+✅ this does seem to work now that I've fixed my canvas size
 
 ### Should I use transform instead of position relative?
 
@@ -143,6 +153,8 @@ I don't think that changed anything, but it's hard to know for sure.
 Although, it did highlight that I was using `right:` before
 and it would be been less confusing to use `left:`.
 
+✅ This does work
+
 ### Visual formatting model
 
 It's probably worth understanding this in detail.
@@ -159,7 +171,7 @@ So what I need is what is described in that article -
 a `<canvas>` that is the size of the entire screen.
 Then I think my numbers will all be correct!
 
-#### I updated the canvas that way
+I tried this a few ways.
 
 First/original attempt:
 
@@ -194,6 +206,8 @@ Third attempt
 
 That seems to be _correct_! Holy shit.
 
+✅ Done
+
 ### Debug function
 
 I used this `keybDebug()` debug function to good effect
@@ -225,3 +239,54 @@ Passing it the empty array means it runs on every page load.
     }
   }, [])
 ```
+
+✅ No longer necessary
+
+## Next on to do list
+
+### Use better name for key pointers / references
+
+I have textual representations of key locations, like `l-f-1-1`.
+I don't call them "references" because that's confusing with React refs.
+I am currently calling them "pointers" but I think that's awkward
+and slightly confusing because a pointer is something else in programming
+(though I guess not in JavaScript)
+and I don't think communicates what I mean without some explanatory text.
+
+How can I improve this?
+
+### Fix the info box covering up the keyboard
+
+It does this, especially for long texts.
+
+Might consider having the key info box cover the initial info section?
+I don't think people need to see that all the time.
+Then that could just resize properly based on the key info content,
+and the close button could get it back to the intro.
+
+I could have that section scroll independently maybe?
+Actually that would probably make the canvas drawing a lot harder tho,
+to only draw to key pointers that were on screen, so maybe not.
+But maybe it could just resize automatically.
+
+### Fix mobile view
+
+I broke it ages ago, going to have to dive in deep there probably
+
+### Add content for all the keys I want
+
+Fill out key info content with references.
+Edit all the content.
+
+### Improve diagram lines
+
+Would be nice if they didn't overlap text, but instead were drawn underneath it.
+Maybe hard?
+
+### Improve key references in text
+
+Right now they're text like `l-f-1-1`, but it would be nice if they looked like keys or something?
+Not sure because I don't want to tie them to the legend;
+what's important is their placement.
+
+More thought is required.
