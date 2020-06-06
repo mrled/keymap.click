@@ -9,7 +9,10 @@ import {
   rightHandKeys,
   rightThumbKeys,
 } from "../lib/keys";
-import { Key } from "./key";
+import {
+  Key,
+  KeyGrid,
+} from "./key";
 import {
   parseKeyInfo,
   KeyInfo,
@@ -48,33 +51,6 @@ const IntroText = () => {
   );
 };
 
-
-/* Return a grid of <Key> components
- * cols: The number of columsn in the grid
- * rows: Number of rows in the grid
- * keys: List of key data objects (e.g. lib/keys.js)
- * onClickEach: Optional function to call onClick for each <Key> component
- *   It will be called with the key data object as the first argument
- * appendClasses: Optional string containing classes to append to the parent grid <div>
- */
-const KeyboardGrid = ({ cols, rows, keys, onClickEach=()=>{}, gridAppendClasses=""} ) => {
-  return (
-    <>
-      <div
-        className={classnames(
-          `grid grid-cols-${cols}-keyb grid-rows-${rows}-keyb`,
-          gridAppendClasses,
-        )}
-      >
-        {keys.map((keyData) => {
-          return (
-            <Key id={keyData.id} key={keyData.reactKey} keyData={keyData} onClick={() => {onClickEach(keyData)}} />
-          );
-        })}
-      </div>
-    </>
-  )
-}
 
 /* Return a list of connections that need to be drawn as lines on the diagram.
  * Scan the whole DOM for every pointer to a keyboard key.
@@ -173,15 +149,14 @@ export const Keyboard = ({ maxWidth=1024 }) => {
           <div className="flex flex-col md:flex-row relative debug-border-purple-disabled">
             <div className="w-full md:w-4/6 md:mr-8 md:px-4 relative debug-border-green-disabled">
               <IntroText />
-              {/* TODO: thumb clusters partially occlude the GUI key on each half b/c of rotation */}
               <div className="flex flex-row debug-bg-teal-disabled">
                 <div className="flex flex-row">
-                  <KeyboardGrid cols="15" rows="10" keys={leftHandKeys} onClickEach={setPressedKey} />
-                  <KeyboardGrid cols="6" rows="6" keys={leftThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-left-thumb-cluster" />
+                  <KeyGrid cols="15" rows="10" keys={leftHandKeys} onClickEach={setPressedKey} />
+                  <KeyGrid cols="6" rows="6" keys={leftThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-left-thumb-cluster" />
                 </div>
                 <div className="flex flex-row-reverse">
-                  <KeyboardGrid cols="15" rows="10" keys={rightHandKeys} onClickEach={setPressedKey} />
-                  <KeyboardGrid cols="6" rows="6" keys={rightThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-right-thumb-cluster" />
+                  <KeyGrid cols="15" rows="10" keys={rightHandKeys} onClickEach={setPressedKey} />
+                  <KeyGrid cols="6" rows="6" keys={rightThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-right-thumb-cluster" />
                 </div>
               </div>
             </div>

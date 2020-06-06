@@ -23,6 +23,7 @@ export const Key = ({ keyData, onClick=null, standalone=false, id=null }) => {
   const classes = classnames(
     standalone ? standaloneClasses : gridClasses,
     `hover:bg-gray-400 cursor-pointer p-1 flex justify-center items-center rounded-sm ${fontSize} font-mono`,
+    "pointer-events-auto",
     {
       "bg-gray-400 border border-blue-500 shadow-outline": false, /* TODO: should be true when this key is selected */
       "bg-gray-200 border border-gray-500 focus:outline-none": true /* TODO: should be true when this key is not selected */
@@ -38,3 +39,31 @@ export const Key = ({ keyData, onClick=null, standalone=false, id=null }) => {
     >{legend}</button>
   )
 }
+
+/* Return a grid of <Key> components
+ * cols: The number of columsn in the grid
+ * rows: Number of rows in the grid
+ * keys: List of key data objects (e.g. lib/keys.js)
+ * onClickEach: Optional function to call onClick for each <Key> component
+ *   It will be called with the key data object as the first argument
+ * appendClasses: Optional string containing classes to append to the parent grid <div>
+ */
+export const KeyGrid = ({ cols, rows, keys, onClickEach=()=>{}, gridAppendClasses=""} ) => {
+  return (
+    <>
+      <div
+        className={classnames(
+          `grid grid-cols-${cols}-keyb grid-rows-${rows}-keyb pointer-events-none`,
+          gridAppendClasses,
+        )}
+      >
+        {keys.map((keyData) => {
+          return (
+            <Key id={keyData.id} key={keyData.reactKey} keyData={keyData} onClick={() => {onClickEach(keyData)}} />
+          );
+        })}
+      </div>
+    </>
+  )
+}
+
