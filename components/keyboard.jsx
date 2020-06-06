@@ -121,14 +121,14 @@ export const Keyboard = ({ maxWidth=1024 }) => {
     <>
       <div
         style={outerWrapperDivStyle}
-        className="my-8 md:my-24 container mx-auto text-sm md:text-base p-4 debug-bg-red-disabled"
+        className="my-8 md:my-24 container mx-auto text-sm md:text-base p-4"
         id="keyblay-debug-outer-wrapper-div"
       >
-        <div className="w-full h-full debug-bg-purple-disabled" id="keyblay-debug-content-wrapper-div">
-          <div className="flex flex-col md:flex-row debug-border-purple-disabled">
-            <div className="w-full md:w-4/6 md:mr-8 md:px-4 debug-border-green-disabled">
+        <div className="w-full h-full" id="keyblay-debug-content-wrapper-div">
+          <div className="flex flex-col md:flex-row">
+            <div className="w-full md:w-4/6 md:mr-8 md:px-4">
               <IntroText />
-              <div className="flex flex-row debug-bg-teal-disabled">
+              <div className="flex flex-row">
                 <div className="flex flex-row">
                   <KeyGrid cols="15" rows="10" keys={leftHandKeys} onClickEach={setPressedKey} />
                   <KeyGrid cols="6" rows="6" keys={leftThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-left-thumb-cluster" />
@@ -141,7 +141,7 @@ export const Keyboard = ({ maxWidth=1024 }) => {
             </div>
             <div
               className={classnames(
-                "w-full h-auto md:h-full right-0 left-0 md:left-auto md:w-4/12 md:mh-screen-90 md:t-20 fixed md:sticky debug-bg-yellow-disabled",
+                "w-full h-auto md:h-full right-0 left-0 md:left-auto md:w-4/12 md:mh-screen-90 md:t-20 fixed md:sticky",
                 {
                   "bottom-0": pressedKey.info,
                   "hidden md:block": !pressedKey.info,
