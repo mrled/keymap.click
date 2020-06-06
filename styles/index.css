@@ -1,114 +1,18 @@
+/* purgecss start ignore */
 @tailwind base;
 @tailwind components;
+/* purgecss end ignore */
 @tailwind utilities;
 
-:root {
-  --keyboard-grid-unit: 1.0rem;
-}
+@variants responsive {
+  .mh-screen-90 {
+    max-height: 90vh;
+  }
 
-.grid-rows-10-keyb {
-  grid-template-rows: repeat(10, var(--keyboard-grid-unit));
-}
-.grid-cols-15-keyb {
-  grid-template-columns: repeat(15, var(--keyboard-grid-unit));
-}
-.grid-rows-6-keyb {
-  grid-template-rows: repeat(6, var(--keyboard-grid-unit));
-}
-.grid-cols-6-keyb {
-  grid-template-columns: repeat(6, var(--keyboard-grid-unit));
-}
-
-.standalone-key {
-  display: inline-block;
-}
-.standalone-key-w-1 {
-  width: var(--keyboard-grid-unit);
-}
-.standalone-key-w-2 {
-  width: calc(var(--keyboard-grid-unit) * 2);
-}
-.standalone-key-w-3 {
-  width: calc(var(--keyboard-grid-unit) * 3);
-}
-.standalone-key-h-2 {
-  height: calc(var(--keyboard-grid-unit) * 2);
-}
-.standalone-key-h-3 {
-  height: calc(var(--keyboard-grid-unit) * 3);
-}
-.standalone-key-h-4 {
-  height: calc(var(--keyboard-grid-unit) * 4);
-}
-
-.keyboard-left-thumb-cluster {
-  transform:
-    translateX(calc(var(--keyboard-grid-unit) * -2))
-    translateY(calc(var(--keyboard-grid-unit) * 6))
-    rotate(25deg);
-  transform-origin: 0 calc(var(--keyboard-grid-unit) * 2);
-}
-.keyboard-right-thumb-cluster {
-  transform:
-    translateX(calc(var(--keyboard-grid-unit) * 2))
-    translateY(calc(var(--keyboard-grid-unit) * 6))
-    rotate(-25deg);
-  transform-origin: calc(var(--keyboard-grid-unit) * 6) calc(var(--keyboard-grid-unit) * 2);
-}
-
-/* Useful for debugging layout problems
- * Probably real web developers don't need stuff like this
- * But these let me easily add borders / backgrounds to elements
- * to figure out where the DOM places them,
- * and makes it clear in the markup why something has a particular border / background -
- * which reminds me that I should remove them from production deployments,
- * even if I've forgotten why they were there in the first place.
- */
-.debug-border-red {
-  border-color: #fed7d7;
-  border-style: solid;
-  border-width: 1px;
-}
-.debug-border-green {
-  border-color: #c6f6d5;
-  border-style: solid;
-  border-width: 1px;
-}
-.debug-border-purple {
-  border-color: #e9d8fd;
-  border-style: solid;
-  border-width: 1px;
-}
-.debug-border-orange {
-  border-color: #feebc8;
-  border-style: solid;
-  border-width: 1px;
-}
-.debug-border-teal {
-  border-color: #b2f5ea;
-  border-style: solid;
-  border-width: 1px;
-}
-.debug-border-yellow {
-  border-color: #fefcbf;
-  border-style: solid;
-  border-width: 1px;
-}
-.debug-bg-red {
-  background-color: #fed7d7;
-}
-.debug-bg-green {
-  background-color: #c6f6d5;
-}
-.debug-bg-purple {
-  background-color: #e9d8fd;
-}
-.debug-bg-orange {
-  background-color: #feebc8;
-}
-.debug-bg-teal {
-  background-color: #b2f5ea;
-}
-.debug-bg-yellow {
-  background-color: #fefcbf;
+  .t-20 {
+    top: 20px;
+  }
+  .h-auto {
+    height: auto;
+  }
 }
