@@ -39,7 +39,7 @@ export const parseKeyInfo = (keyInfo) => {
       </span>
     );
     output.push(
-      <span key={`match-idx-${match.index}`} className={`${keyInfoConnectFromClass} ${keyInfoConnectFromClassPrefix}${identifier}`}>
+      <span key={`match-idx-${match.index}`} className={`${keyInfoConnectFromClass} ${keyInfoConnectFromClassPrefix}${identifier} bg-green-200 truncate`}>
         {identifier}
       </span>
     );
