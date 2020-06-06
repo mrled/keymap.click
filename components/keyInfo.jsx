@@ -1,6 +1,10 @@
 import log from "loglevel";
 
 import {
+  keyInfoConnectFromClass,
+  keyInfoConnectFromClassPrefix,
+} from "../lib/keyConnections";
+import {
   Key,
 } from "./key";
 
@@ -35,7 +39,7 @@ export const parseKeyInfo = (keyInfo) => {
       </span>
     );
     output.push(
-      <span key={`match-idx-${match.index}`} className={`key-info-connect-from key-info-connect-from-${identifier}`}>
+      <span key={`match-idx-${match.index}`} className={`${keyInfoConnectFromClass} ${keyInfoConnectFromClassPrefix}${identifier}`}>
         {identifier}
       </span>
     );
