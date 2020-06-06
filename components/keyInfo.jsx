@@ -1,6 +1,9 @@
-import { Key } from "./key";
-
 import log from "loglevel";
+
+import {
+  Key,
+} from "./key";
+
 
 /* Parse a keyInfo property
   * Return an array of JSX <span> elements.

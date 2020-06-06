@@ -10,47 +10,18 @@ import {
   rightThumbKeys,
 } from "../lib/keys";
 import {
-  Key,
+  Diagram,
+} from "./diagram";
+import {
+  IntroText,
+} from "./introText";
+import {
   KeyGrid,
 } from "./key";
 import {
   parseKeyInfo,
   KeyInfo,
 } from "./keyInfo";
-import {
-  ConnectorCanvas,
-  Point,
-} from "./diagram";
-
-/* A simple component containing the introduction text
- */
-const IntroText = () => {
-  return (
-    <div className="pb-20">
-      <h1 className="text-3xl pb-8 mb-8 debug-bg-orange-disabled">
-        keyblay: Experiments in keyboard layouts
-      </h1>
-      <p className="p-1 debug-bg-orange-disabled">This is a work in progress.</p>
-      <p className="p-1 debug-bg-orange-disabled">
-        I am building this to show off keyboard layouts for my ErgoDox, and
-        provide explanations for why I made the layout decisions I made. The
-        ErgoDox-EZ has been a huge part of my strategy for dealing with RSI,
-        and I want to be able to visually explain to others how it helped
-        me.
-      </p>
-      <p className="p-1 debug-bg-orange-disabled">
-        I am building it on GitHub. Issues and contributions welcome.{" "}
-        <a
-          className="text-blue-600 undere"
-          href="https://github.com/mrled/keyblay"
-        >
-          https://github.com/mrled/keyblay
-        </a>
-      </p>
-    </div>
-  );
-};
-
 
 /* Return a list of connections that need to be drawn as lines on the diagram.
  * Scan the whole DOM for every pointer to a keyboard key.
@@ -89,7 +60,10 @@ const getKeyConnections = () => {
     targetKeyIds.forEach(targetKeyId => {
       const targetKey = document.getElementById(targetKeyId)
       const targetCoords = targetKey.getBoundingClientRect()
-      log.debug(`Draw on the canvas from source at ${sourceCoords.x}, ${sourceCoords.y} to dest key with ID ${targetKeyId} at ${targetCoords.x},${targetCoords.y}`)
+      log.debug(
+        `Draw on the canvas from source at ${sourceCoords.x},${sourceCoords.y}`,
+        `to dest key with ID ${targetKeyId} at ${targetCoords.x},${targetCoords.y}`
+      )
       connections.push([sourceCoords, targetCoords])
     })
   }
@@ -99,7 +73,7 @@ const getKeyConnections = () => {
 export const Keyboard = ({ maxWidth=1024 }) => {
   const [pressedKey, setPressedKey] = useState({});
 
-  const connectorCanvasRef = useRef(null)
+  const diagramRef = useRef(null)
 
   const allKeys = leftHandKeys
     .slice(0)
@@ -133,8 +107,8 @@ export const Keyboard = ({ maxWidth=1024 }) => {
    */
   useEffect(() => {
     const connections = getKeyConnections()
-    log.debug(connectorCanvasRef)
-    connectorCanvasRef.current.setConnections(connections)
+    log.debug(diagramRef)
+    diagramRef.current.setConnections(connections)
   }, [pressedKey]) // Passing pressedKey in this array means to call useEffect every time pressedKey changes state
 
   const parsedPressedKeyInfo = parseKeyInfo(pressedKey.info);
@@ -186,7 +160,7 @@ export const Keyboard = ({ maxWidth=1024 }) => {
           {/* We place the canvas last and therefore we do not need to specify a z-index -
             * it is naturally on top of the other content.
             */}
-          <ConnectorCanvas ref={connectorCanvasRef} />
+          <Diagram ref={diagramRef} />
         </div>
       </div>
     </>
