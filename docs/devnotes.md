@@ -269,6 +269,10 @@ Actually that would probably make the canvas drawing a lot harder tho,
 to only draw to key pointers that were on screen, so maybe not.
 But maybe it could just resize automatically.
 
+Decided to put it above the keyboard for now.
+
+✅ Done
+
 ### Fix mobile view
 
 I broke it ages ago, going to have to dive in deep there probably
@@ -290,3 +294,12 @@ Not sure because I don't want to tie them to the legend;
 what's important is their placement.
 
 More thought is required.
+
+### Lines don't draw past the current view port
+
+Lines draw just in the viewport.
+If the keyInfo panel on the right is very long and goes past the view port,
+the line will appear to cut off when I scroll down.
+
+Maybe the line should be drawn past the viewport?
+Or maybe I need to redraw on scroll?
