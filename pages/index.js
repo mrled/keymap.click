@@ -11,7 +11,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <Keyboard maxWidth="1024" />
+        <Keyboard />
       </div>
     </>
   );
