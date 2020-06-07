@@ -108,7 +108,6 @@ export const Keyboard = ({ maxWidth=1024 }) => {
               )}
             >
               <div
-                style={{ maxHeight: "calc(100vh - 20px)" }}
                 className="border border-gray-300 bg-gray-100 rounded-md p-4 pb-8 md:p-4 md:pt-2 mx-2 md:mx-none"
               >
                 <KeyInfo keyData={pressedKey} parsedKeyInfo={parsedPressedKeyInfo} keyButtonOnClick={() => setPressedKey({})} />
