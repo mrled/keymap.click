@@ -76,7 +76,7 @@ export function absolutifyBoundingClientRect(rect) {
 }
 ```
 
-Status: not yet implemented... is this necessary?
+✅ Done
 
 ### I'm not redrawing the canvas based on scroll position
 
