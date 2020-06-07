@@ -2,8 +2,8 @@
  */
 export const IntroText = () => {
   return (
-    <div className="pb-20">
-      <h1 className="text-3xl pb-8 mb-8">
+    <div className="pb-4">
+      <h1 className="text-3xl pb-4">
         keyblay: Experiments in keyboard layouts
       </h1>
       <p className="p-1">This is a work in progress.</p>

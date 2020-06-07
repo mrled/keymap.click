@@ -16,15 +16,11 @@ import {
   Diagram,
 } from "./diagram";
 import {
-  IntroText,
-} from "./introText";
+  InfoPanel,
+} from "./infoPanel";
 import {
   KeyGrid,
 } from "./key";
-import {
-  parseKeyInfo,
-  KeyInfo,
-} from "./keyInfo";
 
 export const Keyboard = () => {
   const [pressedKey, setPressedKey] = useState({});
@@ -85,8 +81,6 @@ export const Keyboard = () => {
     diagramRef.current.setConnections(connections)
   }, [pressedKey]) // Passing pressedKey in this array means to call useEffect every time pressedKey changes state
 
-  const parsedPressedKeyInfo = parseKeyInfo(pressedKey.info);
-
   return (
     <>
       <div
@@ -94,27 +88,11 @@ export const Keyboard = () => {
         id="keyblay-debug-outer-wrapper-div"
       >
         <div className="w-full h-full" id="keyblay-debug-content-wrapper-div">
-          <div className="flex flex-col md:flex-row">
-            <div className="w-full md:w-4/6 md:mr-8 md:px-4">
-              <IntroText />
-              {renderKeyboard()}
+          <div className="w-full md:w-4/6 md:mr-8 md:px-4">
+            <div className="border border-gray-300 bg-gray-100 rounded-md p-4 mb-4">
+              <InfoPanel keyData={pressedKey} keyButtonOnClick={() => setPressedKey({})} />
             </div>
-            <div
-              className={classnames(
-                "w-full h-auto md:h-full right-0 left-0 md:left-auto md:w-4/12 md:mh-screen-90 md:t-20 fixed md:sticky",
-                {
-                  "bottom-0": pressedKey.info,
-                  "hidden md:block": !pressedKey.info,
-                }
-              )}
-            >
-              <div
-                className="border border-gray-300 bg-gray-100 rounded-md p-4 pb-8 md:p-4 md:pt-2 mx-2 md:mx-none"
-              >
-                <KeyInfo keyData={pressedKey} parsedKeyInfo={parsedPressedKeyInfo} keyButtonOnClick={() => setPressedKey({})} />
-              </div>
-            </div>
-
+            {renderKeyboard()}
           </div>
           {/* We place the canvas last and therefore we do not need to specify a z-index -
             * it is naturally on top of the other content.

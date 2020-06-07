@@ -84,20 +84,16 @@ export const KeyInfoInner = ({ keyData, parsedKeyInfo }) => {
 export const KeyInfo = ({ keyData, parsedKeyInfo, keyButtonOnClick=()=>{} }) => {
   return (
     <>
-      <div className="flex flex-row justify-between items-center border-b md:border-none pb-2 mb-2 md:mb-none">
+      <div className="border-b pb-2 mb-2">
         <h2 className="text-2xl">Key information</h2>
         <button
           onClick={keyButtonOnClick}
-          className="block md:hidden text-blue-500"
+          className="block text-blue-500"
         >
-          close
+          deselect key
         </button>
       </div>
-        {keyData.info ? (
-          <KeyInfoInner keyData={keyData} parsedKeyInfo={parsedKeyInfo} />
-        ) : (
-          "Select a key"
-        )}
+      <KeyInfoInner keyData={keyData} parsedKeyInfo={parsedKeyInfo} />
     </>
   );
 };
