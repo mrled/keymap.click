@@ -52,8 +52,11 @@ export const Keyboard = ({ maxWidth=1024 }) => {
   /* useEffect runs code when the page renders
    * <https://reactjs.org/docs/hooks-effect.html>
    * This means you can interact with the DOM itself in it, via e.g. document.getElementById(...)
+   * You can call useEffect() more than once, even for the same event.
    */
 
+  /* Add a handler for the keydown event
+   */
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
