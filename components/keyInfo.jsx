@@ -4,10 +4,7 @@ import {
   keyInfoConnectFromClass,
   keyInfoConnectFromClassPrefix,
 } from "../lib/keyConnections";
-import {
-  Key,
-} from "./key";
-
+import { Key } from "./key";
 
 /* Parse a keyInfo property
   * Return an array of JSX <span> elements.
@@ -24,10 +21,10 @@ export const parseKeyInfo = (keyInfo) => {
   var match = null;
   var lastMatchEndIdx = 0;
 
-  while (match = keyRefRe.exec(keyInfo)) {
+  while ((match = keyRefRe.exec(keyInfo))) {
     var [
-      wholeMatch,   // e.g. [[l-t-1-3]]
-      identifier,   // e.g. l-t-1-3, for the first key on the left side of the left finger cluster
+      wholeMatch, // e.g. [[l-t-1-3]]
+      identifier, // e.g. l-t-1-3, for the first key on the left side of the left finger cluster
       // side,         // e.g. l for left side or r for right side
       // cluster,      // e.g. f for finger cluster or t for thumb cluster
       // col,          // e.g. 1, for the key starting at grid col 1
@@ -39,7 +36,10 @@ export const parseKeyInfo = (keyInfo) => {
       </span>
     );
     output.push(
-      <span key={`match-idx-${match.index}`} className={`${keyInfoConnectFromClass} ${keyInfoConnectFromClassPrefix}${identifier} bg-green-200 truncate`}>
+      <span
+        key={`match-idx-${match.index}`}
+        className={`${keyInfoConnectFromClass} ${keyInfoConnectFromClassPrefix}${identifier} bg-green-200 truncate`}
+      >
         {identifier}
       </span>
     );
@@ -52,12 +52,14 @@ export const parseKeyInfo = (keyInfo) => {
       {keyInfo.slice(lastMatchEndIdx, keyInfo.length)}
     </span>
   );
-  log.debug(`All done. lastMatchEndIdx: ${lastMatchEndIdx}, keyInfo.length: ${keyInfo.length}`)
+  log.debug(
+    `All done. lastMatchEndIdx: ${lastMatchEndIdx}, keyInfo.length: ${keyInfo.length}`
+  );
 
-  log.debug(typeof output)
+  log.debug(typeof output);
 
   return output;
-}
+};
 
 /* An info card about a particular key
  * keyData: A key object (e.g. from lib/keys.js)
@@ -66,32 +68,38 @@ export const parseKeyInfo = (keyInfo) => {
 export const KeyInfoInner = ({ keyData, parsedKeyInfo }) => {
   return (
     <>
-      <Key
-        keyData={keyData} standalone={true}
-        extraClasses="inline"
-      />
-      <span className="p-5 font-mono">{keyData.legendText ? keyData.legendText : keyData.legend}</span>
       <div className="p-5">
         <p className="">{parsedKeyInfo}</p>
       </div>
     </>
   );
-}
+};
 
 /* Return a KeyInfoInner component, wrapped in a <KeyInfo> component
  * styled nicely for the parent <Keyboard> component
  */
-export const KeyInfo = ({ keyData, parsedKeyInfo, keyButtonOnClick=()=>{} }) => {
+export const KeyInfo = ({
+  keyData,
+  parsedKeyInfo,
+  keyButtonOnClick = () => {},
+}) => {
   return (
     <>
       <div className="border-b pb-2 mb-2">
-        <h2 className="text-2xl">Key information</h2>
-        <button
-          onClick={keyButtonOnClick}
-          className="block text-blue-500"
-        >
-          deselect key
-        </button>
+        <div className="flex justify-between">
+          <div>
+            <h2 className="text-2xl">Key information</h2>
+            <button onClick={keyButtonOnClick} className="block text-blue-500">
+              deselect key
+            </button>
+          </div>
+          <div>
+            <Key keyData={keyData} standalone={true} extraClasses="inline" />
+            <span className="p-5 font-mono">
+              {keyData.legendText ? keyData.legendText : keyData.legend}
+            </span>
+          </div>
+        </div>
       </div>
       <KeyInfoInner keyData={keyData} parsedKeyInfo={parsedKeyInfo} />
     </>
