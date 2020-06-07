@@ -303,3 +303,30 @@ the line will appear to cut off when I scroll down.
 
 Maybe the line should be drawn past the viewport?
 Or maybe I need to redraw on scroll?
+
+Doing more research on this, I'm not sure I understood it properly.
+It may not be related to the view port.
+
+Rather, sometimes the canvas doesn't extend as far as the lines that are supposed to be drawn on it.
+Not sure why - it's supposed to be the full height of the page.
+
+Further, the height of the canvas appears to change sometimes.
+I look at the canvas by mousing over the element in Chrome's dev tools,
+and it always stops right where the line ends.
+
+Figure out how to extend the canvas all the way to the end of the content,
+and this problem should be fixed.
+
+### Add URL fragments for what key I'm referring to
+
+Would be nice for sharing etc
+
+### Add place for more general info
+
+What is an ergodox, why did it help me generally, etc.
+
+Probably will have lots of these.
+
+Maybe an FAQ style section, if I can't think of anything better.
+
+They should be linkable with URL fragments too.
