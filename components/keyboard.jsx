@@ -26,7 +26,7 @@ import {
   KeyInfo,
 } from "./keyInfo";
 
-export const Keyboard = ({ maxWidth=1024 }) => {
+export const Keyboard = () => {
   const [pressedKey, setPressedKey] = useState({});
 
   const diagramRef = useRef(null)
@@ -48,6 +48,21 @@ export const Keyboard = ({ maxWidth=1024 }) => {
     if (!found) return;
     setPressedKey(found);
   };
+
+  const renderKeyboard = () => {
+    return (
+      <div className="flex flex-row">
+        <div className="flex flex-row">
+          <KeyGrid cols="15" rows="10" keys={leftHandKeys} onClickEach={setPressedKey} />
+          <KeyGrid cols="6" rows="6" keys={leftThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-left-thumb-cluster" />
+        </div>
+        <div className="flex flex-row-reverse">
+          <KeyGrid cols="15" rows="10" keys={rightHandKeys} onClickEach={setPressedKey} />
+          <KeyGrid cols="6" rows="6" keys={rightThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-right-thumb-cluster" />
+        </div>
+      </div>
+    )
+  }
 
   /* useEffect runs code when the page renders
    * <https://reactjs.org/docs/hooks-effect.html>
@@ -72,14 +87,9 @@ export const Keyboard = ({ maxWidth=1024 }) => {
 
   const parsedPressedKeyInfo = parseKeyInfo(pressedKey.info);
 
-  const outerWrapperDivStyle = {
-    maxWidth: maxWidth,
-  }
-
   return (
     <>
       <div
-        style={outerWrapperDivStyle}
         className="my-8 md:my-24 container mx-auto text-sm md:text-base p-4"
         id="keyblay-debug-outer-wrapper-div"
       >
@@ -87,16 +97,7 @@ export const Keyboard = ({ maxWidth=1024 }) => {
           <div className="flex flex-col md:flex-row">
             <div className="w-full md:w-4/6 md:mr-8 md:px-4">
               <IntroText />
-              <div className="flex flex-row">
-                <div className="flex flex-row">
-                  <KeyGrid cols="15" rows="10" keys={leftHandKeys} onClickEach={setPressedKey} />
-                  <KeyGrid cols="6" rows="6" keys={leftThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-left-thumb-cluster" />
-                </div>
-                <div className="flex flex-row-reverse">
-                  <KeyGrid cols="15" rows="10" keys={rightHandKeys} onClickEach={setPressedKey} />
-                  <KeyGrid cols="6" rows="6" keys={rightThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-right-thumb-cluster" />
-                </div>
-              </div>
+              {renderKeyboard()}
             </div>
             <div
               className={classnames(
