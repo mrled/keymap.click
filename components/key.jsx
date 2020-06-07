@@ -7,38 +7,44 @@ import classnames from "classnames";
  *   standalone:  Return with classes for standalone rendering,
  *                rather than the default which returns with classes for rendering in a grid
  */
-export const Key = ({ keyData, onClick=null, standalone=false, id=null }) => {
+export const Key = ({
+  keyData,
+  onClick = null,
+  standalone = false,
+  id = null,
+  active = false,
+  targetKeyActive = false,
+}) => {
   const {
     legend,
-    size=[2, 2],
-    startPos=['auto', 'auto'],
-    fontSize="text-xs",
-    extraClasses='',
-  } = keyData
-  const [col, row] = size
-  const [colStart, rowStart] = startPos
+    size = [2, 2],
+    startPos = ["auto", "auto"],
+    fontSize = "text-xs",
+    extraClasses = "",
+  } = keyData;
+  const [col, row] = size;
+  const [colStart, rowStart] = startPos;
 
-  const gridClasses = `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart}`
-  const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`
+  const gridClasses = `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart} gap-1`;
+  const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`;
   const classes = classnames(
     standalone ? standaloneClasses : gridClasses,
     `hover:bg-gray-400 cursor-pointer p-1 flex justify-center items-center rounded-sm ${fontSize} font-mono`,
     "pointer-events-auto",
     {
-      "bg-gray-400 border border-blue-500 shadow-outline": false, /* TODO: should be true when this key is selected */
-      "bg-gray-200 border border-gray-500 focus:outline-none": true /* TODO: should be true when this key is not selected */
+      "bg-gray-400 border border-blue-500": active /* TODO: should be true when this key is selected */,
+      "bg-gray-200 border border-gray-500": !active /* TODO: should be true when this key is not selected */,
+      "bg-green-200 border border-green-500": targetKeyActive /* TODO: should be true when this key is not selected */,
     },
     extraClasses
-  )
+  );
 
   return (
-    <button
-      id={id}
-      onClick={onClick}
-      className={classes}
-    >{legend}</button>
-  )
-}
+    <button id={id} onClick={onClick} className={classes}>
+      {legend}
+    </button>
+  );
+};
 
 /* Return a grid of <Key> components
  * cols: The number of columsn in the grid
@@ -48,22 +54,39 @@ export const Key = ({ keyData, onClick=null, standalone=false, id=null }) => {
  *   It will be called with the key data object as the first argument
  * appendClasses: Optional string containing classes to append to the parent grid <div>
  */
-export const KeyGrid = ({ cols, rows, keys, onClickEach=()=>{}, gridAppendClasses=""} ) => {
+export const KeyGrid = ({
+  cols,
+  rows,
+  keys,
+  pressedKey,
+  onClickEach = () => {},
+  gridAppendClasses = "",
+  targetKeyIds = [],
+}) => {
+  console.log("pressedKey", pressedKey);
   return (
     <>
       <div
         className={classnames(
           `grid grid-cols-${cols}-keyb grid-rows-${rows}-keyb pointer-events-none`,
-          gridAppendClasses,
+          gridAppendClasses
         )}
       >
         {keys.map((keyData) => {
           return (
-            <Key id={keyData.id} key={keyData.reactKey} keyData={keyData} onClick={() => {onClickEach(keyData)}} />
+            <Key
+              id={keyData.id}
+              targetKeyActive={
+                targetKeyIds.findIndex((id) => id === keyData.id) > -1
+              }
+              active={keyData.id === pressedKey.reactKey}
+              key={keyData.reactKey}
+              keyData={keyData}
+              onClick={() => onClickEach(keyData)}
+            />
           );
         })}
       </div>
     </>
-  )
-}
-
+  );
+};

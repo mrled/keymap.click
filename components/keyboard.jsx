@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-
+import { useWindowSize } from "../lib/hooks";
 import classnames from "classnames";
 import log from "loglevel";
 
@@ -9,23 +9,18 @@ import {
   rightHandKeys,
   rightThumbKeys,
 } from "../lib/keys";
-import {
-  getKeyConnections,
-} from "../lib/keyConnections";
-import {
-  Diagram,
-} from "./diagram";
-import {
-  InfoPanel,
-} from "./infoPanel";
-import {
-  KeyGrid,
-} from "./key";
+import { useKeyConnections } from "../lib/keyConnections";
+import { Diagram } from "./diagram";
+import { InfoPanel } from "./infoPanel";
+import { KeyGrid } from "./key";
 
 export const Keyboard = () => {
   const [pressedKey, setPressedKey] = useState({});
-
-  const diagramRef = useRef(null)
+  const windowSize = useWindowSize();
+  const { connections, targetKeyIds } = useKeyConnections([
+    pressedKey,
+    windowSize,
+  ]);
 
   const allKeys = leftHandKeys
     .slice(0)
@@ -47,18 +42,48 @@ export const Keyboard = () => {
 
   const renderKeyboard = () => {
     return (
-      <div className="flex flex-row">
-        <div className="flex flex-row">
-          <KeyGrid cols="15" rows="10" keys={leftHandKeys} onClickEach={setPressedKey} />
-          <KeyGrid cols="6" rows="6" keys={leftThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-left-thumb-cluster" />
+      <div style={{ marginTop: 260 }} className="flex flex-row">
+        <div className="flex flex-row ml-auto">
+          <KeyGrid
+            cols="15"
+            rows="10"
+            keys={leftHandKeys}
+            pressedKey={pressedKey}
+            targetKeyIds={targetKeyIds}
+            onClickEach={setPressedKey}
+          />
+          <KeyGrid
+            cols="6"
+            rows="6"
+            keys={leftThumbKeys}
+            pressedKey={pressedKey}
+            targetKeyIds={targetKeyIds}
+            onClickEach={setPressedKey}
+            gridAppendClasses="keyboard-left-thumb-cluster"
+          />
         </div>
-        <div className="flex flex-row-reverse">
-          <KeyGrid cols="15" rows="10" keys={rightHandKeys} onClickEach={setPressedKey} />
-          <KeyGrid cols="6" rows="6" keys={rightThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-right-thumb-cluster" />
+        <div className="flex flex-row-reverse mr-auto">
+          <KeyGrid
+            cols="15"
+            rows="10"
+            keys={rightHandKeys}
+            pressedKey={pressedKey}
+            targetKeyIds={targetKeyIds}
+            onClickEach={setPressedKey}
+          />
+          <KeyGrid
+            cols="6"
+            rows="6"
+            keys={rightThumbKeys}
+            pressedKey={pressedKey}
+            targetKeyIds={targetKeyIds}
+            onClickEach={setPressedKey}
+            gridAppendClasses="keyboard-right-thumb-cluster"
+          />
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   /* useEffect runs code when the page renders
    * <https://reactjs.org/docs/hooks-effect.html>
@@ -75,29 +100,29 @@ export const Keyboard = () => {
 
   /* When pressedKey changes, update the diagram
    */
-  useEffect(() => {
-    const connections = getKeyConnections()
-    log.debug(diagramRef)
-    diagramRef.current.setConnections(connections)
-  }, [pressedKey]) // Passing pressedKey in this array means to call useEffect every time pressedKey changes state
 
   return (
     <>
       <div
-        className="my-8 md:my-24 container mx-auto text-sm md:text-base p-4"
+        className="my-8 md:my-24 mx-auto text-sm md:text-base p-4"
         id="keyblay-debug-outer-wrapper-div"
       >
         <div className="w-full h-full" id="keyblay-debug-content-wrapper-div">
-          <div className="w-full md:w-4/6 md:mr-8 md:px-4">
-            <div className="border border-gray-300 bg-gray-100 rounded-md p-4 mb-4">
-              <InfoPanel keyData={pressedKey} keyButtonOnClick={() => setPressedKey({})} />
+          <div className="w-full md:mr-8 md:px-4">
+            <div className="absolute top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto">
+              <div className="container mx-auto">
+                <InfoPanel
+                  keyData={pressedKey}
+                  keyButtonOnClick={() => setPressedKey({})}
+                />
+              </div>
             </div>
             {renderKeyboard()}
           </div>
           {/* We place the canvas last and therefore we do not need to specify a z-index -
-            * it is naturally on top of the other content.
-            */}
-          <Diagram ref={diagramRef} />
+           * it is naturally on top of the other content.
+           */}
+          <Diagram connections={connections} />
         </div>
       </div>
     </>
