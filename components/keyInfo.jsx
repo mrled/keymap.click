@@ -34,26 +34,31 @@ export const parseKeyInfo = (keyInfo) => {
     ] = match;
     if (!content) content = identifier;
     output.push(
-      <span key={`pre-match-idx-${match.index}`}>
-        {keyInfo.slice(lastMatchEndIdx, match.index)}
-      </span>
+      <span
+        key={`pre-match-idx-${match.index}`}
+        dangerouslySetInnerHTML={{
+          __html: keyInfo.slice(lastMatchEndIdx, match.index),
+        }}
+      />
     );
     output.push(
       <span
         key={`match-idx-${match.index}`}
         className={`${keyInfoConnectFromClass} ${keyInfoConnectFromClassPrefix}${identifier} bg-green-200 truncate`}
-      >
-        {content}
-      </span>
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
     );
     //var origLastMatchEndIdx = lastMatchEndIdx;
     lastMatchEndIdx = match.index + wholeMatch.length;
     //log.debug(`Processing match. wholeMatch: ${wholeMatch}, identifier: ${identifier}, side: ${side}, cluster: ${cluster}, col: ${col}, row: ${row}, match.index: ${match.index}, origLastMatchEndIdx: ${origLastMatchEndIdx}, lastMatchEndIdx: ${lastMatchEndIdx}, wholeMatch.length: ${wholeMatch.length}`)
   }
   output.push(
-    <span key="match-idx-final">
-      {keyInfo.slice(lastMatchEndIdx, keyInfo.length)}
-    </span>
+    <span
+      key="match-idx-final"
+      dangerouslySetInnerHTML={{
+        __html: keyInfo.slice(lastMatchEndIdx, keyInfo.length),
+      }}
+    />
   );
   log.debug(
     `All done. lastMatchEndIdx: ${lastMatchEndIdx}, keyInfo.length: ${keyInfo.length}`
