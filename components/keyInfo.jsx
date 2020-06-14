@@ -16,20 +16,23 @@ export const parseKeyInfo = (keyInfo) => {
     return [<span>""</span>];
   }
 
-  const keyRefRe = /\[\[(([l|r])-([f|t])-([0-9]{1,2})-([0-9]{1,2}))\]\]/g;
+  const keyRefRe = /\[\[(([l|r])-([f|t])-([0-9]{1,2})-([0-9]{1,2}))(\|(.+?))?\]\]/g;
   var output = [];
   var match = null;
   var lastMatchEndIdx = 0;
 
   while ((match = keyRefRe.exec(keyInfo))) {
     var [
-      wholeMatch, // e.g. [[l-t-1-3]]
-      identifier, // e.g. l-t-1-3, for the first key on the left side of the left finger cluster
-      // side,         // e.g. l for left side or r for right side
-      // cluster,      // e.g. f for finger cluster or t for thumb cluster
-      // col,          // e.g. 1, for the key starting at grid col 1
-      // row,          // e.g. 3, for the key starting at grid row 3
+      wholeMatch, //     e.g. [[l-t-1-3|some text]]
+      identifier, //     e.g. l-t-1-3, for the first key on the left side of the left finger cluster
+      side, //           e.g. l for left side or r for right side
+      cluster, //        e.g. f for finger cluster or t for thumb cluster
+      col, //            e.g. 1, for the key starting at grid col 1
+      row, //            e.g. 3, for the key starting at grid row 3
+      wholeContent, //   e.g. '|some text'
+      content, //        e.g. 'some text'
     ] = match;
+    if (!content) content = identifier;
     output.push(
       <span key={`pre-match-idx-${match.index}`}>
         {keyInfo.slice(lastMatchEndIdx, match.index)}
@@ -40,7 +43,7 @@ export const parseKeyInfo = (keyInfo) => {
         key={`match-idx-${match.index}`}
         className={`${keyInfoConnectFromClass} ${keyInfoConnectFromClassPrefix}${identifier} bg-green-200 truncate`}
       >
-        {identifier}
+        {content}
       </span>
     );
     //var origLastMatchEndIdx = lastMatchEndIdx;
