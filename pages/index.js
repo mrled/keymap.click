@@ -44,16 +44,19 @@ export default function Home() {
           sizes="128x128"
         />
         <meta name="twitter:site" content="@mrled" />
+        <meta name="twitter:creator" content="@mrled" />
         <meta property="og:image" content="/og_image_screenshot.png" />
-        <meta name="twitter:card" content="summary" />
-        <meta
-          name="twitter:image"
-          content="https://keyblay.now.sh/og_image_screenshot.png"
-        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://keyblay.now.sh/og_image_screenshot.png" />
         <meta
           name="twitter:image:alt"
           content="A screenshot of how the app works"
         />
+        <meta name="twitter:title" content="keyblay: experiments in keyboard layouts">
+        <meta name="twitter:description" content="A visual explanation of how an ErgoDox keyboard helped my RSI.">
+        <meta name="twitter:image:width" content="310">
+        <meta name="twitter:image:height" content="285">
+
       </Head>
       <div>
         <Keyboard />
