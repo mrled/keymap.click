@@ -42,7 +42,7 @@ export const Keyboard = () => {
 
   const renderKeyboard = () => {
     return (
-      <div style={{ marginTop: 260 }} className="flex flex-row">
+      <div className="flex flex-row lg:mt-56">
         <div className="flex flex-row ml-auto">
           <KeyGrid
             cols="15"
@@ -108,8 +108,8 @@ export const Keyboard = () => {
         id="keyblay-debug-outer-wrapper-div"
       >
         <div className="w-full h-full" id="keyblay-debug-content-wrapper-div">
-          <div className="w-full md:mr-8 md:px-4">
-            <div className="absolute top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto">
+          <div className="w-full md:mr-8 md:px-4 z-10">
+            <div className="fixed bottom-0 top-auto lg:absolute lg:bottom-auto lg:top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto">
               <div className="container mx-auto">
                 <InfoPanel
                   keyData={pressedKey}

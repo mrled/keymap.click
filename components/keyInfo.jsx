@@ -68,7 +68,7 @@ export const parseKeyInfo = (keyInfo) => {
 export const KeyInfoInner = ({ keyData, parsedKeyInfo }) => {
   return (
     <>
-      <div className="p-5">
+      <div className="py-5">
         <p className="">{parsedKeyInfo}</p>
       </div>
     </>
