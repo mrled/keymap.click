@@ -45,6 +45,11 @@ export default function Home() {
         />
         <meta property="og:image" content="/og_image_screenshot.png" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="/og_image_screenshot.png" />
+        <meta
+          name="twitter:image:alt"
+          content="A screenshot of how the app works"
+        />
       </Head>
       <div>
         <Keyboard />
