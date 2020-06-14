@@ -9,7 +9,8 @@ import { Key } from "./key";
 /* Parse a keyInfo property
   * Return an array of JSX <span> elements.
     Each <span> element represents either regular text,
-    or a reference to a key on the board.
+    or an indicator to a key on the board.
+    (see docs/physical-key-indicators.md for more information on textual key indicators)
   */
 export const parseKeyInfo = (keyInfo) => {
   if (!keyInfo) {

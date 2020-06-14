@@ -7,17 +7,6 @@ This section isn't well organized.
 
 # Active to do items
 
-## Use better name for key pointers / references
-
-I have textual representations of key locations, like `l-f-1-1`.
-I don't call them "references" because that's confusing with React refs.
-I am currently calling them "pointers" but I think that's awkward
-and slightly confusing because a pointer is something else in programming
-(though I guess not in JavaScript)
-and I don't think communicates what I mean without some explanatory text.
-
-How can I improve this?
-
 ## Fix mobile view
 
 I broke it ages ago, going to have to dive in deep there probably
@@ -380,3 +369,16 @@ and this problem should be fixed.
 For instance, would be good to highlight all arrow keys when selecting any one of them.
 
 ✅ Done
+
+## Use better name for key pointers / references
+
+I have textual representations of key locations, like `l-f-1-1`.
+I don't call them "references" because that's confusing with React refs.
+I am currently calling them "pointers" but I think that's awkward
+and slightly confusing because a pointer is something else in programming
+(though I guess not in JavaScript)
+and I don't think communicates what I mean without some explanatory text.
+
+How can I improve this?
+
+✅ done - see physical-key-indicators.md
