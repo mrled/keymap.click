@@ -279,6 +279,9 @@ Decided to put it above the keyboard for now.
 
 I broke it ages ago, going to have to dive in deep there probably
 
+Update: recent changes have improved this,
+but the biggest problem is that it's not drawing lines on the canvas that extends past the view port.
+
 ### Add content for all the keys I want
 
 Fill out key info content with references.
@@ -309,6 +312,8 @@ That gets rid of ugly reference IDs, as long as I'm referencing them with a lege
 I could just say "here" with a reference, in order to point to a key without the legend.
 That gets rid of the rest of the text reference IDs.
 
+✅ Done!
+
 ### Lines don't draw past the current view port
 
 Lines draw just in the viewport.
@@ -331,7 +336,7 @@ and it always stops right where the line ends.
 Figure out how to extend the canvas all the way to the end of the content,
 and this problem should be fixed.
 
-✅ Done, with Josh's help
+✅ Done, with Josh's help - although maybe broken again? tracking under mobile.
 
 ### Add URL fragments for what key I'm referring to
 
