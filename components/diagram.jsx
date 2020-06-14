@@ -61,7 +61,7 @@ export const Diagram = ({ connections }) => {
     <div
       ref={container}
       id="keyblay-debug-canvas-container"
-      className="absolute top-0 left-0 w-full h-full pointer-events-none"
+      className="absolute top-0 left-0 w-full h-full pointer-events-none z-50"
     >
       <canvas
         ref={canvas}
