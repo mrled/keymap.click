@@ -44,6 +44,8 @@ npm install
 npm run dev
 ```
 
+I'm using `prettier` so I don't have to have a dumb code formatting opinion.
+
 ## Thanks
 
 - Josh:
@@ -65,3 +67,5 @@ npm run dev
   which I use as an icon.
 - Terence Eden for making me aware of
   [the `<kbd>` element](https://shkspr.mobi/blog/2020/05/better-keyboard-buttons-in-html/)
+- Xah Lee's useful
+  [list of unicode computing symbols](http://xahlee.info/comp/unicode_computing_symbols.html)
