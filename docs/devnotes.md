@@ -69,10 +69,10 @@ Maybe I could do that like this?
 
 ```js
 export function absolutifyBoundingClientRect(rect) {
-  const abs = DOMRect.fromRect(rect)
-  abs.x += window.scrollX
-  abs.y += window.scrollY
-  return abs
+  const abs = DOMRect.fromRect(rect);
+  abs.x += window.scrollX;
+  abs.y += window.scrollY;
+  return abs;
 }
 ```
 
@@ -140,9 +140,9 @@ Here's what I'm doing now:
 
 ```css
 .keyboard-left-thumb-cluster {
-  transform:
-    translateX(calc(var(--keyboard-grid-unit) * -2))
-    translateY(calc(var(--keyboard-grid-unit) * 6))
+  transform: translateX(calc(var(--keyboard-grid-unit) * -2)) translateY(
+      calc(var(--keyboard-grid-unit) * 6)
+    )
     rotate(25deg);
   transform-origin: 0 calc(var(--keyboard-grid-unit) * 2);
 }
@@ -176,20 +176,20 @@ I tried this a few ways.
 First/original attempt:
 
 ```js
-    const origBoundingRect = canvas.getBoundingClientRect()
-    canvas.style.width = '100%'
-    canvas.style.height = '100%'
-    canvas.width = origBoundingRect.width
-    canvas.height = origBoundingRect.height
+const origBoundingRect = canvas.getBoundingClientRect();
+canvas.style.width = "100%";
+canvas.style.height = "100%";
+canvas.width = origBoundingRect.width;
+canvas.height = origBoundingRect.height;
 ```
 
 Second attempt:
 
 ```js
-    canvas.style.width = '100%'
-    canvas.style.height = '100%'
-    canvas.width = canvas.offsetWidth
-    canvas.height = canvas.offsetHeight
+canvas.style.width = "100%";
+canvas.style.height = "100%";
+canvas.width = canvas.offsetWidth;
+canvas.height = canvas.offsetHeight;
 ```
 
 Third attempt
@@ -218,26 +218,28 @@ useEffect takes 2 arguments here - my arrow function and an empty array.
 Passing it the empty array means it runs on every page load.
 
 ```js
-  useEffect(() => {
-    document.keybDebug = () => {
-      const r = (num) => {
-        // Round to integer, append with _ if wasn't integer to begin with
-        // useful bc rotate-xform'd elements have positions in very tiny fractions of pixels,
-        // which I don't care about in this fucking debug function
-        const rounded = Math.round(num)
-        return num === rounded ? `${rounded}` : `${rounded}_`
-      }
-      const gbrbi = (id) => {
-        const br = document.getElementById(id).getBoundingClientRect();
-        return `${id}: ${r(br.x)},${r(br.y)} (${r(br.width)}x${r(br.height)}) ([${r(br.left)}..${r(br.right)}]x[${r(br.top)}..${r(br.bottom)}])`
-      }
-      console.log(gbrbi('keyblay-debug-canvas'));
-      console.log(gbrbi('keyblay-debug-canvas-container'));
-      console.log(gbrbi('keyblay-debug-content-wrapper-div'));
-      console.log(gbrbi('keyblay-debug-outer-wrapper-div'));
-      console.log(gbrbi('l-f-1-1'));
-    }
-  }, [])
+useEffect(() => {
+  document.keybDebug = () => {
+    const r = (num) => {
+      // Round to integer, append with _ if wasn't integer to begin with
+      // useful bc rotate-xform'd elements have positions in very tiny fractions of pixels,
+      // which I don't care about in this fucking debug function
+      const rounded = Math.round(num);
+      return num === rounded ? `${rounded}` : `${rounded}_`;
+    };
+    const gbrbi = (id) => {
+      const br = document.getElementById(id).getBoundingClientRect();
+      return `${id}: ${r(br.x)},${r(br.y)} (${r(br.width)}x${r(
+        br.height
+      )}) ([${r(br.left)}..${r(br.right)}]x[${r(br.top)}..${r(br.bottom)}])`;
+    };
+    console.log(gbrbi("keyblay-debug-canvas"));
+    console.log(gbrbi("keyblay-debug-canvas-container"));
+    console.log(gbrbi("keyblay-debug-content-wrapper-div"));
+    console.log(gbrbi("keyblay-debug-outer-wrapper-div"));
+    console.log(gbrbi("l-f-1-1"));
+  };
+}, []);
 ```
 
 ✅ No longer necessary
