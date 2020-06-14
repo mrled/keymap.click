@@ -68,11 +68,7 @@ export const parseKeyInfo = (keyInfo) => {
 export const KeyInfoInner = ({ keyData, parsedKeyInfo }) => {
   return (
     <>
-      <Key keyData={keyData} standalone={true} extraClasses="inline" />
-      <span className="p-5 font-mono">
-        {keyData.legendText ? keyData.legendText : keyData.legend}
-      </span>
-      <div className="p-5">
+      <div className="py-5">
         <p className="">{parsedKeyInfo}</p>
       </div>
     </>
@@ -90,10 +86,20 @@ export const KeyInfo = ({
   return (
     <>
       <div className="border-b pb-2 mb-2">
-        <h2 className="text-2xl">Key information</h2>
-        <button onClick={keyButtonOnClick} className="block text-blue-500">
-          deselect key
-        </button>
+        <div className="flex justify-between">
+          <div>
+            <h2 className="text-2xl">Key information</h2>
+            <button onClick={keyButtonOnClick} className="block text-blue-500">
+              deselect key
+            </button>
+          </div>
+          <div>
+            <Key keyData={keyData} standalone={true} extraClasses="inline" />
+            <span className="p-5 font-mono">
+              {keyData.legendText ? keyData.legendText : keyData.legend}
+            </span>
+          </div>
+        </div>
       </div>
       <KeyInfoInner keyData={keyData} parsedKeyInfo={parsedKeyInfo} />
     </>
