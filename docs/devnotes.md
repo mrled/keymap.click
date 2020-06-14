@@ -50,13 +50,6 @@ E.g. look at the bracket keys `[ { } ]` - it's pointing to the non-transformed l
 How will I show all this info?
 Won't be able to see it all at once...
 
-## Twitter cards
-
-https://developer.twitter.com/en/docs/tweets/optimize-with-cards/guides/getting-started
-
-I added enough so it's better than just a bare link,
-but it's not showing my image and I'm not sure why.
-
 # Development notes and completed to do items
 
 This was originally added as part of a big wip commit.
@@ -389,3 +382,17 @@ and I don't think communicates what I mean without some explanatory text.
 How can I improve this?
 
 ✅ done - see physical-key-indicators.md
+
+## Twitter cards
+
+https://developer.twitter.com/en/docs/tweets/optimize-with-cards/guides/getting-started
+
+I added enough so it's better than just a bare link,
+but it's not showing my image and I'm not sure why.
+
+✅ Done
+
+Validated with
+<https://cards-dev.twitter.com/validator>
+but it's not showing up in my actual tweet yet -
+might take a week to expire the cache?
