@@ -46,7 +46,10 @@ export default function Home() {
         <meta name="twitter:site" content="@mrled" />
         <meta property="og:image" content="/og_image_screenshot.png" />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:image" content="/og_image_screenshot.png" />
+        <meta
+          name="twitter:image"
+          content="https://keyblay.now.sh/og_image_screenshot.png"
+        />
         <meta
           name="twitter:image:alt"
           content="A screenshot of how the app works"
