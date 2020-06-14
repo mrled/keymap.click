@@ -16,11 +16,17 @@ import { KeyGrid } from "./key";
 
 export const Keyboard = () => {
   const [pressedKey, setPressedKey] = useState({});
+  const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
   const windowSize = useWindowSize();
   const { connections, targetKeyIds } = useKeyConnections([
     pressedKey,
     windowSize,
   ]);
+
+  const setPressedAndSelectedKeys = (keyData) => {
+    setPressedKey(keyData);
+    setOtherSelectedKeys(keyData.selection);
+  };
 
   const allKeys = leftHandKeys
     .slice(0)
@@ -49,16 +55,18 @@ export const Keyboard = () => {
             rows="10"
             keys={leftHandKeys}
             pressedKey={pressedKey}
+            selectedKeys={otherSelectedKeys}
             targetKeyIds={targetKeyIds}
-            onClickEach={setPressedKey}
+            onClickEach={setPressedAndSelectedKeys}
           />
           <KeyGrid
             cols="6"
             rows="6"
             keys={leftThumbKeys}
             pressedKey={pressedKey}
+            selectedKeys={otherSelectedKeys}
             targetKeyIds={targetKeyIds}
-            onClickEach={setPressedKey}
+            onClickEach={setPressedAndSelectedKeys}
             gridAppendClasses="keyboard-left-thumb-cluster"
           />
         </div>
@@ -68,16 +76,18 @@ export const Keyboard = () => {
             rows="10"
             keys={rightHandKeys}
             pressedKey={pressedKey}
+            selectedKeys={otherSelectedKeys}
             targetKeyIds={targetKeyIds}
-            onClickEach={setPressedKey}
+            onClickEach={setPressedAndSelectedKeys}
           />
           <KeyGrid
             cols="6"
             rows="6"
             keys={rightThumbKeys}
             pressedKey={pressedKey}
+            selectedKeys={otherSelectedKeys}
             targetKeyIds={targetKeyIds}
-            onClickEach={setPressedKey}
+            onClickEach={setPressedAndSelectedKeys}
             gridAppendClasses="keyboard-right-thumb-cluster"
           />
         </div>

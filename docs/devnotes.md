@@ -350,3 +350,5 @@ They should be linkable with URL fragments too.
 ### Allow selecting multiple keys at once
 
 For instance, would be good to highlight all arrow keys when selecting any one of them.
+
+✅ Done
