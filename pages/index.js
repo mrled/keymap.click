@@ -43,8 +43,9 @@ export default function Home() {
           href="/command_128x128.png"
           sizes="128x128"
         />
+        <meta name="twitter:site" content="@mrled" />
         <meta property="og:image" content="/og_image_screenshot.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:image" content="/og_image_screenshot.png" />
         <meta
           name="twitter:image:alt"
