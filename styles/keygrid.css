@@ -5,6 +5,11 @@
 :root {
   --keyboard-grid-unit: 1rem;
 }
+@media (min-width: 768px) {
+  :root {
+    --keyboard-grid-unit: 1.4rem;
+  }
+}
 
 .grid-rows-10-keyb {
   grid-template-rows: repeat(10, var(--keyboard-grid-unit));

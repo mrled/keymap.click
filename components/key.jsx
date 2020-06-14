@@ -12,6 +12,8 @@ export const Key = ({
   onClick = null,
   standalone = false,
   id = null,
+  active = false,
+  targetKeyActive = false,
 }) => {
   const {
     legend,
@@ -30,8 +32,9 @@ export const Key = ({
     `hover:bg-gray-400 cursor-pointer p-1 flex justify-center items-center rounded-sm ${fontSize} font-mono`,
     "pointer-events-auto",
     {
-      "bg-gray-400 border border-blue-500 shadow-outline": false /* TODO: should be true when this key is selected */,
-      "bg-gray-200 border border-gray-500 focus:outline-none": true /* TODO: should be true when this key is not selected */,
+      "bg-gray-400 border border-blue-500": active /* TODO: should be true when this key is selected */,
+      "bg-gray-200 border border-gray-500": !active /* TODO: should be true when this key is not selected */,
+      "bg-green-200 border border-green-500": targetKeyActive /* TODO: should be true when this key is not selected */,
     },
     extraClasses
   );
@@ -55,9 +58,12 @@ export const KeyGrid = ({
   cols,
   rows,
   keys,
+  pressedKey,
   onClickEach = () => {},
   gridAppendClasses = "",
+  targetKeyIds = [],
 }) => {
+  console.log("pressedKey", pressedKey);
   return (
     <>
       <div
@@ -70,11 +76,13 @@ export const KeyGrid = ({
           return (
             <Key
               id={keyData.id}
+              targetKeyActive={
+                targetKeyIds.findIndex((id) => id === keyData.id) > -1
+              }
+              active={keyData.id === pressedKey.reactKey}
               key={keyData.reactKey}
               keyData={keyData}
-              onClick={() => {
-                onClickEach(keyData);
-              }}
+              onClick={() => onClickEach(keyData)}
             />
           );
         })}
