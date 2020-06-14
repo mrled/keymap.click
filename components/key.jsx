@@ -59,6 +59,7 @@ export const KeyGrid = ({
   rows,
   keys,
   pressedKey,
+  selectedKeys = [],
   onClickEach = () => {},
   gridAppendClasses = "",
   targetKeyIds = [],
@@ -79,7 +80,10 @@ export const KeyGrid = ({
               targetKeyActive={
                 targetKeyIds.findIndex((id) => id === keyData.id) > -1
               }
-              active={keyData.id === pressedKey.reactKey}
+              active={
+                keyData.id === pressedKey.reactKey ||
+                selectedKeys.indexOf(keyData.id) > -1
+              }
               key={keyData.reactKey}
               keyData={keyData}
               onClick={() => onClickEach(keyData)}
