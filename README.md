@@ -63,3 +63,5 @@ npm run dev
 - Wikimedia Commons for the
   [Looped square on white background.svg](https://commons.wikimedia.org/wiki/File:Looped_square_on_white_background.svg)
   which I use as an icon.
+- Terence Eden for making me aware of
+  [the `<kbd>` element](https://shkspr.mobi/blog/2020/05/better-keyboard-buttons-in-html/)
