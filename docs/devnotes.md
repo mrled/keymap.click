@@ -1,4 +1,69 @@
-Big WIP commit. Lots of progress. Some notes.
+# Development notes and to do items
+
+At the top are active to do items.
+
+In the second section are finished to-do items and also some general dev notes.
+This section isn't well organized.
+
+# Active to do items
+
+## Use better name for key pointers / references
+
+I have textual representations of key locations, like `l-f-1-1`.
+I don't call them "references" because that's confusing with React refs.
+I am currently calling them "pointers" but I think that's awkward
+and slightly confusing because a pointer is something else in programming
+(though I guess not in JavaScript)
+and I don't think communicates what I mean without some explanatory text.
+
+How can I improve this?
+
+## Fix mobile view
+
+I broke it ages ago, going to have to dive in deep there probably
+
+Update: recent changes have improved this,
+but the biggest problem is that it's not drawing lines on the canvas that extends past the view port.
+
+## Add content for all the keys I want
+
+Fill out key info content with references.
+Edit all the content.
+
+## Improve diagram lines
+
+Would be nice if they didn't overlap text, but instead were drawn underneath it.
+Maybe hard?
+
+## Add URL fragments for what key I'm referring to
+
+Would be nice for sharing etc
+
+## Add place for more general info
+
+What is an ergodox, why did it help me generally, etc.
+
+Probably will have lots of these.
+
+Maybe an FAQ style section, if I can't think of anything better.
+
+They should be linkable with URL fragments too.
+
+## Transformed thumb clusters have the wrong pointer location
+
+E.g. look at the bracket keys `[ { } ]` - it's pointing to the non-transformed location for shift. Ugh.
+
+## Need to show other layers and layouts
+
+- Show my function layer, just for fun(ction)
+- Show the Ergodox default layout
+
+How will I show all this info?
+Won't be able to see it all at once...
+
+# Development notes and completed to do items
+
+This was originally added as part of a big wip commit.
 
 I have changed a lot of the code.
 Some of it is good refactored, but plenty of the refactoring was probably not helpful.
@@ -244,18 +309,7 @@ useEffect(() => {
 
 ✅ No longer necessary
 
-## Next on to do list
-
-### Use better name for key pointers / references
-
-I have textual representations of key locations, like `l-f-1-1`.
-I don't call them "references" because that's confusing with React refs.
-I am currently calling them "pointers" but I think that's awkward
-and slightly confusing because a pointer is something else in programming
-(though I guess not in JavaScript)
-and I don't think communicates what I mean without some explanatory text.
-
-How can I improve this?
+## more
 
 ### Fix the info box covering up the keyboard
 
@@ -274,23 +328,6 @@ But maybe it could just resize automatically.
 Decided to put it above the keyboard for now.
 
 ✅ Done
-
-### Fix mobile view
-
-I broke it ages ago, going to have to dive in deep there probably
-
-Update: recent changes have improved this,
-but the biggest problem is that it's not drawing lines on the canvas that extends past the view port.
-
-### Add content for all the keys I want
-
-Fill out key info content with references.
-Edit all the content.
-
-### Improve diagram lines
-
-Would be nice if they didn't overlap text, but instead were drawn underneath it.
-Maybe hard?
 
 ### Improve key references in text
 
@@ -338,34 +375,8 @@ and this problem should be fixed.
 
 ✅ Done, with Josh's help - although maybe broken again? tracking under mobile.
 
-### Add URL fragments for what key I'm referring to
-
-Would be nice for sharing etc
-
-### Add place for more general info
-
-What is an ergodox, why did it help me generally, etc.
-
-Probably will have lots of these.
-
-Maybe an FAQ style section, if I can't think of anything better.
-
-They should be linkable with URL fragments too.
-
 ### Allow selecting multiple keys at once
 
 For instance, would be good to highlight all arrow keys when selecting any one of them.
 
 ✅ Done
-
-### Transformed thumb clusters have the wrong pointer location
-
-E.g. look at the bracket keys `[ { } ]` - it's pointing to the non-transformed location for shift. Ugh.
-
-### Need to show other layers and layouts
-
-- Show my function layer, just for fun(ction)
-- Show the Ergodox default layout
-
-How will I show all this info?
-Won't be able to see it all at once...
