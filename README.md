@@ -28,14 +28,14 @@ I'll get a lot of new experience with this project.
 
 ## How it's built
 
-* next.js
-* tailwind
+- next.js
+- tailwind
 
 Other prerequisites:
 
-* Node and NPM
-* Autoprefixer (`npm install -g autoprefixer`)
-* PostCSS (`npm install -g postcss-cli`)
+- Node and NPM
+- Autoprefixer (`npm install -g autoprefixer`)
+- PostCSS (`npm install -g postcss-cli`)
 
 Development mode:
 
@@ -46,17 +46,20 @@ npm run dev
 
 ## Thanks
 
-* Josh:
+- Josh:
   I would still be trying to build this from scratch without a framework
   if it weren't for your kind help.
   THANK YOU so much.
-* The community that built the original ErgoDox
+- The community that built the original ErgoDox
   (see <https://www.ergodox.io/>):
   I'm not sure I would have been able to work for some weeks of 2019
   without this keyboard.
   It's made a big difference.
   Thanks for making it.
-* ZSA Technology Labs, makers of the
+- ZSA Technology Labs, makers of the
   [ErgoDox-EZ](https://ergodox-ez.com/):
   I doubt I would have tried to build one on my own.
   Thank you for making it easier to get.
+- Wikimedia Commons for the
+  [Looped square on white background.svg](https://commons.wikimedia.org/wiki/File:Looped_square_on_white_background.svg)
+  which I use as an icon.
