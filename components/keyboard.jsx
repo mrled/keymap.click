@@ -9,23 +9,15 @@ import {
   rightHandKeys,
   rightThumbKeys,
 } from "../lib/keys";
-import {
-  getKeyConnections,
-} from "../lib/keyConnections";
-import {
-  Diagram,
-} from "./diagram";
-import {
-  InfoPanel,
-} from "./infoPanel";
-import {
-  KeyGrid,
-} from "./key";
+import { getKeyConnections } from "../lib/keyConnections";
+import { Diagram } from "./diagram";
+import { InfoPanel } from "./infoPanel";
+import { KeyGrid } from "./key";
 
 export const Keyboard = () => {
   const [pressedKey, setPressedKey] = useState({});
 
-  const diagramRef = useRef(null)
+  const diagramRef = useRef(null);
 
   const allKeys = leftHandKeys
     .slice(0)
@@ -49,16 +41,38 @@ export const Keyboard = () => {
     return (
       <div className="flex flex-row">
         <div className="flex flex-row">
-          <KeyGrid cols="15" rows="10" keys={leftHandKeys} onClickEach={setPressedKey} />
-          <KeyGrid cols="6" rows="6" keys={leftThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-left-thumb-cluster" />
+          <KeyGrid
+            cols="15"
+            rows="10"
+            keys={leftHandKeys}
+            onClickEach={setPressedKey}
+          />
+          <KeyGrid
+            cols="6"
+            rows="6"
+            keys={leftThumbKeys}
+            onClickEach={setPressedKey}
+            gridAppendClasses="keyboard-left-thumb-cluster"
+          />
         </div>
         <div className="flex flex-row-reverse">
-          <KeyGrid cols="15" rows="10" keys={rightHandKeys} onClickEach={setPressedKey} />
-          <KeyGrid cols="6" rows="6" keys={rightThumbKeys} onClickEach={setPressedKey} gridAppendClasses="keyboard-right-thumb-cluster" />
+          <KeyGrid
+            cols="15"
+            rows="10"
+            keys={rightHandKeys}
+            onClickEach={setPressedKey}
+          />
+          <KeyGrid
+            cols="6"
+            rows="6"
+            keys={rightThumbKeys}
+            onClickEach={setPressedKey}
+            gridAppendClasses="keyboard-right-thumb-cluster"
+          />
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   /* useEffect runs code when the page renders
    * <https://reactjs.org/docs/hooks-effect.html>
@@ -76,10 +90,10 @@ export const Keyboard = () => {
   /* When pressedKey changes, update the diagram
    */
   useEffect(() => {
-    const connections = getKeyConnections()
-    log.debug(diagramRef)
-    diagramRef.current.setConnections(connections)
-  }, [pressedKey]) // Passing pressedKey in this array means to call useEffect every time pressedKey changes state
+    const connections = getKeyConnections();
+    log.debug(diagramRef);
+    diagramRef.current.setConnections(connections);
+  }, [pressedKey]); // Passing pressedKey in this array means to call useEffect every time pressedKey changes state
 
   return (
     <>
@@ -90,13 +104,16 @@ export const Keyboard = () => {
         <div className="w-full h-full" id="keyblay-debug-content-wrapper-div">
           <div className="w-full md:w-4/6 md:mr-8 md:px-4">
             <div className="border border-gray-300 bg-gray-100 rounded-md p-4 mb-4">
-              <InfoPanel keyData={pressedKey} keyButtonOnClick={() => setPressedKey({})} />
+              <InfoPanel
+                keyData={pressedKey}
+                keyButtonOnClick={() => setPressedKey({})}
+              />
             </div>
             {renderKeyboard()}
           </div>
           {/* We place the canvas last and therefore we do not need to specify a z-index -
-            * it is naturally on top of the other content.
-            */}
+           * it is naturally on top of the other content.
+           */}
           <Diagram ref={diagramRef} />
         </div>
       </div>
