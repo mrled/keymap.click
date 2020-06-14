@@ -16,3 +16,13 @@
     height: auto;
   }
 }
+
+kbd {
+  border: 0.1em solid #aaa;
+  border-radius: 15%;
+  display: inline-block;
+  padding: 0em 0.5em;
+  background: linear-gradient(180deg, #fff, #fff, #fff, #ddd);
+  color: #000;
+  font-weight: bold;
+}
