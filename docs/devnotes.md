@@ -352,3 +352,15 @@ They should be linkable with URL fragments too.
 For instance, would be good to highlight all arrow keys when selecting any one of them.
 
 ✅ Done
+
+### Transformed thumb clusters have the wrong pointer location
+
+E.g. look at the bracket keys `[ { } ]` - it's pointing to the non-transformed location for shift. Ugh.
+
+### Need to show other layers and layouts
+
+- Show my function layer, just for fun(ction)
+- Show the Ergodox default layout
+
+How will I show all this info?
+Won't be able to see it all at once...
