@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Head from "next/head";
-import log from 'loglevel';
+import log from "loglevel";
 import { Keyboard } from "../components/keyboard";
 log.enableAll();
 export default function Home() {
