@@ -44,7 +44,7 @@ export default function Home() {
           sizes="128x128"
         />
         <meta property="og:image" content="/og_image_screenshot.png" />
-        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <div>
         <Keyboard />
