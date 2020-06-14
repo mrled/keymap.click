@@ -297,6 +297,18 @@ what's important is their placement.
 
 More thought is required.
 
+Update:
+
+I want to be able to reference key legends.
+Maybe start with something like this:
+<https://shkspr.mobi/blog/2020/05/better-keyboard-buttons-in-html/>
+
+Then, add a way to tag a legend with an id.
+That gets rid of ugly reference IDs, as long as I'm referencing them with a legend.
+
+I could just say "here" with a reference, in order to point to a key without the legend.
+That gets rid of the rest of the text reference IDs.
+
 ### Lines don't draw past the current view port
 
 Lines draw just in the viewport.
@@ -319,6 +331,8 @@ and it always stops right where the line ends.
 Figure out how to extend the canvas all the way to the end of the content,
 and this problem should be fixed.
 
+✅ Done, with Josh's help
+
 ### Add URL fragments for what key I'm referring to
 
 Would be nice for sharing etc
@@ -332,3 +346,7 @@ Probably will have lots of these.
 Maybe an FAQ style section, if I can't think of anything better.
 
 They should be linkable with URL fragments too.
+
+### Allow selecting multiple keys at once
+
+For instance, would be good to highlight all arrow keys when selecting any one of them.
