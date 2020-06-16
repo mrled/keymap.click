@@ -1,5 +1,28 @@
 import classnames from "classnames";
 
+/* This is a small element used as an anchor point to connect a diagram line to this key.
+ *
+ * We use this because it is transformed with the outer element,
+ * for instance the thumb clusters are moved and rotated,
+ * and this div is to relatively the same place within its parent <Key> during that transformation.
+ *
+ * The parent <Key> element is large enough that when it rotates, its BoundingClientRect is enlarged,
+ * so the calculation we were doing before of a few px from the top left was actually outside of
+ * the rotated <Key> element itself.
+ *
+ * Technically, this little <div> will have the same problem - its BoundingClientRect is enlarged.
+ * However, it is so small that this doesn't matter.
+ * The diagram line still looks good inside the <Key>.
+ */
+const KeyHandler = ({ keyId }) => {
+  const classes = "h-0 w-0 top-0 left-0 pointer-events-none";
+  return keyId ? (
+    <div id={keyId} className={classes} />
+  ) : (
+    <div className={classes} />
+  );
+};
+
 /* A keyboard key
  * Properties:
  *   keyData:     An object e.g. from lib/keys.js
@@ -40,7 +63,8 @@ export const Key = ({
   );
 
   return (
-    <button id={id} onClick={onClick} className={classes}>
+    <button onClick={onClick} className={classes}>
+      <KeyHandler keyId={id} />
       {legend}
     </button>
   );

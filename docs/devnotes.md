@@ -38,10 +38,6 @@ Maybe an FAQ style section, if I can't think of anything better.
 
 They should be linkable with URL fragments too.
 
-## Transformed thumb clusters have the wrong pointer location
-
-E.g. look at the bracket keys `[ { } ]` - it's pointing to the non-transformed location for shift. Ugh.
-
 ## Need to show other layers and layouts
 
 - Show my function layer, just for fun(ction)
@@ -396,3 +392,25 @@ Validated with
 <https://cards-dev.twitter.com/validator>
 but it's not showing up in my actual tweet yet -
 might take a week to expire the cache?
+
+## Transformed thumb clusters have the wrong pointer location
+
+E.g. look at the bracket keys `[ { } ]` - it's pointing to the non-transformed location for shift. Ugh.
+
+Update: I see what's happening now.
+BoundingClientRect is the rectangle that encompasses the element post-rotation,
+but BoundingClientRect doesn't itself rotate.
+BoundingClientRect must always have top and bottom edges perpendicular to the X axis.
+
+That is, if you take a square with top and bottom edges perpendicular to the X axis and rotate it 45 degrees,
+the BoundingClientRect is now LARGER than it was before.
+
+What I want to do is calculate the location pre-rotation,
+then apply the rotation transformation to the calculated result.
+Cool, some baby's first linear algebra.
+
+... except why the fuck would I do math when I can just put a tiny `<div>` inside the `<Key>`
+and have the existing CSS transform do the math for me.
+Derp. SOEZ.
+
+✅ Done
