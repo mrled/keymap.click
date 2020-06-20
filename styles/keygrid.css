@@ -3,11 +3,11 @@
  */
 
 :root {
-  --keyboard-grid-unit: 1rem;
+  --keyboard-grid-unit: 0.75rem;
 }
 @media (min-width: 768px) {
   :root {
-    --keyboard-grid-unit: 1.4rem;
+    --keyboard-grid-unit: 1rem;
   }
 }
 
