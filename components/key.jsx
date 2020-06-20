@@ -42,7 +42,7 @@ export const Key = ({
     legend,
     size = [2, 2],
     startPos = ["auto", "auto"],
-    fontSize = "text-xs",
+    fontSize = "text-2xs md:text-xs",
     extraClasses = "",
   } = keyData;
   const [col, row] = size;

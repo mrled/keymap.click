@@ -17,6 +17,10 @@
   }
 }
 
+.text-2xs {
+  font-size: 0.5em;
+}
+
 kbd {
   border: 0.1em solid #aaa;
   border-radius: 15%;
