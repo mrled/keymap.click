@@ -2,8 +2,9 @@ import { useState } from "react";
 import Head from "next/head";
 import log from "loglevel";
 import { Keyboard } from "../components/keyboard";
+import { allKeysById } from "../lib/keys";
 log.enableAll();
-export default function Home() {
+export default function Home({ pressedKey }) {
   return (
     <>
       <Head>
@@ -67,8 +68,15 @@ export default function Home() {
         <meta name="twitter:image:height" content="285" />
       </Head>
       <div>
-        <Keyboard />
+        <Keyboard initialState={pressedKey} />
       </div>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { keyId } = context.query;
+  return {
+    props: { pressedKey: allKeysById[keyId] },
+  };
 }
