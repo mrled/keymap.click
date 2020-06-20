@@ -18,8 +18,8 @@ import { Diagram } from "./diagram";
 import { InfoPanel } from "./infoPanel";
 import { KeyGrid } from "./key";
 
-export const Keyboard = ({ keyId = null }) => {
-  const [pressedKey, setPressedKey] = useState({});
+export const Keyboard = ({ initialState }) => {
+  const [pressedKey, setPressedKey] = useState(initialState || {});
   const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
   const windowSize = useWindowSize();
   const { connections, targetKeyIds } = useKeyConnections([
@@ -29,13 +29,14 @@ export const Keyboard = ({ keyId = null }) => {
   const router = useRouter();
 
   useEffect(() => {
+    const { keyId } = router.query;
     if (keyId && allKeysById[keyId]) {
       setPressedKey(allKeysById[keyId]);
       log.debug(`On load using selected key id: ${keyId}`);
     } else {
       log.debug(`On load no such key id: ${keyId}`);
     }
-  });
+  }, [router.query.keyId]);
 
   const setPressedAndSelectedKeys = (keyData) => {
     setPressedKey(keyData);
@@ -45,13 +46,6 @@ export const Keyboard = ({ keyId = null }) => {
     } else {
       router.push("/");
     }
-  };
-
-  const handleKeyDown = (e) => {
-    e.keyCode === 9 && e.preventDefault();
-    const found = allKeys.find((key) => key.keyCode === e.keyCode);
-    if (!found) return;
-    setPressedKey(found);
   };
 
   const renderKeyboard = () => {
@@ -118,10 +112,6 @@ export const Keyboard = ({ keyId = null }) => {
 
   /* Add a handler for the keydown event
    */
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []); // Passing an empty array means to call useEffect only once, when page first renders
 
   return (
     <>
