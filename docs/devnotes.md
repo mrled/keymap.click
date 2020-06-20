@@ -24,10 +24,6 @@ Edit all the content.
 Would be nice if they didn't overlap text, but instead were drawn underneath it.
 Maybe hard?
 
-## Add URL fragments for what key I'm referring to
-
-Would be nice for sharing etc
-
 ## Add place for more general info
 
 What is an ergodox, why did it help me generally, etc.
@@ -45,6 +41,23 @@ They should be linkable with URL fragments too.
 
 How will I show all this info?
 Won't be able to see it all at once...
+
+## Layout fix: selecting a different key shouldn't move view window around
+
+This is pretty annoying in practice.
+
+## Emphasize selected key more
+
+Currently, selected key is emphasized with a darker gray background.
+The green highlights for key indicators are more prominent.
+Make the selected key more prominent.
+
+## Better font for key legends
+
+The current font is... _ok_.
+Stuff like vol up/down is a hack,
+and the backspace/delete/esc/tab keys are all really ugly and pixelated,
+especially on non-retina.
 
 # Development notes and completed to do items
 
@@ -414,3 +427,13 @@ and have the existing CSS transform do the math for me.
 Derp. SOEZ.
 
 ✅ Done
+
+## Add URL fragments for what key I'm referring to
+
+Would be nice for sharing etc
+
+✅ Done! Query string instead of URL fragments, but whatever.
+
+Note that I tried to use dynamic routing with something like `pages/key/[keyId].js`,
+but that resulted in full page reloads every time.
+The URLs were nicer, but I don't think I'm too worried about it.
