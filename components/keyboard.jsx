@@ -48,48 +48,55 @@ export const Keyboard = () => {
 
   const renderKeyboard = () => {
     return (
-      <div className="flex flex-row lg:mt-56">
-        <div className="flex flex-row ml-auto">
-          <KeyGrid
-            cols="15"
-            rows="10"
-            keys={leftHandKeys}
-            pressedKey={pressedKey}
-            selectedKeys={otherSelectedKeys}
-            targetKeyIds={targetKeyIds}
-            onClickEach={setPressedAndSelectedKeys}
-          />
-          <KeyGrid
-            cols="6"
-            rows="6"
-            keys={leftThumbKeys}
-            pressedKey={pressedKey}
-            selectedKeys={otherSelectedKeys}
-            targetKeyIds={targetKeyIds}
-            onClickEach={setPressedAndSelectedKeys}
-            gridAppendClasses="keyboard-left-thumb-cluster"
-          />
+      <div className="flex flex-col md:flex-row mt-0">
+        <div className="flex flex-col">
+          <h2 className="text-xl">Left hand</h2>
+          <div className="flex flex-row ml-auto">
+            <KeyGrid
+              cols="15"
+              rows="10"
+              keys={leftHandKeys}
+              pressedKey={pressedKey}
+              selectedKeys={otherSelectedKeys}
+              targetKeyIds={targetKeyIds}
+              onClickEach={setPressedAndSelectedKeys}
+            />
+            <KeyGrid
+              cols="6"
+              rows="6"
+              keys={leftThumbKeys}
+              pressedKey={pressedKey}
+              selectedKeys={otherSelectedKeys}
+              targetKeyIds={targetKeyIds}
+              onClickEach={setPressedAndSelectedKeys}
+              gridAppendClasses="keyboard-left-thumb-cluster"
+            />
+          </div>
         </div>
-        <div className="flex flex-row-reverse mr-auto">
-          <KeyGrid
-            cols="15"
-            rows="10"
-            keys={rightHandKeys}
-            pressedKey={pressedKey}
-            selectedKeys={otherSelectedKeys}
-            targetKeyIds={targetKeyIds}
-            onClickEach={setPressedAndSelectedKeys}
-          />
-          <KeyGrid
-            cols="6"
-            rows="6"
-            keys={rightThumbKeys}
-            pressedKey={pressedKey}
-            selectedKeys={otherSelectedKeys}
-            targetKeyIds={targetKeyIds}
-            onClickEach={setPressedAndSelectedKeys}
-            gridAppendClasses="keyboard-right-thumb-cluster"
-          />
+
+        <div className="flex flex-col mt-20 md:mt-0">
+          <h2 className="text-xl ml-auto">Right hand</h2>
+          <div className="flex flex-row-reverse">
+            <KeyGrid
+              cols="15"
+              rows="10"
+              keys={rightHandKeys}
+              pressedKey={pressedKey}
+              selectedKeys={otherSelectedKeys}
+              targetKeyIds={targetKeyIds}
+              onClickEach={setPressedAndSelectedKeys}
+            />
+            <KeyGrid
+              cols="6"
+              rows="6"
+              keys={rightThumbKeys}
+              pressedKey={pressedKey}
+              selectedKeys={otherSelectedKeys}
+              targetKeyIds={targetKeyIds}
+              onClickEach={setPressedAndSelectedKeys}
+              gridAppendClasses="keyboard-right-thumb-cluster"
+            />
+          </div>
         </div>
       </div>
     );
@@ -108,32 +115,25 @@ export const Keyboard = () => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []); // Passing an empty array means to call useEffect only once, when page first renders
 
-  /* When pressedKey changes, update the diagram
-   */
-
   return (
     <>
       <div
-        className="my-8 md:my-24 mx-auto text-sm md:text-base p-4"
+        className="w-full h-full text-sm md:text-base p-4 flex"
         id="keyblay-debug-outer-wrapper-div"
       >
-        <div className="w-full h-full" id="keyblay-debug-content-wrapper-div">
-          <div className="w-full md:mr-8 md:px-4 z-10">
-            <div className="fixed bottom-0 top-auto lg:absolute lg:bottom-auto lg:top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto">
-              <div className="container mx-auto">
-                <InfoPanel
-                  keyData={pressedKey}
-                  keyButtonOnClick={() => setPressedKey({})}
-                />
-              </div>
-            </div>
-            {renderKeyboard()}
+        <div className="w-full md:mr-8 md:px-4 z-10">
+          <div className="bottom-auto top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto">
+            <InfoPanel
+              keyData={pressedKey}
+              keyButtonOnClick={() => setPressedKey({})}
+            />
           </div>
-          {/* We place the canvas last and therefore we do not need to specify a z-index -
-           * it is naturally on top of the other content.
-           */}
-          <Diagram connections={connections} />
+          {renderKeyboard()}
         </div>
+        {/* We place the canvas last and therefore we do not need to specify a z-index -
+         * it is naturally on top of the other content.
+         */}
+        <Diagram connections={connections} />
       </div>
     </>
   );
