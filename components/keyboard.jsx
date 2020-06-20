@@ -51,7 +51,7 @@ export const Keyboard = () => {
       <div className="flex flex-col md:flex-row mt-0">
         <div className="flex flex-col">
           <h2 className="text-xl">Left hand</h2>
-          <div className="flex flex-row ml-auto">
+          <div className="flex flex-row">
             <KeyGrid
               cols="15"
               rows="10"
