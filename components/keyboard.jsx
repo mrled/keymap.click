@@ -1,20 +1,24 @@
 import { useState, useRef, useEffect } from "react";
-import { useWindowSize } from "../lib/hooks";
+import { useRouter } from "next/router";
+
 import classnames from "classnames";
 import log from "loglevel";
 
 import {
+  allKeys,
+  allKeysById,
   leftHandKeys,
   leftThumbKeys,
   rightHandKeys,
   rightThumbKeys,
 } from "../lib/keys";
+import { useWindowSize } from "../lib/hooks";
 import { useKeyConnections } from "../lib/keyConnections";
 import { Diagram } from "./diagram";
 import { InfoPanel } from "./infoPanel";
 import { KeyGrid } from "./key";
 
-export const Keyboard = () => {
+export const Keyboard = ({ keyId = null }) => {
   const [pressedKey, setPressedKey] = useState({});
   const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
   const windowSize = useWindowSize();
@@ -22,22 +26,26 @@ export const Keyboard = () => {
     pressedKey,
     windowSize,
   ]);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (keyId && allKeysById[keyId]) {
+      setPressedKey(allKeysById[keyId]);
+      log.debug(`On load using selected key id: ${keyId}`);
+    } else {
+      log.debug(`On load no such key id: ${keyId}`);
+    }
+  });
 
   const setPressedAndSelectedKeys = (keyData) => {
     setPressedKey(keyData);
     setOtherSelectedKeys(keyData.selection);
+    if (keyData) {
+      router.push(`/?keyId=${keyData.id}`);
+    } else {
+      router.push("/");
+    }
   };
-
-  const allKeys = leftHandKeys
-    .slice(0)
-    .concat(leftThumbKeys, rightHandKeys, rightThumbKeys);
-  allKeys.forEach((keyData, idx) => {
-    const side = keyData.board[0] == "right" ? "r" : "l";
-    const cluster = keyData.board[1] == "finger" ? "f" : "t";
-    const keyId = `${side}-${cluster}-${keyData.startPos[0]}-${keyData.startPos[1]}`;
-    keyData.reactKey = keyId;
-    keyData.id = keyId;
-  });
 
   const handleKeyDown = (e) => {
     e.keyCode === 9 && e.preventDefault();
