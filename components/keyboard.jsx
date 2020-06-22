@@ -123,7 +123,10 @@ export const Keyboard = ({ initialState }) => {
           <div className="bottom-auto top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto">
             <InfoPanel
               keyData={pressedKey}
-              keyButtonOnClick={() => setPressedKey({})}
+              keyButtonOnClick={() => {
+                router.push("/");
+                setPressedKey({});
+              }}
             />
           </div>
           {renderKeyboard()}
