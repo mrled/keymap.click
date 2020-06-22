@@ -74,8 +74,8 @@ export default function Home({ pressedKey }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const { keyId } = context.query;
+export async function getStaticProps(context) {
+  const { keyId } = context.query || {};
   return {
     props: { pressedKey: allKeysById[keyId] || null },
   };
