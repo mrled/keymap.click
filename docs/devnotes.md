@@ -59,6 +59,12 @@ Stuff like vol up/down is a hack,
 and the backspace/delete/esc/tab keys are all really ugly and pixelated,
 especially on non-retina.
 
+## Have a per-key preview image for slack/twitter/etc
+
+Now that I can link to individual keys, seems like I really ought to have a preview image for each one.
+
+Also should change the page title.
+
 # Development notes and completed to do items
 
 This was originally added as part of a big wip commit.
