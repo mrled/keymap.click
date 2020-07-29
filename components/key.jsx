@@ -40,30 +40,48 @@ export const Key = ({
   targetKeyActive = false,
 }) => {
   const {
-    legendSymbol = "",
-    legendText = "",
-    legendFont = "",
-    legendImageName = "",
-    name = "",
+    legend,
     size = [2, 2],
     startPos = ["auto", "auto"],
-    legendTextFontSize = "text-2xs md:text-xs",
-    legendSymbolFontSize = "text-2xs md:text-xs",
     extraClasses = "",
   } = keyData;
   const [col, row] = size;
   const [colStart, rowStart] = startPos;
 
-  const legend = legendSymbol || legendText;
-  // const fontSize = legendSymbolFontSize ? legendSymbol : legendTextFontSize;
-  // const legend = legendText;
-  const fontSize = legendTextFontSize;
+  const keyLegendInfo = function () {
+    const defaultFontFace = "keyblay-font-roboto-mono"
+    const defaultGlyphFontSize = "text-m md:text-m";
+    const defaultTextFontSize = "text-2xs md:text-xs";
+
+    if (!legend) {
+      return {}
+    } else if (legend.image) {
+      return {
+        legend: <img src={`legends/${legend.image.value}`} className="container w-4 h-4" />,
+      }
+    } else if (legend.glyph) {
+      return {
+        legend: legend.glyph.value,
+        fontSize: legend.glyph.fontSize || defaultGlyphFontSize,
+        fontFace: legend.glyph.fontFace || defaultFontFace,
+      }
+    } else if (legend.text) {
+      return {
+        legend: legend.text.value,
+        fontSize: legend.text.fontSize || defaultTextFontSize,
+        fontFace: legend.text.fontFace || defaultFontFace,
+      }
+    } else {
+      return {}
+    }
+
+  }()
 
   const gridClasses = `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart}`;
   const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`;
   const classes = classnames(
     standalone ? standaloneClasses : gridClasses,
-    `hover:bg-gray-400 cursor-pointer p-1 flex justify-center items-center rounded-sm ${fontSize} font-mono`,
+    `hover:bg-gray-400 cursor-pointer p-1 flex justify-center items-center rounded-sm font-mono`,
     "pointer-events-auto",
     {
       "bg-gray-400 border border-blue-500": active /* TODO: should be true when this key is selected */,
@@ -71,28 +89,19 @@ export const Key = ({
       "bg-green-200 border border-green-500": targetKeyActive /* TODO: should be true when this key is not selected */,
     },
     {
-      "keyblay-font-free-mono": legendFont == "FreeMono",
+      [keyLegendInfo.fontFace]: keyLegendInfo.fontFace,
+      [keyLegendInfo.fontSize]: keyLegendInfo.fontSize,
     },
     extraClasses
   );
 
-  if (legendImageName) {
-    const legendImagePath = `legends/${legendImageName}`
-    return (
-      <button onClick={onClick} className={classes}>
-        <KeyHandler keyId={id} />
-        <img src={legendImagePath} className="container w-4 h-4" />
-      </button>
-    );
+  return (
+    <button onClick={onClick} className={classes}>
+      <KeyHandler keyId={id} />
+      {keyLegendInfo.legend}
+    </button>
+  );
 
-  } else {
-    return (
-      <button onClick={onClick} className={classes}>
-        <KeyHandler keyId={id} />
-        {legend}
-      </button>
-    );
-  }
 };
 
 /* Return a grid of <Key> components
