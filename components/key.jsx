@@ -16,11 +16,12 @@ import classnames from "classnames";
  */
 const KeyHandler = ({ keyId }) => {
   const classes = "h-0 w-0 top-0 left-0 pointer-events-none";
-  return keyId ? (
-    <div id={keyId} className={classes} />
-  ) : (
-    <div className={classes} />
-  );
+  return keyId ?
+    (
+      <div id={keyId} className={classes} />
+    ) : (
+      <div className={classes} />
+    );
 };
 
 /* A keyboard key
@@ -39,14 +40,23 @@ export const Key = ({
   targetKeyActive = false,
 }) => {
   const {
-    legend,
+    legendSymbol = "",
+    legendText = "",
+    legendFont = "",
+    name = "",
     size = [2, 2],
     startPos = ["auto", "auto"],
-    fontSize = "text-2xs md:text-xs",
+    legendTextFontSize = "text-2xs md:text-xs",
+    legendSymbolFontSize = "text-2xs md:text-xs",
     extraClasses = "",
   } = keyData;
   const [col, row] = size;
   const [colStart, rowStart] = startPos;
+
+  // const legend = legendSymbol || legendText;
+  // const fontSize = legendSymbolFontSize ? legendSymbol : legendTextFontSize;
+  const legend = legendText;
+  const fontSize = legendTextFontSize;
 
   const gridClasses = `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart}`;
   const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`;
@@ -58,6 +68,9 @@ export const Key = ({
       "bg-gray-400 border border-blue-500": active /* TODO: should be true when this key is selected */,
       "bg-gray-200 border border-gray-500": !active /* TODO: should be true when this key is not selected */,
       "bg-green-200 border border-green-500": targetKeyActive /* TODO: should be true when this key is not selected */,
+    },
+    {
+      "keyblay-font-free-mono": legendFont == "FreeMono",
     },
     extraClasses
   );
@@ -84,7 +97,7 @@ export const KeyGrid = ({
   keys,
   pressedKey,
   selectedKeys = [],
-  onClickEach = () => {},
+  onClickEach = () => { },
   gridAppendClasses = "",
   targetKeyIds = [],
 }) => {
