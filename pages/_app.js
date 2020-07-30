@@ -2,9 +2,14 @@ import "../styles/index.css";
 import "../styles/keygrid.css";
 import "../styles/fonts.css";
 import "../styles/debug.css";
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import * as Fathom from 'fathom-client'
 
 function App({ Component, pageProps }) {
+
+  const router = useRouter()
 
   useEffect(() => {
     Fathom.load('HDMUSVII', {
