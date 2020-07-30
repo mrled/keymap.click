@@ -55,6 +55,14 @@ const Legend = (legend) => {
   }
 }
 
+export const keyDataTextLabel = (keyData) => {
+  if (keyData.name) {
+    return keyData.name;
+  }
+  const legend = Legend(keyData.legend);
+  return legend.legend;
+}
+
 /* A keyboard key
  * Properties:
  *   keyData:           An object e.g. from lib/keys.js
@@ -132,7 +140,6 @@ export const KeyGrid = ({
   gridAppendClasses = "",
   targetKeyIds = [],
 }) => {
-  console.log("pressedKey", pressedKey);
   return (
     <>
       <div
@@ -142,14 +149,21 @@ export const KeyGrid = ({
         )}
       >
         {keys.map((keyData) => {
+          const isTargetKey = targetKeyIds.findIndex((id) => id === keyData.id) > -1;
+          let isActive, isInSelectedGroup;
+          if (pressedKey) {
+            isActive = keyData.id === pressedKey.reactKey;
+            isInSelectedGroup = !isActive && selectedKeys.indexOf(keyData.id) > -1
+          } else {
+            isActive = false;
+            isInSelectedGroup = false;
+          }
           return (
             <Key
               id={keyData.id}
-              targetKeyActive={
-                targetKeyIds.findIndex((id) => id === keyData.id) > -1
-              }
-              active={keyData.id === pressedKey.reactKey}
-              otherSelected={keyData.id !== pressedKey.reactKey && selectedKeys.indexOf(keyData.id) > -1}
+              targetKeyActive={isTargetKey}
+              active={isActive}
+              otherSelected={isInSelectedGroup}
               key={keyData.reactKey}
               keyData={keyData}
               onClick={() => onClickEach(keyData)}
