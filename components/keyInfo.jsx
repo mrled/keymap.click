@@ -4,7 +4,12 @@ import {
   keyInfoConnectFromClass,
   keyInfoConnectFromClassPrefix,
 } from "../lib/keyConnections";
-import { keyDataTextLabel, Key, KeyGrid } from "./key";
+import {
+  keyDataTextLabel,
+  keyLegendAttrib,
+  Key,
+  KeyGrid
+} from "./key";
 
 /* Parse a keyInfo property
   * Return an array of JSX <span> elements.
@@ -97,6 +102,12 @@ export const KeyInfo = ({
   modifiedKeyData.startPos = [0, 0];
   const keys = [modifiedKeyData]
   const textLabel = keyDataTextLabel(modifiedKeyData);
+  const legendAttrib = keyLegendAttrib(modifiedKeyData);
+  const legendAttribElem = legendAttrib ? <div className="text-2xs">
+    <h2>Legend Attribution:</h2>
+    <p>{keyLegendAttrib(modifiedKeyData)}</p>
+  </div> : <></>
+
   return (
     <>
       <div className="border-b pb-2 mb-2">
@@ -132,6 +143,7 @@ export const KeyInfo = ({
         </div>
       </div>
       <KeyInfoInner keyData={keyData} parsedKeyInfo={parsedKeyInfo} />
+      {legendAttribElem}
     </>
   );
 };
