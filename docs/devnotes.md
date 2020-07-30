@@ -12,16 +12,6 @@ This section isn't well organized.
 Currently this is the Material Design Send Email icon (a paper airplane).
 What should I put there instead?
 
-## Nicer legend for the escape key
-
-Currently this is an SVG from Wikimedia Commons, and it looks like shit.
-What should I use instead?
-
-I'm mad that the Microsoft Segoe UI font has such a stupid license.
-It has the only escape key legend I really like,
-and it's not available for this use.
-What the fuck good does it do them? Ugh.
-
 ## Nicer legend for the app/menu key
 
 Currently this is an SVG, but it doesn't belong with the other icons and is blurry.
@@ -515,3 +505,14 @@ and add some separate issues for specific icons.
 
 ✅ hell yeah
 
+## Nicer legend for the escape key
+
+Currently this is an SVG from Wikimedia Commons, and it looks like shit.
+What should I use instead?
+
+I'm mad that the Microsoft Segoe UI font has such a stupid license.
+It has the only escape key legend I really like,
+and it's not available for this use.
+What the fuck good does it do them? Ugh.
+
+✅ Done! Got a link to thenounproject.com from Ben, found the perfect icon.
