@@ -26,10 +26,14 @@ const KeyHandler = ({ keyId }) => {
 
 /* A keyboard key
  * Properties:
- *   keyData:     An object e.g. from lib/keys.js
- *   onClick:     An onClick function
- *   standalone:  Return with classes for standalone rendering,
- *                rather than the default which returns with classes for rendering in a grid
+ *   keyData:           An object e.g. from lib/keys.js
+ *   onClick:           An onClick function
+ *   standalone:        Return with classes for standalone rendering,
+ *                      rather than the default which returns with classes for rendering in a grid
+ *   id:                Key id, for drawing diagram lines
+ *   active:            True if this key has been selected by the user
+ *   otherSelected:     True if this key is a member of the same group as the key selected by the user
+ *   targetKeyActive:   True if this key is the target of a diagram liner
  */
 export const Key = ({
   keyData,
@@ -37,6 +41,7 @@ export const Key = ({
   standalone = false,
   id = null,
   active = false,
+  otherSelected = false,
   targetKeyActive = false,
 }) => {
   const {
@@ -84,9 +89,10 @@ export const Key = ({
     `hover:bg-gray-400 cursor-pointer p-1 flex justify-center items-center rounded-sm font-mono`,
     "pointer-events-auto",
     {
-      "bg-gray-400 border border-blue-500": active /* TODO: should be true when this key is selected */,
-      "bg-gray-200 border border-gray-500": !active /* TODO: should be true when this key is not selected */,
-      "bg-green-200 border border-green-500": targetKeyActive /* TODO: should be true when this key is not selected */,
+      "bg-orange-300 border border-orange-500": active,
+      "bg-orange-100 border border-orange-500": otherSelected,
+      "bg-gray-200 border border-gray-500": !active && !otherSelected,
+      "bg-green-200 border border-green-500": targetKeyActive,
     },
     {
       [keyLegendInfo.fontFace]: keyLegendInfo.fontFace,
@@ -138,10 +144,8 @@ export const KeyGrid = ({
               targetKeyActive={
                 targetKeyIds.findIndex((id) => id === keyData.id) > -1
               }
-              active={
-                keyData.id === pressedKey.reactKey ||
-                selectedKeys.indexOf(keyData.id) > -1
-              }
+              active={keyData.id === pressedKey.reactKey}
+              otherSelected={keyData.id !== pressedKey.reactKey && selectedKeys.indexOf(keyData.id) > -1}
               key={keyData.reactKey}
               keyData={keyData}
               onClick={() => onClickEach(keyData)}
