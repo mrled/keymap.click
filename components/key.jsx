@@ -43,6 +43,7 @@ export const Key = ({
     legendSymbol = "",
     legendText = "",
     legendFont = "",
+    legendImageName = "",
     name = "",
     size = [2, 2],
     startPos = ["auto", "auto"],
@@ -53,9 +54,9 @@ export const Key = ({
   const [col, row] = size;
   const [colStart, rowStart] = startPos;
 
-  // const legend = legendSymbol || legendText;
+  const legend = legendSymbol || legendText;
   // const fontSize = legendSymbolFontSize ? legendSymbol : legendTextFontSize;
-  const legend = legendText;
+  // const legend = legendText;
   const fontSize = legendTextFontSize;
 
   const gridClasses = `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart}`;
@@ -75,12 +76,23 @@ export const Key = ({
     extraClasses
   );
 
-  return (
-    <button onClick={onClick} className={classes}>
-      <KeyHandler keyId={id} />
-      {legend}
-    </button>
-  );
+  if (legendImageName) {
+    const legendImagePath = `legends/${legendImageName}`
+    return (
+      <button onClick={onClick} className={classes}>
+        <KeyHandler keyId={id} />
+        <img src={legendImagePath} className="container w-4 h-4" />
+      </button>
+    );
+
+  } else {
+    return (
+      <button onClick={onClick} className={classes}>
+        <KeyHandler keyId={id} />
+        {legend}
+      </button>
+    );
+  }
 };
 
 /* Return a grid of <Key> components
