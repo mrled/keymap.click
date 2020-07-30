@@ -120,6 +120,7 @@ export const Keyboard = ({ initialState }) => {
         id="keyblay-debug-outer-wrapper-div"
       >
         <div className="w-full md:mr-8 md:px-4 z-10">
+          {renderKeyboard()}
           <div className="bottom-auto top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto">
             <InfoPanel
               keyData={pressedKey}
@@ -129,7 +130,6 @@ export const Keyboard = ({ initialState }) => {
               }}
             />
           </div>
-          {renderKeyboard()}
         </div>
         {/* We place the canvas last and therefore we do not need to specify a z-index -
          * it is naturally on top of the other content.
