@@ -37,18 +37,21 @@ const Legend = (legend) => {
   } else if (legend.image) {
     return {
       legend: <img src={`legends/${legend.image.value}`} className="container w-4 h-4" />,
+      attrib: legend.image.attrib || "",
     }
   } else if (legend.glyph) {
     return {
       legend: legend.glyph.value,
       fontSize: legend.glyph.fontSize || defaultGlyphFontSize,
       fontFace: legend.glyph.fontFace || defaultFontFace,
+      attrib: "",
     }
   } else if (legend.text) {
     return {
       legend: legend.text.value,
       fontSize: legend.text.fontSize || defaultTextFontSize,
       fontFace: legend.text.fontFace || defaultFontFace,
+      attrib: "",
     }
   } else {
     return {}
@@ -61,6 +64,11 @@ export const keyDataTextLabel = (keyData) => {
   }
   const legend = Legend(keyData.legend);
   return legend.legend;
+}
+
+export const keyLegendAttrib = (keyData) => {
+  const legend = Legend(keyData.legend);
+  return legend.attrib;
 }
 
 /* A keyboard key
