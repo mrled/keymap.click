@@ -23,6 +23,12 @@
 .grid-cols-6-keyb {
   grid-template-columns: repeat(6, var(--keyboard-grid-unit));
 }
+.grid-rows-4-keyb {
+  grid-template-rows: repeat(4, var(--keyboard-grid-unit));
+}
+.grid-cols-4-keyb {
+  grid-template-columns: repeat(4, var(--keyboard-grid-unit));
+}
 
 .standalone-key {
   display: inline-block;
