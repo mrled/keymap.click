@@ -24,6 +24,37 @@ const KeyHandler = ({ keyId }) => {
     );
 };
 
+/* Process a legend object from lib/keys.js,
+ * and return a Legend object that can be used inside of a Key
+ */
+const Legend = (legend) => {
+  const defaultFontFace = "keyblay-font-roboto-mono"
+  const defaultGlyphFontSize = "text-m md:text-m";
+  const defaultTextFontSize = "text-2xs md:text-xs";
+
+  if (!legend) {
+    return {}
+  } else if (legend.image) {
+    return {
+      legend: <img src={`legends/${legend.image.value}`} className="container w-4 h-4" />,
+    }
+  } else if (legend.glyph) {
+    return {
+      legend: legend.glyph.value,
+      fontSize: legend.glyph.fontSize || defaultGlyphFontSize,
+      fontFace: legend.glyph.fontFace || defaultFontFace,
+    }
+  } else if (legend.text) {
+    return {
+      legend: legend.text.value,
+      fontSize: legend.text.fontSize || defaultTextFontSize,
+      fontFace: legend.text.fontFace || defaultFontFace,
+    }
+  } else {
+    return {}
+  }
+}
+
 /* A keyboard key
  * Properties:
  *   keyData:           An object e.g. from lib/keys.js
@@ -53,34 +84,7 @@ export const Key = ({
   const [col, row] = size;
   const [colStart, rowStart] = startPos;
 
-  const keyLegendInfo = function () {
-    const defaultFontFace = "keyblay-font-roboto-mono"
-    const defaultGlyphFontSize = "text-m md:text-m";
-    const defaultTextFontSize = "text-2xs md:text-xs";
-
-    if (!legend) {
-      return {}
-    } else if (legend.image) {
-      return {
-        legend: <img src={`legends/${legend.image.value}`} className="container w-4 h-4" />,
-      }
-    } else if (legend.glyph) {
-      return {
-        legend: legend.glyph.value,
-        fontSize: legend.glyph.fontSize || defaultGlyphFontSize,
-        fontFace: legend.glyph.fontFace || defaultFontFace,
-      }
-    } else if (legend.text) {
-      return {
-        legend: legend.text.value,
-        fontSize: legend.text.fontSize || defaultTextFontSize,
-        fontFace: legend.text.fontFace || defaultFontFace,
-      }
-    } else {
-      return {}
-    }
-
-  }()
+  const keyLegendInfo = Legend(legend);
 
   const gridClasses = `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart}`;
   const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`;
