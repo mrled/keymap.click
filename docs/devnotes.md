@@ -7,12 +7,43 @@ This section isn't well organized.
 
 # Active to do items
 
+## Nicer legend for the leader key
+
+Currently this is the Material Design Send Email icon (a paper airplane).
+What should I put there instead?
+
+## Nicer legend for the escape key
+
+Currently this is an SVG from Wikimedia Commons, and it looks like shit.
+What should I use instead?
+
+I'm mad that the Microsoft Segoe UI font has such a stupid license.
+It has the only escape key legend I really like,
+and it's not available for this use.
+What the fuck good does it do them? Ugh.
+
+## Nicer legend for the app/menu key
+
+Currently this is an SVG, but it doesn't belong with the other icons and is blurry.
+What should I use instead?
+
+I was using a Unicode hamburger glyph,
+but it was not very clear what it was until you clicked there.
+Microsoft keyboards tend to use something that looks like a menu,
+so I'll probably have to find something like that.
+
 ## Fix mobile view
 
 I broke it ages ago, going to have to dive in deep there probably
 
 Update: recent changes have improved this,
 but the biggest problem is that it's not drawing lines on the canvas that extends past the view port.
+
+20200729 Update: I think all the lines are drawing correctly now,
+and when I moved the KeyInfo panel back to the bottom,
+this is mostly OK?
+But I'm still seeing problems with two of the green lines when I select the `[]` keys,
+only on mobile.
 
 ## Add content for all the keys I want
 
@@ -41,23 +72,6 @@ They should be linkable with URL fragments too.
 
 How will I show all this info?
 Won't be able to see it all at once...
-
-## Layout fix: selecting a different key shouldn't move view window around
-
-This is pretty annoying in practice.
-
-## Emphasize selected key more
-
-Currently, selected key is emphasized with a darker gray background.
-The green highlights for key indicators are more prominent.
-Make the selected key more prominent.
-
-## Better font for key legends
-
-The current font is... _ok_.
-Stuff like vol up/down is a hack,
-and the backspace/delete/esc/tab keys are all really ugly and pixelated,
-especially on non-retina.
 
 ## Have a per-key preview image for slack/twitter/etc
 
@@ -443,3 +457,61 @@ Would be nice for sharing etc
 Note that I tried to use dynamic routing with something like `pages/key/[keyId].js`,
 but that resulted in full page reloads every time.
 The URLs were nicer, but I don't think I'm too worried about it.
+
+## Emphasize selected key more
+
+Currently, selected key is emphasized with a darker gray background.
+The green highlights for key indicators are more prominent.
+Make the selected key more prominent.
+
+✅ Done, it's a nice orange now, and the other keys in the group are a lighter orange.
+
+## Add tracking
+
+I'm using Fathom for other projects, and I added it today.
+
+✅ Done
+
+## Layout fix: selecting a different key shouldn't move view window around
+
+This is pretty annoying in practice.
+
+✅ This is improved by moving the KeyInfo panel back to the bottom of the screen.
+
+## Better font for key legends
+
+The current font is... _ok_.
+Stuff like vol up/down is a hack,
+and the backspace/delete/esc/tab keys are all really ugly and pixelated,
+especially on non-retina.
+
+20200729 Update:
+
+I had to go to SVGs to fix this, but the result is MUCH better.
+I'm not 100% happy with how everything looks yet...
+but I'm way happier than I was before.
+Some stuff like volume keys just looks like shit with emoji.
+Also, Unicode glyphs for computing symbols look like shit compared to SVGs --
+maybe because of the fonts I have access to?
+It seems like everything might be defaulting to Menlo or GNU FreeFont Mono
+because most fonts don't have the escape key symbol.
+
+I improved text/glyph legends by using Roboto Mono,
+which looks great and is freely available as a web font I can self-host.
+
+I now differentiate between _glyph_ legends,
+which are either one character (`A`) or two characters (`,<`),
+_text_ legends, which are words (`Home`) or abbreviations (`Ctrl`),
+and _image_ legends, which are SVGs.
+Keys may have only one, two, or all three of these;
+currently I prefer images, then glyphs, and finally text if nothing else is available,
+which is currently the case only for PgUp/PgDn/Home/End.
+This made it clear that glyphs should always be the same large size,
+and text should always be the same smaller size.
+Images should try to match the glyph size, more or less.
+
+I think I'm actually going to call this done,
+and add some separate issues for specific icons.
+
+✅ hell yeah
+
