@@ -90,7 +90,7 @@ export const KeyInfoInner = ({ keyData, parsedKeyInfo }) => {
 export const KeyInfo = ({
   keyData,
   parsedKeyInfo,
-  keyButtonOnClick = () => {},
+  keyButtonOnClick = () => { },
 }) => {
   return (
     <>
@@ -104,9 +104,7 @@ export const KeyInfo = ({
           </div>
           <div>
             <Key keyData={keyData} standalone={true} extraClasses="inline" />
-            <span className="p-5 font-mono">
-              {keyData.legendText ? keyData.legendText : keyData.legend}
-            </span>
+            <span className="p-5 font-mono">{keyData.name}</span>
           </div>
         </div>
       </div>
