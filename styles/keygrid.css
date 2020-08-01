@@ -56,18 +56,12 @@
   transform: translateX(calc(var(--keyboard-grid-unit) * -2))
     translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(25deg);
   transform-origin: 0 calc(var(--keyboard-grid-unit) * 2);
-  /* Don't set padding here so that on narrow screens there is not too much blank space
-   * between the left hand and the right hand.
-   * On wide screens, the padding-bottom of the right thumb cluster will prevent overlap.
-   */
-  /* padding-bottom: calc(var(--keyboard-grid-unit) * 9); */
+  padding-bottom: calc(var(--keyboard-grid-unit) * 9);
 }
 .keyboard-right-thumb-cluster {
   transform: translateX(calc(var(--keyboard-grid-unit) * 2))
     translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(-25deg);
   transform-origin: calc(var(--keyboard-grid-unit) * 6)
     calc(var(--keyboard-grid-unit) * 2);
-  /* Prevent the transformed thumb cluster from overlapping with elements below it
-   */
   padding-bottom: calc(var(--keyboard-grid-unit) * 9);
 }

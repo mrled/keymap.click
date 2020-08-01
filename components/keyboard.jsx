@@ -76,7 +76,7 @@ export const Keyboard = ({ initialState }) => {
           </div>
         </div>
 
-        <div className="flex flex-col mt-20 md:mt-0">
+        <div className="flex flex-col mt-0">
           <h2 className="text-xl ml-auto">Right hand</h2>
           <div className="flex flex-row-reverse">
             <KeyGrid
