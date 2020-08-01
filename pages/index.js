@@ -29,19 +29,19 @@ export default function Home({ pressedKey }) {
         <link
           rel="icon"
           type="image/png"
-          href="/command_16x16.png"
-          sizes="16x16"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          href="/command_32x32.png"
+          href="/command_32.png"
           sizes="32x32"
         />
         <link
           rel="icon"
           type="image/png"
-          href="/command_128x128.png"
+          href="/command_64.png"
+          sizes="64x64"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          href="/command_128.png"
           sizes="128x128"
         />
         <meta name="twitter:site" content="@mrled" />
