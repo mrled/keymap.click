@@ -1,9 +1,12 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { useWindowSize } from "~/lib/hooks";
 import log from "loglevel";
 
 export const Diagram = ({ connections }) => {
   const canvas = useRef();
   const container = useRef();
+  const [docHeight, setDocHeight] = useState(0);
+  const currentBrowserWidth = useWindowSize();
 
   const updateCanvas = () => {
     if (!canvas) return;
@@ -52,6 +55,21 @@ export const Diagram = ({ connections }) => {
     context.stroke();
   };
 
+  useEffect(() => {
+    const body = document.body,
+      html = document.documentElement;
+
+    // https://stackoverflow.com/a/1147768
+    const height = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
+    setDocHeight(height);
+  }, [currentBrowserWidth]);
+
   useEffect(() => void updateCanvas(), []);
   useEffect(() => {
     updateCanvas();
@@ -61,12 +79,13 @@ export const Diagram = ({ connections }) => {
     <div
       ref={container}
       id="keyblay-debug-canvas-container"
-      className="absolute top-0 left-0 w-full h-full pointer-events-none z-50"
+      style={{ height: docHeight, width: "100%" }}
+      className="absolute top-0 left-0 w-full pointer-events-none z-50"
     >
       <canvas
         ref={canvas}
         id="keyblay-debug-canvas"
-        className="absolute overflow-visible h-screen w-screen"
+        className="absolute overflow-visible h-full w-screen"
       />
     </div>
   );
