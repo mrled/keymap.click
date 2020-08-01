@@ -22,19 +22,6 @@ but it was not very clear what it was until you clicked there.
 Microsoft keyboards tend to use something that looks like a menu,
 so I'll probably have to find something like that.
 
-## Fix mobile view
-
-I broke it ages ago, going to have to dive in deep there probably
-
-Update: recent changes have improved this,
-but the biggest problem is that it's not drawing lines on the canvas that extends past the view port.
-
-20200729 Update: I think all the lines are drawing correctly now,
-and when I moved the KeyInfo panel back to the bottom,
-this is mostly OK?
-But I'm still seeing problems with two of the green lines when I select the `[]` keys,
-only on mobile.
-
 ## Add content for all the keys I want
 
 Fill out key info content with references.
@@ -44,6 +31,46 @@ Edit all the content.
 
 Would be nice if they didn't overlap text, but instead were drawn underneath it.
 Maybe hard?
+
+20200731: Thinking more about this:
+
+* Build an "orthogonal" diagram, where all the lines are horizontal or vertical, no slopes or curves
+* On the keyboard map, I can cheat --
+  all the keys on the left hand have diagram lines that are drawn vertically into the left margin,
+  and then down to the key information panel;
+  similarly, all the keys on the right have lines that are drawn into the right margin.
+* Additionally, I can divide the vertical key space into 7 sections,
+  as there are at most 7 keys that occupy the same vertical space.
+  I don't need to adjust the attachment point at run time,
+  it can just be static for a key in whatever position.
+* If I ever reposition the keys to more precisely mirror the location of the keys on the physical ErgoDox,
+  which are not in an exact grid,
+  I'll have to modify the attachment point location and might have to set it manually on each key,
+  but I still won't have to select it algorithmically.
+* In the information panel, I have to do some calculations.
+* `getClientRects()` returns a list of rects -- one for each line of text -- inside a div.
+  I think I can use this to determine how many attachment points are on the same line of text.
+* Then I can place the horizontal lines from the margin into the text such that they don't cover one another.
+* Calculate positions for vertical lines in the margins to they don't cover one another either
+
+Then I can iterate, perhaps:
+
+* Minimizing crossings
+* Automatically moving horizontal lines that are close, if there is room to do so
+* Perhaps that could use a "force-directed" technique?
+  There's a more general document:
+  [Graph Drawing Tutorial](http://cs.brown.edu/people/rtamassi/papers/gd-tutorial/gd-constraints.pdf).
+  It discusses force directed techniques for graph layout,
+  such that nodes might attract or repel one another;
+  if nodes repelled one another but were confined to a location within their parent key,
+  I could automatically lay out the horizontal lines to be far apart from each other.
+* Experiment with different colors, maybe that helps if there are lines close to each other?
+* Intelligently combine lines that are going to or from the same place.
+  For instance, two separate places in the text might refer to the same key;
+  these could share the vertical line in the margin,
+  and only diverge in the info panel.
+* Intelligently use the opposite margin,
+  if doing so would result in shorter lines or less congested margins.
 
 ## Add place for more general info
 
@@ -516,3 +543,18 @@ and it's not available for this use.
 What the fuck good does it do them? Ugh.
 
 ✅ Done! Got a link to thenounproject.com from Ben, found the perfect icon.
+
+## Fix mobile view
+
+I broke it ages ago, going to have to dive in deep there probably
+
+Update: recent changes have improved this,
+but the biggest problem is that it's not drawing lines on the canvas that extends past the view port.
+
+20200729 Update: I think all the lines are drawing correctly now,
+and when I moved the KeyInfo panel back to the bottom,
+this is mostly OK?
+But I'm still seeing problems with two of the green lines when I select the `[]` keys,
+only on mobile.
+
+✅ Josh fixed it! It wasn't calculating the whole document height after all, but it's doing so now.
