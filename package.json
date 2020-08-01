@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "devlocalnet": "next dev --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "export": "npm run build && next export"
