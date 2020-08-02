@@ -116,10 +116,17 @@ export const Keyboard = ({ initialState }) => {
   return (
     <>
       <div
-        className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg	"
+        className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg"
         id="keyblay-debug-outer-wrapper-div"
       >
+
         <div className="w-full md:mr-8 md:px-4 z-10">
+
+          <div className="border border-gray-300 bg-gray-100 rounded-md p-2 m-2">
+            <h1 className="text-xl">keyblay</h1>
+          </div>
+
+
           {renderKeyboard()}
           <div className="bottom-auto top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto">
             <InfoPanel
