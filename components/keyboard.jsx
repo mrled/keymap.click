@@ -50,7 +50,7 @@ export const Keyboard = ({ initialState }) => {
 
   const renderKeyboard = () => {
     return (
-      <div className="flex flex-col md:flex-row mt-0">
+      <div className="flex items-center justify-center flex-col md:flex-row mt-0">
         <div className="flex flex-col">
           <h2 className="text-xl">Left hand</h2>
           <div className="flex flex-row">
@@ -116,7 +116,7 @@ export const Keyboard = ({ initialState }) => {
   return (
     <>
       <div
-        className="w-full h-full text-sm md:text-base p-4 flex"
+        className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg	"
         id="keyblay-debug-outer-wrapper-div"
       >
         <div className="w-full md:mr-8 md:px-4 z-10">
