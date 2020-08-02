@@ -106,13 +106,12 @@ export const Key = ({
   const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`;
   const classes = classnames(
     standalone ? standaloneClasses : gridClasses,
-    `hover:bg-gray-400 cursor-pointer p-1 flex justify-center items-center rounded-sm font-mono`,
-    "pointer-events-auto",
+    `cursor-pointer p-1 flex justify-center items-center rounded-sm font-mono pointer-events-auto keyblay-outline-none`,
     {
-      "bg-orange-300 border border-orange-500": active,
-      "bg-orange-100 border border-orange-500": otherSelected,
-      "bg-gray-200 border border-gray-500": !active && !otherSelected,
-      "bg-green-200 border border-green-500": targetKeyActive,
+      "bg-orange-300 border border-orange-700 hover:bg-orange-600": active,
+      "bg-orange-100 border border-orange-500 hover:bg-orange-400": otherSelected,
+      "bg-green-200 border border-green-500 hover:bg-green-400": targetKeyActive,
+      "bg-gray-200 border border-gray-500 hover:bg-gray-400": !active && !otherSelected && !targetKeyActive,
     },
     {
       [keyLegendInfo.fontFace]: keyLegendInfo.fontFace,

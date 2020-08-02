@@ -65,3 +65,7 @@
     calc(var(--keyboard-grid-unit) * 2);
   padding-bottom: calc(var(--keyboard-grid-unit) * 9);
 }
+
+.keyblay-outline-none, .keyblay-outline-none:focus {
+  outline: 0 !important;
+}

@@ -130,6 +130,7 @@ export const KeyInfo = ({
                 cols="4"
                 rows="4"
                 keys={keys}
+                pressedKey={keyData}
               />
             </div>
           </div>
