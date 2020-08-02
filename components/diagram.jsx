@@ -1,6 +1,12 @@
 import { useRef, useEffect, useState } from "react";
-import { useWindowSize } from "~/lib/hooks";
 import log from "loglevel";
+
+import {
+  useWindowSize,
+} from "~/lib/hooks";
+import {
+  documentScrollCenter,
+} from "~/lib/keyConnections";
 
 export const Diagram = ({ connections }) => {
   const canvas = useRef();
@@ -44,30 +50,39 @@ export const Diagram = ({ connections }) => {
       log.debug("No connections to set");
       return;
     }
+
+    // Should only be enabled when in debug mode
+    if (false) {
+      context.strokeStyle = "purple";
+      context.lineWidth = 1;
+      context.beginPath();
+      context.moveTo(documentScrollCenter(), 0);
+      context.lineTo(documentScrollCenter(), document.documentElement.scrollHeight);
+      context.stroke()
+    }
+
     context.strokeStyle = "#68d391";
     context.lineWidth = 1;
     context.beginPath();
     connections.forEach((connection) => {
-      const [source, target] = connection;
+      const source = connection.sourceCoords;
+      const target = connection.targetCoords;
+      if (!source || !target) {
+        console.log(`Connection is not complete, skipping: ${connection}`)
+        return
+      }
       context.moveTo(source.x, source.y);
+      const marginOffset = 25;
+      const marginX = connection.margin === 'r' ? document.documentElement.scrollWidth - marginOffset : marginOffset;
+      context.lineTo(marginX, source.y);
+      context.lineTo(marginX, target.y);
       context.lineTo(target.x, target.y);
     });
     context.stroke();
   };
 
   useEffect(() => {
-    const body = document.body,
-      html = document.documentElement;
-
-    // https://stackoverflow.com/a/1147768
-    const height = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-    );
-    setDocHeight(height);
+    setDocHeight(document.documentElement.scrollHeight);
   }, [currentBrowserWidth]);
 
   useEffect(() => void updateCanvas(), []);

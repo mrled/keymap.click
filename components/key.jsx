@@ -1,5 +1,9 @@
 import classnames from "classnames";
 
+import {
+  keyHandleDomIdFromKeyId,
+} from "~/lib/keyConnections"
+
 /* This is a small element used as an anchor point to connect a diagram line to this key.
  *
  * We use this because it is transformed with the outer element,
@@ -14,11 +18,11 @@ import classnames from "classnames";
  * However, it is so small that this doesn't matter.
  * The diagram line still looks good inside the <Key>.
  */
-const KeyHandler = ({ keyId }) => {
+const KeyHandle = ({ keyId }) => {
   const classes = "h-0 w-0 top-0 left-0 pointer-events-none";
   return keyId ?
     (
-      <div id={keyId} className={classes} />
+      <div id={keyHandleDomIdFromKeyId(keyId)} className={classes} />
     ) : (
       <div className={classes} />
     );
@@ -121,8 +125,8 @@ export const Key = ({
   );
 
   return (
-    <button onClick={onClick} className={classes}>
-      <KeyHandler keyId={id} />
+    <button id={id} onClick={onClick} className={classes}>
+      <KeyHandle keyId={id} />
       {keyLegendInfo.legend}
     </button>
   );
