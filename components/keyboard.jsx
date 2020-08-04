@@ -35,12 +35,17 @@ export const Keyboard = ({ initialState }) => {
   const router = useRouter();
   const [appDebug, setAppDebug] = useContext(AppDebugContext)
 
-  const setAppDebugWrapper = (newLevel) => {
-    return () => {
-      const newValue = { debugLevel: newLevel };
-      log.debug(`Changing appDebug from ${JSON.stringify(appDebug)} to ${JSON.stringify(newValue)}`)
-      setAppDebug(newValue);
+  const onDebugLevelChange = (event) => {
+    const logLevel = parseInt(event.target.value);
+    const newValue = { debugLevel: logLevel };
+    switch (logLevel) {
+      case 0: log.setLevel(log.levels.SILENT); break;
+      case 1: log.setLevel(log.levels.DEBUG); break;
+      case 2: log.setLevel(log.levels.TRACE); break;
+      default: log.setLevel(log.levels.SILENT); break;
     }
+    log.debug(`Changing appDebug from ${JSON.stringify(appDebug)} to ${JSON.stringify(newValue)}`)
+    setAppDebug(newValue);
   };
 
   useEffect(() => {
@@ -139,10 +144,17 @@ export const Keyboard = ({ initialState }) => {
 
           <div className="border border-gray-300 bg-gray-100 rounded-md p-2 m-2">
             <h1 className="text-xl">keyblay</h1>
-            App Debug:
-            <button className="m-2 p-2 border border-gray-300" onClick={setAppDebugWrapper(0)}>0</button>
-            <button className="m-2 p-2 border border-gray-300" onClick={setAppDebugWrapper(1)}>1</button>
-            <button className="m-2 p-2 border border-gray-300" onClick={setAppDebugWrapper(2)}>2</button>
+            <label htmlFor="keyblay-app-debug-selector" className="p-2 m-2">Debug level</label>
+            <select
+              onChange={onDebugLevelChange}
+              name="Debug levels"
+              id="keyblay-app-debug-selector"
+              className="p-2 m-2"
+            >
+              <option value="0">Off</option>
+              <option value="1">Extra logging</option>
+              <option value="2">Yet more logging, visuals</option>
+            </select>
           </div>
 
 

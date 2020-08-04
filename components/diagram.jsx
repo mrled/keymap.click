@@ -55,7 +55,7 @@ export const Diagram = ({ connections }) => {
 
     // Should only be enabled when in debug mode
     log.debug(`appDebug: ${JSON.stringify(appDebug)}`)
-    if (appDebug.debugLevel > 0) {
+    if (appDebug.debugLevel > 1) {
       context.strokeStyle = "purple";
       context.lineWidth = 1;
       context.beginPath();
