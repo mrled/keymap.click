@@ -558,3 +558,210 @@ But I'm still seeing problems with two of the green lines when I select the `[]`
 only on mobile.
 
 ✅ Josh fixed it! It wasn't calculating the whole document height after all, but it's doing so now.
+
+## Set a debug global state
+
+See commits:
+
+* c57b65a92247d5b054481b942d6784f8d43f7e0b
+* 40aa2231c82410f56300bfc1b80f21666e251273
+
+These are consecutive.
+
+In short:
+
+* The _context_ passes object state and function state-setters from parents to children
+* There are a few major components to doing this -
+  the context object, the state, the context provider, and the provider value.
+* For application global state, you have to set the provider in the root, e.g. your `App`,
+  which in my case resides in `~/pages/_app.js`.
+
+Example:
+
+### `~/components/appDebugContext.jsx`
+
+```
+import {
+  createContext,
+  useState,
+} from "react";
+
+export const AppDebugContext = createContext({ debugLevel: 0 });
+```
+
+### `~/pages/_app.js`
+
+Originally this just returned a Component:
+
+```
+function App({ Component, pageProps }) {
+  ...
+  return <>
+    <Component {...pageProps} />;
+  </>
+}
+```
+
+But now it has to manage the state, and wrap its component in a context provider:
+
+```
+import { AppDebugContext } from "~/components/appDebugContext";
+function App({ Component, pageProps }) {
+  const [appDebug, setAppDebug] = useState({ debugLevel: 0 });
+  ...
+  return <>
+    <AppDebugContext.Provider value={[appDebug, setAppDebug]}>
+      <Component {...pageProps} />;
+    </AppDebugContext.Provider>
+  </
+}
+```
+
+A few things to note here:
+
+1. The `useState` call has to be in the `App`, and it can't be inside of `appDebugContext.jsx` anywhere.
+I think this is because the `useState` call must be in a React component that is a parent component
+for everything that consumes this context.
+For a global value like my debug settings,
+the only option is `App`.
+
+1. We are using `useState` to keep track of state (the debug level),
+and `createContext` to create a global context.
+The state is only directly usable from the component that creates it.
+You cannot export the return value of `useState` and get/set it in other components.
+(This is because of the React Rules of Hooks.)
+You can however use a context and pass the context to child components.
+
+1. The `value={[appDebug, setAppDebug]}` in the `<AppDebugContext.Provider ...` component is important.
+This is what `useContext()` will return for all the context consumers.
+_If you don't include a setter here, consumers will not be able to set the context._
+Based on some examples on the web and/or the way `useState()` returns the state value and the state setter,
+you might think that `useContext()` always returns the context value and the context setter.
+_Wrong._
+It always returns whatever the `value` attribute of the context provider is set to in the parent element.
+If you are using React state in your context
+and have a state value/setter that you want to be accessible from other components,
+which is our case here,
+then you have to explicitly pass that state value/setter as the `value` attribute.
+(Can you tell this tripped me up for a long time?)
+
+### `~/components/keyboard.jsx`
+
+To get and set the debugLevel from here, we have to make some changes.
+Here's a diff:
+
+```diff
+diff --git a/components/keyboard.jsx b/components/keyboard.jsx
+index bb88f64..8911aa4 100644
+--- a/components/keyboard.jsx
++++ b/components/keyboard.jsx
+@@ -1,4 +1,8 @@
+-import { useState, useRef, useEffect } from "react";
++import {
++  useContext,
++  useEffect,
++  useState,
++} from "react";
+ import { useRouter } from "next/router";
+
+ import classnames from "classnames";
+@@ -18,6 +22,8 @@ import { Diagram } from "./diagram";
+ import { InfoPanel } from "./infoPanel";
+ import { KeyGrid } from "./key";
+
++import { AppDebugContext } from "~/components/appDebugContext";
++
+ export const Keyboard = ({ initialState }) => {
+   const [pressedKey, setPressedKey] = useState(initialState || {});
+   const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
+@@ -27,6 +33,15 @@ export const Keyboard = ({ initialState }) => {
+     windowSize,
+   ]);
+   const router = useRouter();
++  const [appDebug, setAppDebug] = useContext(AppDebugContext)
++
++  const setAppDebugWrapper = (newLevel) => {
++    return () => {
++      const newValue = { debugLevel: newLevel };
++      log.debug(`Changing appDebug from ${JSON.stringify(appDebug)} to ${JSON.stringify(newValue)}`)
++      setAppDebug(newValue);
++    }
++  };
+
+   useEffect(() => {
+     const { keyId } = router.query;
+@@ -124,6 +139,10 @@ export const Keyboard = ({ initialState }) => {
+
+           <div className="border border-gray-300 bg-gray-100 rounded-md p-2 m-2">
+             <h1 className="text-xl">keyblay</h1>
++            App Debug:
++            <button className="m-2 p-2 border border-gray-300" onClick={setAppDebugWrapper(0)}>0</button>
++            <button className="m-2 p-2 border border-gray-300" onClick={setAppDebugWrapper(1)}>1</button>
++            <button className="m-2 p-2 border border-gray-300" onClick={setAppDebugWrapper(2)}>2</button>
+           </div>
+```
+
+### `~/components/diagram.jsx`
+
+This is a consumer of the context.
+
+It's a great example because we use the appDebug value inside of `updateCanvas()`,
+which we call in an effect hook.
+
+1. As in the previous example, we import `AppDebugContext`
+and get an `appDebug` and `setAppDebug` by calling `useContext(AppDebugContext)`.
+
+1. We use the `appDebug.debugLevel` directly inside of our `updateCanvas()` function
+
+1. We trigger `updateCanvas()` whenever `appDebug` changes in the effect hook.
+
+```diff
+diff --git a/components/diagram.jsx b/components/diagram.jsx
+index 0628b01..bd52044 100644
+--- a/components/diagram.jsx
++++ b/components/diagram.jsx
+@@ -1,4 +1,4 @@
+-import { useRef, useEffect, useState } from "react";
++import { useRef, useEffect, useState, useContext } from "react";
+ import log from "loglevel";
+
+ import {
+@@ -7,12 +7,14 @@ import {
+ import {
+   documentScrollCenter,
+ } from "~/lib/keyConnections";
++import { AppDebugContext } from "~/components/appDebugContext";
+
+ export const Diagram = ({ connections }) => {
+   const canvas = useRef();
+   const container = useRef();
+   const [docHeight, setDocHeight] = useState(0);
+   const currentBrowserWidth = useWindowSize();
++  const [appDebug, setAppDebug] = useContext(AppDebugContext);
+
+   const updateCanvas = () => {
+     if (!canvas) return;
+@@ -52,7 +54,8 @@ export const Diagram = ({ connections }) => {
+     }
+
+     // Should only be enabled when in debug mode
+-    if (false) {
++    log.debug(`appDebug: ${JSON.stringify(appDebug)}`)
++    if (appDebug.debugLevel > 0) {
+       context.strokeStyle = "purple";
+       context.lineWidth = 1;
+       context.beginPath();
+@@ -88,7 +91,7 @@ export const Diagram = ({ connections }) => {
+   useEffect(() => void updateCanvas(), []);
+   useEffect(() => {
+     updateCanvas();
+-  }, [connections]);
++  }, [connections, appDebug]);
+
+   return (
+     <div
+```
+
+### In conclusion
+
+✅ This was really hard to figure out
