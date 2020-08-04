@@ -67,10 +67,10 @@ export const parseKeyInfo = (keyInfo) => {
     />
   );
   log.debug(
-    `All done. lastMatchEndIdx: ${lastMatchEndIdx}, keyInfo.length: ${keyInfo.length}`
+    `parseKeyInfo() all done, lastMatchEndIdx: ${lastMatchEndIdx}, keyInfo.length: ${keyInfo.length}`
   );
 
-  log.debug(typeof output);
+  log.debug(`parseKeyInfo() returning output, of type ${typeof output}`);
 
   return output;
 };
