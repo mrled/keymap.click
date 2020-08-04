@@ -765,3 +765,13 @@ index 0628b01..bd52044 100644
 ### In conclusion
 
 ✅ This was really hard to figure out
+
+## Controlled component example
+
+In commit e6b91119f58f81199a5ccbc3e9078adef3e21f4e,
+I implement a controlled component based on the previously implemented
+React context backed by React state.
+
+It's a simple `<select>` box that changes the debug level.
+
+✅ Once I had the context stuff figured out, this was easy.
