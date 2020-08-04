@@ -7,9 +7,7 @@ import {
 import {
   documentScrollCenter,
 } from "~/lib/keyConnections";
-import {
-  AppDebugContext,
-} from "~/pages/_app";
+import { AppDebugContext } from "~/components/appDebugContext";
 
 export const Diagram = ({ connections }) => {
   const canvas = useRef();

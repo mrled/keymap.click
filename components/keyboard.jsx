@@ -9,9 +9,6 @@ import classnames from "classnames";
 import log from "loglevel";
 
 import {
-  AppDebugContext,
-} from "~/pages/_app"
-import {
   allKeys,
   allKeysById,
   leftHandKeys,
@@ -24,7 +21,8 @@ import { useKeyConnections } from "../lib/keyConnections";
 import { Diagram } from "./diagram";
 import { InfoPanel } from "./infoPanel";
 import { KeyGrid } from "./key";
-// import { AppDebugContext, AppDebugProvider } from "~/components/appDebugContext";
+
+import { AppDebugContext } from "~/components/appDebugContext";
 
 export const Keyboard = ({ initialState }) => {
   const [pressedKey, setPressedKey] = useState(initialState || {});
@@ -44,12 +42,6 @@ export const Keyboard = ({ initialState }) => {
       setAppDebug(newValue);
     }
   };
-
-  // const appDebug = useContext(AppDebugContext)
-  // const handleAppDebugChange = (event) => ({
-  //   ...appDebug,
-  //   debugLevel: event.value
-  // });
 
   useEffect(() => {
     const { keyId } = router.query;

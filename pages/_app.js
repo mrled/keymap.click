@@ -4,22 +4,17 @@ import "../styles/fonts.css";
 import "../styles/debug.css";
 
 import {
-  createContext,
   useEffect,
   useState,
 } from 'react'
 import { useRouter } from 'next/router'
 import * as Fathom from 'fathom-client'
 
-// import {
-//   AppDebugContext,
-//   AppDebugProvider,
-// } from "~/components/appDebugContext";
-
-export const AppDebugContext = createContext({ debugLevel: 0 });
+import { AppDebugContext } from "~/components/appDebugContext";
 
 function App({ Component, pageProps }) {
 
+  const [appDebug, setAppDebug] = useState({ debugLevel: 0 });
   const router = useRouter()
 
   useEffect(() => {
@@ -34,8 +29,6 @@ function App({ Component, pageProps }) {
       router.events.off('routeChangeComplete', onRouteChangeComplete);
     }
   }, [])
-
-  const [appDebug, setAppDebug] = useState({ debugLevel: 0 });
 
   return <>
     <AppDebugContext.Provider value={[appDebug, setAppDebug]}>
