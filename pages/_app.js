@@ -3,9 +3,20 @@ import "../styles/keygrid.css";
 import "../styles/fonts.css";
 import "../styles/debug.css";
 
-import { useEffect } from 'react'
+import {
+  createContext,
+  useEffect,
+  useState,
+} from 'react'
 import { useRouter } from 'next/router'
 import * as Fathom from 'fathom-client'
+
+// import {
+//   AppDebugContext,
+//   AppDebugProvider,
+// } from "~/components/appDebugContext";
+
+export const AppDebugContext = createContext({ debugLevel: 0 });
 
 function App({ Component, pageProps }) {
 
@@ -24,7 +35,13 @@ function App({ Component, pageProps }) {
     }
   }, [])
 
-  return <Component {...pageProps} />;
+  const [appDebug, setAppDebug] = useState({ debugLevel: 0 });
+
+  return <>
+    <AppDebugContext.Provider value={[appDebug, setAppDebug]}>
+      <Component {...pageProps} />;
+    </AppDebugContext.Provider>
+  </>
 }
 
 export default App;

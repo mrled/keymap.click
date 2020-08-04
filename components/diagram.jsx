@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useContext } from "react";
 import log from "loglevel";
 
 import {
@@ -7,12 +7,16 @@ import {
 import {
   documentScrollCenter,
 } from "~/lib/keyConnections";
+import {
+  AppDebugContext,
+} from "~/pages/_app";
 
 export const Diagram = ({ connections }) => {
   const canvas = useRef();
   const container = useRef();
   const [docHeight, setDocHeight] = useState(0);
   const currentBrowserWidth = useWindowSize();
+  const [appDebug, setAppDebug] = useContext(AppDebugContext);
 
   const updateCanvas = () => {
     if (!canvas) return;
@@ -52,7 +56,8 @@ export const Diagram = ({ connections }) => {
     }
 
     // Should only be enabled when in debug mode
-    if (false) {
+    log.debug(`appDebug: ${JSON.stringify(appDebug)}`)
+    if (appDebug.debugLevel > 0) {
       context.strokeStyle = "purple";
       context.lineWidth = 1;
       context.beginPath();
@@ -88,7 +93,7 @@ export const Diagram = ({ connections }) => {
   useEffect(() => void updateCanvas(), []);
   useEffect(() => {
     updateCanvas();
-  }, [connections]);
+  }, [connections, appDebug]);
 
   return (
     <div

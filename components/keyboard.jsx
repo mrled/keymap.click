@@ -1,9 +1,16 @@
-import { useState, useRef, useEffect } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useRouter } from "next/router";
 
 import classnames from "classnames";
 import log from "loglevel";
 
+import {
+  AppDebugContext,
+} from "~/pages/_app"
 import {
   allKeys,
   allKeysById,
@@ -17,6 +24,7 @@ import { useKeyConnections } from "../lib/keyConnections";
 import { Diagram } from "./diagram";
 import { InfoPanel } from "./infoPanel";
 import { KeyGrid } from "./key";
+// import { AppDebugContext, AppDebugProvider } from "~/components/appDebugContext";
 
 export const Keyboard = ({ initialState }) => {
   const [pressedKey, setPressedKey] = useState(initialState || {});
@@ -27,6 +35,21 @@ export const Keyboard = ({ initialState }) => {
     windowSize,
   ]);
   const router = useRouter();
+  const [appDebug, setAppDebug] = useContext(AppDebugContext)
+
+  const setAppDebugWrapper = (newLevel) => {
+    return () => {
+      const newValue = { debugLevel: newLevel };
+      log.debug(`Changing appDebug from ${JSON.stringify(appDebug)} to ${JSON.stringify(newValue)}`)
+      setAppDebug(newValue);
+    }
+  };
+
+  // const appDebug = useContext(AppDebugContext)
+  // const handleAppDebugChange = (event) => ({
+  //   ...appDebug,
+  //   debugLevel: event.value
+  // });
 
   useEffect(() => {
     const { keyId } = router.query;
@@ -124,6 +147,10 @@ export const Keyboard = ({ initialState }) => {
 
           <div className="border border-gray-300 bg-gray-100 rounded-md p-2 m-2">
             <h1 className="text-xl">keyblay</h1>
+            App Debug:
+            <button className="m-2 p-2 border border-gray-300" onClick={setAppDebugWrapper(0)}>0</button>
+            <button className="m-2 p-2 border border-gray-300" onClick={setAppDebugWrapper(1)}>1</button>
+            <button className="m-2 p-2 border border-gray-300" onClick={setAppDebugWrapper(2)}>2</button>
           </div>
 
 
