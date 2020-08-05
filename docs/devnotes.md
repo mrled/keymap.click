@@ -470,6 +470,10 @@ Cool, some baby's first linear algebra.
 and have the existing CSS transform do the math for me.
 Derp. SOEZ.
 
+Update 20200804: For an example of what's happening, see this from the React dev tools Chrome extension:
+
+![rotated-key-react-dev-tools.png](rotated-key-react-dev-tools.png)
+
 ✅ Done
 
 ## Add URL fragments for what key I'm referring to
