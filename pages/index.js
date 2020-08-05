@@ -1,10 +1,12 @@
-import { useState } from "react";
 import Head from "next/head";
+
 import log from "loglevel";
+
 import { Keyboard } from "../components/keyboard";
-import { allKeysById } from "../lib/keys";
+
 log.enableAll();
-export default function Home({ pressedKey }) {
+
+export default function Home() {
   return (
     <>
       <Head>
@@ -68,15 +70,8 @@ export default function Home({ pressedKey }) {
         <meta name="twitter:image:height" content="285" />
       </Head>
       <div>
-        <Keyboard initialState={pressedKey} />
+        <Keyboard />
       </div>
     </>
   );
-}
-
-export async function getStaticProps(context) {
-  const { keyId } = context.query || {};
-  return {
-    props: { pressedKey: allKeysById[keyId] || null },
-  };
 }

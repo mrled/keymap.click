@@ -5,11 +5,9 @@ import {
 } from "react";
 import { useRouter } from "next/router";
 
-import classnames from "classnames";
 import log from "loglevel";
 
 import {
-  allKeys,
   allKeysById,
   leftHandKeys,
   leftThumbKeys,
@@ -24,8 +22,8 @@ import { KeyGrid } from "./key";
 
 import { AppDebugContext } from "~/components/appDebugContext";
 
-export const Keyboard = ({ initialState }) => {
-  const [pressedKey, setPressedKey] = useState(initialState || {});
+export const Keyboard = () => {
+  const [pressedKey, setPressedKey] = useState({});
   const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
   const windowSize = useWindowSize();
   const { connections, targetKeyIds } = useKeyConnections([
