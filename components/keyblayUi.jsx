@@ -2,6 +2,7 @@ import {
   useContext,
   useState,
 } from "react";
+import { useRouter } from "next/router";
 
 import { Diagram } from "./diagram";
 import { InfoPanel } from "./infoPanel";
@@ -15,6 +16,7 @@ export const KeyblayUI = () => {
   const [pressedKey, setPressedKey] = useState({});
   const [appDebug, setAppDebug] = useContext(AppDebugContext)
   const windowSize = useWindowSize();
+  const router = useRouter();
 
   const { connections, targetKeyIds } = useKeyConnections([
     pressedKey,
