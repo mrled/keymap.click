@@ -2,7 +2,7 @@ import Head from "next/head";
 
 import log from "loglevel";
 
-import { Keyboard } from "../components/keyboard";
+import { KeyblayUI } from "../components/keyblayUi";
 
 log.enableAll();
 
@@ -70,7 +70,7 @@ export default function Home() {
         <meta name="twitter:image:height" content="285" />
       </Head>
       <div>
-        <Keyboard />
+        <KeyblayUI />
       </div>
     </>
   );
