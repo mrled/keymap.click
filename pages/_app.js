@@ -51,7 +51,7 @@ function App({ Component, pageProps }) {
 
   return <>
     <AppDebugContext.Provider value={[appDebug, setAppDebug]}>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </AppDebugContext.Provider>
   </>
 }
