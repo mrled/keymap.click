@@ -7,6 +7,13 @@ This section isn't well organized.
 
 # Active to do items
 
+## Improve the app title bar thing
+
+* Take up as little vertical space as possible
+* Put title on same line as debug controls
+* Probably hide debug controls behind hamburger menu?
+* I am thinking some kind of About panel should be accessible from there too.
+
 ## Nicer legend for the leader key
 
 Currently this is the Material Design Send Email icon (a paper airplane).
@@ -775,3 +782,29 @@ React context backed by React state.
 It's a simple `<select>` box that changes the debug level.
 
 ✅ Once I had the context stuff figured out, this was easy.
+
+## Another hook example
+
+See commit 2500d05745e0f63ba46a90e8a4918a09855ff1ac.
+
+I had a function that needed to run when the debug level changed.
+Prior to this commit, I did this in the component that changes the debug level.
+This worked fine, but meant the debug handling was coupled to the UI,
+and if I changed debugging elsewhere in the app later,
+my function would not get called.
+
+In this commit I moved the function to the root component,
+and use hooks and context to update it automatically no matter where it changes.
+
+✅ Another application of the context + state stuff I just learned
+
+## Break out the `<Keyboard>` component from the surrounding UI
+
+This has been bugging me for a while.
+
+The keyboard was built in a `renderKeyboard()` function,
+but I refactored it into its own component,
+separate from the info panel and canvas diagram,
+which were before all part of `<Keyboard>`.
+
+✅ Easier than I thought - I didn't even need any hooks to do this
