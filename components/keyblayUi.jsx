@@ -9,6 +9,7 @@ import { InfoPanel } from "./infoPanel";
 
 import { AppDebugContext } from "~/components/appDebugContext";
 import { Keyboard } from "~/components/keyboard";
+import { VisualDebugStyle } from "~/components/visualDebugStyle";
 import { useWindowSize } from "../lib/hooks";
 import { useKeyConnections } from "../lib/keyConnections";
 
@@ -25,8 +26,11 @@ export const KeyblayUI = () => {
 
   return (
     <>
+
+      <VisualDebugStyle enableDebug={appDebug.debugLevel > 1} />
+
       <div
-        className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg"
+        className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg debug-bg-yellow"
         id="keyblay-debug-outer-wrapper-div"
       >
 

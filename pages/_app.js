@@ -1,7 +1,6 @@
 import "../styles/index.css";
 import "../styles/keygrid.css";
 import "../styles/fonts.css";
-import "../styles/debug.css";
 
 import {
   useEffect,
