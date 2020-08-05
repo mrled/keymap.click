@@ -21,7 +21,6 @@ export const Diagram = ({ connections }) => {
     if (!canvas.current) return;
 
     const context = canvas.current.getContext("2d");
-    console.log("updateCanvas");
 
     /* Without setting the h/w here, canvas will be some arbitrary small size
      * canvas.style.{w/h} is the CSS 'style' property of the element in the DOM,
@@ -53,9 +52,10 @@ export const Diagram = ({ connections }) => {
       return;
     }
 
-    // Should only be enabled when in debug mode
-    log.debug(`appDebug: ${JSON.stringify(appDebug)}`)
+    /* Visual debugging
+     */
     if (appDebug.debugLevel > 1) {
+      log.debug(`diagram: visual debugging enabled`);
       context.strokeStyle = "purple";
       context.lineWidth = 1;
       context.beginPath();
@@ -71,7 +71,7 @@ export const Diagram = ({ connections }) => {
       const source = connection.sourceCoords;
       const target = connection.targetCoords;
       if (!source || !target) {
-        console.log(`Connection is not complete, skipping: ${connection}`)
+        log.debug(`Connection is not complete, skipping: ${connection}`)
         return
       }
       context.moveTo(source.x, source.y);

@@ -35,19 +35,6 @@ export const Keyboard = ({ initialState }) => {
   const router = useRouter();
   const [appDebug, setAppDebug] = useContext(AppDebugContext)
 
-  const onDebugLevelChange = (event) => {
-    const logLevel = parseInt(event.target.value);
-    const newValue = { debugLevel: logLevel };
-    switch (logLevel) {
-      case 0: log.setLevel(log.levels.SILENT); break;
-      case 1: log.setLevel(log.levels.DEBUG); break;
-      case 2: log.setLevel(log.levels.TRACE); break;
-      default: log.setLevel(log.levels.SILENT); break;
-    }
-    log.debug(`Changing appDebug from ${JSON.stringify(appDebug)} to ${JSON.stringify(newValue)}`)
-    setAppDebug(newValue);
-  };
-
   useEffect(() => {
     const { keyId } = router.query;
     if (keyId && allKeysById[keyId]) {
@@ -146,7 +133,7 @@ export const Keyboard = ({ initialState }) => {
             <h1 className="text-xl">keyblay</h1>
             <label htmlFor="keyblay-app-debug-selector" className="p-2 m-2">Debug level</label>
             <select
-              onChange={onDebugLevelChange}
+              onChange={event => setAppDebug({ debugLevel: parseInt(event.target.value) })}
               name="Debug levels"
               id="keyblay-app-debug-selector"
               className="p-2 m-2"
