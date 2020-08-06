@@ -7,6 +7,35 @@ This section isn't well organized.
 
 # Active to do items
 
+Here are some release milestones.
+
+Release: dev preview:
+
+* Improve diagram lines
+* Decide on a final name
+
+Release: 1.0
+
+* Add a guide
+* Add content for all the keys I want
+* Add place for more general info
+
+## Add a guide
+
+A new user lands on this page.
+What should they click on?
+Why should they care?
+
+## Decide on a final name
+
+I have always hated 'keyblay'.
+What should I call it instead?
+
+## Nicer looking key references inside the info panel
+
+* Make the `<kbd>` elements look like mini keys from the board above?
+* For non-`<kbd>` references, put a tiny rectangular key that looks like a small key from above off to the side?
+
 ## Improve the app title bar thing
 
 * Take up as little vertical space as possible
