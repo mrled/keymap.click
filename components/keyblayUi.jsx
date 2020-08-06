@@ -1,12 +1,12 @@
-import {
+import { useRouter } from "next/router";
+import React, {
   useCallback,
   useContext,
   useState,
 } from "react";
-import { useRouter } from "next/router";
 
-import { Diagram } from "./diagram";
-import { InfoPanel } from "./infoPanel";
+import { Diagram } from "~/components/diagram";
+import { InfoPanel } from "~/components/infoPanel";
 
 import { AppDebugContext } from "~/components/appDebugContext";
 import { Keyboard } from "~/components/keyboard";
@@ -14,8 +14,8 @@ import { VisualDebugStyle } from "~/components/visualDebugStyle";
 import {
   FakeDOMRect,
 } from "~/lib/geometry";
-import { useWindowSize } from "../lib/hooks";
-import { useKeyConnections } from "../lib/keyConnections";
+import { useWindowSize } from "~/lib/hooks";
+import { useKeyConnections } from "~/lib/keyConnections";
 
 
 export const KeyblayUI = () => {
@@ -49,10 +49,7 @@ export const KeyblayUI = () => {
   }, [windowSize, keyboardAndPanelRect]);
 
 
-  const { connections, targetKeyIds } = useKeyConnections([
-    pressedKey,
-    windowSize,
-  ]);
+  const { connections, targetKeyIds } = useKeyConnections(pressedKey);
 
   return (
     <>

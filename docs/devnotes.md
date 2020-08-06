@@ -885,3 +885,9 @@ The way of thinking really helped, though.
 It has a world-class explanation of why functional React is different from class-based React,
 with great visuals.
 It focused me on a question: "what state changes should trigger my callback?"
+
+## Fix linting errors
+
+Use eslint, it seems to be recommended in a lot of places
+
+✅ Done

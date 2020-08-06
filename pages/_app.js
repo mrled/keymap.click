@@ -1,15 +1,15 @@
-import "../styles/index.css";
-import "../styles/keygrid.css";
-import "../styles/fonts.css";
-
-import {
+import { useRouter } from 'next/router'
+import React, {
   useEffect,
   useState,
 } from 'react'
-import { useRouter } from 'next/router'
-import * as Fathom from 'fathom-client'
 
+import * as Fathom from 'fathom-client'
 import log from "loglevel";
+
+import "~/styles/index.css";
+import "~/styles/keygrid.css";
+import "~/styles/fonts.css";
 
 import { AppDebugContext } from "~/components/appDebugContext";
 
@@ -43,7 +43,7 @@ function App({ Component, pageProps }) {
     return () => {
       router.events.off('routeChangeComplete', onRouteChangeComplete);
     }
-  }, []);
+  }, [router.events]);
 
   useEffect(() => {
     handleAppDebugChange(appDebug);

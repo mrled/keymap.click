@@ -1,6 +1,13 @@
-import { useRef, useEffect, useState, useContext } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useContext,
+} from "react";
+
 import log from "loglevel";
 
+import { AppDebugContext } from "~/components/appDebugContext";
 import {
   smallerRect,
   traceRect,
@@ -8,7 +15,6 @@ import {
 import {
   useWindowSize,
 } from "~/lib/hooks";
-import { AppDebugContext } from "~/components/appDebugContext";
 
 export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, diamargRightRect }) => {
   const canvas = useRef();

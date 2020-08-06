@@ -1,37 +1,35 @@
-import {
+import { useRouter } from "next/router";
+import React, {
   useEffect,
   useState,
 } from "react";
-import { useRouter } from "next/router";
 
 import log from "loglevel";
 
+import { KeyGrid } from "~/components/key";
+import { useKeyConnections } from "~/lib/keyConnections";
 import {
   allKeysById,
   leftHandKeys,
   leftThumbKeys,
   rightHandKeys,
   rightThumbKeys,
-} from "../lib/keys";
-import { useWindowSize } from "../lib/hooks";
-import { useKeyConnections } from "../lib/keyConnections";
-import { KeyGrid } from "./key";
+} from "~/lib/keys";
 
 export const Keyboard = ({ pressedKey, setPressedKey }) => {
   const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
-  const windowSize = useWindowSize();
 
   const router = useRouter();
 
   useEffect(() => {
-    const { keyId } = router.query;
+    const keyId = router.query.keyId;
     if (keyId && allKeysById[keyId]) {
       setPressedKey(allKeysById[keyId]);
       log.debug(`On load using selected key id: ${keyId}`);
     } else {
       log.debug(`On load no such key id: ${keyId}`);
     }
-  }, [router.query.keyId]);
+  }, [router.query.keyId, setPressedKey]);
 
   const setPressedAndSelectedKeys = (keyData) => {
     setPressedKey(keyData);
@@ -43,10 +41,7 @@ export const Keyboard = ({ pressedKey, setPressedKey }) => {
     }
   };
 
-  const { connections, targetKeyIds } = useKeyConnections([
-    pressedKey,
-    windowSize,
-  ]);
+  const { connections, targetKeyIds } = useKeyConnections(pressedKey);
 
   return (
     <div className="flex items-center justify-center flex-col md:flex-row mt-0">

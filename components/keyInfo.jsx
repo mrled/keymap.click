@@ -1,25 +1,26 @@
+import React from "react";
+
 import log from "loglevel";
 
 import {
-  keyInfoConnectFromClass,
-  keyInfoConnectFromClassPrefix,
-} from "../lib/keyConnections";
-import {
   keyDataTextLabel,
   keyLegendAttrib,
-  Key,
   KeyGrid
-} from "./key";
+} from "~/components/key";
+import {
+  keyInfoConnectFromClass,
+  keyInfoConnectFromClassPrefix,
+} from "~/lib/keyConnections";
 
 /* Parse a keyInfo property
-  * Return an array of JSX <span> elements.
-    Each <span> element represents either regular text,
-    or an indicator to a key on the board.
-    (see docs/physical-key-indicators.md for more information on textual key indicators)
-  */
+ * Return an array of JSX <span> elements.
+   Each <span> element represents either regular text,
+   or an indicator to a key on the board.
+   (see docs/physical-key-indicators.md for more information on textual key indicators)
+ */
 export const parseKeyInfo = (keyInfo) => {
   if (!keyInfo) {
-    return [<span>""</span>];
+    return [<span key={0}></span>];
   }
 
   const keyRefRe = /\[\[(([l|r])-([f|t])-([0-9]{1,2})-([0-9]{1,2}))(\|(.+?))?\]\]/g;
@@ -79,7 +80,7 @@ export const parseKeyInfo = (keyInfo) => {
  * keyData: A key object (e.g. from lib/keys.js)
  * parsedKeyInfo: JSX returned from parseKeyInfo()
  */
-export const KeyInfoInner = ({ keyData, parsedKeyInfo }) => {
+export const KeyInfoInner = ({ parsedKeyInfo }) => {
   return (
     <>
       <div className="py-5">
@@ -143,7 +144,7 @@ export const KeyInfo = ({
 
         </div>
       </div>
-      <KeyInfoInner keyData={keyData} parsedKeyInfo={parsedKeyInfo} />
+      <KeyInfoInner parsedKeyInfo={parsedKeyInfo} />
       {legendAttribElem}
     </>
   );

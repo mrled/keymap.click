@@ -1,3 +1,5 @@
+import React from "react";
+
 /* A simple component containing the introduction text
  */
 export const IntroText = () => {

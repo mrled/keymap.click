@@ -7,6 +7,11 @@ module.exports = {
         "eslint:recommended",
         "plugin:react/recommended"
     ],
+    "ignorePatterns": [
+        ".eslintrc.js",
+        "out/**",
+        "postcss.config.js"
+    ],
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -18,10 +23,14 @@ module.exports = {
         "react",
         "react-hooks"
     ],
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "rules": {
-        "no-unused-vars": "off",
-        "react/prop-types": "off", /* TODO: fix this and turn back on */
-        "react/react-in-jsx-scope": "off", /* TODO: Fix this and turn it back on */
+        "no-unused-vars": "warn",
+        "react/prop-types": "off", /* This probably isn't worth the hassle; move to TypeScript instead, maybe */
         "react-hooks/exhaustive-deps": "warn"
     }
 }

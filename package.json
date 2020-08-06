@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build": "next build",
     "dev": "next dev",
     "devlocalnet": "next dev --hostname 0.0.0.0",
-    "build": "next build",
-    "start": "next start",
-    "export": "npm run build && next export"
+    "export": "npm run build && next export",
+    "lint": "eslint",
+    "lintall": "eslint .",
+    "start": "next start"
   },
   "dependencies": {
     "fathom-client": "^3.0.0",
