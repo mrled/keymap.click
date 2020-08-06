@@ -101,17 +101,28 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
 
     context.strokeStyle = "#68d391";
     context.lineWidth = 1;
+    const marginInsetTickSize = 5;  // Distance between lines in margin
     context.beginPath();
-    connections.forEach((connection) => {
+    connections.forEach((connection, idx) => {
       const source = connection.sourceCoords;
       const target = connection.targetCoords;
       if (!source || !target) {
         log.debug(`Connection is not complete, skipping: ${connection}`)
         return
       }
+
+      const calculateMarginXCoord = (marginRect, marginSide, connIdx, tickSize) => {
+        const inset = connIdx * tickSize;
+        const offsetMultiplier = marginSide === 'r' ? -1 : 1;
+        const offset = inset * offsetMultiplier;
+        const offsetFrom = marginSide === 'r' ? marginRect.right : marginRect.left;
+        return offsetFrom + offset;
+      }
+
+      const diamargRect = connection.margin === 'r' ? diamargRightRect : diamargLeftRect;
+      const marginX = calculateMarginXCoord(diamargRect, connection.margin, idx, marginInsetTickSize)
+
       context.moveTo(source.x, source.y);
-      const marginOffset = 25;
-      const marginX = connection.margin === 'r' ? document.documentElement.scrollWidth - marginOffset : marginOffset;
       context.lineTo(marginX, source.y);
       context.lineTo(marginX, target.y);
       context.lineTo(target.x, target.y);
