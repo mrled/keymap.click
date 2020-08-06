@@ -793,7 +793,7 @@ It's a simple `<select>` box that changes the debug level.
 
 ✅ Once I had the context stuff figured out, this was easy.
 
-## Another hook example
+## Another hook example: contexts, state, hooks
 
 See commit 2500d05745e0f63ba46a90e8a4918a09855ff1ac.
 
@@ -818,3 +818,41 @@ separate from the info panel and canvas diagram,
 which were before all part of `<Keyboard>`.
 
 ✅ Easier than I thought - I didn't even need any hooks to do this
+
+## Another hook example: Updating drawing boundaries based on element sizes
+
+See "Diamargs" commit b3330be2bdf7988c200bdc335640176fb3873d90
+
+I wanted `keyboardAndPanelRect` to update via `useCallback()`
+whenever the elements inside it changed size,
+but I struggled with it for a while.
+I was trying to use refs to trigger that update,
+but it wasn't triggering --
+I'm not sure if I was doing something wrong, but
+[How can I measure a DOM node?](https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node)
+was not working for me.
+
+I realized that I would only need the callback to trigger when the key information text changed,
+though, which was my aha moment.
+The only reason the InfoPanel would change size is if the text within it changed in length,
+so I could depend just on `pressedKey` and get the behavior I wanted.
+
+### Triggering on resizing DOM nodes
+
+Maybe this is not yet easy?
+<https://stackoverflow.com/questions/37775020/trigger-resize-event-on-component>
+
+### useEffect guide
+
+[A Complete Guide to useEffect](https://overreacted.io/a-complete-guide-to-useeffect/)
+
+This is an _incredible_ guide.
+It should be incorporated directly and entirely into official React documentation.
+
+Unfortunately, it didn't directly solve the problem as I conceived of it --
+it couldn't tell me how to run a callback when an element changed size.
+
+The way of thinking really helped, though.
+It has a world-class explanation of why functional React is different from class-based React,
+with great visuals.
+It focused me on a question: "what state changes should trigger my callback?"
