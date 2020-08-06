@@ -53,6 +53,8 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
       return;
     }
 
+    const keyboardCenter = keyboardAndPanelRect.x + (keyboardAndPanelRect.right - keyboardAndPanelRect.x) / 2;
+
     if (appDebug.debugLevel > 1) {
       log.debug(`diagram: visual debugging enabled`);
       context.lineWidth = 2;
@@ -62,7 +64,6 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
       // Also draw a line down the center of the keyboard.
 
       if (keyboardAndPanelRect) {
-        const keyboardCenter = keyboardAndPanelRect.x + (keyboardAndPanelRect.right - keyboardAndPanelRect.x) / 2;
         context.beginPath();
         context.strokeStyle = "purple";
         context.moveTo(keyboardCenter, 0);
@@ -110,17 +111,18 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
         log.debug(`Connection is not complete, skipping: ${connection}`)
         return
       }
+      const rightMargin = keyboardCenter < target.x;
 
-      const calculateMarginXCoord = (marginRect, marginSide, connIdx, tickSize) => {
+      const calculateMarginXCoord = (marginRect, rightMargin, connIdx, tickSize) => {
         const inset = connIdx * tickSize;
-        const offsetMultiplier = marginSide === 'r' ? -1 : 1;
+        const offsetMultiplier = rightMargin ? -1 : 1;
         const offset = inset * offsetMultiplier;
-        const offsetFrom = marginSide === 'r' ? marginRect.right : marginRect.left;
+        const offsetFrom = rightMargin ? marginRect.right : marginRect.left;
         return offsetFrom + offset;
       }
 
-      const diamargRect = connection.margin === 'r' ? diamargRightRect : diamargLeftRect;
-      const marginX = calculateMarginXCoord(diamargRect, connection.margin, idx, marginInsetTickSize)
+      const diamargRect = rightMargin ? diamargRightRect : diamargLeftRect;
+      const marginX = calculateMarginXCoord(diamargRect, rightMargin, idx, marginInsetTickSize)
 
       context.moveTo(source.x, source.y);
       context.lineTo(marginX, source.y);
