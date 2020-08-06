@@ -2,14 +2,15 @@ import { useRef, useEffect, useState, useContext } from "react";
 import log from "loglevel";
 
 import {
+  smallerRect,
+  traceRect,
+} from "~/lib/geometry";
+import {
   useWindowSize,
 } from "~/lib/hooks";
-import {
-  documentScrollCenter,
-} from "~/lib/keyConnections";
 import { AppDebugContext } from "~/components/appDebugContext";
 
-export const Diagram = ({ connections }) => {
+export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, diamargRightRect }) => {
   const canvas = useRef();
   const container = useRef();
   const [docHeight, setDocHeight] = useState(0);
@@ -52,16 +53,50 @@ export const Diagram = ({ connections }) => {
       return;
     }
 
-    /* Visual debugging
-     */
     if (appDebug.debugLevel > 1) {
       log.debug(`diagram: visual debugging enabled`);
-      context.strokeStyle = "purple";
-      context.lineWidth = 1;
-      context.beginPath();
-      context.moveTo(documentScrollCenter(), 0);
-      context.lineTo(documentScrollCenter(), document.documentElement.scrollHeight);
-      context.stroke()
+      context.lineWidth = 2;
+
+      // Draw a rectangle inset from the three KID elements.
+      // Show we can track their outline as they change in size.
+      // Also draw a line down the center of the keyboard.
+
+      if (keyboardAndPanelRect) {
+        const keyboardCenter = keyboardAndPanelRect.x + (keyboardAndPanelRect.right - keyboardAndPanelRect.x) / 2;
+        context.beginPath();
+        context.strokeStyle = "purple";
+        context.moveTo(keyboardCenter, 0);
+        context.lineTo(keyboardCenter, document.documentElement.scrollHeight);
+        context.stroke();
+
+        context.strokeStyle = "purple";
+        context.beginPath();
+        traceRect(smallerRect(keyboardAndPanelRect), context);
+        context.stroke()
+      } else {
+        log.debug(`diagram: could not draw center line because there was no keyboardAndPanelRect`);
+      }
+
+      if (diamargLeftRect) {
+        const diamargLeftRectInner = smallerRect(diamargLeftRect);
+        context.strokeStyle = "purple";
+        context.beginPath();
+        traceRect(diamargLeftRectInner, context);
+        context.stroke()
+      } else {
+        log.debug(`diagram: there is no diamargLeftRect`);
+      }
+      if (diamargRightRect) {
+        const diamargRightRectInner = smallerRect(diamargRightRect);
+        context.strokeStyle = "purple";
+        context.beginPath();
+        traceRect(diamargRightRectInner, context);
+        context.stroke()
+      } else {
+        log.debug(`diagram: there is no diamargRightRect`);
+      }
+
+
     }
 
     context.strokeStyle = "#68d391";
@@ -91,7 +126,7 @@ export const Diagram = ({ connections }) => {
   useEffect(() => void updateCanvas(), []);
   useEffect(() => {
     updateCanvas();
-  }, [connections, appDebug]);
+  }, [connections, appDebug, keyboardAndPanelRect, diamargLeftRect, diamargRightRect]);
 
   return (
     <div

@@ -4,6 +4,7 @@
 
 :root {
   --keyboard-grid-unit: 1.0rem;
+  --kid-diamarg-width: calc(var(--keyboard-grid-unit) * 2.0);
 }
 @media (min-width: 900px) {
   :root {
@@ -68,4 +69,11 @@
 
 .keyblay-outline-none, .keyblay-outline-none:focus {
   outline: 0 !important;
+}
+
+.kid-diamarg {
+  width: var(--kid-diamarg-width);
+}
+.kid-center {
+  width: calc(100% - (var(--kid-diamarg-width) * 2));
 }

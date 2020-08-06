@@ -79,6 +79,12 @@ Then I can iterate, perhaps:
 * Intelligently use the opposite margin,
   if doing so would result in shorter lines or less congested margins.
 
+20200805 update:
+
+* Added Diamargs
+* Keyboard sometimes overlaps Diamargs, depending on window width.
+  TODO: smarten up breakpoints so that this never happens at sane sizes.
+
 ## Add place for more general info
 
 What is an ergodox, why did it help me generally, etc.
