@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useState,
+  useEffect,
 } from "react";
 
 import { Diagram } from "~/components/diagram";
@@ -10,6 +11,7 @@ import { InfoPanel } from "~/components/infoPanel";
 
 import {
   AppDebugContext,
+  DocumentDimensionsContext,
   KeyMapContext,
 } from "~/components/appContext";
 import { Keyboard } from "~/components/keyboard";
@@ -25,6 +27,7 @@ export const KeyblayUI = () => {
   const [pressedKey, setPressedKey] = useState({});
   const [visibleSettings, setVisibleSettings] = useState(false);
   const [appDebug, setAppDebug] = useContext(AppDebugContext)
+  const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext)
   const [keyMap, setKeyMap] = useContext(KeyMapContext)
   const windowSize = useWindowSize();
   const router = useRouter();
@@ -32,8 +35,7 @@ export const KeyblayUI = () => {
 
   /* Calculating rects of child elements
    * See also https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
-   * Note that we are dependent on windowSize,
-   * to make sure these get recalculated as the width changes.
+   * Note that we are dependent on the dimensions of both the viewport (window) AND the whole document.
    * The diamargs also have to depend on the keyboard/panel height.
    * keyboard/panel height depends on the InfoPanel because of the length of the text.
    */
@@ -41,20 +43,26 @@ export const KeyblayUI = () => {
   const [keyboardAndPanelRect, setKeyboardAndPanelRect] = useState(new FakeDOMRect());
   const keyboardAndPanel = useCallback(node => {
     if (node !== null) setKeyboardAndPanelRect(node.getBoundingClientRect());
-  }, [windowSize, pressedKey, visibleSettings]);
+  }, [documentDimensions, pressedKey, visibleSettings, windowSize]);
 
   const [diamargLeftRect, setDiamargLeftRect] = useState(new FakeDOMRect());
   const diamargLeft = useCallback(node => {
     if (node !== null) setDiamargLeftRect(node.getBoundingClientRect());
-  }, [windowSize, pressedKey, visibleSettings, keyboardAndPanelRect]);
+  }, [documentDimensions, keyboardAndPanelRect, pressedKey, visibleSettings, windowSize]);
 
   const [diamargRightRect, setDiamargRightRect] = useState(new FakeDOMRect());
   const diamargRight = useCallback(node => {
     if (node !== null) setDiamargRightRect(node.getBoundingClientRect());
-  }, [windowSize, pressedKey, visibleSettings, keyboardAndPanelRect]);
+  }, [documentDimensions, keyboardAndPanelRect, pressedKey, visibleSettings, windowSize]);
+
+  useEffect(() => {
+    updateDocumentDimensions();
+    // We must NOT pass updateDocumentDimensions as a dependency for this effect, or it will cause an infinite loop!
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pressedKey, visibleSettings]);
 
 
-  const { connections, targetKeyIds } = useKeyConnections(pressedKey);
+  const { connections, targetKeyIds } = useKeyConnections(pressedKey, keyboardAndPanelRect.top);
 
   return (
     <>
@@ -121,6 +129,7 @@ export const KeyblayUI = () => {
 
               <Keyboard
                 pressedKey={pressedKey}
+                targetKeyIds={targetKeyIds}
                 setPressedKey={setPressedKey}
                 keyMapName={keyMap.keyMapName}
               />

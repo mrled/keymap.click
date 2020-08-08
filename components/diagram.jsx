@@ -1,13 +1,16 @@
 import React, {
-  useRef,
-  useEffect,
-  useState,
+  useCallback,
   useContext,
+  useEffect,
+  useRef,
 } from "react";
 
 import log from "loglevel";
 
-import { AppDebugContext } from "~/components/appContext";
+import {
+  AppDebugContext,
+  DocumentDimensionsContext,
+} from "~/components/appContext";
 import {
   smallerRect,
   traceRect,
@@ -19,11 +22,11 @@ import {
 export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, diamargRightRect }) => {
   const canvas = useRef();
   const container = useRef();
-  const [docHeight, setDocHeight] = useState(0);
-  const currentBrowserWidth = useWindowSize();
+  const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext)
+  const windowSize = useWindowSize();
   const [appDebug, setAppDebug] = useContext(AppDebugContext);
 
-  const updateCanvas = () => {
+  const updateCanvas = useCallback(() => {
     if (!canvas) return;
     if (!canvas.current) return;
 
@@ -70,10 +73,17 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
       // Also draw a line down the center of the keyboard.
 
       if (keyboardAndPanelRect) {
+        log.debug(`Drawing into the keyboard/panel rectangle...`)
         context.beginPath();
         context.strokeStyle = "purple";
         context.moveTo(keyboardCenter, 0);
-        context.lineTo(keyboardCenter, document.documentElement.scrollHeight);
+        var idx = 0;
+        while (idx <= document.documentElement.scrollHeight) {
+          context.lineTo(keyboardCenter + 10, idx);
+          context.moveTo(keyboardCenter, idx);
+          context.lineTo(keyboardCenter, idx + 100);
+          idx += 100;
+        }
         context.stroke();
 
         context.strokeStyle = "purple";
@@ -148,28 +158,24 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
       leftRightIdx[rightMargin] += 1;
     });
     context.stroke();
-  };
+  }, [appDebug.debugLevel, connections, diamargLeftRect, diamargRightRect, keyboardAndPanelRect]);
 
-  useEffect(() => {
-    setDocHeight(document.documentElement.scrollHeight);
-  }, [currentBrowserWidth]);
-
-  useEffect(() => void updateCanvas(), []);
   useEffect(() => {
     updateCanvas();
-  }, [connections, appDebug, keyboardAndPanelRect, diamargLeftRect, diamargRightRect]);
+  }, [appDebug, connections, diamargLeftRect, diamargRightRect, documentDimensions, keyboardAndPanelRect, updateCanvas, windowSize]);
 
   return (
     <div
       ref={container}
       id="keyblay-debug-canvas-container"
-      style={{ height: docHeight, width: "100%" }}
-      className="absolute top-0 left-0 w-full pointer-events-none z-50"
+      style={{ height: documentDimensions.height, width: "100%" }}
+      className="absolute top-0 left-0 pointer-events-none z-50"
     >
       <canvas
         ref={canvas}
         id="keyblay-debug-canvas"
-        className="absolute overflow-visible h-full w-screen"
+        style={{ height: documentDimensions.height, width: "100%" }}
+        className="absolute overflow-visible w-screen"
       />
     </div>
   );

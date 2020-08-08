@@ -7,13 +7,11 @@ import React, {
 import log from "loglevel";
 
 import { KeyGrid } from "~/components/key";
-import { useKeyConnections } from "~/lib/keyConnections";
 import {
   keyMaps,
-  legends,
 } from "~/lib/keys";
 
-export const Keyboard = ({ pressedKey, setPressedKey, keyMapName }) => {
+export const Keyboard = ({ pressedKey, targetKeyIds, setPressedKey, keyMapName }) => {
   const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
 
   const router = useRouter();
@@ -40,8 +38,6 @@ export const Keyboard = ({ pressedKey, setPressedKey, keyMapName }) => {
       router.push("/");
     }
   };
-
-  const { connections, targetKeyIds } = useKeyConnections(pressedKey);
 
   return (
     <div className="flex items-center justify-center flex-col md:flex-row mt-0">
