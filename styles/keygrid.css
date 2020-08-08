@@ -27,6 +27,12 @@
 .grid-rows-4-keyb {
   grid-template-rows: repeat(4, var(--keyboard-grid-unit));
 }
+.grid-cols-2-keyb {
+  grid-template-columns: repeat(2, var(--keyboard-grid-unit));
+}
+.grid-cols-3-keyb {
+  grid-template-columns: repeat(3, var(--keyboard-grid-unit));
+}
 .grid-cols-4-keyb {
   grid-template-columns: repeat(4, var(--keyboard-grid-unit));
 }

@@ -3,9 +3,9 @@ import React from "react";
 import log from "loglevel";
 
 import {
+  KeyGrid,
   keyDataTextLabel,
   keyLegendAttrib,
-  KeyGrid
 } from "~/components/key";
 import {
   keyInfoConnectFromClass,
@@ -128,7 +128,7 @@ export const KeyInfo = ({
           <div className="flex flex-col flex-1">
             <div className="flex flex-row justify-center">
               <KeyGrid
-                cols="4"
+                cols={keyData.size ? keyData.size[0] : 2} // HACK: we rely on a default with of 2 here
                 rows="4"
                 keys={keys}
                 pressedKey={keyData}
