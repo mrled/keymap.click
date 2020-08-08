@@ -110,7 +110,15 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
     context.lineWidth = 1;
     const marginInsetTickSize = 5;  // Distance between lines in margin
     context.beginPath();
-    connections.forEach((connection, idx) => {
+
+    /* leftRightIdx: keep track of number of vertical lines in each diamarg.
+     * right = true and left = false.
+     * leftRightIdx[rightMargin] will return the number of vertical lines in the current diamarg
+     * in the body of the forEach function below.
+     */
+    const leftRightIdx = { true: 0, false: 0 };
+
+    connections.forEach((connection) => {
       const source = connection.sourceCoords;
       const target = connection.targetCoords;
       if (!source || !target) {
@@ -119,8 +127,10 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
       }
       const rightMargin = keyboardCenter < target.x;
 
-      const calculateMarginXCoord = (marginRect, rightMargin, connIdx, tickSize) => {
-        const inset = connIdx * tickSize;
+      /* Return the X coordinate for the vertical line
+       */
+      const calculateMarginXCoord = (marginRect, rightMargin, idx, tickSize) => {
+        const inset = idx * tickSize;
         const offsetMultiplier = rightMargin ? -1 : 1;
         const offset = inset * offsetMultiplier;
         const offsetFrom = rightMargin ? marginRect.right : marginRect.left;
@@ -128,12 +138,14 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
       }
 
       const diamargRect = rightMargin ? diamargRightRect : diamargLeftRect;
-      const marginX = calculateMarginXCoord(diamargRect, rightMargin, idx, marginInsetTickSize)
+      const marginX = calculateMarginXCoord(diamargRect, rightMargin, leftRightIdx[rightMargin], marginInsetTickSize)
 
       context.moveTo(source.x, source.y);
       context.lineTo(marginX, source.y);
       context.lineTo(marginX, target.y);
       context.lineTo(target.x, target.y);
+
+      leftRightIdx[rightMargin] += 1;
     });
     context.stroke();
   };
