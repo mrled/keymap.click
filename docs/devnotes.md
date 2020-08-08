@@ -26,6 +26,8 @@ A new user lands on this page.
 What should they click on?
 Why should they care?
 
+Some kind of guided tour.
+
 ## Decide on a final name
 
 I have always hated 'keyblay'.
@@ -36,12 +38,26 @@ What should I call it instead?
 * Make the `<kbd>` elements look like mini keys from the board above?
 * For non-`<kbd>` references, put a tiny rectangular key that looks like a small key from above off to the side?
 
+## Don't parse the key info
+
+Should just require setting the required class names as HTML in the text.
+It's barely more cumbersome this way, and less code.
+I'm already using HTML in the info anyway... might as well remove all this parsing crap.
+
 ## Improve the app title bar thing
 
 * Take up as little vertical space as possible
 * Put title on same line as debug controls
 * Probably hide debug controls behind hamburger menu?
 * I am thinking some kind of About panel should be accessible from there too.
+
+Update 20200807:
+
+* ✅ Take up as little vertical space as possible
+* ✅ Put title on same line as debug controls
+* ✅ Probably hide debug controls behind hamburger menu?
+* 🔲 I am thinking some kind of About panel should be accessible from there too.
+* 🔲 The diagram isn't redrawing when the panel opens, and I'm not sure why.
 
 ## Nicer legend for the leader key
 
@@ -123,14 +139,6 @@ Probably will have lots of these.
 Maybe an FAQ style section, if I can't think of anything better.
 
 They should be linkable with URL fragments too.
-
-## Need to show other layers and layouts
-
-- Show my function layer, just for fun(ction)
-- Show the Ergodox default layout
-
-How will I show all this info?
-Won't be able to see it all at once...
 
 ## Have a per-key preview image for slack/twitter/etc
 
@@ -891,3 +899,32 @@ It focused me on a question: "what state changes should trigger my callback?"
 Use eslint, it seems to be recommended in a lot of places
 
 ✅ Done
+
+## Need to show other layers and layouts
+
+- Show my function layer, just for fun(ction)
+- Show the Ergodox default layout
+
+How will I show all this info?
+Won't be able to see it all at once...
+
+✅ Done 20200807 -- decided it would be useful to have a layout for debugging the diagram lines, and here we go.
+
+## Separate legend from layout definition
+
+Multiple layouts might want to reuse the same set of legends.
+
+✅ Done 20200807 -- also done as part of the debugging layer thing.
+
+## Make keyboard unselectable
+
+There is no value in letting users select text or images on keys.
+
+✅ Done 20200807
+
+## Center key in keyInfo panel
+
+This was bugging me ever since my debugging code could draw a vertical line down the center of the keyboard.
+Now it goes through the center of the key as well.
+
+✅ Done 20200807
