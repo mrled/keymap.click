@@ -168,7 +168,7 @@ export const KeyGrid = ({
     <>
       <div
         className={classnames(
-          `grid grid-cols-${cols}-keyb grid-rows-${rows}-keyb pointer-events-none`,
+          `grid grid-cols-${cols}-keyb grid-rows-${rows}-keyb pointer-events-none select-none`,
           gridAppendClasses
         )}
       >
