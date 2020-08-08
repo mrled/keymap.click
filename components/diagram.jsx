@@ -7,7 +7,7 @@ import React, {
 
 import log from "loglevel";
 
-import { AppDebugContext } from "~/components/appDebugContext";
+import { AppDebugContext } from "~/components/appContext";
 import {
   smallerRect,
   traceRect,

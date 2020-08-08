@@ -11,7 +11,11 @@ import "~/styles/index.css";
 import "~/styles/keygrid.css";
 import "~/styles/fonts.css";
 
-import { AppDebugContext } from "~/components/appDebugContext";
+import {
+  AppDebugContext,
+  KeyMapContext,
+  LegendMapContext,
+} from "~/components/appContext";
 
 /* Update application state based on the appDebug.
  * Intended to be called from a useEffect() hook that is called on appDebug value change.
@@ -30,6 +34,8 @@ export const handleAppDebugChange = (appDebug) => {
 function App({ Component, pageProps }) {
 
   const [appDebug, setAppDebug] = useState({ debugLevel: 0 });
+  const [keyMap, setKeyMap] = useState({ keyMapName: "MrlMainLayer" });
+  const [legendMap, setLegendMap] = useState({ legendMapName: "MrlLegends" });
   const router = useRouter()
 
   useEffect(() => {
@@ -51,7 +57,11 @@ function App({ Component, pageProps }) {
 
   return <>
     <AppDebugContext.Provider value={[appDebug, setAppDebug]}>
-      <Component {...pageProps} />
+      <KeyMapContext.Provider value={[keyMap, setKeyMap]}>
+        <LegendMapContext.Provider value={[legendMap, setLegendMap]}>
+          <Component {...pageProps} />
+        </LegendMapContext.Provider>
+      </KeyMapContext.Provider>
     </AppDebugContext.Provider>
   </>
 }

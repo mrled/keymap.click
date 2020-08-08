@@ -1,10 +1,18 @@
-import React from "react";
+import React, {
+  useContext,
+} from "react";
 
 import classnames from "classnames";
 
 import {
+  LegendMapContext,
+} from "~/components/appContext";
+import {
   keyHandleDomIdFromKeyId,
 } from "~/lib/keyConnections"
+import {
+  legendMaps,
+} from "~/lib/keys";
 
 /* This is a small element used as an anchor point to connect a diagram line to this key.
  *
@@ -68,12 +76,14 @@ export const keyDataTextLabel = (keyData) => {
   if (keyData.name) {
     return keyData.name;
   }
-  const legend = Legend(keyData.legend);
+  const [legendMap, setLegendMap] = useContext(LegendMapContext)
+  const legend = Legend(legendMaps[legendMap.legendMapName][keyData.legend]);
   return legend.legend;
 }
 
 export const keyLegendAttrib = (keyData) => {
-  const legend = Legend(keyData.legend);
+  const [legendMap, setLegendMap] = useContext(LegendMapContext)
+  const legend = Legend(legendMaps[legendMap.legendMapName][keyData.legend]);
   return legend.attrib;
 }
 
@@ -106,7 +116,8 @@ export const Key = ({
   const [col, row] = size;
   const [colStart, rowStart] = startPos;
 
-  const keyLegendInfo = Legend(legend);
+  const [legendMap, setLegendMap] = useContext(LegendMapContext)
+  const keyLegendInfo = Legend(legendMaps[legendMap.legendMapName][legend]);
 
   const gridClasses = `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart}`;
   const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`;
