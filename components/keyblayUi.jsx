@@ -11,7 +11,6 @@ import { InfoPanel } from "~/components/infoPanel";
 import {
   AppDebugContext,
   KeyMapContext,
-  LegendMapContext,
 } from "~/components/appContext";
 import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
@@ -20,16 +19,13 @@ import {
 } from "~/lib/geometry";
 import { useWindowSize } from "~/lib/hooks";
 import { useKeyConnections } from "~/lib/keyConnections";
-import {
-  keyMaps,
-  legendMaps,
-} from "~/lib/keys";
+import { AppSettings } from "./appSettings";
 
 export const KeyblayUI = () => {
   const [pressedKey, setPressedKey] = useState({});
+  const [visibleSettings, setVisibleSettings] = useState(false);
   const [appDebug, setAppDebug] = useContext(AppDebugContext)
   const [keyMap, setKeyMap] = useContext(KeyMapContext)
-  const [legendMap, setLegendMap] = useContext(LegendMapContext)
   const windowSize = useWindowSize();
   const router = useRouter();
 
@@ -45,17 +41,17 @@ export const KeyblayUI = () => {
   const [keyboardAndPanelRect, setKeyboardAndPanelRect] = useState(new FakeDOMRect());
   const keyboardAndPanel = useCallback(node => {
     if (node !== null) setKeyboardAndPanelRect(node.getBoundingClientRect());
-  }, [windowSize, pressedKey]);
+  }, [windowSize, pressedKey, visibleSettings]);
 
   const [diamargLeftRect, setDiamargLeftRect] = useState(new FakeDOMRect());
   const diamargLeft = useCallback(node => {
     if (node !== null) setDiamargLeftRect(node.getBoundingClientRect());
-  }, [windowSize, keyboardAndPanelRect]);
+  }, [windowSize, pressedKey, visibleSettings, keyboardAndPanelRect]);
 
   const [diamargRightRect, setDiamargRightRect] = useState(new FakeDOMRect());
   const diamargRight = useCallback(node => {
     if (node !== null) setDiamargRightRect(node.getBoundingClientRect());
-  }, [windowSize, keyboardAndPanelRect]);
+  }, [windowSize, pressedKey, visibleSettings, keyboardAndPanelRect]);
 
 
   const { connections, targetKeyIds } = useKeyConnections(pressedKey);
@@ -79,45 +75,22 @@ export const KeyblayUI = () => {
             className="border border-gray-300 bg-gray-100 rounded-md p-2 m-2"
             id="keyblay-ui-app-bar-container"
           >
-            <h1 className="text-xl inline mr-12">keyblay</h1>
 
-            <label htmlFor="keyblay-app-debug-selector" className="p-2 m-2">Debug level</label>
-            <select
-              onChange={event => setAppDebug({ debugLevel: parseInt(event.target.value) })}
-              name="Debug levels"
-              id="keyblay-app-debug-selector"
-              className="p-2 m-2"
-            >
-              <option value="0">Off</option>
-              <option value="1">Extra logging</option>
-              <option value="2">Yet more logging, visuals</option>
-            </select>
+            <div className="flex flex-row justify-between">
 
-            <label htmlFor="keyblay-legend-selector" className="p-2 m-2">Key legends</label>
-            <select
-              onChange={event => setLegendMap({ legendMapName: event.target.value })}
-              defaultValue={legendMap.legendMapName}
-              name="Legend maps"
-              id="keyblay-legend-selector"
-              className="p-2 m-2"
-            >
-              {Object.keys(legendMaps).map((legendMapName, idx) => {
-                return <option key={idx} value={legendMapName}>{legendMapName}</option>
-              })}
-            </select>
+              <h1 className="text-xl flex-col p-2">keyblay</h1>
 
-            <label htmlFor="keyblay-keymap-selector" className="p-2 m-2">Key layouts</label>
-            <select
-              onChange={event => setKeyMap({ keyMapName: event.target.value })}
-              defaultValue={keyMap.keyMapName}
-              name="Layouts"
-              id="keyblay-keymap-selector"
-              className="p-2 m-2"
-            >
-              {Object.keys(keyMaps).map((keyMapName, idx) => {
-                return <option key={idx} value={keyMapName}>{keyMapName}</option>
-              })}
-            </select>
+              <button
+                className="inline text-blue-500 p-2"
+                onClick={() => { setVisibleSettings(s => !s) }}>
+                {visibleSettings ? "Hide settings" : "Show settings"}
+              </button>
+
+            </div>
+
+            <div className="flex flex-row">
+              <AppSettings visible={visibleSettings} />
+            </div>
 
           </div>
 
