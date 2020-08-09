@@ -1,12 +1,10 @@
+import { useRouter } from "next/router";
 import React, {
   useContext,
 } from "react";
 
 import classnames from "classnames";
 
-import {
-  LegendMapContext,
-} from "~/components/appContext";
 import {
   keyHandleDomIdFromKeyId,
 } from "~/lib/keyConnections"
@@ -89,14 +87,16 @@ export const keyDataTextLabel = (keyData) => {
   if (keyData.name) {
     return keyData.name;
   }
-  const [legendMap, setLegendMap] = useContext(LegendMapContext)
-  const legend = Legend(legendMaps[legendMap.legendMapName][keyData.legend]);
+  const router = useRouter();
+  const legendMapName = router.query['legendMap'] || "MrlLegends";
+  const legend = Legend(legendMaps[legendMapName][keyData.legend]);
   return legend.legend;
 }
 
 export const keyLegendAttrib = (keyData) => {
-  const [legendMap, setLegendMap] = useContext(LegendMapContext)
-  const legend = Legend(legendMaps[legendMap.legendMapName][keyData.legend]);
+  const router = useRouter();
+  const legendMapName = router.query['legendMap'] || "MrlLegends";
+  const legend = Legend(legendMaps[legendMapName][keyData.legend]);
   return legend.attrib;
 }
 
@@ -130,8 +130,9 @@ export const Key = ({
   const [col, row] = size;
   const [colStart, rowStart] = startPos;
 
-  const [legendMap, setLegendMap] = useContext(LegendMapContext)
-  const keyLegendInfo = Legend(legendMaps[legendMap.legendMapName][legend]);
+  const router = useRouter();
+  const legendMapName = router.query['legendMap'] || "MrlLegends";
+  const keyLegendInfo = Legend(legendMaps[legendMapName][legend]);
 
   const gridClasses = `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart}`;
   const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`;

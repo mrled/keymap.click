@@ -8,14 +8,19 @@ import log from "loglevel";
 
 import { KeyGrid } from "~/components/key";
 import {
+  KeyMapState,
+  SelectedKeyState,
+} from "~/lib/appQueryState";
+import {
   keyMaps,
 } from "~/lib/keys";
 
-export const Keyboard = ({ pressedKey, targetKeyIds, setPressedKey, keyMapName }) => {
+export const Keyboard = ({ pressedKey, targetKeyIds, setPressedKey }) => {
   const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
 
   const router = useRouter();
 
+  const keyMapName = KeyMapState.getValue(router);
   const keyMap = keyMaps[keyMapName];
   // const legend = legends[legendName]
 
@@ -32,11 +37,7 @@ export const Keyboard = ({ pressedKey, targetKeyIds, setPressedKey, keyMapName }
   const setPressedAndSelectedKeys = (keyData) => {
     setPressedKey(keyData);
     setOtherSelectedKeys(keyData.selection);
-    if (keyData) {
-      router.push(`/?keyId=${keyData.id}`);
-    } else {
-      router.push("/");
-    }
+    SelectedKeyState.setQuery(router, keyData ? keyData.id : null);
   };
 
   return (

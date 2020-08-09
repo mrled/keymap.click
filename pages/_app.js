@@ -14,12 +14,7 @@ import "~/styles/fonts.css";
 import {
   AppDebugContext,
   DocumentDimensionsContext,
-  KeyMapContext,
-  LegendMapContext,
   appDebugDefault,
-  documentDimensionsDefault,
-  keyMapDefault,
-  legendMapDefault,
 } from "~/components/appContext";
 
 /* Update application state based on the appDebug.
@@ -39,8 +34,6 @@ export const handleAppDebugChange = (appDebug) => {
 function App({ Component, pageProps }) {
 
   const [appDebug, setAppDebug] = useState(appDebugDefault);
-  const [keyMap, setKeyMap] = useState(keyMapDefault);
-  const [legendMap, setLegendMap] = useState(legendMapDefault);
   const router = useRouter();
 
 
@@ -90,11 +83,7 @@ function App({ Component, pageProps }) {
   return <>
     <AppDebugContext.Provider value={[appDebug, setAppDebug]}>
       <DocumentDimensionsContext.Provider value={[documentDimensions, updateDocumentDimensions]}>
-        <KeyMapContext.Provider value={[keyMap, setKeyMap]}>
-          <LegendMapContext.Provider value={[legendMap, setLegendMap]}>
-            <Component {...pageProps} />
-          </LegendMapContext.Provider>
-        </KeyMapContext.Provider>
+        <Component {...pageProps} />
       </DocumentDimensionsContext.Provider>
     </AppDebugContext.Provider>
   </>

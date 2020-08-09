@@ -14,10 +14,12 @@ import { InfoPanel } from "~/components/infoPanel";
 import {
   AppDebugContext,
   DocumentDimensionsContext,
-  KeyMapContext,
 } from "~/components/appContext";
 import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
+import {
+  SelectedKeyState,
+} from "~/lib/appQueryState";
 import {
   FakeDOMRect,
 } from "~/lib/geometry";
@@ -30,7 +32,6 @@ export const KeyblayUI = () => {
   const [visibleSettings, setVisibleSettings] = useState(false);
   const [appDebug, setAppDebug] = useContext(AppDebugContext)
   const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext)
-  const [keyMap, setKeyMap] = useContext(KeyMapContext)
   const windowSize = useWindowSize();
   const router = useRouter();
 
@@ -134,7 +135,6 @@ export const KeyblayUI = () => {
                 pressedKey={pressedKey}
                 targetKeyIds={targetKeyIds}
                 setPressedKey={setPressedKey}
-                keyMapName={keyMap.keyMapName}
               />
 
               <div
@@ -144,7 +144,7 @@ export const KeyblayUI = () => {
                 <InfoPanel
                   keyData={pressedKey}
                   keyButtonOnClick={() => {
-                    router.push("/");
+                    SelectedKeyState.setQuery(router, null)
                     setPressedKey({});
                   }}
                 />
