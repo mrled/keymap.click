@@ -33,6 +33,12 @@ Some kind of guided tour.
 I have always hated 'keyblay'.
 What should I call it instead?
 
+Maybe something related to
+
+* Ergonomics
+* Guided tours
+* RSI
+
 ## Nicer looking key references inside the info panel
 
 * Make the `<kbd>` elements look like mini keys from the board above?
@@ -44,20 +50,11 @@ Should just require setting the required class names as HTML in the text.
 It's barely more cumbersome this way, and less code.
 I'm already using HTML in the info anyway... might as well remove all this parsing crap.
 
-## Improve the app title bar thing
+## Highlight or color change when mousing over diagram annotations
 
-* Take up as little vertical space as possible
-* Put title on same line as debug controls
-* Probably hide debug controls behind hamburger menu?
-* I am thinking some kind of About panel should be accessible from there too.
-
-Update 20200807:
-
-* ✅ Take up as little vertical space as possible
-* ✅ Put title on same line as debug controls
-* ✅ Probably hide debug controls behind hamburger menu?
-* 🔲 I am thinking some kind of About panel should be accessible from there too.
-* 🔲 The diagram isn't redrawing when the panel opens, and I'm not sure why.
+When hovering over the a key reference in the text, or a key itself that is referenced,
+highlight the relevant line and both reference and referent.
+This will help in complicated graphs.
 
 ## Nicer legend for the leader key
 
@@ -129,6 +126,12 @@ Then I can iterate, perhaps:
 * Added Diamargs
 * Keyboard sometimes overlaps Diamargs, depending on window width.
   TODO: smarten up breakpoints so that this never happens at sane sizes.
+
+20200808 update:
+
+* 🔲 smarten up breakpoints per above
+* ✅ fucking fix margin->keyboard diagram lines overlapping!!
+* 🔲 fix margin->text diagram lines overlapping
 
 ## Add place for more general info
 
@@ -928,3 +931,32 @@ This was bugging me ever since my debugging code could draw a vertical line down
 Now it goes through the center of the key as well.
 
 ✅ Done 20200807
+
+## The React Chrome dev extension
+
+* It shows you your components, not the HTML they generate. Much less messy.
+* Double click on a component, and see its internal state, hooks in use, props passed to it,
+  even current value of effect hooks and so forth. Wow.
+
+✅ This thing is dope
+
+## Improve the app title bar thing
+
+* Take up as little vertical space as possible
+* Put title on same line as debug controls
+* Probably hide debug controls behind hamburger menu?
+* I am thinking some kind of About panel should be accessible from there too.
+
+Update 20200807:
+
+* ✅ Take up as little vertical space as possible
+* ✅ Put title on same line as debug controls
+* ✅ Probably hide debug controls behind hamburger menu?
+* 🔲 I am thinking some kind of About panel could be accessible from there too (in the future)
+* 🔲 The diagram isn't redrawing when the panel opens, and I'm not sure why.
+
+Update 20200808
+
+* ✅ The diagram isn't redrawing when the panel opens, and I'm not sure why.
+
+DONE :)
