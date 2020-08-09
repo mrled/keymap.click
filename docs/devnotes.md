@@ -960,3 +960,9 @@ Update 20200808
 * ✅ The diagram isn't redrawing when the panel opens, and I'm not sure why.
 
 DONE :)
+
+## Allow linking to keys in specific maps / with specific legends
+
+Decided this was necessary because there are multiple maps now.
+
+* ✅ done 20200809
