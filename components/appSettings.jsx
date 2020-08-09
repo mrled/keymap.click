@@ -36,6 +36,7 @@ export const AppSettings = ({ visible }) => {
         <label htmlFor="keyblay-app-debug-selector" className="p-2 m-2 w-1/3">Debug level</label>
         <select
           onChange={event => setAppDebug({ debugLevel: parseInt(event.target.value) })}
+          defaultValue={appDebug.debugLevel}
           name="Debug levels"
           id="keyblay-app-debug-selector"
           className="p-2 m-2 w-1/3"
