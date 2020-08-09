@@ -1,87 +1,42 @@
 import { useRouter } from "next/router";
 import React, {
-  useContext,
   useEffect,
   useState,
 } from "react";
 
 import log from "loglevel";
 
-import {
-  KeyMapContext,
-  LegendMapContext,
-  PressedKeyContext
-} from "./appContext";
 import { KeyGrid } from "~/components/key";
 import {
-  // useAppRoute,
-  updateRoute,
-} from "~/lib/appRouter";
-import {
   keyMaps,
-  legendMaps,
 } from "~/lib/keys";
 
-export const Keyboard = ({ targetKeyIds }) => {
+export const Keyboard = ({ pressedKey, targetKeyIds, setPressedKey, keyMapName }) => {
   const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
-  const [keyMap, setKeyMap] = useContext(KeyMapContext)
-  const [legendMap, setLegendMap] = useContext(LegendMapContext)
-  const [pressedKey, setPressedKey] = useContext(PressedKeyContext)
 
   const router = useRouter();
 
-  const keyMapObj = keyMaps[keyMap.keyMapName];
+  const keyMap = keyMaps[keyMapName];
   // const legend = legends[legendName]
 
-  // useEffect(() => {
-  //   updateRoute();
-  // }, [router.query]);
-
-  // useEffect(() => {
-  //   updateRoute({
-  //     selectedKeyData: keyMapObj.allKeysById[pressedKey.pressedKeyData],
-  //     selectedKeyMap: keyMap.keyMapName,
-  //     selectedLegendMap: legendMap.legendMapName,
-  //   })
-  // }, [keyMap, keyMapObj, legendMap, pressedKey]);
-
-  // useEffect(() => {
-  //   const qKeyId = router.query.keyId;
-  //   const qLegendMap = router.query.legendMap;
-  //   const qKeyMap = router.query.keyMap;
-
-  //   if (qKeyId && keyMapObj.allKeysById[qKeyId]) {
-  //     setPressedKey(keyMapObj.allKeysById[qKeyId]);
-  //     log.debug(`On load using selected key id: ${qKeyId}`);
-  //   } else {
-  //     log.debug(`On load no such key id: ${qKeyId}`);
-  //   }
-
-  //   if (qLegendMap && legendMaps[qLegendMap]) {
-  //     setLegendMap(qLegendMap);
-  //     log.debug(`On load using selected legend map: ${qLegendMap}`);
-  //   } else {
-  //     log.debug(`On load no such legend map: ${qLegendMap}`)
-  //   }
-
-  //   if (qKeyMap && keyMaps[qKeyMap]) {
-  //     setKeyMap(qKeyMap);
-  //     log.debug(`On load using selected key map: ${qKeyMap}`);
-  //   } else {
-  //     log.debug(`On load no such key map: ${qKeyMap}`)
-  //   }
-
-  // }, [router.query]);
+  useEffect(() => {
+    const keyId = router.query.keyId;
+    if (keyId && keyMap.allKeysById[keyId]) {
+      setPressedKey(keyMap.allKeysById[keyId]);
+      log.debug(`On load using selected key id: ${keyId}`);
+    } else {
+      log.debug(`On load no such key id: ${keyId}`);
+    }
+  }, [keyMap, router.query.keyId, setPressedKey]);
 
   const setPressedAndSelectedKeys = (keyData) => {
     setPressedKey(keyData);
     setOtherSelectedKeys(keyData.selection);
-    updateRoute({ router: router, selectedKeyData: keyData });
-    // if (keyData) {
-    //   router.push(`/?keyId=${keyData.id}`);
-    // } else {
-    //   router.push("/");
-    // }
+    if (keyData) {
+      router.push(`/?keyId=${keyData.id}`);
+    } else {
+      router.push("/");
+    }
   };
 
   return (
@@ -92,7 +47,7 @@ export const Keyboard = ({ targetKeyIds }) => {
           <KeyGrid
             cols="15"
             rows="10"
-            keys={keyMapObj.leftHandKeys}
+            keys={keyMap.leftHandKeys}
             pressedKey={pressedKey}
             selectedKeys={otherSelectedKeys}
             targetKeyIds={targetKeyIds}
@@ -101,7 +56,7 @@ export const Keyboard = ({ targetKeyIds }) => {
           <KeyGrid
             cols="6"
             rows="6"
-            keys={keyMapObj.leftThumbKeys}
+            keys={keyMap.leftThumbKeys}
             pressedKey={pressedKey}
             selectedKeys={otherSelectedKeys}
             targetKeyIds={targetKeyIds}
@@ -117,7 +72,7 @@ export const Keyboard = ({ targetKeyIds }) => {
           <KeyGrid
             cols="15"
             rows="10"
-            keys={keyMapObj.rightHandKeys}
+            keys={keyMap.rightHandKeys}
             pressedKey={pressedKey}
             selectedKeys={otherSelectedKeys}
             targetKeyIds={targetKeyIds}
@@ -126,7 +81,7 @@ export const Keyboard = ({ targetKeyIds }) => {
           <KeyGrid
             cols="6"
             rows="6"
-            keys={keyMapObj.rightThumbKeys}
+            keys={keyMap.rightThumbKeys}
             pressedKey={pressedKey}
             selectedKeys={otherSelectedKeys}
             targetKeyIds={targetKeyIds}

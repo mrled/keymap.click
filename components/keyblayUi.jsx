@@ -15,79 +15,24 @@ import {
   AppDebugContext,
   DocumentDimensionsContext,
   KeyMapContext,
-  LegendMapContext,
-  PressedKeyContext,
 } from "~/components/appContext";
 import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
-// import {
-//   useAppRoute,
-// } from "~/lib/appRouter";
 import {
   FakeDOMRect,
 } from "~/lib/geometry";
 import { useWindowSize } from "~/lib/hooks";
 import { useKeyConnections } from "~/lib/keyConnections";
-import {
-  keyMaps,
-  legendMaps,
-} from "~/lib/keys";
 import { AppSettings } from "./appSettings";
-import { updateRoute } from "~/lib/appRouter";
 
 export const KeyblayUI = () => {
+  const [pressedKey, setPressedKey] = useState({});
   const [visibleSettings, setVisibleSettings] = useState(false);
   const [appDebug, setAppDebug] = useContext(AppDebugContext)
   const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext)
   const [keyMap, setKeyMap] = useContext(KeyMapContext)
-  const [legendMap, setLegendMap] = useContext(LegendMapContext)
-  const [pressedKey, setPressedKey] = useContext(PressedKeyContext);
   const windowSize = useWindowSize();
   const router = useRouter();
-
-  // useCallback(() => {
-  //   const keyMapObj = keyMaps[keyMap.keyMapName];
-  //   const qKeyId = router.query.keyId;
-  //   const qLegendMap = router.query.legendMap;
-  //   const qKeyMap = router.query.keyMap;
-
-  //   if (qKeyId && keyMapObj.allKeysById[qKeyId]) {
-  //     setPressedKey(keyMapObj.allKeysById[qKeyId]);
-  //     log.debug(`On load using selected key id: ${qKeyId}`);
-  //   } else {
-  //     log.debug(`On load no such key id: ${qKeyId}`);
-  //   }
-
-  //   if (qLegendMap && legendMaps[qLegendMap]) {
-  //     setLegendMap(qLegendMap);
-  //     log.debug(`On load using selected legend map: ${qLegendMap}`);
-  //   } else {
-  //     log.debug(`On load no such legend map: ${qLegendMap}`)
-  //   }
-
-  //   if (qKeyMap && keyMaps[qKeyMap]) {
-  //     setKeyMap(qKeyMap);
-  //     log.debug(`On load using selected key map: ${qKeyMap}`);
-  //   } else {
-  //     log.debug(`On load no such key map: ${qKeyMap}`)
-  //   }
-  // }, [router.query, keyMap, setKeyMap, setLegendMap, setPressedKey])
-
-  // useCallback(() => {
-  //   useEffect(() => {
-  //     const newKeyId = pressedKey ? pressedKey.id : router.query.keyId;
-  //     const newKeyMap = keyMap ? keyMap : router.query.keyMap;
-  //     const newLegendMap = legendMap ? legendMap : router.query.legendMap;
-  //     router.push({
-  //       pathName: '/',
-  //       query: {
-  //         keyId: newKeyId,
-  //         keyMap: newKeyMap,
-  //         legendMap: newLegendMap,
-  //       }
-  //     });
-  //   });
-  // }, [keyMap, legendMap, pressedKey, router])
 
 
   /* Calculating rects of child elements
@@ -144,7 +89,7 @@ export const KeyblayUI = () => {
 
             <div className="flex flex-row justify-between">
 
-              <h1 className="text-2xl flex-col p-2">Layout Guide</h1>
+              <h1 className="text-xl flex-col p-2">keyblay</h1>
 
               <button
                 className="inline text-blue-500 p-2"
@@ -186,7 +131,9 @@ export const KeyblayUI = () => {
             >
 
               <Keyboard
+                pressedKey={pressedKey}
                 targetKeyIds={targetKeyIds}
+                setPressedKey={setPressedKey}
                 keyMapName={keyMap.keyMapName}
               />
 
