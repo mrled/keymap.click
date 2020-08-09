@@ -6,6 +6,8 @@ import React, {
   useEffect,
 } from "react";
 
+import log from "loglevel";
+
 import { Diagram } from "~/components/diagram";
 import { InfoPanel } from "~/components/infoPanel";
 
@@ -43,23 +45,24 @@ export const KeyblayUI = () => {
   const [keyboardAndPanelRect, setKeyboardAndPanelRect] = useState(new FakeDOMRect());
   const keyboardAndPanel = useCallback(node => {
     if (node !== null) setKeyboardAndPanelRect(node.getBoundingClientRect());
-  }, [documentDimensions, pressedKey, visibleSettings, windowSize]);
+  }, [pressedKey, visibleSettings, windowSize]);
 
   const [diamargLeftRect, setDiamargLeftRect] = useState(new FakeDOMRect());
   const diamargLeft = useCallback(node => {
     if (node !== null) setDiamargLeftRect(node.getBoundingClientRect());
-  }, [documentDimensions, keyboardAndPanelRect, pressedKey, visibleSettings, windowSize]);
+  }, [keyboardAndPanelRect, pressedKey, visibleSettings, windowSize]);
 
   const [diamargRightRect, setDiamargRightRect] = useState(new FakeDOMRect());
   const diamargRight = useCallback(node => {
     if (node !== null) setDiamargRightRect(node.getBoundingClientRect());
-  }, [documentDimensions, keyboardAndPanelRect, pressedKey, visibleSettings, windowSize]);
+  }, [keyboardAndPanelRect, pressedKey, visibleSettings, windowSize]);
 
   useEffect(() => {
+    log.debug(`Document dimensions should update due to a dependency change...`)
     updateDocumentDimensions();
     // We must NOT pass updateDocumentDimensions as a dependency for this effect, or it will cause an infinite loop!
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pressedKey, visibleSettings]);
+  }, [keyboardAndPanelRect, pressedKey, visibleSettings]);
 
 
   const { connections, targetKeyIds } = useKeyConnections(pressedKey, keyboardAndPanelRect.top);

@@ -26,24 +26,35 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
   const windowSize = useWindowSize();
   const [appDebug, setAppDebug] = useContext(AppDebugContext);
 
+  const updateCanvasSize = useCallback(() => {
+    if (!canvas) return;
+    if (!canvas.current) return;
+
+    /* Without setting the h/w here, canvas will be some arbitrary small size
+   * canvas.style.{w/h} is the CSS 'style' property of the element in the DOM,
+   * while canvas.{w/h} is the _internal_ dimensions for drawing on.
+   * We want our canvas to cover the entire screen,
+   * so this relies on the container being position: absolute in the top left
+   * and width/height at 100%,
+   * while the canvas should also be position: absolute and overflow: visible.
+   */
+    canvas.current.style.width = `${documentDimensions.width}px`;
+    canvas.current.style.height = `${documentDimensions.height}px`;
+    canvas.current.width = documentDimensions.width;
+    canvas.current.height = documentDimensions.height;
+
+    log.debug(`New canvas sizes:\n${canvas.current.style.width} * ${canvas.current.style.height}\n${canvas.current.width} * ${canvas.current.height}`);
+  }, [documentDimensions]);
+
+  useEffect(() => {
+    updateCanvasSize();
+  }, [documentDimensions, updateCanvasSize, windowSize]);
+
   const updateCanvas = useCallback(() => {
     if (!canvas) return;
     if (!canvas.current) return;
 
     const context = canvas.current.getContext("2d");
-
-    /* Without setting the h/w here, canvas will be some arbitrary small size
-     * canvas.style.{w/h} is the CSS 'style' property of the element in the DOM,
-     * while canvas.{w/h} is the _internal_ dimensions for drawing on.
-     * We want our canvas to cover the entire screen,
-     * so this relies on the container being position: absolute in the top left
-     * and width/height at 100%,
-     * while the canvas should also be position: absolute and overflow: visible.
-     */
-    canvas.current.style.width = `${container.current.scrollWidth}px`;
-    canvas.current.style.height = `${container.current.scrollHeight}px`;
-    canvas.current.width = container.current.scrollWidth;
-    canvas.current.height = container.current.scrollHeight;
 
     /* Clear the canvas completely before drawing
      * Without this, fast refresh during development will show old paths and new paths
