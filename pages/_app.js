@@ -16,11 +16,17 @@ import {
   DocumentDimensionsContext,
   KeyMapContext,
   LegendMapContext,
+  PressedKeyContext,
   appDebugDefault,
   documentDimensionsDefault,
   keyMapDefault,
   legendMapDefault,
+  pressedKeyDefault,
 } from "~/components/appContext";
+import {
+  keyMaps,
+  legendMaps,
+} from "~/lib/keys";
 
 /* Update application state based on the appDebug.
  * Intended to be called from a useEffect() hook that is called on appDebug value change.
@@ -41,7 +47,41 @@ function App({ Component, pageProps }) {
   const [appDebug, setAppDebug] = useState(appDebugDefault);
   const [keyMap, setKeyMap] = useState(keyMapDefault);
   const [legendMap, setLegendMap] = useState(legendMapDefault);
+  const [pressedKey, setPressedKey] = useState(pressedKeyDefault);
   const router = useRouter();
+
+
+  const keyMapObj = keyMaps[keyMap.keyMapName];
+  const qKeyId = router.query.keyId;
+  const qLegendMap = router.query.legendMap;
+  const qKeyMap = router.query.keyMap;
+
+  if (qKeyId && qKeyId !== "undefined" && keyMapObj.allKeysById[qKeyId]) {
+    if (pressedKey != qKeyId) {
+      setPressedKey(keyMapObj.allKeysById[qKeyId]);
+      log.debug(`On load using selected key id: ${qKeyId}`);
+    } else {
+      log.debug(`On load router key ID ${qKeyId} matched current pressed key ${pressedKey}`);
+    }
+
+  } else {
+    log.debug(`On load no such key id: ${qKeyId}`);
+  }
+
+  if (qLegendMap && qLegendMap != "undefined" && legendMaps[qLegendMap]) {
+    setLegendMap(qLegendMap);
+    log.debug(`On load using selected legend map: ${qLegendMap}`);
+  } else {
+    log.debug(`On load no such legend map: ${qLegendMap}`)
+  }
+
+  if (qKeyMap && qKeyMap != "undefined" && keyMaps[qKeyMap]) {
+    setKeyMap(qKeyMap);
+    log.debug(`On load using selected key map: ${qKeyMap}`);
+  } else {
+    log.debug(`On load no such key map: ${qKeyMap}`)
+  }
+
 
 
   /* Manage document size context
@@ -92,7 +132,9 @@ function App({ Component, pageProps }) {
       <DocumentDimensionsContext.Provider value={[documentDimensions, updateDocumentDimensions]}>
         <KeyMapContext.Provider value={[keyMap, setKeyMap]}>
           <LegendMapContext.Provider value={[legendMap, setLegendMap]}>
-            <Component {...pageProps} />
+            <PressedKeyContext.Provider value={[pressedKey, setPressedKey]}>
+              <Component {...pageProps} />
+            </PressedKeyContext.Provider>
           </LegendMapContext.Provider>
         </KeyMapContext.Provider>
       </DocumentDimensionsContext.Provider>
