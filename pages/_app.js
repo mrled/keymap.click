@@ -16,6 +16,10 @@ import {
   DocumentDimensionsContext,
   KeyMapContext,
   LegendMapContext,
+  appDebugDefault,
+  documentDimensionsDefault,
+  keyMapDefault,
+  legendMapDefault,
 } from "~/components/appContext";
 
 /* Update application state based on the appDebug.
@@ -34,9 +38,9 @@ export const handleAppDebugChange = (appDebug) => {
 
 function App({ Component, pageProps }) {
 
-  const [appDebug, setAppDebug] = useState({ debugLevel: 0 });
-  const [keyMap, setKeyMap] = useState({ keyMapName: "MrlMainLayer" });
-  const [legendMap, setLegendMap] = useState({ legendMapName: "MrlLegends" });
+  const [appDebug, setAppDebug] = useState(appDebugDefault);
+  const [keyMap, setKeyMap] = useState(keyMapDefault);
+  const [legendMap, setLegendMap] = useState(legendMapDefault);
   const router = useRouter();
 
 
