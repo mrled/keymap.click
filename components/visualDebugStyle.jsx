@@ -19,7 +19,7 @@ const VisualDebugStyleEnabled = () => {
         border-width: 1px;
       }
       .debug-border-orange {
-        border-color: #feebc8;
+        border-color: #ea9904;
         border-style: solid;
         border-width: 1px;
       }
@@ -29,7 +29,7 @@ const VisualDebugStyleEnabled = () => {
         border-width: 1px;
       }
       .debug-border-yellow {
-        border-color: #fefcbf;
+        border-color: #fdf874;
         border-style: solid;
         border-width: 1px;
       }
@@ -45,11 +45,17 @@ const VisualDebugStyleEnabled = () => {
       .debug-bg-orange {
         background-color: #feebc8;
       }
+      .debug-trans-bg-orange {
+        background-color: rgba(254, 235, 200, 0.2);
+      }
       .debug-bg-teal {
         background-color: #b2f5ea;
       }
       .debug-bg-yellow {
         background-color: #fefcbf;
+      }
+      .debug-trans-bg-yellow {
+        background-color: rgba(254, 252, 191, 0.2);
       }
     `}
   </style>

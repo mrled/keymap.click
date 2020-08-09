@@ -175,7 +175,7 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
         ref={canvas}
         id="keyblay-debug-canvas"
         style={{ height: documentDimensions.height, width: "100%" }}
-        className="absolute overflow-visible w-screen"
+        className="absolute overflow-visible w-screen debug-border-orange debug-trans-bg-orange"
       />
     </div>
   );
