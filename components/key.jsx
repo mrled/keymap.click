@@ -28,14 +28,27 @@ import {
  * However, it is so small that this doesn't matter.
  * The diagram line still looks good inside the <Key>.
  */
-const KeyHandle = ({ keyId }) => {
-  const classes = "h-0 w-0 top-0 left-0 pointer-events-none";
-  return keyId ?
-    (
-      <div id={keyHandleDomIdFromKeyId(keyId)} className={classes} />
-    ) : (
-      <div className={classes} />
-    );
+const KeyHandle = ({ keyId, colStart, handleTop }) => {
+  if (!keyId) {
+    return null;
+  }
+
+  /* Calculate an offset for the Y dimension.
+   * This offset is used to ensure that lines pointing to keys on the same row
+   * don't overwrite each other.
+   * It's not perfect, but it should be pretty good for non-pathological keymaps.
+   */
+  const yOffsetValue = colStart;
+  const yOffsetMultiplier = handleTop ? -1 : 1;
+  const yOffset = yOffsetValue * yOffsetMultiplier;
+  const style = {
+    transform: `translateY(${yOffset}px)`,
+  };
+
+  const classes = "h-1 w-1 m-0 p-0 border-none pointer-events-none absolute";
+  return <>
+    <div id={keyHandleDomIdFromKeyId(keyId)} style={style} className={classes} />
+  </>;
 };
 
 /* Process a legend object from lib/keys.js,
@@ -112,6 +125,7 @@ export const Key = ({
     size = [2, 2],
     startPos = ["auto", "auto"],
     extraClasses = "",
+    handleTop = false,
   } = keyData;
   const [col, row] = size;
   const [colStart, rowStart] = startPos;
@@ -123,7 +137,7 @@ export const Key = ({
   const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`;
   const classes = classnames(
     standalone ? standaloneClasses : gridClasses,
-    `cursor-pointer p-1 flex justify-center items-center rounded-sm font-mono pointer-events-auto keyblay-outline-none`,
+    `cursor-pointer p-1 flex justify-center items-center rounded-sm font-mono pointer-events-auto keyblay-outline-none relative`,
     {
       "bg-orange-300 border border-orange-700 hover:bg-orange-600": active,
       "bg-orange-100 border border-orange-500 hover:bg-orange-400": otherSelected,
@@ -139,7 +153,7 @@ export const Key = ({
 
   return (
     <button id={id} onClick={onClick} className={classes}>
-      <KeyHandle keyId={id} />
+      <KeyHandle keyId={id} colStart={colStart} handleTop={handleTop} />
       {keyLegendInfo.legend}
     </button>
   );
