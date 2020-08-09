@@ -29,6 +29,7 @@ import { AppSettings } from "./appSettings";
 
 export const KeyblayUI = () => {
   const [pressedKey, setPressedKey] = useState({});
+  const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
   const [visibleSettings, setVisibleSettings] = useState(false);
   const [appDebug, setAppDebug] = useContext(AppDebugContext)
   const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext)
@@ -132,8 +133,10 @@ export const KeyblayUI = () => {
             >
 
               <Keyboard
+                otherSelectedKeys={otherSelectedKeys}
                 pressedKey={pressedKey}
                 targetKeyIds={targetKeyIds}
+                setOtherSelectedKeys={setOtherSelectedKeys}
                 setPressedKey={setPressedKey}
               />
 
@@ -145,6 +148,7 @@ export const KeyblayUI = () => {
                   keyData={pressedKey}
                   keyButtonOnClick={() => {
                     SelectedKeyState.setQuery(router, null)
+                    setOtherSelectedKeys([]);
                     setPressedKey({});
                   }}
                 />

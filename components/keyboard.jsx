@@ -15,14 +15,11 @@ import {
   keyMaps,
 } from "~/lib/keys";
 
-export const Keyboard = ({ pressedKey, targetKeyIds, setPressedKey }) => {
-  const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
-
+export const Keyboard = ({ otherSelectedKeys, pressedKey, targetKeyIds, setOtherSelectedKeys, setPressedKey }) => {
   const router = useRouter();
 
   const keyMapName = KeyMapState.getValue(router);
   const keyMap = keyMaps[keyMapName];
-  // const legend = legends[legendName]
 
   useEffect(() => {
     const keyId = router.query.keyId;
