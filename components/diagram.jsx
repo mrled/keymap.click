@@ -179,14 +179,12 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
     <div
       ref={container}
       id="keyblay-debug-canvas-container"
-      style={{ height: documentDimensions.height, width: "100%" }}
       className="absolute top-0 left-0 pointer-events-none z-50"
     >
       <canvas
         ref={canvas}
         id="keyblay-debug-canvas"
-        style={{ height: documentDimensions.height, width: "100%" }}
-        className="absolute overflow-visible w-screen debug-border-orange debug-trans-bg-orange"
+        className="absolute overflow-visible debug-border-orange debug-trans-bg-orange"
       />
     </div>
   );
