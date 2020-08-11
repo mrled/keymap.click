@@ -50,6 +50,56 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
     updateCanvasSize();
   }, [documentDimensions, updateCanvasSize, windowSize]);
 
+  const drawVisualDebugInfo = (context, keyboardCenter, keyboardAndPanelRect, diamargLeftRect, diamargRightRect) => {
+    log.debug(`diagram: visual debugging enabled`);
+    context.lineWidth = 2;
+
+    // Draw a rectangle inset from the three KID elements.
+    // Show we can track their outline as they change in size.
+    // Also draw a line down the center of the keyboard.
+
+    if (keyboardAndPanelRect) {
+      log.debug(`Drawing into the keyboard/panel rectangle...`)
+      context.beginPath();
+      context.strokeStyle = "purple";
+      context.moveTo(keyboardCenter, 0);
+      var idx = 0;
+      while (idx <= document.documentElement.scrollHeight) {
+        context.lineTo(keyboardCenter + 10, idx);
+        context.moveTo(keyboardCenter, idx);
+        context.lineTo(keyboardCenter, idx + 100);
+        idx += 100;
+      }
+      context.stroke();
+
+      context.strokeStyle = "purple";
+      context.beginPath();
+      traceRect(smallerRect(keyboardAndPanelRect), context);
+      context.stroke()
+    } else {
+      log.debug(`diagram: could not draw center line because there was no keyboardAndPanelRect`);
+    }
+
+    if (diamargLeftRect) {
+      const diamargLeftRectInner = smallerRect(diamargLeftRect);
+      context.strokeStyle = "purple";
+      context.beginPath();
+      traceRect(diamargLeftRectInner, context);
+      context.stroke()
+    } else {
+      log.debug(`diagram: there is no diamargLeftRect`);
+    }
+    if (diamargRightRect) {
+      const diamargRightRectInner = smallerRect(diamargRightRect);
+      context.strokeStyle = "purple";
+      context.beginPath();
+      traceRect(diamargRightRectInner, context);
+      context.stroke()
+    } else {
+      log.debug(`diagram: there is no diamargRightRect`);
+    }
+  }
+
   const updateCanvas = useCallback(() => {
     if (!canvas) return;
     if (!canvas.current) return;
@@ -76,61 +126,20 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
     const keyboardCenter = keyboardAndPanelRect.x + (keyboardAndPanelRect.right - keyboardAndPanelRect.x) / 2;
 
     if (appDebug.debugLevel > 1) {
-      log.debug(`diagram: visual debugging enabled`);
-      context.lineWidth = 2;
-
-      // Draw a rectangle inset from the three KID elements.
-      // Show we can track their outline as they change in size.
-      // Also draw a line down the center of the keyboard.
-
-      if (keyboardAndPanelRect) {
-        log.debug(`Drawing into the keyboard/panel rectangle...`)
-        context.beginPath();
-        context.strokeStyle = "purple";
-        context.moveTo(keyboardCenter, 0);
-        var idx = 0;
-        while (idx <= document.documentElement.scrollHeight) {
-          context.lineTo(keyboardCenter + 10, idx);
-          context.moveTo(keyboardCenter, idx);
-          context.lineTo(keyboardCenter, idx + 100);
-          idx += 100;
-        }
-        context.stroke();
-
-        context.strokeStyle = "purple";
-        context.beginPath();
-        traceRect(smallerRect(keyboardAndPanelRect), context);
-        context.stroke()
-      } else {
-        log.debug(`diagram: could not draw center line because there was no keyboardAndPanelRect`);
-      }
-
-      if (diamargLeftRect) {
-        const diamargLeftRectInner = smallerRect(diamargLeftRect);
-        context.strokeStyle = "purple";
-        context.beginPath();
-        traceRect(diamargLeftRectInner, context);
-        context.stroke()
-      } else {
-        log.debug(`diagram: there is no diamargLeftRect`);
-      }
-      if (diamargRightRect) {
-        const diamargRightRectInner = smallerRect(diamargRightRect);
-        context.strokeStyle = "purple";
-        context.beginPath();
-        traceRect(diamargRightRectInner, context);
-        context.stroke()
-      } else {
-        log.debug(`diagram: there is no diamargRightRect`);
-      }
-
-
+      drawVisualDebugInfo(context, keyboardCenter, keyboardAndPanelRect, diamargLeftRect, diamargRightRect);
     }
 
     context.strokeStyle = "#68d391";
     context.lineWidth = 1;
-    const marginInsetTickSize = 5;  // Distance between lines in margin
     context.beginPath();
+
+    /* marginInsetTickSize: the distance between vertical lines in the margin
+     */
+    const marginInsetTickSize = 5;
+
+    /* sourceYInsetTickSize: the distance between horizontal lines from the source text to the margin
+     */
+    const sourceYInsetTickSize = 3;
 
     /* leftRightIdx: keep track of number of vertical lines in each diamarg.
      * right = true and left = false.
@@ -138,6 +147,14 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
      * in the body of the forEach function below.
      */
     const leftRightIdx = { true: 0, false: 0 };
+
+    /* leftRightSourceYCoordStartList: keep track of Y coordinates that source diagram lines have started from.
+     * With this info, we can offset the horizontal line between the source text and the diamarg
+     * by some small amount so that two horizontal lines are not drawn on top of each other.
+     * leftRightSourceYCoordStartList[rightMargin] will return the Y coordinates that have been found in the correct diamarg
+     * in the body of the forEach function below.
+     */
+    let leftRightSourceYCoordStartList = { true: [], false: [], };
 
     connections.forEach((connection) => {
       const source = connection.sourceCoords;
@@ -147,6 +164,24 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
         return
       }
       const rightMargin = keyboardCenter < target.x;
+
+      const calculateSourceYCoord = (initialSourceYCoord, alreadySeenCoords, tickSize) => {
+        let result = initialSourceYCoord;
+        let idx = 0;
+        while (alreadySeenCoords.indexOf(result) > -1) {
+          if (idx > 100) {
+            throw new Error(`This is probably an infinite loop`)
+          }
+          result += tickSize;
+          idx += 1;
+        }
+        log.debug(`Selected source Y coordinate of ${result} from initial value of ${initialSourceYCoord}`);
+        alreadySeenCoords.push(result);
+        return [result, alreadySeenCoords];
+      }
+
+      const [sourceInsetY, newCoordList] = calculateSourceYCoord(source.y, leftRightSourceYCoordStartList[rightMargin], sourceYInsetTickSize)
+      leftRightSourceYCoordStartList[rightMargin] = newCoordList;
 
       /* Return the X coordinate for the vertical line
        */
@@ -162,7 +197,8 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
       const marginX = calculateMarginXCoord(diamargRect, rightMargin, leftRightIdx[rightMargin], marginInsetTickSize)
 
       context.moveTo(source.x, source.y);
-      context.lineTo(marginX, source.y);
+      context.lineTo(source.x, sourceInsetY);
+      context.lineTo(marginX, sourceInsetY);
       context.lineTo(marginX, target.y);
       context.lineTo(target.x, target.y);
 
