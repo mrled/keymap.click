@@ -28,17 +28,6 @@ Why should they care?
 
 Some kind of guided tour.
 
-## Decide on a final name
-
-I have always hated 'keyblay'.
-What should I call it instead?
-
-Maybe something related to
-
-* Ergonomics
-* Guided tours
-* RSI
-
 ## Nicer looking key references inside the info panel
 
 * Make the `<kbd>` elements look like mini keys from the board above?
@@ -76,68 +65,6 @@ so I'll probably have to find something like that.
 Fill out key info content with references.
 Edit all the content.
 
-## Improve diagram lines
-
-Would be nice if they didn't overlap text, but instead were drawn underneath it.
-Maybe hard?
-
-20200731: Thinking more about this:
-
-* Build an "orthogonal" diagram, where all the lines are horizontal or vertical, no slopes or curves
-* On the keyboard map, I can cheat --
-  all the keys on the left hand have diagram lines that are drawn vertically into the left margin,
-  and then down to the key information panel;
-  similarly, all the keys on the right have lines that are drawn into the right margin.
-* Additionally, I can divide the vertical key space into 7 sections,
-  as there are at most 7 keys that occupy the same vertical space.
-  I don't need to adjust the attachment point at run time,
-  it can just be static for a key in whatever position.
-* If I ever reposition the keys to more precisely mirror the location of the keys on the physical ErgoDox,
-  which are not in an exact grid,
-  I'll have to modify the attachment point location and might have to set it manually on each key,
-  but I still won't have to select it algorithmically.
-* In the information panel, I have to do some calculations.
-* `getClientRects()` returns a list of rects -- one for each line of text -- inside a div.
-  I think I can use this to determine how many attachment points are on the same line of text.
-* Then I can place the horizontal lines from the margin into the text such that they don't cover one another.
-* Calculate positions for vertical lines in the margins to they don't cover one another either
-
-Then I can iterate, perhaps:
-
-* Minimizing crossings
-* Automatically moving horizontal lines that are close, if there is room to do so
-* Perhaps that could use a "force-directed" technique?
-  There's a more general document:
-  [Graph Drawing Tutorial](http://cs.brown.edu/people/rtamassi/papers/gd-tutorial/gd-constraints.pdf).
-  It discusses force directed techniques for graph layout,
-  such that nodes might attract or repel one another;
-  if nodes repelled one another but were confined to a location within their parent key,
-  I could automatically lay out the horizontal lines to be far apart from each other.
-* Experiment with different colors, maybe that helps if there are lines close to each other?
-* Intelligently combine lines that are going to or from the same place.
-  For instance, two separate places in the text might refer to the same key;
-  these could share the vertical line in the margin,
-  and only diverge in the info panel.
-* Intelligently use the opposite margin,
-  if doing so would result in shorter lines or less congested margins.
-
-20200805 update:
-
-* Added Diamargs
-* Keyboard sometimes overlaps Diamargs, depending on window width.
-  TODO: smarten up breakpoints so that this never happens at sane sizes.
-
-20200808 update:
-
-* 🔲 smarten up breakpoints per above
-* ✅ fucking fix margin->keyboard diagram lines overlapping!!
-* 🔲 fix margin->text diagram lines overlapping
-
-20200810 update:
-
-* 🔲 smarten up breakpoints per above
-* ✅ fix margin->text diagram lines overlapping
-
 ## Add place for more general info
 
 What is an ergodox, why did it help me generally, etc.
@@ -153,8 +80,6 @@ They should be linkable with URL fragments too.
 Now that I can link to individual keys, seems like I really ought to have a preview image for each one.
 
 Also should change the page title.
-
-## Notes from discussing names and stuff with
 
 # Development notes and completed to do items
 
@@ -973,3 +898,80 @@ DONE :)
 Decided this was necessary because there are multiple maps now.
 
 * ✅ done 20200809
+
+## Improve diagram lines
+
+Would be nice if they didn't overlap text, but instead were drawn underneath it.
+Maybe hard?
+
+20200731: Thinking more about this:
+
+* Build an "orthogonal" diagram, where all the lines are horizontal or vertical, no slopes or curves
+* On the keyboard map, I can cheat --
+  all the keys on the left hand have diagram lines that are drawn vertically into the left margin,
+  and then down to the key information panel;
+  similarly, all the keys on the right have lines that are drawn into the right margin.
+* Additionally, I can divide the vertical key space into 7 sections,
+  as there are at most 7 keys that occupy the same vertical space.
+  I don't need to adjust the attachment point at run time,
+  it can just be static for a key in whatever position.
+* If I ever reposition the keys to more precisely mirror the location of the keys on the physical ErgoDox,
+  which are not in an exact grid,
+  I'll have to modify the attachment point location and might have to set it manually on each key,
+  but I still won't have to select it algorithmically.
+* In the information panel, I have to do some calculations.
+* `getClientRects()` returns a list of rects -- one for each line of text -- inside a div.
+  I think I can use this to determine how many attachment points are on the same line of text.
+* Then I can place the horizontal lines from the margin into the text such that they don't cover one another.
+* Calculate positions for vertical lines in the margins to they don't cover one another either
+
+Then I can iterate, perhaps:
+
+* Minimizing crossings
+* Automatically moving horizontal lines that are close, if there is room to do so
+* Perhaps that could use a "force-directed" technique?
+  There's a more general document:
+  [Graph Drawing Tutorial](http://cs.brown.edu/people/rtamassi/papers/gd-tutorial/gd-constraints.pdf).
+  It discusses force directed techniques for graph layout,
+  such that nodes might attract or repel one another;
+  if nodes repelled one another but were confined to a location within their parent key,
+  I could automatically lay out the horizontal lines to be far apart from each other.
+* Experiment with different colors, maybe that helps if there are lines close to each other?
+* Intelligently combine lines that are going to or from the same place.
+  For instance, two separate places in the text might refer to the same key;
+  these could share the vertical line in the margin,
+  and only diverge in the info panel.
+* Intelligently use the opposite margin,
+  if doing so would result in shorter lines or less congested margins.
+
+20200805 update:
+
+* Added Diamargs
+* Keyboard sometimes overlaps Diamargs, depending on window width.
+  TODO: smarten up breakpoints so that this never happens at sane sizes.
+
+20200808 update:
+
+* 🔲 smarten up breakpoints per above
+* ✅ fucking fix margin->keyboard diagram lines overlapping!!
+* 🔲 fix margin->text diagram lines overlapping
+
+20200810 update:
+
+* ✅ smarten up breakpoints per above -- actually going to say this looks pretty ok in the non-pathological case right now
+* ✅ fix margin->text diagram lines overlapping
+
+THAT MEANS THIS IS FINALLY DONE!
+
+## Decide on a final name
+
+I have always hated 'keyblay'.
+What should I call it instead?
+
+Maybe something related to
+
+* Ergonomics
+* Guided tours
+* RSI
+
+✅ I got keymap.click !!
