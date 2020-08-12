@@ -6,5 +6,5 @@
 }
 
 .keyblay-font-roboto-mono {
-    font: "Roboto Mono";
+    font-family: "Roboto Mono", monospace;
 }

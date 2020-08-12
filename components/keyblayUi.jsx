@@ -91,7 +91,7 @@ export const KeyblayUI = () => {
 
             <div className="flex flex-row justify-between">
 
-              <h1 className="text-xl flex-col p-2">keyblay</h1>
+              <h1 className="text-xl flex-col p-2 keyblay-font-roboto-mono">keymap.click</h1>
 
               <button
                 className="inline text-blue-500 p-2"
