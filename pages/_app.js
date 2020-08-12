@@ -65,7 +65,11 @@ function App({ Component, pageProps }) {
 
   useEffect(() => {
     Fathom.load('HDMUSVII', {
-      includedDomains: ['keyblay.now.sh']
+      includedDomains: [
+        'keyblay.now.sh',
+        'keymap.click',
+        'keymap-dot-click.vercel.app',
+      ]
     });
     function onRouteChangeComplete() {
       Fathom.trackPageview();

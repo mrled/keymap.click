@@ -1,9 +1,9 @@
-# keyblay
+# keymap.click
 
 Experiments in keyboard layout demonstration
 
 You might be able to see it in action here:
-<https://keyblay.now.sh>
+<https://keymap.click>
 
 That site is used for development,
 and may not always be working.

@@ -133,6 +133,11 @@ Then I can iterate, perhaps:
 * ✅ fucking fix margin->keyboard diagram lines overlapping!!
 * 🔲 fix margin->text diagram lines overlapping
 
+20200810 update:
+
+* 🔲 smarten up breakpoints per above
+* ✅ fix margin->text diagram lines overlapping
+
 ## Add place for more general info
 
 What is an ergodox, why did it help me generally, etc.
@@ -148,6 +153,8 @@ They should be linkable with URL fragments too.
 Now that I can link to individual keys, seems like I really ought to have a preview image for each one.
 
 Also should change the page title.
+
+## Notes from discussing names and stuff with
 
 # Development notes and completed to do items
 

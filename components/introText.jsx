@@ -6,7 +6,7 @@ export const IntroText = () => {
   return (
     <div className="pb-4">
       <h1 className="text-3xl pb-4">
-        keyblay: Experiments in keyboard layouts
+        keymap.click: Experiments in keyboard layouts
       </h1>
       <p className="p-1">This is a work in progress.</p>
       <p className="p-1">
@@ -19,9 +19,9 @@ export const IntroText = () => {
         I am building it on GitHub. Issues and contributions welcome.{" "}
         <a
           className="text-blue-600 undere"
-          href="https://github.com/mrled/keyblay"
+          href="https://github.com/mrled/keymap.click"
         >
-          https://github.com/mrled/keyblay
+          https://github.com/mrled/keymap.click
         </a>
       </p>
     </div>

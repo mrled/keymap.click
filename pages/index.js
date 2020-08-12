@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>keyblay: experiments in keyboard layouts</title>
+        <title>keymap.click: experiments in keyboard layouts</title>
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="viewport"
@@ -21,14 +21,14 @@ export default function Home() {
         <meta
           name="og:title"
           property="og:title"
-          content="keyblay: experiments in keyboard layouts"
+          content="keymap.click: experiments in keyboard layouts"
         />
         <meta
           name="og:description"
           property="og:description"
           content="A visual explanation of how an ErgoDox keyboard helped my RSI."
         />
-        <meta property="og:url" content="https://keyblay.now.sh" />
+        <meta property="og:url" content="https://keymap.click" />
         <link
           rel="icon"
           type="image/png"
@@ -53,7 +53,7 @@ export default function Home() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:image"
-          content="https://keyblay.now.sh/og_image_screenshot.png"
+          content="https://keymap.click/og_image_screenshot.png"
         />
         <meta
           name="twitter:image:alt"
@@ -61,7 +61,7 @@ export default function Home() {
         />
         <meta
           name="twitter:title"
-          content="keyblay: experiments in keyboard layouts"
+          content="keymap.click: experiments in keyboard layouts"
         />
         <meta
           name="twitter:description"
