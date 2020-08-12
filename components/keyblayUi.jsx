@@ -75,7 +75,7 @@ export const KeyblayUI = () => {
       <VisualDebugStyle enableDebug={appDebug.debugLevel > 1} />
 
       <div
-        className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg"
+        className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg mx-auto"
         id="keyblay-ui-outer-wrapper-container"
       >
 
