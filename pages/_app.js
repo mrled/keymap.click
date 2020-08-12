@@ -16,6 +16,7 @@ import {
   DocumentDimensionsContext,
   appDebugDefault,
 } from "~/components/appContext";
+import { AppHead } from "~/components/appHead";
 
 /* Update application state based on the appDebug.
  * Intended to be called from a useEffect() hook that is called on appDebug value change.
@@ -87,6 +88,7 @@ function App({ Component, pageProps }) {
   return <>
     <AppDebugContext.Provider value={[appDebug, setAppDebug]}>
       <DocumentDimensionsContext.Provider value={[documentDimensions, updateDocumentDimensions]}>
+        <AppHead />
         <Component {...pageProps} />
       </DocumentDimensionsContext.Provider>
     </AppDebugContext.Provider>
