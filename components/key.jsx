@@ -60,8 +60,17 @@ const Legend = (legend) => {
   if (!legend) {
     return {}
   } else if (legend.image) {
+    const [
+      width,
+      height,
+    ] = legend.image.size ? legend.image.size : [4, 4];
     return {
-      legend: <img src={`legends/${legend.image.value}`} className="container w-4 h-4" />,
+      legend: <>
+        <img
+          src={`legends/${legend.image.value}`}
+          className={`container w-${width} h-${height}`}
+        />
+      </>,
       attrib: legend.image.attrib || "",
     }
   } else if (legend.glyph) {
