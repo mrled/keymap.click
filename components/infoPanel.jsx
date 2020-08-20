@@ -1,6 +1,6 @@
+import Link from "next/link";
 import React from "react";
 
-import { IntroText } from "~/components/introText";
 import { parseKeyInfo, KeyInfo } from "~/components/keyInfo";
 
 /* Return a KeyInfoInner component, wrapped in a <KeyInfo> component
@@ -17,6 +17,19 @@ export const InfoPanel = ({ keyData, keyButtonOnClick = () => { } }) => {
       />
     );
   } else {
-    return <IntroText />;
+    return (
+      <div>
+        <h1 className="text-2xl pb-4">
+          Welcome
+      </h1>
+        <p className="p-1">Please select a key.</p>
+        <p className="p-1">
+          <Link href="/about">
+            <a className="text-blue-500">What is this?</a>
+          </Link>
+        </p>
+      </div>
+    );
   }
 };
+
