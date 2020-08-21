@@ -45,6 +45,19 @@ Edit all of this.
 
 Things I might do, but that I haven't decided on yet
 
+### Allow pulling in other keymaps
+
+Pull in keymaps and legend sets from other sources client-side.
+
+This would let other people write a .js file and use my app to show them.
+
+Use the getStaticPaths with a fallback for this, like
+<https://static-tweet.now.sh/>
+
+### Write prose in markdown
+
+Annoying to write in HTML, honestly, especially inside a React component.
+
 ### Nicer looking key references inside the info panel
 
 * Make the `<kbd>` elements look like mini keys from the board above?
