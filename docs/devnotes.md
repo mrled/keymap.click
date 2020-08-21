@@ -7,6 +7,8 @@ This section isn't well organized.
 
 # Active to do items
 
+Everything that I have decided to definitely do
+
 Here are some release milestones.
 
 Release: dev preview:
@@ -18,7 +20,8 @@ Release: 1.0
 
 * Add a guide
 * Add content for all the keys I want
-* Add place for more general info
+* Add place for more general info / prose
+* Add prose content
 
 ## Add a guide
 
@@ -27,6 +30,20 @@ What should they click on?
 Why should they care?
 
 Some kind of guided tour.
+
+## Add content for all the keys I want
+
+Fill out key info content with references.
+Edit all the content.
+
+## Add prose content
+
+Write about what this is, who am I, how this works, what an ErgoDox is, RSI stuff, etc etc.
+Edit all of this.
+
+# Ideas
+
+Things I might do, but that I haven't decided on yet
 
 ## Nicer looking key references inside the info panel
 
@@ -60,21 +77,6 @@ but it was not very clear what it was until you clicked there.
 Microsoft keyboards tend to use something that looks like a menu,
 so I'll probably have to find something like that.
 
-## Add content for all the keys I want
-
-Fill out key info content with references.
-Edit all the content.
-
-## Add place for more general info
-
-What is an ergodox, why did it help me generally, etc.
-
-Probably will have lots of these.
-
-Maybe an FAQ style section, if I can't think of anything better.
-
-They should be linkable with URL fragments too.
-
 ## Have a per-key preview image for slack/twitter/etc
 
 Now that I can link to individual keys, seems like I really ought to have a preview image for each one.
@@ -82,6 +84,10 @@ Now that I can link to individual keys, seems like I really ought to have a prev
 Also should change the page title.
 
 # Development notes and completed to do items
+
+Finished tasks, and general notes that are not tasks
+
+## Big WIP commit
 
 This was originally added as part of a big wip commit.
 
@@ -975,3 +981,15 @@ Maybe something related to
 * RSI
 
 ✅ I got keymap.click !!
+
+## Add place for more general info
+
+What is an ergodox, why did it help me generally, etc.
+
+Probably will have lots of these.
+
+Maybe an FAQ style section, if I can't think of anything better.
+
+They should be linkable too.
+
+✅ I have a way to add pages now
