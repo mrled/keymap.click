@@ -14,6 +14,7 @@ import { InfoPanel } from "~/components/infoPanel";
 import {
   AppDebugContext,
   DocumentDimensionsContext,
+  VisibleMenuContext,
 } from "~/components/appContext";
 import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
@@ -25,14 +26,13 @@ import {
 } from "~/lib/geometry";
 import { useWindowSize } from "~/lib/hooks";
 import { useKeyConnections } from "~/lib/keyConnections";
-import { AppSettings } from "./appSettings";
 
 export const KeyblayUI = () => {
   const [pressedKey, setPressedKey] = useState({});
   const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
-  const [visibleSettings, setVisibleSettings] = useState(false);
-  const [appDebug, setAppDebug] = useContext(AppDebugContext)
-  const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext)
+  const [appDebug, setAppDebug] = useContext(AppDebugContext);
+  const [visibleMenu, setVisibleMenu] = useContext(VisibleMenuContext);
+  const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext);
   const windowSize = useWindowSize();
   const router = useRouter();
 
@@ -47,24 +47,24 @@ export const KeyblayUI = () => {
   const [keyboardAndPanelRect, setKeyboardAndPanelRect] = useState(new FakeDOMRect());
   const keyboardAndPanel = useCallback(node => {
     if (node !== null) setKeyboardAndPanelRect(node.getBoundingClientRect());
-  }, [pressedKey, visibleSettings, windowSize]);
+  }, [pressedKey, visibleMenu, windowSize]);
 
   const [diamargLeftRect, setDiamargLeftRect] = useState(new FakeDOMRect());
   const diamargLeft = useCallback(node => {
     if (node !== null) setDiamargLeftRect(node.getBoundingClientRect());
-  }, [keyboardAndPanelRect, pressedKey, visibleSettings, windowSize]);
+  }, [keyboardAndPanelRect, pressedKey, visibleMenu, windowSize]);
 
   const [diamargRightRect, setDiamargRightRect] = useState(new FakeDOMRect());
   const diamargRight = useCallback(node => {
     if (node !== null) setDiamargRightRect(node.getBoundingClientRect());
-  }, [keyboardAndPanelRect, pressedKey, visibleSettings, windowSize]);
+  }, [keyboardAndPanelRect, pressedKey, visibleMenu, windowSize]);
 
   useEffect(() => {
     log.debug(`Document dimensions should update due to a dependency change...`)
     updateDocumentDimensions();
     // We must NOT pass updateDocumentDimensions as a dependency for this effect, or it will cause an infinite loop!
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyboardAndPanelRect, pressedKey, visibleSettings]);
+  }, [keyboardAndPanelRect, pressedKey, visibleMenu]);
 
 
   const { connections, targetKeyIds } = useKeyConnections(pressedKey, keyboardAndPanelRect.top);
@@ -83,29 +83,6 @@ export const KeyblayUI = () => {
           className="w-full md:mr-8 md:px-4 z-10"
           id="keyblay-ui-content-container"
         >
-
-          <div
-            className="border border-gray-300 bg-gray-100 rounded-md p-2 m-2"
-            id="keyblay-ui-app-bar-container"
-          >
-
-            <div className="flex flex-row justify-between">
-
-              <h1 className="text-xl flex-col p-2 keyblay-font-roboto-mono">keymap.click</h1>
-
-              <button
-                className="inline text-blue-500 p-2"
-                onClick={() => { setVisibleSettings(s => !s) }}>
-                {visibleSettings ? "Hide settings" : "Show settings"}
-              </button>
-
-            </div>
-
-            <div className="flex flex-row">
-              <AppSettings visible={visibleSettings} />
-            </div>
-
-          </div>
 
           {/* Some notes on naming:
             * KID is Keyboard, InfoPanel, Diamargs.

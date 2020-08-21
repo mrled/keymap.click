@@ -14,7 +14,9 @@ import "~/styles/fonts.css";
 import {
   AppDebugContext,
   DocumentDimensionsContext,
+  VisibleMenuContext,
   appDebugDefault,
+  visibleMenuDefault,
 } from "~/components/appContext";
 import { AppHead } from "~/components/appHead";
 
@@ -35,6 +37,7 @@ export const handleAppDebugChange = (appDebug) => {
 function App({ Component, pageProps }) {
 
   const [appDebug, setAppDebug] = useState(appDebugDefault);
+  const [visibleMenu, setVisibleMenu] = useState(visibleMenuDefault);
   const router = useRouter();
 
 
@@ -88,8 +91,10 @@ function App({ Component, pageProps }) {
   return <>
     <AppDebugContext.Provider value={[appDebug, setAppDebug]}>
       <DocumentDimensionsContext.Provider value={[documentDimensions, updateDocumentDimensions]}>
-        <AppHead />
-        <Component {...pageProps} />
+        <VisibleMenuContext.Provider value={[visibleMenu, setVisibleMenu]}>
+          <AppHead />
+          <Component {...pageProps} />
+        </VisibleMenuContext.Provider>
       </DocumentDimensionsContext.Provider>
     </AppDebugContext.Provider>
   </>

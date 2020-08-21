@@ -18,23 +18,19 @@ import {
   legendMaps,
 } from "~/lib/keys";
 
-export const AppSettings = ({ visible }) => {
+export const AppSettings = () => {
   const [appDebug, setAppDebug] = useContext(AppDebugContext)
   const router = useRouter();
 
   return (
     <div
-      className={classnames(
-        // "bg-blue-200 shadow-lg m-4 p-4 rounded-md container m-auto",
-        "container m-4 p-4",
-        {
-          "hidden": !visible,
-        }
-      )}
+      className="mt-4"
       id="keyblay-app-settings"
     >
 
       <hr />
+
+      <h2 className="mt-4 mb-4 text-2xl">Settings</h2>
 
       <div className="flex flex-wrap">
         <label htmlFor="keyblay-app-debug-selector" className="p-2 m-2 w-1/3">Debug level</label>

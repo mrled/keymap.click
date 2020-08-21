@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
+import { InterAppLink } from "~/components/interAppLink";
 import { parseKeyInfo, KeyInfo } from "~/components/keyInfo";
 
 /* Return a KeyInfoInner component, wrapped in a <KeyInfo> component
@@ -24,9 +25,7 @@ export const InfoPanel = ({ keyData, keyButtonOnClick = () => { } }) => {
       </h1>
         <p className="p-1">Please select a key.</p>
         <p className="p-1">
-          <Link href="/about">
-            <a className="text-blue-500">What is this?</a>
-          </Link>
+          <InterAppLink href="/about">What is this?</InterAppLink>
         </p>
       </div>
     );

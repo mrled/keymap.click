@@ -1,9 +1,13 @@
 import React from "react";
 
-import { KeyblayUI } from "../components/keyblayUi";
+import { KeyblayUI } from "~/components/keyblayUi";
+import { MenuBar } from "~/components/menuBar";
 
 export default function Home() {
   return (
-    <KeyblayUI />
+    <>
+      <MenuBar showSettings={true} />
+      <KeyblayUI />
+    </>
   );
 }
