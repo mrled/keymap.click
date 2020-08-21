@@ -5,7 +5,7 @@ At the top are active to do items.
 In the second section are finished to-do items and also some general dev notes.
 This section isn't well organized.
 
-# Active to do items
+## Active to do items
 
 Everything that I have decided to definitely do
 
@@ -23,7 +23,7 @@ Release: 1.0
 * Add place for more general info / prose
 * Add prose content
 
-## Add a guide
+### Add a guide
 
 A new user lands on this page.
 What should they click on?
@@ -31,43 +31,43 @@ Why should they care?
 
 Some kind of guided tour.
 
-## Add content for all the keys I want
+### Add content for all the keys I want
 
 Fill out key info content with references.
 Edit all the content.
 
-## Add prose content
+### Add prose content
 
 Write about what this is, who am I, how this works, what an ErgoDox is, RSI stuff, etc etc.
 Edit all of this.
 
-# Ideas
+## Ideas
 
 Things I might do, but that I haven't decided on yet
 
-## Nicer looking key references inside the info panel
+### Nicer looking key references inside the info panel
 
 * Make the `<kbd>` elements look like mini keys from the board above?
 * For non-`<kbd>` references, put a tiny rectangular key that looks like a small key from above off to the side?
 
-## Don't parse the key info
+### Don't parse the key info
 
 Should just require setting the required class names as HTML in the text.
 It's barely more cumbersome this way, and less code.
 I'm already using HTML in the info anyway... might as well remove all this parsing crap.
 
-## Highlight or color change when mousing over diagram annotations
+### Highlight or color change when mousing over diagram annotations
 
 When hovering over the a key reference in the text, or a key itself that is referenced,
 highlight the relevant line and both reference and referent.
 This will help in complicated graphs.
 
-## Nicer legend for the leader key
+### Nicer legend for the leader key
 
 Currently this is the Material Design Send Email icon (a paper airplane).
 What should I put there instead?
 
-## Nicer legend for the app/menu key
+### Nicer legend for the app/menu key
 
 Currently this is an SVG, but it doesn't belong with the other icons and is blurry.
 What should I use instead?
@@ -77,17 +77,17 @@ but it was not very clear what it was until you clicked there.
 Microsoft keyboards tend to use something that looks like a menu,
 so I'll probably have to find something like that.
 
-## Have a per-key preview image for slack/twitter/etc
+### Have a per-key preview image for slack/twitter/etc
 
 Now that I can link to individual keys, seems like I really ought to have a preview image for each one.
 
 Also should change the page title.
 
-# Development notes and completed to do items
+## Development notes and completed to do items
 
 Finished tasks, and general notes that are not tasks
 
-## Big WIP commit
+### Big WIP commit
 
 This was originally added as part of a big wip commit.
 
@@ -136,7 +136,7 @@ I found this helpful:
 
 ✅ this is all solved with some state in a class component and understanding refs and hooks better
 
-## update 20200602 - partially working
+### update 20200602 - partially working
 
 Holy shit, it's partially working.
 
@@ -146,11 +146,11 @@ This means they look offset from where they should be.
 
 They also don't change on scroll, which is a problem.
 
-## update 20200606
+### update 20200606
 
 More thoughts
 
-### Adjust DOMRect for scroll position
+#### Adjust DOMRect for scroll position
 
 <https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect>
 
@@ -169,13 +169,13 @@ export function absolutifyBoundingClientRect(rect) {
 
 ✅ Done
 
-### I'm not redrawing the canvas based on scroll position
+#### I'm not redrawing the canvas based on scroll position
 
 I think I don't need to do this - but if different parts of the page scroll differently,
 like if the info panel is scrolling separately from the page,
 I might need to.
 
-### getClientRects()
+#### getClientRects()
 
 Not sure if this is going to be useful or not, but there is also this API call.
 
@@ -194,7 +194,7 @@ This would let me connect my line to the text directly.
 
 ✅ Done
 
-### Should connect to a different place on the key / text
+#### Should connect to a different place on the key / text
 
 Right now it's connecting to the upper left corner;
 I think it would be nice to connect to lower corner, bottom middle, or something else,
@@ -202,7 +202,7 @@ especially for the text references.
 
 ✅ Done
 
-### getBoundingClientRect() is supposed to return post-transform values
+#### getBoundingClientRect() is supposed to return post-transform values
 
 Here's a bug from 10 years ago
 
@@ -213,7 +213,7 @@ transform values is correct.
 
 ✅ this does seem to work now that I've fixed my canvas size
 
-### Should I use transform instead of position relative?
+#### Should I use transform instead of position relative?
 
 Here's what I was doing before:
 
@@ -246,12 +246,12 @@ and it would be been less confusing to use `left:`.
 
 ✅ This does work
 
-### Visual formatting model
+#### Visual formatting model
 
 It's probably worth understanding this in detail.
 <https://developer.mozilla.org/en-US/docs/Web/CSS/Visual_formatting_model>
 
-### I think the canvas is the wrong size
+#### I think the canvas is the wrong size
 
 <https://permadi.com/2009/04/usng-html-5-canvas-to-draw-over-my-web-page-part-2/>
 
@@ -299,7 +299,7 @@ That seems to be _correct_! Holy shit.
 
 ✅ Done
 
-### Debug function
+#### Debug function
 
 I used this `keybDebug()` debug function to good effect
 when I was trying to figure out where all the elements were and why my lines were wrong.
@@ -335,9 +335,9 @@ useEffect(() => {
 
 ✅ No longer necessary
 
-## more
+### more
 
-### Fix the info box covering up the keyboard
+#### Fix the info box covering up the keyboard
 
 It does this, especially for long texts.
 
@@ -355,7 +355,7 @@ Decided to put it above the keyboard for now.
 
 ✅ Done
 
-### Improve key references in text
+#### Improve key references in text
 
 Right now they're text like `l-f-1-1`, but it would be nice if they looked like keys or something?
 Not sure because I don't want to tie them to the legend;
@@ -377,7 +377,7 @@ That gets rid of the rest of the text reference IDs.
 
 ✅ Done!
 
-### Lines don't draw past the current view port
+#### Lines don't draw past the current view port
 
 Lines draw just in the viewport.
 If the keyInfo panel on the right is very long and goes past the view port,
@@ -401,13 +401,13 @@ and this problem should be fixed.
 
 ✅ Done, with Josh's help - although maybe broken again? tracking under mobile.
 
-### Allow selecting multiple keys at once
+#### Allow selecting multiple keys at once
 
 For instance, would be good to highlight all arrow keys when selecting any one of them.
 
 ✅ Done
 
-## Use better name for key pointers / references
+### Use better name for key pointers / references
 
 I have textual representations of key locations, like `l-f-1-1`.
 I don't call them "references" because that's confusing with React refs.
@@ -420,7 +420,7 @@ How can I improve this?
 
 ✅ done - see physical-key-indicators.md
 
-## Twitter cards
+### Twitter cards
 
 https://developer.twitter.com/en/docs/tweets/optimize-with-cards/guides/getting-started
 
@@ -434,7 +434,7 @@ Validated with
 but it's not showing up in my actual tweet yet -
 might take a week to expire the cache?
 
-## Transformed thumb clusters have the wrong pointer location
+### Transformed thumb clusters have the wrong pointer location
 
 E.g. look at the bracket keys `[ { } ]` - it's pointing to the non-transformed location for shift. Ugh.
 
@@ -460,7 +460,7 @@ Update 20200804: For an example of what's happening, see this from the React dev
 
 ✅ Done
 
-## Add URL fragments for what key I'm referring to
+### Add URL fragments for what key I'm referring to
 
 Would be nice for sharing etc
 
@@ -470,7 +470,7 @@ Note that I tried to use dynamic routing with something like `pages/key/[keyId].
 but that resulted in full page reloads every time.
 The URLs were nicer, but I don't think I'm too worried about it.
 
-## Emphasize selected key more
+### Emphasize selected key more
 
 Currently, selected key is emphasized with a darker gray background.
 The green highlights for key indicators are more prominent.
@@ -478,19 +478,19 @@ Make the selected key more prominent.
 
 ✅ Done, it's a nice orange now, and the other keys in the group are a lighter orange.
 
-## Add tracking
+### Add tracking
 
 I'm using Fathom for other projects, and I added it today.
 
 ✅ Done
 
-## Layout fix: selecting a different key shouldn't move view window around
+### Layout fix: selecting a different key shouldn't move view window around
 
 This is pretty annoying in practice.
 
 ✅ This is improved by moving the KeyInfo panel back to the bottom of the screen.
 
-## Better font for key legends
+### Better font for key legends
 
 The current font is... _ok_.
 Stuff like vol up/down is a hack,
@@ -527,7 +527,7 @@ and add some separate issues for specific icons.
 
 ✅ hell yeah
 
-## Nicer legend for the escape key
+### Nicer legend for the escape key
 
 Currently this is an SVG from Wikimedia Commons, and it looks like shit.
 What should I use instead?
@@ -539,7 +539,7 @@ What the fuck good does it do them? Ugh.
 
 ✅ Done! Got a link to thenounproject.com from Ben, found the perfect icon.
 
-## Fix mobile view
+### Fix mobile view
 
 I broke it ages ago, going to have to dive in deep there probably
 
@@ -554,7 +554,7 @@ only on mobile.
 
 ✅ Josh fixed it! It wasn't calculating the whole document height after all, but it's doing so now.
 
-## Set a debug global state
+### Set a debug global state
 
 See commits:
 
@@ -573,7 +573,7 @@ In short:
 
 Example:
 
-### `~/components/appDebugContext.jsx`
+#### `~/components/appDebugContext.jsx`
 
 ```
 import {
@@ -584,7 +584,7 @@ import {
 export const AppDebugContext = createContext({ debugLevel: 0 });
 ```
 
-### `~/pages/_app.js`
+#### `~/pages/_app.js`
 
 Originally this just returned a Component:
 
@@ -640,7 +640,7 @@ which is our case here,
 then you have to explicitly pass that state value/setter as the `value` attribute.
 (Can you tell this tripped me up for a long time?)
 
-### `~/components/keyboard.jsx`
+#### `~/components/keyboard.jsx`
 
 To get and set the debugLevel from here, we have to make some changes.
 Here's a diff:
@@ -696,7 +696,7 @@ index bb88f64..8911aa4 100644
            </div>
 ```
 
-### `~/components/diagram.jsx`
+#### `~/components/diagram.jsx`
 
 This is a consumer of the context.
 
@@ -757,11 +757,11 @@ index 0628b01..bd52044 100644
      <div
 ```
 
-### In conclusion
+#### In conclusion
 
 ✅ This was really hard to figure out
 
-## Controlled component example
+### Controlled component example
 
 In commit e6b91119f58f81199a5ccbc3e9078adef3e21f4e,
 I implement a controlled component based on the previously implemented
@@ -771,7 +771,7 @@ It's a simple `<select>` box that changes the debug level.
 
 ✅ Once I had the context stuff figured out, this was easy.
 
-## Another hook example: contexts, state, hooks
+### Another hook example: contexts, state, hooks
 
 See commit 2500d05745e0f63ba46a90e8a4918a09855ff1ac.
 
@@ -786,7 +786,7 @@ and use hooks and context to update it automatically no matter where it changes.
 
 ✅ Another application of the context + state stuff I just learned
 
-## Break out the `<Keyboard>` component from the surrounding UI
+### Break out the `<Keyboard>` component from the surrounding UI
 
 This has been bugging me for a while.
 
@@ -797,7 +797,7 @@ which were before all part of `<Keyboard>`.
 
 ✅ Easier than I thought - I didn't even need any hooks to do this
 
-## Another hook example: Updating drawing boundaries based on element sizes
+### Another hook example: Updating drawing boundaries based on element sizes
 
 See "Diamargs" commit b3330be2bdf7988c200bdc335640176fb3873d90
 
@@ -815,12 +815,12 @@ though, which was my aha moment.
 The only reason the InfoPanel would change size is if the text within it changed in length,
 so I could depend just on `pressedKey` and get the behavior I wanted.
 
-### Triggering on resizing DOM nodes
+#### Triggering on resizing DOM nodes
 
 Maybe this is not yet easy?
 <https://stackoverflow.com/questions/37775020/trigger-resize-event-on-component>
 
-### useEffect guide
+#### useEffect guide
 
 [A Complete Guide to useEffect](https://overreacted.io/a-complete-guide-to-useeffect/)
 
@@ -835,13 +835,13 @@ It has a world-class explanation of why functional React is different from class
 with great visuals.
 It focused me on a question: "what state changes should trigger my callback?"
 
-## Fix linting errors
+### Fix linting errors
 
 Use eslint, it seems to be recommended in a lot of places
 
 ✅ Done
 
-## Need to show other layers and layouts
+### Need to show other layers and layouts
 
 - Show my function layer, just for fun(ction)
 - Show the Ergodox default layout
@@ -851,26 +851,26 @@ Won't be able to see it all at once...
 
 ✅ Done 20200807 -- decided it would be useful to have a layout for debugging the diagram lines, and here we go.
 
-## Separate legend from layout definition
+### Separate legend from layout definition
 
 Multiple layouts might want to reuse the same set of legends.
 
 ✅ Done 20200807 -- also done as part of the debugging layer thing.
 
-## Make keyboard unselectable
+### Make keyboard unselectable
 
 There is no value in letting users select text or images on keys.
 
 ✅ Done 20200807
 
-## Center key in keyInfo panel
+### Center key in keyInfo panel
 
 This was bugging me ever since my debugging code could draw a vertical line down the center of the keyboard.
 Now it goes through the center of the key as well.
 
 ✅ Done 20200807
 
-## The React Chrome dev extension
+### The React Chrome dev extension
 
 * It shows you your components, not the HTML they generate. Much less messy.
 * Double click on a component, and see its internal state, hooks in use, props passed to it,
@@ -878,7 +878,7 @@ Now it goes through the center of the key as well.
 
 ✅ This thing is dope
 
-## Improve the app title bar thing
+### Improve the app title bar thing
 
 * Take up as little vertical space as possible
 * Put title on same line as debug controls
@@ -899,13 +899,13 @@ Update 20200808
 
 DONE :)
 
-## Allow linking to keys in specific maps / with specific legends
+### Allow linking to keys in specific maps / with specific legends
 
 Decided this was necessary because there are multiple maps now.
 
 * ✅ done 20200809
 
-## Improve diagram lines
+### Improve diagram lines
 
 Would be nice if they didn't overlap text, but instead were drawn underneath it.
 Maybe hard?
@@ -969,7 +969,7 @@ Then I can iterate, perhaps:
 
 THAT MEANS THIS IS FINALLY DONE!
 
-## Decide on a final name
+### Decide on a final name
 
 I have always hated 'keyblay'.
 What should I call it instead?
@@ -982,7 +982,7 @@ Maybe something related to
 
 ✅ I got keymap.click !!
 
-## Add place for more general info
+### Add place for more general info
 
 What is an ergodox, why did it help me generally, etc.
 
