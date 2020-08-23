@@ -9,14 +9,7 @@ This section isn't well organized.
 
 Everything that I have decided to definitely do
 
-Here are some release milestones.
-
-Release: dev preview:
-
-* Improve diagram lines
-* Decide on a final name
-
-Release: 1.0
+### Release a version 1.0
 
 * Add a guide
 * Add content for all the keys I want
@@ -995,6 +988,13 @@ Maybe something related to
 
 ✅ I got keymap.click !!
 ✅ 20200820 update: Eradicated the hated 'keyblay' from source code
+
+### Release a dev preview
+
+* Improve diagram lines
+* Decide on a final name
+
+✅ dev preview officially released, posted on my blog about it, hell yeah
 
 ### Add place for more general info
 
