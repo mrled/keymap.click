@@ -53,7 +53,7 @@ const KeyHandle = ({ keyId, colStart, handleTop }) => {
  * and return a Legend object that can be used inside of a Key
  */
 const Legend = (legend) => {
-  const defaultFontFace = "keyblay-font-roboto-mono"
+  const defaultFontFace = "font-roboto-mono"
   const defaultGlyphFontSize = "text-m md:text-m";
   const defaultTextFontSize = "text-2xs md:text-xs";
 
@@ -147,7 +147,7 @@ export const Key = ({
   const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`;
   const classes = classnames(
     standalone ? standaloneClasses : gridClasses,
-    `cursor-pointer p-1 flex justify-center items-center rounded-sm font-mono pointer-events-auto keyblay-outline-none relative`,
+    `cursor-pointer p-1 flex justify-center items-center rounded-sm font-mono pointer-events-auto force-outline-none relative`,
     {
       "bg-orange-300 border border-orange-700 hover:bg-orange-600": active,
       "bg-orange-100 border border-orange-500 hover:bg-orange-400": otherSelected,

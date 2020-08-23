@@ -73,7 +73,7 @@
   padding-bottom: calc(var(--keyboard-grid-unit) * 9);
 }
 
-.keyblay-outline-none, .keyblay-outline-none:focus {
+.force-outline-none, .force-outline-none:focus {
   outline: 0 !important;
 }
 

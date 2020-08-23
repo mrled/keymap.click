@@ -214,12 +214,12 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
   return (
     <div
       ref={container}
-      id="keyblay-debug-canvas-container"
+      id="debug-canvas-container"
       className="absolute top-0 left-0 pointer-events-none z-50"
     >
       <canvas
         ref={canvas}
-        id="keyblay-debug-canvas"
+        id="debug-canvas"
         className="absolute overflow-visible debug-border-orange debug-trans-bg-orange"
       />
     </div>

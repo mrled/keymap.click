@@ -15,7 +15,7 @@ export const Menu = ({ visible, showSettings = false }) => {
           "hidden": !visible,
         }
       )}
-      id="keyblay-app-menu"
+      id="app-menu"
     >
 
       <ul className="">

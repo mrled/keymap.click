@@ -27,7 +27,7 @@ import {
 import { useWindowSize } from "~/lib/hooks";
 import { useKeyConnections } from "~/lib/keyConnections";
 
-export const KeyblayUI = () => {
+export const KeymapUI = () => {
   const [pressedKey, setPressedKey] = useState({});
   const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
   const [appDebug, setAppDebug] = useContext(AppDebugContext);
@@ -76,12 +76,12 @@ export const KeyblayUI = () => {
 
       <div
         className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg mx-auto"
-        id="keyblay-ui-outer-wrapper-container"
+        id="keymap-ui-outer-wrapper-container"
       >
 
         <div
           className="w-full md:mr-8 md:px-4 z-10"
-          id="keyblay-ui-content-container"
+          id="keymap-ui-content-container"
         >
 
           {/* Some notes on naming:
@@ -94,18 +94,18 @@ export const KeyblayUI = () => {
             */}
           <div
             className="flex"
-            id="keyblay-ui-kid-container"
+            id="keymap-ui-kid-container"
           >
 
             <div
               className="flex flex-col kid-diamarg m-0 p-0 border-0 debug-bg-red"
-              id="keyblay-ui-diamarg-left"
+              id="keymap-ui-diamarg-left"
               ref={diamargLeft}
             />
 
             <div
               className="flex flex-col kid-center m-0 p-0 border-0"
-              id="keyblay-ui-keyboard-and-panel-container"
+              id="keymap-ui-keyboard-and-panel-container"
               ref={keyboardAndPanel}
             >
 
@@ -119,7 +119,7 @@ export const KeyblayUI = () => {
 
               <div
                 className="bottom-auto top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto w-full debug-bg-teal"
-                id="keyblay-ui-info-panel-container"
+                id="keymap-ui-info-panel-container"
               >
                 <InfoPanel
                   keyData={pressedKey}
@@ -135,7 +135,7 @@ export const KeyblayUI = () => {
 
             <div
               className="flex flex-col kid-diamarg m-0 p-0 border-0 debug-bg-red"
-              id="keyblay-ui-diamarg-right"
+              id="keymap-ui-diamarg-right"
               ref={diamargRight}
             />
 

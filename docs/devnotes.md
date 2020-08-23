@@ -994,6 +994,7 @@ Maybe something related to
 * RSI
 
 ✅ I got keymap.click !!
+✅ 20200820 update: Eradicated the hated 'keyblay' from source code
 
 ### Add place for more general info
 

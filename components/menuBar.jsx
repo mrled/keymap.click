@@ -14,13 +14,13 @@ export const MenuBar = ({ showSettings = false }) => {
   return (
     <div
       className="border border-gray-300 bg-gray-100 rounded-md p-2 m-8"
-      id="keyblay-ui-app-bar-container"
+      id="menu-bar-container"
     >
 
       <div className="flex flex-row justify-between">
 
         <h1
-          className="text-xl flex-col p-2 keyblay-font-roboto-mono"
+          className="text-xl flex-col p-2 font-roboto-mono"
         >
           <InterAppLink href="/">keymap.click</InterAppLink>
         </h1>
