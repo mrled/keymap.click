@@ -26,26 +26,26 @@ export default function About() {
                   https://www.ergodox.io/
                 </a>.
                 They come in several different varieties.
-                <ul className="list-disc mt-2 ml-4">
-                  <li>
-                    <a className="text-blue-600" href="https://ergodox-ez.com/">
-                      ErgoDox-EZ
+              </p>
+              <ul className="list-disc mt-2 ml-4">
+                <li>
+                  <a className="text-blue-600" href="https://ergodox-ez.com/">
+                    ErgoDox-EZ
                     </a>{" "}
                     pre-assembled boards. This is what I have.
                   </li>
-                  <li>
-                    <a className="text-blue-600" href="https://input.club/devices/infinity-ergodox/">
-                      ErgoDox Infinity
+                <li>
+                  <a className="text-blue-600" href="https://input.club/devices/infinity-ergodox/">
+                    ErgoDox Infinity
                     </a>{" "}
                     kits.
                   </li>
-                  <li>
-                    <a className="text-blue-600" href="https://www.ergodox.io/#parts">
-                      Assembled from raw parts
+                <li>
+                  <a className="text-blue-600" href="https://www.ergodox.io/#parts">
+                    Assembled from raw parts
                     </a>.
                   </li>
-                </ul>
-              </p>
+              </ul>
             </div>
 
             <div className="m-4 p-4">
