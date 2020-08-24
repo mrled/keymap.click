@@ -30,6 +30,10 @@ Update 20200823: This exists now, but needs refinement.
 * 🔲 Get rid of the guide bar; navigate from the key info panel
 * 🔲 Possible navigation bugs? Maybe need to re-think state to integrate both guide and pressedKey
 * 🔲 Possible initial page load bugs? Make sure the app can't get confused when loading in the middle of a guided tour
+* 🔲 Bug: guide in selection box on initial load sometimes wrong
+* 🔲 Bug: clicking a key doesn't exit the guide
+* 🔲 Add guide for main layout
+* 🔲 Add guide for old layout, or maybe just remove it
 
 ### Add content for all the keys I want
 
@@ -44,6 +48,22 @@ Edit all of this.
 ## Ideas
 
 Things I might do, but that I haven't decided on yet
+
+### Fix messy URLs
+
+* Root always shows a default view
+* Clicking anywhere puts all items in the URL.
+  Currently, default values are not persisted to the URL.
+* Use paths rather than query string, everything just looks nicer.
+* Is there a library for query string -like paths?
+  Even `/keymap:default/guide:someguide/`; I know some REST APIs work this way.
+
+### Fix messy state crap
+
+State is all over the place because it's hard and I learned it over the course of this project.
+Clean this up.
+
+Josh has mentioned `unstated-next` to me more than once, can that help me?
 
 ### Allow referencing legends as `<kbd>` elements
 
