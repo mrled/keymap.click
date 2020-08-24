@@ -38,6 +38,13 @@ Edit all of this.
 
 Things I might do, but that I haven't decided on yet
 
+### Allow referencing legends as `<kbd>` elements
+
+Goes hand in hand with "Nicer looking key references".
+
+Would be useful to be able to reference whatever the legend in the current legendMap for any key,
+especially keys that don't have good Unicode glyphs like layer or volume keys.
+
 ### Allow pulling in other keymaps
 
 Pull in keymaps and legend sets from other sources client-side.
