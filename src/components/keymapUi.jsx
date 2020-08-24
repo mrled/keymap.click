@@ -21,20 +21,14 @@ import {
 } from "~/components/guidance";
 import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
+import { useWindowSize } from "~/hooks/useWindowSize";
 import {
-  GuideState,
-  GuideStepState,
-  KeyMapState,
   SelectedKeyState,
 } from "~/lib/appQueryState";
 import {
   FakeDOMRect,
 } from "~/lib/geometry";
-import { useWindowSize } from "~/lib/hooks";
-import { useKeyConnections } from "~/lib/keyConnections";
-import {
-  keyMaps,
-} from "~/lib/keys";
+import { useKeyConnections } from "~/hooks/useKeyConnections";
 
 
 export const KeymapUI = () => {

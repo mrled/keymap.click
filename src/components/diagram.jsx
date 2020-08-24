@@ -11,13 +11,11 @@ import {
   AppDebugContext,
   DocumentDimensionsContext,
 } from "~/components/appContext";
+import { useWindowSize } from "~/hooks/useWindowSize";
 import {
   smallerRect,
   traceRect,
 } from "~/lib/geometry";
-import {
-  useWindowSize,
-} from "~/lib/hooks";
 
 export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, diamargRightRect }) => {
   const canvas = useRef();
