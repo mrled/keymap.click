@@ -16,9 +16,15 @@ import {
   DocumentDimensionsContext,
   VisibleMenuContext,
 } from "~/components/appContext";
+import {
+  GuideBar,
+} from "~/components/guidance";
 import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
 import {
+  GuideState,
+  GuideStepState,
+  KeyMapState,
   SelectedKeyState,
 } from "~/lib/appQueryState";
 import {
@@ -26,6 +32,10 @@ import {
 } from "~/lib/geometry";
 import { useWindowSize } from "~/lib/hooks";
 import { useKeyConnections } from "~/lib/keyConnections";
+import {
+  keyMaps,
+} from "~/lib/keys";
+
 
 export const KeymapUI = () => {
   const [pressedKey, setPressedKey] = useState({});
@@ -35,7 +45,6 @@ export const KeymapUI = () => {
   const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext);
   const windowSize = useWindowSize();
   const router = useRouter();
-
 
   /* Calculating rects of child elements
    * See also https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
@@ -75,7 +84,7 @@ export const KeymapUI = () => {
       <VisualDebugStyle enableDebug={appDebug.debugLevel > 1} />
 
       <div
-        className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg mx-auto"
+        className="w-full h-full text-sm md:text-base p-4 max-w-screen-lg mx-auto"
         id="keymap-ui-outer-wrapper-container"
       >
 
@@ -83,6 +92,8 @@ export const KeymapUI = () => {
           className="w-full md:mr-8 md:px-4 z-10"
           id="keymap-ui-content-container"
         >
+
+          <GuideBar />
 
           {/* Some notes on naming:
             * KID is Keyboard, InfoPanel, Diamargs.

@@ -15,7 +15,7 @@ import {
   keyMaps,
 } from "~/lib/keys";
 
-export const Keyboard = ({ otherSelectedKeys, pressedKey, targetKeyIds, setOtherSelectedKeys, setPressedKey }) => {
+export const Keyboard = ({ guideStep, otherSelectedKeys, pressedKey, targetKeyIds, setOtherSelectedKeys, setPressedKey }) => {
   const router = useRouter();
 
   const keyMapName = KeyMapState.getValue(router);
@@ -24,7 +24,9 @@ export const Keyboard = ({ otherSelectedKeys, pressedKey, targetKeyIds, setOther
   useEffect(() => {
     const keyId = router.query.keyId;
     if (keyId && keyMap.allKeysById[keyId]) {
-      setPressedKey(keyMap.allKeysById[keyId]);
+      const keyData = keyMap.allKeysById[keyId];
+      setPressedKey(keyData);
+      setOtherSelectedKeys(keyData.selection);
       log.debug(`On load using selected key id: ${keyId}`);
     } else {
       log.debug(`On load no such key id: ${keyId}`);
