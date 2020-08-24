@@ -24,6 +24,13 @@ Why should they care?
 
 Some kind of guided tour.
 
+Update 20200823: This exists now, but needs refinement.
+
+* ✅ Basic navigation works!
+* 🔲 Get rid of the guide bar; navigate from the key info panel
+* 🔲 Possible navigation bugs? Maybe need to re-think state to integrate both guide and pressedKey
+* 🔲 Possible initial page load bugs? Make sure the app can't get confused when loading in the middle of a guided tour
+
 ### Add content for all the keys I want
 
 Fill out key info content with references.
