@@ -15,7 +15,7 @@ import {
   keyMaps,
 } from "~/lib/keys";
 
-export const Keyboard = ({ guideStep, otherSelectedKeys, pressedKey, targetKeyIds, setOtherSelectedKeys, setPressedKey }) => {
+export const Keyboard = ({ otherSelectedKeys, pressedKey, targetKeyIds, setOtherSelectedKeys, setPressedKey }) => {
   const router = useRouter();
 
   const keyMapName = KeyMapState.getValue(router);

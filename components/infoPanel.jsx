@@ -1,29 +1,14 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
 
 import { InterAppLink } from "~/components/interAppLink";
 import { parseKeyInfo, KeyInfo } from "~/components/keyInfo";
-import {
-  GuideState,
-  GuideStepState,
-  KeyMapState,
-} from "~/lib/appQueryState";
 
 /* Return a KeyInfoInner component, wrapped in a <KeyInfo> component
  * styled nicely for the parent <Keyboard> component
  */
 export const InfoPanel = ({ keyData, keyButtonOnClick = () => { } }) => {
-  const router = useRouter();
-
-  const currentGuideName = GuideState.getValue(router);
-  const currentGuideStep = GuideStepState.getValue(router);
-  const currentKeyMapName = KeyMapState.getValue(router);
-
-  const inGuide = Boolean(currentGuideName) && currentGuideStep !== null;
-  const keySelected = Boolean(keyData.info);
-
-  if (keySelected) {
+  if (keyData.info) {
     const parsedKeyInfo = parseKeyInfo(keyData.info);
     return (
       <KeyInfo

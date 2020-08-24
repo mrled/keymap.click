@@ -16,9 +16,6 @@ import {
   DocumentDimensionsContext,
   VisibleMenuContext,
 } from "~/components/appContext";
-import {
-  GuideBar,
-} from "~/components/guidance";
 import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
 import {
@@ -78,7 +75,7 @@ export const KeymapUI = () => {
       <VisualDebugStyle enableDebug={appDebug.debugLevel > 1} />
 
       <div
-        className="w-full h-full text-sm md:text-base p-4 max-w-screen-lg mx-auto"
+        className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg mx-auto"
         id="keymap-ui-outer-wrapper-container"
       >
 
@@ -86,8 +83,6 @@ export const KeymapUI = () => {
           className="w-full md:mr-8 md:px-4 z-10"
           id="keymap-ui-content-container"
         >
-
-          <GuideBar />
 
           {/* Some notes on naming:
             * KID is Keyboard, InfoPanel, Diamargs.
