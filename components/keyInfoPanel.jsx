@@ -1,8 +1,12 @@
-import Link from "next/link";
 import React from "react";
 
 import { InterAppLink } from "~/components/interAppLink";
-import { parseKeyInfo, KeyInfo } from "~/components/keyInfo";
+import {
+  KeyInfo
+} from "~/components/keyInfo";
+import {
+  parseKeyInfo,
+} from "~/lib/keyInfoParser";
 
 /* Return a KeyInfoInner component, wrapped in a <KeyInfo> component
  * styled nicely for the parent <Keyboard> component

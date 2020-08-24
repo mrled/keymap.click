@@ -9,7 +9,7 @@ import React, {
 import log from "loglevel";
 
 import { Diagram } from "~/components/diagram";
-import { InfoPanel } from "~/components/infoPanel";
+import { InfoPanel } from "~/components/keyInfoPanel";
 
 import {
   AppDebugContext,
