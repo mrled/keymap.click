@@ -55,13 +55,12 @@ export const AppSettings = () => {
           className="p-2 m-2 w-1/3"
         >
           {Object.keys(legendMaps).map((legendMapName, idx) => {
-            return <option key={idx} value={legendMapName}>{legendMapName}</option>
+            return <option key={idx} value={legendMapName}>{legendMaps[legendMapName].fullName}</option>
           })}
         </select>
 
         <label htmlFor="keymap-selector" className="p-2 m-2 w-1/3">Key layouts</label>
         <select
-          // onChange={event => setKeyMap({ keyMapName: event.target.value })}
           onChange={(event) => { KeyMapState.setQuery(router, event.target.value); }}
           defaultValue={KeyMapState.getValue(router)}
           name="Layouts"
@@ -69,7 +68,7 @@ export const AppSettings = () => {
           className="p-2 m-2 w-1/3"
         >
           {Object.keys(keyMaps).map((keyMapName, idx) => {
-            return <option key={idx} value={keyMapName}>{keyMapName}</option>
+            return <option key={idx} value={keyMapName}>{keyMaps[keyMapName].fullName}</option>
           })}
         </select>
       </div>
