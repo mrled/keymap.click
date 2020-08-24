@@ -6,9 +6,18 @@ import React, {
 import classnames from "classnames";
 
 import {
+  KeyboardSettingsContext,
+} from "~/components/appContext";
+import {
+  GuideState,
+  GuideStepState,
+  KeyMapState,
+} from "~/lib/appQueryState";
+import {
   keyHandleDomIdFromKeyId,
 } from "~/lib/keyConnections"
 import {
+  keyMaps,
   legendMaps,
 } from "~/lib/keys";
 
@@ -128,6 +137,8 @@ export const Key = ({
   active = false,
   otherSelected = false,
   targetKeyActive = false,
+  isGuideStepKey = false,
+  isInGuideSelectionGroup = false,
 }) => {
   const {
     legend,
@@ -149,10 +160,28 @@ export const Key = ({
     standalone ? standaloneClasses : gridClasses,
     `cursor-pointer p-1 flex justify-center items-center rounded-sm font-mono pointer-events-auto force-outline-none relative`,
     {
-      "bg-orange-300 border border-orange-700 hover:bg-orange-600": active,
-      "bg-orange-100 border border-orange-500 hover:bg-orange-400": otherSelected,
-      "bg-green-200 border border-green-500 hover:bg-green-400": targetKeyActive,
-      "bg-gray-200 border border-gray-500 hover:bg-gray-400": !active && !otherSelected && !targetKeyActive,
+      /* Background colors:
+       * - Darker orange: The selected key
+       * - Lighter orange: Other keys in the selection group
+       * - Green: Keys that are targets of text in the key info
+       * - Darker versions of the above: hover state
+       */
+      "bg-orange-300 hover:bg-orange-600": active,
+      "bg-orange-100 hover:bg-orange-400": otherSelected,
+      "bg-green-200 hover:bg-green-400": targetKeyActive,
+      "bg-gray-200 hover:bg-gray-400": !active && !otherSelected && !targetKeyActive,
+
+      /* Borders:
+       * - Darker red, wide, dotted: The guide step's key
+       * - Lighter red, wide, dotted: Other keys in the guide step's selection group
+       * - Other colors: darker versions of the background color
+       */
+      "border-4 border-dashed border-red-700": isGuideStepKey,
+      "border-4 border-dashed border-red-300": isInGuideSelectionGroup,
+      "border border-orange-700": active && !isGuideStepKey && !isInGuideSelectionGroup,
+      "border border-orange-500": otherSelected && !isGuideStepKey && !isInGuideSelectionGroup,
+      "border border-green-500": targetKeyActive && !isGuideStepKey && !isInGuideSelectionGroup,
+      "border border-gray-500": !active && !otherSelected && !targetKeyActive && !isGuideStepKey && !isInGuideSelectionGroup,
     },
     {
       [keyLegendInfo.fontFace]: keyLegendInfo.fontFace,
@@ -188,6 +217,15 @@ export const KeyGrid = ({
   gridAppendClasses = "",
   targetKeyIds = [],
 }) => {
+  const router = useRouter();
+  const keyMapName = KeyMapState.getValue(router);
+  const guideName = GuideState.getValue(router);
+  const guideStepIdx = Number(GuideStepState.getValue(router));
+  const keyMap = keyMaps[keyMapName];
+  const [keyboardSettings, setKeyboardSettings] = useContext(KeyboardSettingsContext);
+  const guide = keyMap.guides[guideName];
+  const guideStep = guide.steps[guideStepIdx];
+
   return (
     <>
       <div
@@ -197,6 +235,7 @@ export const KeyGrid = ({
         )}
       >
         {keys.map((keyData) => {
+
           const isTargetKey = targetKeyIds.findIndex((id) => id === keyData.id) > -1;
           let isActive, isInSelectedGroup;
           if (pressedKey) {
@@ -206,6 +245,17 @@ export const KeyGrid = ({
             isActive = false;
             isInSelectedGroup = false;
           }
+
+          let isGuideStepKey, isInGuideSelectionGroup;
+          if (guideStep) {
+            isGuideStepKey = keyData.id === guideStep.key;
+            isInGuideSelectionGroup = !isGuideStepKey &&
+              guideStep.selection.indexOf(keyData.id) > -1;
+          } else {
+            isGuideStepKey = false;
+            isInGuideSelectionGroup = false;
+          }
+
           return (
             <Key
               id={keyData.id}
@@ -215,8 +265,11 @@ export const KeyGrid = ({
               key={keyData.reactKey}
               keyData={keyData}
               onClick={() => onClickEach(keyData)}
+              isGuideStepKey={isGuideStepKey}
+              isInGuideSelectionGroup={isInGuideSelectionGroup}
             />
           );
+
         })}
       </div>
     </>

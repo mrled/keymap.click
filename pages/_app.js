@@ -14,8 +14,10 @@ import "~/styles/fonts.css";
 import {
   AppDebugContext,
   DocumentDimensionsContext,
+  KeyboardSettingsContext,
   VisibleMenuContext,
   appDebugDefault,
+  keyboardSettingsDefault,
   visibleMenuDefault,
 } from "~/components/appContext";
 import { AppHead } from "~/components/appHead";
@@ -37,6 +39,7 @@ export const handleAppDebugChange = (appDebug) => {
 function App({ Component, pageProps }) {
 
   const [appDebug, setAppDebug] = useState(appDebugDefault);
+  const [keyboardSettings, setKeyboardSettings] = useState(keyboardSettingsDefault);
   const [visibleMenu, setVisibleMenu] = useState(visibleMenuDefault);
   const router = useRouter();
 
@@ -91,10 +94,12 @@ function App({ Component, pageProps }) {
   return <>
     <AppDebugContext.Provider value={[appDebug, setAppDebug]}>
       <DocumentDimensionsContext.Provider value={[documentDimensions, updateDocumentDimensions]}>
-        <VisibleMenuContext.Provider value={[visibleMenu, setVisibleMenu]}>
-          <AppHead />
-          <Component {...pageProps} />
-        </VisibleMenuContext.Provider>
+        <KeyboardSettingsContext.Provider value={[keyboardSettings, setKeyboardSettings]}>
+          <VisibleMenuContext.Provider value={[visibleMenu, setVisibleMenu]}>
+            <AppHead />
+            <Component {...pageProps} />
+          </VisibleMenuContext.Provider>
+        </KeyboardSettingsContext.Provider>
       </DocumentDimensionsContext.Provider>
     </AppDebugContext.Provider>
   </>
