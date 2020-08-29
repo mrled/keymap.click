@@ -3,7 +3,7 @@ import React from "react";
 import classnames from "classnames";
 
 import { AppSettings } from "~/components/appSettings";
-import { InterAppLink } from "~/components/interAppLink";
+import { IntraAppLink } from "~/components/intraAppLink";
 
 export const Menu = ({ visible, showSettings = false }) => {
 
@@ -20,13 +20,13 @@ export const Menu = ({ visible, showSettings = false }) => {
 
       <ul className="">
         <li><h2 className="mb-2 text-2xl">
-          <InterAppLink href="/about">What is this site?</InterAppLink>
+          <IntraAppLink href="/about">What is this site?</IntraAppLink>
         </h2></li>
         <li><h2 className="mb-2 text-2xl">
-          <InterAppLink href="/ergodox">What kind of keyboard is this?</InterAppLink>
+          <IntraAppLink href="/ergodox">What kind of keyboard is this?</IntraAppLink>
         </h2></li>
         <li><h2 className="mb-2 text-2xl">
-          <InterAppLink href="/story">Personal history</InterAppLink>
+          <IntraAppLink href="/story">Personal history</IntraAppLink>
         </h2></li>
       </ul>
 

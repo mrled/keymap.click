@@ -53,10 +53,6 @@ Things I might do, but that I haven't decided on yet
 
 Makes things simpler, allows me to load debug info on initial page load
 
-### Change the component to intraAppLink
-
-It's an intra- not an inter- app link, oops
-
 ### Bug: keyboardAndPanelRect, diamargLeftRect, diamargRightRect sometimes not calc correctly
 
 When the viewport is at the top, these values seem to be correct.
@@ -1059,3 +1055,9 @@ Maybe an FAQ style section, if I can't think of anything better.
 They should be linkable too.
 
 ✅ I have a way to add pages now
+
+### Change the component to intraAppLink
+
+It's an intra- not an inter- app link, oops
+
+✅ Fixed

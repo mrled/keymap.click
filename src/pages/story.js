@@ -1,6 +1,6 @@
 import React from "react";
 
-import { InterAppLink } from "~/components/interAppLink";
+import { IntraAppLink } from "~/components/intraAppLink";
 import { MenuBar } from "~/components/menuBar";
 
 export default function Story() {
@@ -51,7 +51,7 @@ export default function Story() {
                 keeping my elbows at right angles.
                 I'd founds several options,
                 and ultimately decided I wanted to try an
-                {" "}<InterAppLink href="/ergodox">ErgoDox keyboard</InterAppLink>.
+                {" "}<IntraAppLink href="/ergodox">ErgoDox keyboard</IntraAppLink>.
               </p>
               <p className="p-1">
                 My brother had an
@@ -69,9 +69,9 @@ export default function Story() {
                 I had not expected a much more significant benefit.
                 I could remap every painful key under my pinkies to keys under my thumbs.
                 For instance, I moved
-                {" "}<InterAppLink href="/?keyId=l-t-1-3">
+                {" "}<IntraAppLink href="/?keyId=l-t-1-3">
                   the shift key
-                </InterAppLink>{" "}
+                </IntraAppLink>{" "}
                 to an easy location under my left thumb.
               </p>
               <p className="p-1">

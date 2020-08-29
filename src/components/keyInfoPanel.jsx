@@ -1,6 +1,6 @@
 import React from "react";
 
-import { InterAppLink } from "~/components/interAppLink";
+import { IntraAppLink } from "~/components/intraAppLink";
 import {
   KeyInfo
 } from "~/components/keyInfo";
@@ -28,7 +28,7 @@ export const InfoPanel = ({ keyData }) => {
       </h1>
         <p className="p-1">Please select a key.</p>
         <p className="p-1">
-          <InterAppLink href="/about">What is this?</InterAppLink>
+          <IntraAppLink href="/about">What is this?</IntraAppLink>
         </p>
       </div>
     );

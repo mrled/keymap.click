@@ -6,7 +6,7 @@ import {
   VisibleMenuContext,
 } from "~/components/appContext";
 import { Menu } from "~/components/menu";
-import { InterAppLink } from "~/components/interAppLink";
+import { IntraAppLink } from "~/components/intraAppLink";
 
 export const MenuBar = ({ showSettings = false }) => {
   const [visibleMenu, setVisibleMenu] = useContext(VisibleMenuContext);
@@ -22,7 +22,7 @@ export const MenuBar = ({ showSettings = false }) => {
         <h1
           className="text-xl flex-col p-2 font-roboto-mono"
         >
-          <InterAppLink href="/">keymap.click</InterAppLink>
+          <IntraAppLink href="/">keymap.click</IntraAppLink>
         </h1>
 
         <button
