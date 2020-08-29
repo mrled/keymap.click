@@ -8,7 +8,7 @@ import React, {
 import log from "loglevel";
 
 import { Diagram } from "~/components/diagram";
-import { InfoPanel } from "~/components/keyInfoPanel";
+import { InfoPanel } from "~/components/keyInfo";
 
 import {
   AppDebugContext,
@@ -33,7 +33,7 @@ export const KeymapUI = () => {
   const [visibleMenu, setVisibleMenu] = useContext(VisibleMenuContext);
   const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext);
   const windowSize = useWindowSize();
-  const { state, hydratedState } = useContext(KeymapUiStateContext);
+  const { state } = useContext(KeymapUiStateContext);
 
   /* Calculating rects of child elements
    * See also https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
@@ -130,9 +130,7 @@ export const KeymapUI = () => {
                 className="bottom-auto top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto w-full debug-bg-teal"
                 id="keymap-ui-info-panel-container"
               >
-                <InfoPanel
-                  keyData={hydratedState.keyData}
-                />
+                <InfoPanel />
               </div>
 
             </div>
