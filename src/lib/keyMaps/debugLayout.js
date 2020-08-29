@@ -18,6 +18,7 @@ const guiKeySelection = ["l-f-14-6", "r-f-1-6"];
 
 const DebugLayout = {
   fullName: "Debug layout",
+  defaultGuide: "exampleGuide",
   guides: {
     exampleGuide: {
       fullName: "Example guide",

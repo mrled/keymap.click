@@ -24,13 +24,50 @@ const GuideBarButton = ({ children = null, enabled = true, onClick = () => { } }
   </button>
 }
 
+export const GuidedTourButtons = () => {
+  const {
+    hydratedState,
+    decrementGuideStep,
+    incrementGuideStep,
+    setGuide,
+  } = useContext(KeymapUiStateContext);
+
+  const prevButton = (
+    <GuideBarButton
+      onClick={() => decrementGuideStep()}
+      enabled={hydratedState.canDecrementGuideStep}
+    >Prev</GuideBarButton>
+  );
+  const nextButton = (
+    <GuideBarButton
+      onClick={() => incrementGuideStep()}
+      enabled={hydratedState.canIncrementGuideStep}
+    >Next</GuideBarButton>
+  );
+  const exitButton = (
+    <GuideBarButton
+      onClick={() => { setGuide(null); }}
+      enabled={hydratedState.inGuide}
+    >Exit</GuideBarButton>
+  );
+  const startButton = (
+    <GuideBarButton
+      onClick={() => { setGuide(hydratedState.keyMap.defaultGuide); }}
+      enabled={!hydratedState.inGuide && hydratedState.keyMap.defaultGuide}
+    >Start</GuideBarButton>
+  )
+  return <>
+    {prevButton}
+    {nextButton}
+    {hydratedState.inGuide ? exitButton : startButton}
+  </>;
+}
+
 export const GuideBar = () => {
   const {
     state,
     hydratedState,
     setGuide,
-    decrementGuideStep,
-    incrementGuideStep,
   } = useContext(KeymapUiStateContext);
 
   const guideSelectBox = useRef();
@@ -65,24 +102,7 @@ export const GuideBar = () => {
         </select>
 
         <div className="block md:inline">
-          <GuideBarButton
-            onClick={() => decrementGuideStep()}
-            enabled={hydratedState.canDecrementGuideStep}
-          >Prev</GuideBarButton>
-
-          <GuideBarButton
-            onClick={() => incrementGuideStep()}
-            enabled={hydratedState.canIncrementGuideStep}
-          >Next</GuideBarButton>
-
-          <GuideBarButton
-            onClick={() => {
-              const newGuide = setGuide(null);
-              guideSelectBox.current.value = newGuide.name;
-            }}
-            enabled={hydratedState.inGuide}
-          >Exit</GuideBarButton>
-
+          <GuidedTourButtons />
         </div>
       </div>
 
