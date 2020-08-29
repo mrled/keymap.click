@@ -22,6 +22,7 @@ Object.keys(keyMaps).forEach((keyMapName) => {
     fullName: "(none)",
     steps: [],
   }
+  Object.keys(keyMap.guides).forEach(guideKey => keyMap.guides[guideKey]["name"] = guideKey);
   if (!keyMap.fullName) {
     keyMap['fullName'] = keyMapName;
   }

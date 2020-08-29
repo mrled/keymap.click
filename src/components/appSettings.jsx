@@ -1,18 +1,11 @@
-import { useRouter } from "next/router";
 import React, {
   useContext,
 } from "react";
 
-import classnames from "classnames";
-import log from "loglevel";
-
 import {
   AppDebugContext,
 } from "~/components/appContext";
-import {
-  KeyMapState,
-  LegendMapState,
-} from "~/lib/appQueryState";
+import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 import {
   keyMaps,
   legendMaps,
@@ -20,7 +13,8 @@ import {
 
 export const AppSettings = () => {
   const [appDebug, setAppDebug] = useContext(AppDebugContext)
-  const router = useRouter();
+
+  const { state, setLegendMap, setKeyMap } = useContext(KeymapUiStateContext);
 
   return (
     <div
@@ -48,8 +42,8 @@ export const AppSettings = () => {
 
         <label htmlFor="legend-selector" className="p-2 m-2 w-1/3">Key legends</label>
         <select
-          onChange={(event) => { LegendMapState.setQuery(router, event.target.value); }}
-          defaultValue={LegendMapState.getValue(router)}
+          onChange={(event) => { setLegendMap(event.target.value); }}
+          defaultValue={state.legendMap}
           name="Legend maps"
           id="legend-selector"
           className="p-2 m-2 w-1/3"
@@ -61,8 +55,8 @@ export const AppSettings = () => {
 
         <label htmlFor="keymap-selector" className="p-2 m-2 w-1/3">Key layouts</label>
         <select
-          onChange={(event) => { KeyMapState.setQuery(router, event.target.value); }}
-          defaultValue={KeyMapState.getValue(router)}
+          onChange={(event) => { setKeyMap(event.target.value); }}
+          defaultValue={state.keyMap}
           name="Layouts"
           id="keymap-selector"
           className="p-2 m-2 w-1/3"

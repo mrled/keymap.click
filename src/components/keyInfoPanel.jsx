@@ -11,14 +11,13 @@ import {
 /* Return a KeyInfoInner component, wrapped in a <KeyInfo> component
  * styled nicely for the parent <Keyboard> component
  */
-export const InfoPanel = ({ keyData, keyButtonOnClick = () => { } }) => {
+export const InfoPanel = ({ keyData }) => {
   if (keyData.info) {
     const parsedKeyInfo = parseKeyInfo(keyData.info);
     return (
       <KeyInfo
         keyData={keyData}
         parsedKeyInfo={parsedKeyInfo}
-        keyButtonOnClick={keyButtonOnClick}
       />
     );
   } else {

@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import React, {
   useCallback,
   useContext,
@@ -21,56 +20,65 @@ import {
 } from "~/components/guidance";
 import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
-import { useWindowSize } from "~/hooks/useWindowSize";
-import {
-  SelectedKeyState,
-} from "~/lib/appQueryState";
 import {
   FakeDOMRect,
 } from "~/lib/geometry";
 import { useKeyConnections } from "~/hooks/useKeyConnections";
+import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
+import { useWindowSize } from "~/hooks/useWindowSize";
 
 
 export const KeymapUI = () => {
-  const [pressedKey, setPressedKey] = useState({});
-  const [otherSelectedKeys, setOtherSelectedKeys] = useState([]);
   const [appDebug, setAppDebug] = useContext(AppDebugContext);
   const [visibleMenu, setVisibleMenu] = useContext(VisibleMenuContext);
   const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext);
   const windowSize = useWindowSize();
-  const router = useRouter();
+  const { state, hydratedState } = useContext(KeymapUiStateContext);
 
   /* Calculating rects of child elements
    * See also https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
    * Note that we are dependent on the dimensions of both the viewport (window) AND the whole document.
    * The diamargs also have to depend on the keyboard/panel height.
    * keyboard/panel height depends on the InfoPanel because of the length of the text.
+   * Note that we have to ignore react-hooks/exhaustive-deps,
+   * because the dependencies we list are not explicitly used in the hook.
    */
 
   const [keyboardAndPanelRect, setKeyboardAndPanelRect] = useState(new FakeDOMRect());
   const keyboardAndPanel = useCallback(node => {
     if (node !== null) setKeyboardAndPanelRect(node.getBoundingClientRect());
-  }, [pressedKey, visibleMenu, windowSize]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    state.keyId, // If this changes, the size of the keyInfo panel may change
+    visibleMenu, // If this change, the location of the keyboard is shifted down
+    windowSize, // If this changes, windows change size horizontally and we may encounter size breakpoints
+  ]);
 
   const [diamargLeftRect, setDiamargLeftRect] = useState(new FakeDOMRect());
   const diamargLeft = useCallback(node => {
     if (node !== null) setDiamargLeftRect(node.getBoundingClientRect());
-  }, [keyboardAndPanelRect, pressedKey, visibleMenu, windowSize]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    keyboardAndPanelRect, // If this changes, the diamargs should both change
+  ]);
 
   const [diamargRightRect, setDiamargRightRect] = useState(new FakeDOMRect());
   const diamargRight = useCallback(node => {
     if (node !== null) setDiamargRightRect(node.getBoundingClientRect());
-  }, [keyboardAndPanelRect, pressedKey, visibleMenu, windowSize]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    keyboardAndPanelRect, // If this changes, the diamargs should both change
+  ]);
 
   useEffect(() => {
     log.debug(`Document dimensions should update due to a dependency change...`)
     updateDocumentDimensions();
     // We must NOT pass updateDocumentDimensions as a dependency for this effect, or it will cause an infinite loop!
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyboardAndPanelRect, pressedKey, visibleMenu]);
+  }, [keyboardAndPanelRect, state.keyId, visibleMenu]);
 
 
-  const { connections, targetKeyIds } = useKeyConnections(pressedKey, keyboardAndPanelRect.top);
+  const { connections, targetKeyIds } = useKeyConnections(state.keyId, keyboardAndPanelRect.top);
 
   return (
     <>
@@ -115,11 +123,7 @@ export const KeymapUI = () => {
             >
 
               <Keyboard
-                otherSelectedKeys={otherSelectedKeys}
-                pressedKey={pressedKey}
                 targetKeyIds={targetKeyIds}
-                setOtherSelectedKeys={setOtherSelectedKeys}
-                setPressedKey={setPressedKey}
               />
 
               <div
@@ -127,12 +131,7 @@ export const KeymapUI = () => {
                 id="keymap-ui-info-panel-container"
               >
                 <InfoPanel
-                  keyData={pressedKey}
-                  keyButtonOnClick={() => {
-                    SelectedKeyState.setQuery(router, null)
-                    setOtherSelectedKeys([]);
-                    setPressedKey({});
-                  }}
+                  keyData={hydratedState.keyData}
                 />
               </div>
 

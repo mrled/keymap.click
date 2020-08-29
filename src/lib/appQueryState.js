@@ -3,7 +3,7 @@
 
 import log from "loglevel";
 
-class QueryState {
+export class QueryState {
   constructor(key, defaultValue) {
     this.key = key;
     this.defaultValue = defaultValue;
@@ -45,10 +45,3 @@ export const setQueryState = (router, ...settingValuePairList) => {
     query: newQuery,
   });
 }
-
-// TODO: pull the defaults from a central place that defines all the options
-export const GuideState = new QueryState("guide", "none")
-export const GuideStepState = new QueryState("guideStep", 0)
-export const LegendMapState = new QueryState("legendMap", "MrlLegends");
-export const KeyMapState = new QueryState("keyMap", "MrlMainLayer");
-export const SelectedKeyState = new QueryState("keyId", null);

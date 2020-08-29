@@ -1,16 +1,11 @@
-import { useRouter } from "next/router";
-import React, {
-  useContext,
-} from "react";
+import React, { useContext } from "react";
 
 import classnames from "classnames";
+import log from "loglevel";
 
 import {
   keyHandleDomIdFromKeyId,
 } from "~/lib/keyConnections"
-import {
-  legendMaps,
-} from "~/lib/keys";
 
 /* This is a small element used as an anchor point to connect a diagram line to this key.
  *
@@ -52,7 +47,7 @@ const KeyHandle = ({ keyId, colStart, handleTop }) => {
 /* Process a legend object from lib/keys.js,
  * and return a Legend object that can be used inside of a Key
  */
-const Legend = (legend) => {
+export const Legend = (legend) => {
   const defaultFontFace = "font-roboto-mono"
   const defaultGlyphFontSize = "text-m md:text-m";
   const defaultTextFontSize = "text-2xs md:text-xs";
@@ -92,26 +87,10 @@ const Legend = (legend) => {
   }
 }
 
-export const keyDataTextLabel = (keyData) => {
-  if (keyData.name) {
-    return keyData.name;
-  }
-  const router = useRouter();
-  const legendMapName = router.query['legendMap'] || "MrlLegends";
-  const legend = Legend(legendMaps[legendMapName][keyData.legend]);
-  return legend.legend;
-}
-
-export const keyLegendAttrib = (keyData) => {
-  const router = useRouter();
-  const legendMapName = router.query['legendMap'] || "MrlLegends";
-  const legend = Legend(legendMaps[legendMapName][keyData.legend]);
-  return legend.attrib;
-}
-
 /* A keyboard key
  * Properties:
  *   keyData:           An object e.g. from lib/keys.js
+ *   legend:            A Legend object
  *   onClick:           An onClick function
  *   standalone:        Return with classes for standalone rendering,
  *                      rather than the default which returns with classes for rendering in a grid
@@ -122,6 +101,7 @@ export const keyLegendAttrib = (keyData) => {
  */
 export const Key = ({
   keyData,
+  legend,
   onClick = null,
   standalone = false,
   id = null,
@@ -130,7 +110,6 @@ export const Key = ({
   targetKeyActive = false,
 }) => {
   const {
-    legend,
     size = [2, 2],
     startPos = ["auto", "auto"],
     extraClasses = "",
@@ -138,10 +117,6 @@ export const Key = ({
   } = keyData;
   const [col, row] = size;
   const [colStart, rowStart] = startPos;
-
-  const router = useRouter();
-  const legendMapName = router.query['legendMap'] || "MrlLegends";
-  const keyLegendInfo = Legend(legendMaps[legendMapName][legend]);
 
   const gridClasses = `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart}`;
   const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`;
@@ -155,8 +130,8 @@ export const Key = ({
       "bg-gray-200 border border-gray-500 hover:bg-gray-400": !active && !otherSelected && !targetKeyActive,
     },
     {
-      [keyLegendInfo.fontFace]: keyLegendInfo.fontFace,
-      [keyLegendInfo.fontSize]: keyLegendInfo.fontSize,
+      [legend.fontFace]: legend.fontFace,
+      [legend.fontSize]: legend.fontSize,
     },
     extraClasses
   );
@@ -164,7 +139,7 @@ export const Key = ({
   return (
     <button id={id} onClick={onClick} className={classes}>
       <KeyHandle keyId={id} colStart={colStart} handleTop={handleTop} />
-      {keyLegendInfo.legend}
+      {legend.legend}
     </button>
   );
 
@@ -174,6 +149,7 @@ export const Key = ({
  * cols: The number of columsn in the grid
  * rows: Number of rows in the grid
  * keys: List of key data objects (e.g. lib/keys.js)
+ * legends: Legend map we are using
  * onClickEach: Optional function to call onClick for each <Key> component
  *   It will be called with the key data object as the first argument
  * appendClasses: Optional string containing classes to append to the parent grid <div>
@@ -182,12 +158,13 @@ export const KeyGrid = ({
   cols,
   rows,
   keys,
+  legends,
   pressedKey,
-  selectedKeys = [],
   onClickEach = () => { },
   gridAppendClasses = "",
   targetKeyIds = [],
 }) => {
+  log.debug(`Building keyGrid with pressedKey:\n${JSON.stringify(pressedKey)}`);
   return (
     <>
       <div
@@ -201,7 +178,7 @@ export const KeyGrid = ({
           let isActive, isInSelectedGroup;
           if (pressedKey) {
             isActive = keyData.id === pressedKey.reactKey;
-            isInSelectedGroup = !isActive && selectedKeys.indexOf(keyData.id) > -1
+            isInSelectedGroup = !isActive && pressedKey.selection && pressedKey.selection.indexOf(keyData.id) > -1
           } else {
             isActive = false;
             isInSelectedGroup = false;
@@ -209,12 +186,13 @@ export const KeyGrid = ({
           return (
             <Key
               id={keyData.id}
+              legend={Legend(legends[keyData.legend])}
               targetKeyActive={isTargetKey}
               active={isActive}
               otherSelected={isInSelectedGroup}
               key={keyData.reactKey}
               keyData={keyData}
-              onClick={() => onClickEach(keyData)}
+              onClick={() => onClickEach(keyData.id)}
             />
           );
         })}
