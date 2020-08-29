@@ -30,7 +30,7 @@ export const KeyInfo = ({ keyData, parsedKeyInfo }) => {
             <div className="flex flex-row justify-start">
               <div className="flex flex-col">
                 <h2 className="text-sm md:text-2xl">Key information</h2>
-                <button onClick={setKeyId} className="block text-blue-500">
+                <button onClick={() => setKeyId(null)} className="block text-blue-500">
                   deselect key
               </button>
               </div>
