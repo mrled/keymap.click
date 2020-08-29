@@ -8,7 +8,7 @@ import {
 import { Menu } from "~/components/menu";
 import { IntraAppLink } from "~/components/intraAppLink";
 
-export const MenuBar = ({ showSettings = false }) => {
+export const MenuBar = () => {
   const [visibleMenu, setVisibleMenu] = useContext(VisibleMenuContext);
 
   return (
@@ -34,7 +34,7 @@ export const MenuBar = ({ showSettings = false }) => {
       </div>
 
       <div className="flex flex-row">
-        <Menu visible={visibleMenu} showSettings={showSettings} />
+        <Menu visible={visibleMenu} />
       </div>
 
     </div>

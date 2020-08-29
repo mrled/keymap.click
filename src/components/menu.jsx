@@ -5,7 +5,7 @@ import classnames from "classnames";
 import { AppSettings } from "~/components/appSettings";
 import { IntraAppLink } from "~/components/intraAppLink";
 
-export const Menu = ({ visible, showSettings = false }) => {
+export const Menu = ({ visible }) => {
 
   return (
     <div
@@ -30,9 +30,7 @@ export const Menu = ({ visible, showSettings = false }) => {
         </h2></li>
       </ul>
 
-      <div className={showSettings ? "visible" : "hidden"}>
-        <AppSettings />
-      </div>
+      <AppSettings />
 
     </div>
   );

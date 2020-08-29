@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <>
       <KeymapUiStateContext.Provider value={keymapUiState}>
-        <MenuBar showSettings={true} />
+        <MenuBar />
         <KeymapUI />
       </KeymapUiStateContext.Provider>
     </>
