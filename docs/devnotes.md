@@ -49,6 +49,24 @@ Edit all of this.
 
 Things I might do, but that I haven't decided on yet
 
+### Use query string for setting debug level
+
+Makes things simpler, allows me to load debug info on initial page load
+
+### Change the component to intraAppLink
+
+It's an intra- not an inter- app link, oops
+
+### Bug: keyboardAndPanelRect, diamargLeftRect, diamargRightRect sometimes not calc correctly
+
+When the viewport is at the top, these values seem to be correct.
+
+When it's scrolled down a bit, the values are not correct.
+
+### Move to typescript
+
+Adding the useKeymapUiState hook was pretty tough. I think having string typing everywhere would have helped.
+
 ### Fix messy URLs
 
 * Root always shows a default view
