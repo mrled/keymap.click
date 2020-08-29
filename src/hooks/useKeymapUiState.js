@@ -18,7 +18,7 @@ import {
 const GuideState = new QueryState("guide", "none");
 const GuideStepState = new QueryState("guideStep", 0);
 const LegendMapState = new QueryState("legendMap", "MrlLegends");
-const KeyMapState = new QueryState("keyMap", "MrlMainLayer");
+const KeyMapState = new QueryState("keyMap", "DebugLayout");
 const SelectedKeyState = new QueryState("keyId", null);
 
 /* A table for looking up the state object by its key
