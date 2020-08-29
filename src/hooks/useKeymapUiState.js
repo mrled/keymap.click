@@ -77,11 +77,11 @@ const stateObjToQueryStringPair = (stateObj) => {
 const hydrateState = (state) => {
   const keyMap = keyMaps[state.keyMap || KeyMapState.defaultValue];
   const legendMap = legendMaps[state.legendMap || LegendMapState.defaultValue];
+  const guide = keyMap.guides[state.guide || GuideState.defaultValue];
 
   const keyData = keyMap.allKeysById[state.keyId] || {};
 
-  const guide = keyMap.guides[state.guide || GuideState.defaultValue];
-
+  const guidesAvailable = Object.entries(keyMap.guides).length > 1; // NOTE: in keys.js, we define a "none" guide for every keyMap.
   const guideStepIdx = Number(state.guideStep || GuideStepState.defaultValue);
   const inGuide = guide.name !== GuideState.defaultValue
   const guideStep = inGuide ? guide.steps[guideStepIdx] : {};
@@ -98,6 +98,7 @@ const hydrateState = (state) => {
 
     keyData,
 
+    guidesAvailable,
     guideStepIdx,
     guideStep,
     inGuide,

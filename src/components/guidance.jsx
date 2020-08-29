@@ -50,8 +50,14 @@ export const GuideBar = () => {
           defaultValue={state.guide}
           name="Guides"
           id="guide-selector"
-          className="p-2 m-2 w-1/3"
+          className={classnames(
+            "p-2 m-2 w-1/3",
+            {
+              "text-gray-500": !hydratedState.guidesAvailable,
+            }
+          )}
           ref={guideSelectBox}
+          disabled={!hydratedState.guidesAvailable}
         >
           {Object.keys(hydratedState.keyMap.guides).map((guideName) => {
             return <option key={guideName} value={guideName}>{hydratedState.keyMap.guides[guideName].fullName}</option>
