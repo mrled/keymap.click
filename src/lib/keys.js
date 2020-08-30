@@ -5,12 +5,10 @@ import UnicodeLegends from "./keyLegends/unicodeLegends";
 
 import DebugLayout from "./keyMaps/debugLayout";
 import MrlMainLayer from "./keyMaps/mrlMainLayer";
-import MrlMainLayerOld from "./keyMaps/mrlMainLayerOld";
 
 export const keyMaps = {
   DebugLayout: DebugLayout,
   MrlMainLayer: MrlMainLayer,
-  MrlMainLayerOld: MrlMainLayerOld,
 }
 
 Object.keys(keyMaps).forEach((keyMapName) => {
