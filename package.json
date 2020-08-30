@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
-    "devlocalnet": "next dev --hostname 0.0.0.0",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "devlocalnet": "NODE_OPTIONS='--inspect' next dev --hostname 0.0.0.0",
     "export": "npm run build && next export",
     "lint": "eslint",
     "lintall": "eslint .",
