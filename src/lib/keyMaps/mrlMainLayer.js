@@ -35,6 +35,29 @@ const qwertySelection = [
   "r-f-3-5", "r-f-5-5", "r-f-7-5", "r-f-9-5", "r-f-11-5", "r-f-13-5",
   "r-f-3-7", "r-f-5-7", "r-f-7-7", "r-f-9-7", "r-f-11-7",
 ];
+const pinkyReliefSelection = [
+  "l-f-14-1", // escape
+  "l-f-14-3", // tab
+  "l-t-1-3", // shift
+  "l-t-3-3", // backspace
+  "l-t-5-5", "r-t-1-5", // ctrl
+  "r-t-3-3", // return
+];
+const movedQwertyNonReliefSelection = [
+  "l-f-1-1", // =+
+  "l-f-1-3", // `~
+  "l-f-1-7", // [{
+  "r-f-13-7", // ]}
+  "l-f-14-6", "r-f-1-6", // GUI
+  "l-f-8-9", "r-f-5-9", // option
+];
+const extraFeaturesSelection = [
+  "l-f-2-9", // function layer
+  "l-f-8-9", "r-f-7-9", // arrow layer
+  "r-f-1-1", // leader key
+  "r-f-1-3", // mouse layer
+  "r-f-9-9", "r-f-11-9", "r-f-13-9", // volume keys
+];
 
 const MrlMainLayer = {
   fullName: "Main layer",
@@ -57,6 +80,56 @@ const MrlMainLayer = {
           title: "QWERTY keys",
           text: "Most of the keys on this keyboard are in their default QWERTY location. Even so, there is something special about the ErgoDox style keyboard. The keys are <em>ortholinear</em>, which means that they are arrayed in neat columns rather than offset like a traditional QWERTY keyboard. Along with the split boards that can be moved independently (connected by a cable), this means your fingers extend straight out, or curl straight in, to hit any key.",
           selection: qwertySelection,
+        },
+        {
+          title: "Relieving my pinky",
+          text: "<p>I remapped all of these keys in order to relieve what became intense, painful strain on the pinky fingers of both hands. I am not the first to notice that these keys &mdash; <kbd>esc</kbd>, <kbd>tab</kbd>, <kbd>shift</kbd>, <kbd>backspace</kbd>, <kdb>ctrl</kbd>, and <kbd>return</kbd> &mdash; are some of the most commonly used keys on the board, and yet we use them with our weakest fingers. Changing the location of these keys has made a massive difference in my day to day life on a keyboard, and it was easy to learn.</p><p>At its worst, the tendon on the outside of each forearm from pinky-side of the palm to the elbow would be swollen, rock hard, and painful to touch. Touching any keys with my pinkies would feel like tiny stabs of pain. It was miserable.</>",
+          selection: pinkyReliefSelection,
+        },
+        { key: "l-f-14-1" },
+        { key: "l-f-14-3" },
+        { key: "l-t-1-3" },
+        { key: "l-t-3-3" },
+        {
+          key: "l-t-5-5",
+          selection: ctrlKeySelection,
+        },
+        { key: "r-t-3-3" },
+        {
+          title: "Other remapped keys",
+          text: "Due to the layout of the ErgoDox, some keys had to be moved from their normal QWERTY positions.",
+          selection: movedQwertyNonReliefSelection,
+        },
+        { key: "l-f-1-1" },
+        { key: "l-f-1-3" },
+        {
+          key: "r-f-13-7",
+          selection: bracketKeySelection,
+        },
+        {
+          key: "r-f-1-6",
+          selection: guiKeySelection,
+        },
+        {
+          key: "r-f-5-9",
+          selection: optKeySelection,
+        },
+        {
+          title: "Layers and extra features",
+          text: "Since the board is powered by QMK, I can also get extra features besides just moving keys around.",
+          selection: extraFeaturesSelection,
+        },
+        { key: "l-f-2-9" },
+        { key: "r-f-7-9" },
+        { key: "r-f-1-1" },
+        { key: "r-f-1-3" },
+        {
+          key: "r-f-11-9",
+          selection: volKeySelection,
+        },
+        {
+          title: "The end",
+          text: "Thanks for all the clicks.",
         },
       ],
     },
