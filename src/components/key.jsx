@@ -163,6 +163,7 @@ export const KeyGrid = ({
   onClickEach = () => { },
   gridAppendClasses = "",
   targetKeyIds = [],
+  keySelection = [],
 }) => {
   log.debug(`Building keyGrid with pressedKey:\n${JSON.stringify(pressedKey)}`);
   return (
@@ -178,7 +179,7 @@ export const KeyGrid = ({
           let isActive, isInSelectedGroup;
           if (pressedKey) {
             isActive = keyData.id === pressedKey.reactKey;
-            isInSelectedGroup = !isActive && pressedKey.selection && pressedKey.selection.indexOf(keyData.id) > -1
+            isInSelectedGroup = !isActive && keySelection.indexOf(keyData.id) > -1
           } else {
             isActive = false;
             isInSelectedGroup = false;

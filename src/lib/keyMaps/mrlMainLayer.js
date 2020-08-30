@@ -24,9 +24,43 @@ const guiKeySelection = ["l-f-14-6", "r-f-1-6"];
 const ctrlKeySelection = ["l-t-5-5", "r-t-1-5"];
 const optKeySelection = ["l-f-10-9", "r-f-5-9"];
 const arrowLayerKeySelection = ["l-f-8-9", "r-f-7-9"];
+const qwertySelection = [
+  "l-f-4-1", "l-f-6-1", "l-f-8-1", "l-f-10-1", "l-f-12-1",
+  "l-f-4-3", "l-f-6-3", "l-f-8-3", "l-f-10-3", "l-f-12-3",
+  "l-f-4-5", "l-f-6-5", "l-f-8-5", "l-f-10-5", "l-f-12-5",
+  "l-f-4-7", "l-f-6-7", "l-f-8-7", "l-f-10-7", "l-f-12-7",
+
+  "r-f-3-1", "r-f-5-1", "r-f-7-1", "r-f-9-1", "r-f-11-1", "r-f-13-1",
+  "r-f-3-3", "r-f-5-3", "r-f-7-3", "r-f-9-3", "r-f-11-3", "r-f-13-3",
+  "r-f-3-5", "r-f-5-5", "r-f-7-5", "r-f-9-5", "r-f-11-5", "r-f-13-5",
+  "r-f-3-7", "r-f-5-7", "r-f-7-7", "r-f-9-7", "r-f-11-7",
+];
 
 const MrlMainLayer = {
   fullName: "Main layer",
+  defaultGuide: "mrlGuide",
+  guides: {
+    mrlGuide: {
+      fullName: "Guide to MrlMainLayout",
+      steps: [
+        {
+          title: "Welcome to the guide to my main keyboard layout",
+          text: "This is a guide to the layout for my ErgoDox keyboard. See the help button or the menu for more information about this site, how it's built, who I am, or what this keyboard is. Note the navigation buttons above this text, and click next when you're ready to see the next step in the guide. Note that you can exit the guide at any time with the 'Exit' button, or by clicking on any key on the keyboard.",
+        },
+        {
+          title: "Following the guide",
+          text: "<p>Some steps of the guide, like the previous intro step, will contain text in the bottom information panel, but won't be highlighting a specific key. Other steps of the guide will highlight a key or a group of keys. In this example, the <kbd>mute</kbd> key is highlighted in orange, which shows. You may also see other keys highlighted in lighter orange, such as in this case the other volume-related keys in the layout. Finally some keys might be referenced in the text. These will be highlighted in green and have a green line drawn to them. For instance, I can't put my volume keys on the other side of the board, because I'm using [[l-f-2-9|this key]] for my function layer.</p><p>That's about all you need to know about how the guide works. Next I'll show you the details of the board in broad strokes, and after that I'll get into specific keys.<p>",
+          key: "r-f-9-9",
+          selection: volKeySelection,
+        },
+        {
+          title: "QWERTY keys",
+          text: "Most of the keys on this keyboard are in their default QWERTY location. Even so, there is something special about the ErgoDox style keyboard. The keys are <em>ortholinear</em>, which means that they are arrayed in neat columns rather than offset like a traditional QWERTY keyboard. Along with the split boards that can be moved independently (connected by a cable), this means your fingers extend straight out, or curl straight in, to hit any key.",
+          selection: qwertySelection,
+        },
+      ],
+    },
+  },
   leftHandKeys: [
     // number row
     {

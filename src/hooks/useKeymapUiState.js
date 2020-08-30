@@ -19,7 +19,7 @@ const GuideState = new QueryState("guide", "none");
 const GuideStepState = new QueryState("guideStep", 0);
 const HelpState = new QueryState("help", false)
 const LegendMapState = new QueryState("legendMap", "MrlLegends");
-const KeyMapState = new QueryState("keyMap", "DebugLayout");
+const KeyMapState = new QueryState("keyMap", "MrlMainLayer");
 const SelectedKeyState = new QueryState("keyId", null);
 
 /* A table for looking up the state object by its key
@@ -96,6 +96,8 @@ const hydrateState = (state) => {
   const guideLength = inGuide ? guide.steps.length : 0;
   const onFinalGuideStep = inGuide && guideStepIdx + 1 == guideLength;
 
+  const keySelection = inGuide ? guideStep.selection : keyData.selection;
+
   return {
     keyMap,
     legendMap,
@@ -114,6 +116,8 @@ const hydrateState = (state) => {
     canDecrementGuideStep,
     guideLength,
     onFinalGuideStep,
+
+    keySelection,
   }
 }
 

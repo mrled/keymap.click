@@ -24,6 +24,7 @@ export const Keyboard = ({ targetKeyIds }) => {
             pressedKey={helpIsOpen ? {} : hydratedState.keyData}
             targetKeyIds={helpIsOpen ? [] : targetKeyIds}
             onClickEach={setKeyId}
+            keySelection={hydratedState.keySelection}
           />
           <KeyGrid
             cols="6"
@@ -34,6 +35,7 @@ export const Keyboard = ({ targetKeyIds }) => {
             targetKeyIds={helpIsOpen ? [] : targetKeyIds}
             onClickEach={setKeyId}
             gridAppendClasses="keyboard-left-thumb-cluster"
+            keySelection={hydratedState.keySelection}
           />
         </div>
       </div>
@@ -49,6 +51,7 @@ export const Keyboard = ({ targetKeyIds }) => {
             pressedKey={helpIsOpen ? {} : hydratedState.keyData}
             targetKeyIds={helpIsOpen ? [] : targetKeyIds}
             onClickEach={setKeyId}
+            keySelection={hydratedState.keySelection}
           />
           <KeyGrid
             cols="6"
@@ -59,6 +62,7 @@ export const Keyboard = ({ targetKeyIds }) => {
             targetKeyIds={helpIsOpen ? [] : targetKeyIds}
             onClickEach={setKeyId}
             gridAppendClasses="keyboard-right-thumb-cluster"
+            keySelection={hydratedState.keySelection}
           />
         </div>
       </div>
