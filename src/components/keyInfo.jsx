@@ -12,6 +12,12 @@ import {
   Legend,
 } from "~/components/key";
 import {
+  keyInfoConnectFromClass,
+  keyInfoConnectFromClassPrefix,
+  keyInfoConnectType,
+  keyInfoConnectTypeClassPrefix,
+} from "~/lib/keyConnections";
+import {
   parseKeyInfo,
 } from "~/lib/keyInfoParser";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
@@ -152,17 +158,48 @@ const HelpPanel = ({ hydratedState, setGuide, setHelp }) => {
 const TitleBarKeyGrid = ({ keyData, legendMap }) => {
   let modifiedKeyData = Object.assign({}, keyData);
   modifiedKeyData.startPos = [0, 0];
+  const modifiedKeyId = "title-bar-0-0";
+  modifiedKeyData.reactKey = modifiedKeyId;
+  modifiedKeyData.id = modifiedKeyId;
   return (
     <KeyGrid
+      gridName="title bar"
       // Use a constant size so that elements below/right of this one
       // don't change location when we select different keys
       cols="3"
       rows="4"
       keys={[modifiedKeyData]}
       legends={legendMap}
-      pressedKey={keyData}
+      pressedKey={modifiedKeyData}
     />
   );
+}
+
+/* An empty KeyGrid for the title bar.
+ */
+const EmptyTitleBarKeyGrid = () => {
+  const emptyTbKeyData = { reactKey: 1 }; // Stave off React warnings
+  return <TitleBarKeyGrid keyData={emptyTbKeyData} legendMap={{}} />;
+}
+
+/* A KeyGrid for the title bar when the help menu is active
+ */
+const HelpTitleBarKeyGrid = () => {
+  const helpKeyData = { legend: "?", reactKey: 1, };
+  const helpLegendMap = { "?": { glyph: { value: "¿" } }, };
+  return <TitleBarKeyGrid keyData={helpKeyData} legendMap={helpLegendMap} />;
+}
+
+/* A KeyGrid for the title bar which references a key on the keyboard
+ */
+const PopulatedTitleBarKeyGrid = ({ keyData, legendMap }) => {
+  const modifiedKeyData = { ...keyData };
+  modifiedKeyData.keyHandleExtraClasses = [
+    `${keyInfoConnectFromClass}`,
+    `${keyInfoConnectTypeClassPrefix}${keyInfoConnectType.selected}`,
+    `${keyInfoConnectFromClassPrefix}${keyData.id}`
+  ].join(' ');
+  return <TitleBarKeyGrid keyData={modifiedKeyData} legendMap={legendMap} />;
 }
 
 /* An information panel about whatever key/guide we're in, or with an intro
@@ -172,21 +209,22 @@ export const InfoPanel = () => {
   const { keyData, legendMap } = hydratedState;
   const legend = Legend(legendMap[keyData.legend]);
 
-  const emptyTbKeyGrid = <TitleBarKeyGrid keyData={null} legendMap={{}} />
-
-  const helpKeyData = { legend: "?", };
-  const helpLegendMap = { "?": { glyph: { value: "¿" } }, }
-  const helpTbKeyGrid = <TitleBarKeyGrid keyData={helpKeyData} legendMap={helpLegendMap} />
+  const keyDataTbKeyGrid = keyData.id ? <PopulatedTitleBarKeyGrid keyData={keyData} legendMap={legendMap} /> : <EmptyTitleBarKeyGrid />
 
   if (state.help) {
     // The help panel is open
     return (<>
-      <PanelNavBar tbKeyGrid={helpTbKeyGrid} title={"What is this?"} guideInfo={null} help={state.help} setHelp={setHelp} />
+      <PanelNavBar
+        tbKeyGrid={<HelpTitleBarKeyGrid />}
+        title="What is this?"
+        guideInfo={null}
+        help={state.help}
+        setHelp={setHelp}
+      />
       <HelpPanel hydratedState={hydratedState} setGuide={setGuide} setHelp={setHelp} />
     </>);
   } else if (hydratedState.inGuide) {
     // We are in a guide. There may be a selected key, but maybe not.
-    const tbKeyGrid = keyData ? <TitleBarKeyGrid keyData={keyData} legendMap={legendMap} /> : emptyTbKeyGrid;
     const guideInfo = <GuideInfo
       guideStep={hydratedState.guideStepIdx}
       guideLength={hydratedState.guide.steps.length}
@@ -194,7 +232,7 @@ export const InfoPanel = () => {
     />;
     return (<>
       <PanelNavBar
-        tbKeyGrid={tbKeyGrid}
+        tbKeyGrid={keyDataTbKeyGrid}
         title={hydratedState.guideStep.title || "Key information"}
         guideInfo={guideInfo}
         help={state.help}
@@ -212,16 +250,27 @@ export const InfoPanel = () => {
 
   } else if (hydratedState.keyData.info) {
     // We are NOT in a guide, but the user has selected a key
-    const tbKeyGrid = <TitleBarKeyGrid keyData={keyData} legendMap={legendMap} />
     return (<>
-      <PanelNavBar tbKeyGrid={tbKeyGrid} title={"Key information"} help={state.help} setHelp={setHelp} />
+      <PanelNavBar
+        tbKeyGrid={keyDataTbKeyGrid}
+        title="Key information"
+        help={state.help}
+        setHelp={setHelp}
+      />
       <KeyInfoProse isSet={!keyData.unset} keyInfo={keyData.info} textLabel={keyData.name || legend.legend} />
       <LegendAttribution legendData={legend} />
     </>);
   } else {
+    // No key is selected and we are not in a guide
     return (
       <>
-        <PanelNavBar tbKeyGrid={emptyTbKeyGrid} title={"Welcome"} guideInfo={null} help={state.help} setHelp={setHelp} />
+        <PanelNavBar
+          tbKeyGrid={<EmptyTitleBarKeyGrid />}
+          title="Welcome"
+          guideInfo={null}
+          help={state.help}
+          setHelp={setHelp}
+        />
         <p className="py-1">You are viewing the keymap information for: {hydratedState.keyMap.fullName}.</p>
         <p className="py-1">Select a key from the list above to learn more about it.</p>
         {hydratedState.keyMap.defaultGuide ? (

@@ -21,7 +21,7 @@ import {
  * However, it is so small that this doesn't matter.
  * The diagram line still looks good inside the <Key>.
  */
-const KeyHandle = ({ keyId, colStart, handleTop }) => {
+const KeyHandle = ({ keyId, colStart, handleTop, extraClasses }) => {
   if (!keyId) {
     return null;
   }
@@ -38,7 +38,7 @@ const KeyHandle = ({ keyId, colStart, handleTop }) => {
     transform: `translateY(${yOffset}px)`,
   };
 
-  const classes = "h-1 w-1 m-0 p-0 border-none pointer-events-none absolute";
+  const classes = `h-1 w-1 m-0 p-0 border-none pointer-events-none absolute ${extraClasses}`;
   return <>
     <div id={keyHandleDomIdFromKeyId(keyId)} style={style} className={classes} />
   </>;
@@ -108,6 +108,7 @@ export const Key = ({
   active = false,
   otherSelected = false,
   targetKeyActive = false,
+  keyHandleExtraClasses = null,
 }) => {
   const {
     size = [2, 2],
@@ -120,13 +121,14 @@ export const Key = ({
 
   const gridClasses = `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart}`;
   const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`;
+
   const classes = classnames(
     standalone ? standaloneClasses : gridClasses,
     `cursor-pointer p-1 flex justify-center items-center rounded-sm font-mono pointer-events-auto force-outline-none relative`,
     {
       "bg-orange-300 border border-orange-700 hover:bg-orange-600": active,
       "bg-orange-100 border border-orange-500 hover:bg-orange-400": otherSelected,
-      "bg-green-200 border border-green-500 hover:bg-green-400": targetKeyActive,
+      "bg-green-200 border border-green-500 hover:bg-green-400": !active && targetKeyActive,
       "bg-gray-200 border border-gray-500 hover:bg-gray-400": !active && !otherSelected && !targetKeyActive,
     },
     {
@@ -138,7 +140,7 @@ export const Key = ({
 
   return (
     <button id={id} onClick={onClick} className={classes}>
-      <KeyHandle keyId={id} colStart={colStart} handleTop={handleTop} />
+      <KeyHandle keyId={id} colStart={colStart} handleTop={handleTop} extraClasses={keyHandleExtraClasses} />
       {legend.legend}
     </button>
   );
@@ -155,6 +157,7 @@ export const Key = ({
  * appendClasses: Optional string containing classes to append to the parent grid <div>
  */
 export const KeyGrid = ({
+  gridName = "",
   cols,
   rows,
   keys,
@@ -165,7 +168,7 @@ export const KeyGrid = ({
   targetKeyIds = [],
   keySelection = [],
 }) => {
-  log.debug(`Building keyGrid with pressedKey:\n${JSON.stringify(pressedKey)}`);
+  log.debug(`Building keyGrid '${gridName}' with pressedKey:\n${JSON.stringify(pressedKey)}`);
   return (
     <>
       <div
@@ -179,7 +182,7 @@ export const KeyGrid = ({
           let isActive, isInSelectedGroup;
           if (pressedKey) {
             isActive = keyData.id === pressedKey.reactKey;
-            isInSelectedGroup = !isActive && keySelection.indexOf(keyData.id) > -1
+            isInSelectedGroup = !isActive && keySelection.indexOf(keyData.id) > -1;
           } else {
             isActive = false;
             isInSelectedGroup = false;
@@ -194,6 +197,7 @@ export const KeyGrid = ({
               key={keyData.reactKey}
               keyData={keyData}
               onClick={() => onClickEach(keyData.id)}
+              keyHandleExtraClasses={keyData.keyHandleExtraClasses || null}
             />
           );
         })}

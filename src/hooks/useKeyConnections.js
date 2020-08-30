@@ -8,24 +8,14 @@ import {
   absolutifyRect,
 } from "~/lib/geometry"
 import {
+  Connection,
+  defaultKeyInfoConnectType,
   keyHandleDomIdFromKeyId,
   keyInfoConnectFromClass,
   keyInfoConnectFromClassPrefix,
+  keyInfoConnectType,
+  keyInfoConnectTypeClassPrefix,
 } from "~/lib/keyConnections";
-
-/* A key connection
- * sourceCoords: Coordinates for a source element in the key info panel
- * targetCoords: Coordinates for a target key in the keyboard
- * targetKeyId: ID for the target key
- */
-class Connection {
-  constructor(sourceCoords, targetCoords, targetKeyId, targetHandle) {
-    this.sourceCoords = sourceCoords;
-    this.targetCoords = targetCoords;
-    this.targetKeyId = targetKeyId;
-    this.targetHandle = targetHandle;
-  }
-}
 
 
 /* Return a new Point, representing a location for the diagram lines to connect on a source element
@@ -81,15 +71,34 @@ const getKeyConnections = () => {
       .filter((cls) => cls.startsWith(keyInfoConnectFromClassPrefix))
       .map((cls) => cls.slice(keyInfoConnectFromClassPrefix.length));
 
+    if (targetKeyIds.indexOf("undefined") > -1) {
+      throw new Error(`The indicator '${indicator}' with classes '${indicator.className}' and of id ${indicator.id} has a 'key-info-connect-from-undefined' class, which is the result of a bug elsewhere in the program.`)
+    }
+
+    // Convert the indicator class types to a list of bare type strings,
+    // e.g. key-info-connect-type-textref => textref
+    const discoveredKeyConnType = indicator.className
+      .split(" ")
+      .filter((cls) => cls.startsWith(keyInfoConnectTypeClassPrefix))
+      .map((cls) => cls.slice(keyInfoConnectTypeClassPrefix.length));
+    const keyConnType = discoveredKeyConnType != "" ? discoveredKeyConnType : defaultKeyInfoConnectType;
+
     targetKeyIds.forEach((targetKeyId) => {
       targetKeys.push(targetKeyId);
+
       const targetKeyHandle = document.getElementById(keyHandleDomIdFromKeyId(targetKeyId));
       const targetCoords = connectionPointTo(targetKeyHandle);
+
       log.debug(
         `Found key connection from source at ${sourceCoords.x},${sourceCoords.y}`,
-        `to target key with ID ${targetKeyId} at ${targetCoords.x},${targetCoords.y}`
+        `to target key with ID ${targetKeyId} at ${targetCoords.x},${targetCoords.y}`,
+        `of type ${keyConnType}`
       );
-      const connection = new Connection(sourceCoords, targetCoords, targetKeyId, targetKeyHandle);
+
+      const connection = new Connection(
+        sourceCoords, targetCoords, targetKeyId, targetKeyHandle, keyConnType
+      );
+
       connections.push(connection);
     });
   }

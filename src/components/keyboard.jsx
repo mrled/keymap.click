@@ -17,6 +17,7 @@ export const Keyboard = ({ targetKeyIds }) => {
         <h2 className="text-xl">Left hand</h2>
         <div className="flex flex-row">
           <KeyGrid
+            gridName="left finger"
             cols="15"
             rows="10"
             keys={hydratedState.keyMap.leftHandKeys}
@@ -27,6 +28,7 @@ export const Keyboard = ({ targetKeyIds }) => {
             keySelection={hydratedState.keySelection}
           />
           <KeyGrid
+            gridName="left thumb"
             cols="6"
             rows="6"
             keys={hydratedState.keyMap.leftThumbKeys}
@@ -44,6 +46,7 @@ export const Keyboard = ({ targetKeyIds }) => {
         <h2 className="text-xl ml-auto">Right hand</h2>
         <div className="flex flex-row-reverse">
           <KeyGrid
+            gridName="right finger"
             cols="15"
             rows="10"
             keys={hydratedState.keyMap.rightHandKeys}
@@ -54,6 +57,7 @@ export const Keyboard = ({ targetKeyIds }) => {
             keySelection={hydratedState.keySelection}
           />
           <KeyGrid
+            gridName="right thumb"
             cols="6"
             rows="6"
             keys={hydratedState.keyMap.rightThumbKeys}
