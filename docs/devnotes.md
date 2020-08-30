@@ -15,21 +15,33 @@ Everything that I have decided to definitely do
 * Add content for all the keys I want
 * Add place for more general info / prose
 * Add prose content
+* Draw orange line to selected key
 
 ### Add a guide for the main layout
 
-Fill out all the info content.
-Edit all the content
+* ✅ Fill out all the info content.
+* 🔲 Edit all the content
 
 ### Add content for all the keys I want
 
-Fill out key info content with references.
-Edit all the content.
+* ✅ Fill out key info content with references.
+* 🔲 Edit all the content
 
 ### Add prose content
 
 Write about what this is, who am I, how this works, what an ErgoDox is, RSI stuff, etc etc.
 Edit all of this.
+
+### Draw orange line on the canvas to connect the selected key to the info panel
+
+The guided tours change the selected key for you.
+When they do this, I think it might be jarring for users...
+I think they might get confused and not understand what I'm trying to show them.
+
+Make it more obvious that the selected key has changed by drawing an orange line,
+like the green lines to connect referenced keys, but maybe bolder and/or brighter.
+
+This will make it obvious exactly what's changing and will draw the user's eye to the place I want.
 
 ## Ideas
 
@@ -58,17 +70,6 @@ Consider adding a button to start a tour from any key.
 
 Is there some alternative?
 
-### Draw orange line on the canvas to connect the selected key to the info panel
-
-The guided tours change the selected key for you.
-When they do this, I think it might be jarring for users...
-I think they might get confused and not understand what I'm trying to show them.
-
-Make it more obvious that the selected key has changed by drawing an orange line,
-like the green lines to connect referenced keys, but maybe bolder and/or brighter.
-
-This will make it obvious exactly what's changing and will draw the user's eye to the place I want.
-
 ### Audit when we're prop drilling and when we're using context
 
 It's not always consistent whether I am passing props around or using context.
@@ -85,25 +86,9 @@ When the viewport is at the top, these values seem to be correct.
 
 When it's scrolled down a bit, the values are not correct.
 
-### Move to typescript
+It's also much weirder on iOS... not sure how to debug that.
 
-Adding the useKeymapUiState hook was pretty tough. I think having string typing everywhere would have helped.
-
-### Fix messy URLs
-
-* Root always shows a default view
-* Clicking anywhere puts all items in the URL.
-  Currently, default values are not persisted to the URL.
-* Use paths rather than query string, everything just looks nicer.
-* Is there a library for query string -like paths?
-  Even `/keymap:default/guide:someguide/`; I know some REST APIs work this way.
-
-### Fix messy state crap
-
-State is all over the place because it's hard and I learned it over the course of this project.
-Clean this up.
-
-Josh has mentioned `unstated-next` to me more than once, can that help me?
+Doesn't seem to hurt anything though?
 
 ### Allow referencing legends as `<kbd>` elements
 
@@ -111,19 +96,6 @@ Goes hand in hand with "Nicer looking key references".
 
 Would be useful to be able to reference whatever the legend in the current legendMap for any key,
 especially keys that don't have good Unicode glyphs like layer or volume keys.
-
-### Allow pulling in other keymaps
-
-Pull in keymaps and legend sets from other sources client-side.
-
-This would let other people write a .js file and use my app to show them.
-
-Use the getStaticPaths with a fallback for this, like
-<https://static-tweet.now.sh/>
-
-### Write prose in markdown
-
-Annoying to write in HTML, honestly, especially inside a React component.
 
 ### Nicer looking key references inside the info panel
 
@@ -162,6 +134,43 @@ so I'll probably have to find something like that.
 Now that I can link to individual keys, seems like I really ought to have a preview image for each one.
 
 Also should change the page title.
+
+## Post-1.0 ideas
+
+These are definitely not happening now, but might be doable after 1.0.
+
+### Allow pulling in other keymaps
+
+Pull in keymaps and legend sets from other sources client-side.
+
+This would let other people write a .js file and use my app to show them.
+
+Use the getStaticPaths with a fallback for this, like
+<https://static-tweet.now.sh/>
+
+### Write prose in markdown
+
+Annoying to write in HTML, honestly, especially inside a React component.
+
+### Move to typescript
+
+Adding the useKeymapUiState hook was pretty tough. I think having string typing everywhere would have helped.
+
+### Fix messy URLs
+
+* Root always shows a default view
+* Clicking anywhere puts all items in the URL.
+  Currently, default values are not persisted to the URL.
+* Use paths rather than query string, everything just looks nicer.
+* Is there a library for query string -like paths?
+  Even `/keymap:default/guide:someguide/`; I know some REST APIs work this way.
+
+### Fix messy state crap
+
+State is all over the place because it's hard and I learned it over the course of this project.
+Clean this up.
+
+Josh has mentioned `unstated-next` to me more than once, can that help me?
 
 ## Development notes and completed to do items
 
