@@ -195,7 +195,7 @@ export const InfoPanel = () => {
     return (<>
       <PanelNavBar
         tbKeyGrid={tbKeyGrid}
-        title={"Key information"}
+        title={hydratedState.guideStep.title || "Key information"}
         guideInfo={guideInfo}
         help={state.help}
         setHelp={setHelp}
