@@ -16,24 +16,10 @@ Everything that I have decided to definitely do
 * Add place for more general info / prose
 * Add prose content
 
-### Add a guide
+### Add a guide for the main layout
 
-A new user lands on this page.
-What should they click on?
-Why should they care?
-
-Some kind of guided tour.
-
-Update 20200823: This exists now, but needs refinement.
-
-* ✅ Basic navigation works!
-* 🔲 Get rid of the guide bar; navigate from the key info panel
-* 🔲 Possible navigation bugs? Maybe need to re-think state to integrate both guide and pressedKey
-* 🔲 Possible initial page load bugs? Make sure the app can't get confused when loading in the middle of a guided tour
-* 🔲 Bug: guide in selection box on initial load sometimes wrong
-* 🔲 Bug: clicking a key doesn't exit the guide
-* 🔲 Add guide for main layout
-* 🔲 Add guide for old layout, or maybe just remove it
+Fill out all the info content.
+Edit all the content
 
 ### Add content for all the keys I want
 
@@ -48,6 +34,46 @@ Edit all of this.
 ## Ideas
 
 Things I might do, but that I haven't decided on yet
+
+### Can I remove the menu?
+
+It seems like having the help page and the menu with settings is redundant.
+Should I make a setting panel that works like the help panel?
+
+Should I instead integrate the help in the menu?
+
+Seems like I shouldn't need both.
+Feels cluttered.
+
+### Add a guided tour button next to the help button
+
+Not sure if this is a good idea or not?
+
+I am thinking of users who are linked to one specific key on the site.
+They might not understand what they're seeing until they take a tour,
+but if they don't start on the landing page,
+there is no indication that a tour is possible.
+
+Consider adding a button to start a tour from any key.
+
+Is there some alternative?
+
+### Draw orange line on the canvas to connect the selected key to the info panel
+
+The guided tours change the selected key for you.
+When they do this, I think it might be jarring for users...
+I think they might get confused and not understand what I'm trying to show them.
+
+Make it more obvious that the selected key has changed by drawing an orange line,
+like the green lines to connect referenced keys, but maybe bolder and/or brighter.
+
+This will make it obvious exactly what's changing and will draw the user's eye to the place I want.
+
+### Audit when we're prop drilling and when we're using context
+
+It's not always consistent whether I am passing props around or using context.
+Some components do both, when they could just use one or the other.
+It works now, but could be cleaner.
 
 ### Use query string for setting debug level
 
@@ -1061,3 +1087,44 @@ They should be linkable too.
 It's an intra- not an inter- app link, oops
 
 ✅ Fixed
+
+### Add a guide
+
+A new user lands on this page.
+What should they click on?
+Why should they care?
+
+Some kind of guided tour.
+
+Update 20200823: This exists now, but needs refinement.
+
+* ✅ Basic navigation works!
+* 🔲 Get rid of the guide bar; navigate from the key info panel
+* 🔲 Possible navigation bugs? Maybe need to re-think state to integrate both guide and pressedKey
+* 🔲 Possible initial page load bugs? Make sure the app can't get confused when loading in the middle of a guided tour
+* 🔲 Bug: guide in selection box on initial load sometimes wrong
+* 🔲 Bug: clicking a key doesn't exit the guide
+* 🔲 Add guide for main layout
+* 🔲 Add guide for old layout, or maybe just remove it
+
+Update 20200829: UI improvements and bug quashing!!
+
+Remaining:
+
+* 🔲 Add guide for main layout - going to break this into a separate task
+
+Completed:
+
+* ✅ Get rid of the guide bar; navigate from the key info panel
+* ✅ Possible navigation bugs? Maybe need to re-think state to integrate both guide and pressedKey
+* ✅ Possible initial page load bugs? Make sure the app can't get confused when loading in the middle of a guided tour
+* ✅ Bug: guide in selection box on initial load sometimes wrong
+* ✅ Bug: clicking a key doesn't exit the guide
+* ✅ Add guide for old layout, or maybe just remove it
+
+That means... I can call this item done!
+I think there is still room for improvement,
+especially regarding having both a menu and a help page.
+I created a new task for that too.
+
+✅ !!!! fuck yeah
