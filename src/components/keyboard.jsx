@@ -6,7 +6,10 @@ import { KeyGrid } from "~/components/key";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 
 export const Keyboard = ({ targetKeyIds }) => {
-  const { hydratedState, setKeyId } = useContext(KeymapUiStateContext);
+  const { state, hydratedState, setKeyId } = useContext(KeymapUiStateContext);
+
+  // If the help panel is open, don't highlight keys - that could confuse users
+  const helpIsOpen = state.help;
 
   return (
     <div className="flex items-center justify-center flex-col md:flex-row mt-0">
@@ -18,8 +21,8 @@ export const Keyboard = ({ targetKeyIds }) => {
             rows="10"
             keys={hydratedState.keyMap.leftHandKeys}
             legends={hydratedState.legendMap}
-            pressedKey={hydratedState.keyData}
-            targetKeyIds={targetKeyIds}
+            pressedKey={helpIsOpen ? {} : hydratedState.keyData}
+            targetKeyIds={helpIsOpen ? [] : targetKeyIds}
             onClickEach={setKeyId}
           />
           <KeyGrid
@@ -27,8 +30,8 @@ export const Keyboard = ({ targetKeyIds }) => {
             rows="6"
             keys={hydratedState.keyMap.leftThumbKeys}
             legends={hydratedState.legendMap}
-            pressedKey={hydratedState.keyData}
-            targetKeyIds={targetKeyIds}
+            pressedKey={helpIsOpen ? {} : hydratedState.keyData}
+            targetKeyIds={helpIsOpen ? [] : targetKeyIds}
             onClickEach={setKeyId}
             gridAppendClasses="keyboard-left-thumb-cluster"
           />
@@ -43,8 +46,8 @@ export const Keyboard = ({ targetKeyIds }) => {
             rows="10"
             keys={hydratedState.keyMap.rightHandKeys}
             legends={hydratedState.legendMap}
-            pressedKey={hydratedState.keyData}
-            targetKeyIds={targetKeyIds}
+            pressedKey={helpIsOpen ? {} : hydratedState.keyData}
+            targetKeyIds={helpIsOpen ? [] : targetKeyIds}
             onClickEach={setKeyId}
           />
           <KeyGrid
@@ -52,8 +55,8 @@ export const Keyboard = ({ targetKeyIds }) => {
             rows="6"
             keys={hydratedState.keyMap.rightThumbKeys}
             legends={hydratedState.legendMap}
-            pressedKey={hydratedState.keyData}
-            targetKeyIds={targetKeyIds}
+            pressedKey={helpIsOpen ? {} : hydratedState.keyData}
+            targetKeyIds={helpIsOpen ? [] : targetKeyIds}
             onClickEach={setKeyId}
             gridAppendClasses="keyboard-right-thumb-cluster"
           />

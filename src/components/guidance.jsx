@@ -44,6 +44,12 @@ export const GuidedTourButtons = () => {
       enabled={hydratedState.canIncrementGuideStep}
     >Next</GuideBarButton>
   );
+  const doneButton = (
+    <GuideBarButton
+      onClick={() => { setGuide(null); }}
+      enabled={hydratedState.inGuide}
+    >Finish</GuideBarButton>
+  )
   const exitButton = (
     <GuideBarButton
       onClick={() => { setGuide(null); }}
@@ -56,10 +62,18 @@ export const GuidedTourButtons = () => {
       enabled={!hydratedState.inGuide && hydratedState.keyMap.defaultGuide}
     >Start</GuideBarButton>
   )
+  let finalButton;
+  if (!hydratedState.inGuide) {
+    finalButton = startButton;
+  } else if (hydratedState.onFinalGuideStep) {
+    finalButton = doneButton;
+  } else {
+    finalButton = exitButton;
+  }
   return <>
     {prevButton}
     {nextButton}
-    {hydratedState.inGuide ? exitButton : startButton}
+    {finalButton}
   </>;
 }
 

@@ -11,6 +11,7 @@ import {
   AppDebugContext,
   DocumentDimensionsContext,
 } from "~/components/appContext";
+import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 import { useWindowSize } from "~/hooks/useWindowSize";
 import {
   smallerRect,
@@ -23,6 +24,7 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
   const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext)
   const windowSize = useWindowSize();
   const [appDebug, setAppDebug] = useContext(AppDebugContext);
+  const { state } = useContext(KeymapUiStateContext);
 
   const updateCanvasSize = useCallback(() => {
     if (!canvas) return;
@@ -109,6 +111,9 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
      * until you fully reload the page (e.g. with ctrl-r)
      */
     context.clearRect(0, 0, canvas.current.width, canvas.current.height);
+
+    // If we're in help mode, don't draw at all
+    if (state.help) return;
 
     /* Draw each connection
      * Now that the canvas is the size of the entire screen,
@@ -203,7 +208,7 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
       leftRightIdx[rightMargin] += 1;
     });
     context.stroke();
-  }, [appDebug.debugLevel, connections, diamargLeftRect, diamargRightRect, keyboardAndPanelRect]);
+  }, [appDebug.debugLevel, connections, diamargLeftRect, diamargRightRect, keyboardAndPanelRect, state.help]);
 
   useEffect(() => {
     updateCanvas();

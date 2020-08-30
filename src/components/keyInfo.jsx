@@ -1,3 +1,4 @@
+
 import React, {
   useContext,
 } from "react";
@@ -29,32 +30,34 @@ const GuideInfo = ({ inGuide = false, guideStep = 0, guideLength = 0 }) => {
   }
 }
 
-/* A navigation bar for the KeyInfoPanel
- * Include an entire <KeyGrid> just large enough to hold the largest key.
- */
-const KeyInfoNavBar = ({ keyData, legendMap, guideInfo }) => {
-  let modifiedKeyData = Object.assign({}, keyData);
-  modifiedKeyData.startPos = [0, 0];
+const HelpButton = ({ help, setHelp }) => {
+  const label = help ? "Close help" : "What is this?"
+  return (
+    <button
+      className="border bg-blue-600 p-2 rounded-md text-white"
+      onClick={() => setHelp(!help)}
+    >
+      {label}
+    </button>
+  );
+}
 
+const PanelNavBar = ({ tbKeyGrid, title, guideInfo, help, setHelp }) => {
   return (
     <div className="border-b pb-2 mb-2 flex">
 
       <div className="flex-col px-4">
-        <KeyGrid
-          // Use a constant size so that elements below/right of this one
-          // don't change location when we select different keys
-          cols="3"
-          rows="4"
-          keys={[modifiedKeyData]}
-          legends={legendMap}
-          pressedKey={keyData}
-        />
+        {tbKeyGrid}
       </div>
 
       <div className="flex-col px-4 ">
-        <h2 className="text-sm md:text-2xl">Key information</h2>
+        <h2 className="text-sm md:text-2xl">{title}</h2>
         {guideInfo ? guideInfo : <></>}
       </div>
+
+      <div className=" flex-col ml-auto px-4">
+        <HelpButton help={help} setHelp={setHelp} />
+      </div >
     </div >
   );
 }
@@ -63,7 +66,7 @@ const TextLabelHeader = ({ label }) => {
   if (label) {
     return (
       <p className="py-2">
-        The <span className="font-mono text-gray-600 px-1">{label}</span> key
+        The <kbd>{label}</kbd> key
       </p>
     );
   } else {
@@ -99,32 +102,86 @@ const LegendAttribution = ({ legendData }) => {
   }
 }
 
-/* A <KeyInfo> component styled nicely for the parent <Keyboard> component.
+const HelpPanel = ({ hydratedState, setGuide, setHelp }) => {
+  return (<div>
+    <p>
+      I built this site to show how my
+      {" "}<IntraAppLink href="/ergodox">ErgoDox keyboard</IntraAppLink>{" "}
+      helped my RSI.
+    </p>
+    <p className="py-1">
+      You can select any key on the board above to learn more about why it is placed there.
+    </p>
+    {
+      hydratedState.keyMap.defaultGuide ? (
+        <p className="py-1">Not sure where to begin? This keyboard layout supports a guided tour &mdash; <button
+          className="p-1 border border-gray-300 rounded-md bg-gray-200"
+          onClick={() => setGuide(hydratedState.keyMap.defaultGuide)}
+          disabled={!hydratedState.keyMap.defaultGuide}
+        >start the tour now!</button></p>
+      ) : (
+          <p className="py-1">
+            Not sure where to begin?
+            While the layout you have currently selected does not support a guided tour,
+          you might try the guided tour available in the <IntraAppLink href="/">default layout</IntraAppLink>.
+          </p>
+        )
+    }
+    <p>
+      See also:
+    </p>
+    <ul className="list-disc my-2 mx-8">
+      <li><h2 className="">
+        <IntraAppLink href="/about">What is this site?</IntraAppLink>
+      </h2></li>
+      <li><h2 className="">
+        <IntraAppLink href="/ergodox">What kind of keyboard is this?</IntraAppLink>
+      </h2></li>
+      <li><h2 className="">
+        <IntraAppLink href="/story">Personal history</IntraAppLink>
+      </h2></li>
+    </ul>
+  </div >);
+}
+
+/* A tiny key grid just for use in the title bar of the info panel
  */
-const KeyInfo = ({ keyData, legendMap, guideInfo }) => {
-  const legend = Legend(legendMap[keyData.legend]);
+const TitleBarKeyGrid = ({ keyData, legendMap }) => {
+  let modifiedKeyData = Object.assign({}, keyData);
+  modifiedKeyData.startPos = [0, 0];
   return (
-    <>
-      <KeyInfoNavBar keyData={keyData} legendMap={legendMap} guideInfo={guideInfo} />
-      <KeyInfoProse isSet={!keyData.unset} keyInfo={keyData.info} textLabel={keyData.name || legend.legend} />
-      <LegendAttribution legendData={legend} />
-    </>
+    <KeyGrid
+      // Use a constant size so that elements below/right of this one
+      // don't change location when we select different keys
+      cols="3"
+      rows="4"
+      keys={[modifiedKeyData]}
+      legends={legendMap}
+      pressedKey={keyData}
+    />
   );
-};
+}
 
 /* An information panel about whatever key/guide we're in, or with an intro
  */
 export const InfoPanel = () => {
-  const { hydratedState, setGuide } = useContext(KeymapUiStateContext);
-  if (hydratedState.keyData.info) {
-    /* If in a guide:
-     *   Navigation: title: Keymap Name Guided Tour, Step N/X: <key>, buttons: <prev>, <next>, <exit>, <help>
-     *   <help> popover that says: it's a tour, next/prev work normally,
-     *     to exit the tour click on any key or the exit, see menu to read about this site
-     * If not in a guide:
-     *   Navigation: title: Key information for <key>, buttons: <help>
-     *   <help> popover that says: enter tour to be given a guided tour, see menu to read about this site
-     */
+  const { state, hydratedState, setGuide, setHelp } = useContext(KeymapUiStateContext);
+  const { keyData, legendMap } = hydratedState;
+  const legend = Legend(legendMap[keyData.legend]);
+
+  const emptyTbKeyGrid = <TitleBarKeyGrid keyData={null} legendMap={{}} />
+
+  const helpKeyData = { legend: "?", };
+  const helpLegendMap = { "?": { glyph: { value: "?" } }, }
+  const helpTbKeyGrid = <TitleBarKeyGrid keyData={helpKeyData} legendMap={helpLegendMap} />
+
+  if (state.help) {
+    return (<>
+      <PanelNavBar tbKeyGrid={helpTbKeyGrid} title={"What is this?"} guideInfo={null} help={state.help} setHelp={setHelp} />
+      <HelpPanel hydratedState={hydratedState} setGuide={setGuide} setHelp={setHelp} />
+    </>);
+  } else if (hydratedState.keyData.info) {
+    const tbKeyGrid = <TitleBarKeyGrid keyData={keyData} legendMap={legendMap} />
     const guideInfo = hydratedState.inGuide ? (
       <GuideInfo
         guideStep={hydratedState.guideStepIdx}
@@ -132,38 +189,26 @@ export const InfoPanel = () => {
         inGuide={hydratedState.inGuide}
       />
     ) : (null);
-    return (
-      <KeyInfo
-        keyData={hydratedState.keyData}
-        legendMap={hydratedState.legendMap}
-        guideInfo={guideInfo}
-      />
-    );
+    return (<>
+      <PanelNavBar tbKeyGrid={tbKeyGrid} title={"Key information"} guideInfo={guideInfo} help={state.help} setHelp={setHelp} />
+      <KeyInfoProse isSet={!keyData.unset} keyInfo={keyData.info} textLabel={keyData.name || legend.legend} />
+      <LegendAttribution legendData={legend} />
+    </>);
   } else {
-    /* Navigation: title: Welcome, buttons: <help>
-     * <help> popover that says: enter tour to be given a guided tour, see menu to read about this site
-     * Text: please select a key or enter the guided tour
-     * Alternatively: use the same help content as <help> popovers above?
-     */
     return (
-      <div>
-        <h1 className="text-2xl pb-4">
-          Welcome
-      </h1>
-        <p className="p-1">You are viewing the keymap information for: {hydratedState.keyMap.fullName}.</p>
-        <p className="p-1">Select a key from the list above to learn more about it.</p>
+      <>
+        <PanelNavBar tbKeyGrid={emptyTbKeyGrid} title={"Welcome"} guideInfo={null} help={state.help} setHelp={setHelp} />
+        <p className="py-1">You are viewing the keymap information for: {hydratedState.keyMap.fullName}.</p>
+        <p className="py-1">Select a key from the list above to learn more about it.</p>
         {hydratedState.keyMap.defaultGuide ? (
-          <p className="p-1">Not sure where to begin? <button
-            className="p-1 m-1 border border-gray-300 bg-gray-200"
+          <p className="py-1">Not sure where to begin? <button
+            className="p-1 m-1 border border-gray-300 rounded-md bg-gray-200"
             onClick={() => { setGuide(hydratedState.keyMap.defaultGuide); }}
             disabled={!hydratedState.keyMap.defaultGuide}
           >Start a guided tour!</button></p>
         ) : <></>
         }
-        <p className="p-1">
-          <IntraAppLink href="/about">What is this?</IntraAppLink>
-        </p>
-      </div>
+      </>
     );
   }
 };
