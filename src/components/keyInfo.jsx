@@ -50,21 +50,25 @@ const HelpButton = ({ help, setHelp }) => {
 
 const PanelNavBar = ({ tbKeyGrid, title, guideInfo, help, setHelp }) => {
   return (
-    <div className="border-b pb-2 mb-2 flex">
+    <div className="border-b pb-2 mb-2">
+      <div className="flex">
+        <div className="flex-col px-4">
+          {tbKeyGrid}
+        </div>
 
-      <div className="flex-col px-4">
-        {tbKeyGrid}
+        <div className=" flex-col ml-auto px-4">
+          <HelpButton help={help} setHelp={setHelp} />
+        </div >
+      </div >
+
+      <div className="">
+        <h2 className="text-lg md:text-2xl">{title}</h2>
       </div>
 
-      <div className="flex-col px-4 ">
-        <h2 className="text-sm md:text-2xl">{title}</h2>
+      <div className="py-2">
         {guideInfo ? guideInfo : <></>}
       </div>
-
-      <div className=" flex-col ml-auto px-4">
-        <HelpButton help={help} setHelp={setHelp} />
-      </div >
-    </div >
+    </div>
   );
 }
 
