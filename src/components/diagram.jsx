@@ -26,7 +26,7 @@ import {
  */
 const diagramLineColors = {
   [keyInfoConnectType.textref]: "#68d391",
-  [keyInfoConnectType.selected]: "#dd6b20",
+  [keyInfoConnectType.selected]: "#f6ad55",
   debug: "purple",
 }
 
