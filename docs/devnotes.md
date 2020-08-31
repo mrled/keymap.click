@@ -11,11 +11,11 @@ Everything that I have decided to definitely do
 
 ### Release a version 1.0
 
-* Add a guide
-* Add content for all the keys I want
-* Add place for more general info / prose
-* Add prose content
-* Draw orange line to selected key
+* ✅ Add a guide
+* 🔲 Add / edit content for all the keys I want
+* ✅ Add place for more general info / prose
+* 🔲 Add / edit prose content
+* ✅ Draw orange line to selected key
 
 ### Add a guide for the main layout
 
@@ -29,8 +29,8 @@ Everything that I have decided to definitely do
 
 ### Add prose content
 
-Write about what this is, who am I, how this works, what an ErgoDox is, RSI stuff, etc etc.
-Edit all of this.
+* ✅ Write about what this is, who am I, how this works, what an ErgoDox is, RSI stuff, etc etc.
+* 🔲 Edit all of this.
 
 ## Ideas
 
