@@ -168,8 +168,14 @@ const drawDiagramLineSelected = (
   context.lineWidth = 2;
   context.beginPath();
 
-  const keyInfoTopOffset = 5;
-  const middleLineY = keyInfoTop - keyInfoTopOffset;
+  /* HACK: calculating the middle horizontal line relative to the top of the key info panel
+   * works beautifully on desktop, but breaks terribly on iOS for some reason.
+   * Instead, I use a constant offset from the top of the navbar key grid.
+   * A dumbshit hack, but it does work and looks ok on both desktop and mobile.
+   */
+  // const keyInfoTopOffset = 5;
+  // const middleLineY = keyInfoTop - keyInfoTopOffset;
+  const middleLineY = source.y - 45;
 
   context.moveTo(source.x, source.y);
   context.lineTo(source.x, middleLineY);
