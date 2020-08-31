@@ -32,17 +32,6 @@ Everything that I have decided to definitely do
 Write about what this is, who am I, how this works, what an ErgoDox is, RSI stuff, etc etc.
 Edit all of this.
 
-### Draw orange line on the canvas to connect the selected key to the info panel
-
-The guided tours change the selected key for you.
-When they do this, I think it might be jarring for users...
-I think they might get confused and not understand what I'm trying to show them.
-
-Make it more obvious that the selected key has changed by drawing an orange line,
-like the green lines to connect referenced keys, but maybe bolder and/or brighter.
-
-This will make it obvious exactly what's changing and will draw the user's eye to the place I want.
-
 ## Ideas
 
 Things I might do, but that I haven't decided on yet
@@ -1137,3 +1126,16 @@ especially regarding having both a menu and a help page.
 I created a new task for that too.
 
 ✅ !!!! fuck yeah
+
+### Draw orange line on the canvas to connect the selected key to the info panel
+
+The guided tours change the selected key for you.
+When they do this, I think it might be jarring for users...
+I think they might get confused and not understand what I'm trying to show them.
+
+Make it more obvious that the selected key has changed by drawing an orange line,
+like the green lines to connect referenced keys, but maybe bolder and/or brighter.
+
+This will make it obvious exactly what's changing and will draw the user's eye to the place I want.
+
+* ✅ Done! This looks really nice and I think it helps tell what's going on especially during the tour.
