@@ -67,6 +67,15 @@ export const KeymapUI = () => {
     keyboardAndPanelRect, // If this changes, the diamargs should both change
   ]);
 
+  const [keyInfoContainerRect, setKeyInfoContainerRect] = useState(new FakeDOMRect());
+  const keyInfoContainer = useCallback(node => {
+    if (node != null) setKeyInfoContainerRect(node.getBoundingClientRect());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    windowSize,
+    visibleMenu,
+  ])
+
   useEffect(() => {
     log.debug(`Document dimensions should update due to a dependency change...`)
     updateDocumentDimensions();
@@ -124,6 +133,7 @@ export const KeymapUI = () => {
               <div
                 className="bottom-auto top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto w-full debug-bg-teal"
                 id="keymap-ui-info-panel-container"
+                ref={keyInfoContainer}
               >
                 <InfoPanel />
               </div>
@@ -149,6 +159,7 @@ export const KeymapUI = () => {
           keyboardAndPanelRect={keyboardAndPanelRect}
           diamargLeftRect={diamargLeftRect}
           diamargRightRect={diamargRightRect}
+          keyInfoContainerRect={keyInfoContainerRect}
         />
 
       </div>

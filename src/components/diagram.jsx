@@ -158,6 +158,7 @@ const drawDiagramLineTextref = (
 const drawDiagramLineSelected = (
   context,
   connection,
+  keyInfoTop,
 ) => {
   const source = connection.sourceCoords;
   const target = connection.targetCoords;
@@ -167,11 +168,12 @@ const drawDiagramLineSelected = (
   context.lineWidth = 2;
   context.beginPath();
 
-  const middleY = source.y - 50;
+  const keyInfoTopOffset = 5;
+  const middleLineY = keyInfoTop - keyInfoTopOffset;
 
   context.moveTo(source.x, source.y);
-  context.lineTo(source.x, middleY);
-  context.lineTo(target.x, middleY);
+  context.lineTo(source.x, middleLineY);
+  context.lineTo(target.x, middleLineY);
   context.lineTo(target.x, target.y);
 
   context.stroke();
@@ -181,7 +183,13 @@ const drawDiagramLineSelected = (
 /* A diagram, where we draw lines from the key info panel to the board.
  * This component contains a <canvas> element and is overlaid on top of the entire document.
  */
-export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, diamargRightRect }) => {
+export const Diagram = ({
+  connections,
+  keyboardAndPanelRect,
+  diamargLeftRect,
+  diamargRightRect,
+  keyInfoContainerRect,
+}) => {
   const canvas = useRef();
   const container = useRef();
   const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext)
@@ -287,10 +295,19 @@ export const Diagram = ({ connections, keyboardAndPanelRect, diamargLeftRect, di
         drawDiagramLineSelected(
           context,
           connection,
+          keyInfoContainerRect.top,
         );
       }
     });
-  }, [appDebug.debugLevel, connections, diamargLeftRect, diamargRightRect, keyboardAndPanelRect, state.help]);
+  }, [
+    appDebug.debugLevel,
+    connections,
+    diamargLeftRect,
+    diamargRightRect,
+    keyboardAndPanelRect,
+    keyInfoContainerRect,
+    state.help
+  ]);
 
   useEffect(() => {
     updateCanvas();
