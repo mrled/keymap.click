@@ -6,7 +6,7 @@ import {
   VisibleMenuContext,
 } from "~/components/appContext";
 import { Menu } from "~/components/menu";
-import { IntraAppLink } from "~/components/intraAppLink";
+import { IntraAppLink } from "~/components/prose";
 
 export const MenuBar = () => {
   const [visibleMenu, setVisibleMenu] = useContext(VisibleMenuContext);

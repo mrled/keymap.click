@@ -1,7 +1,10 @@
 import React from "react";
 
-import { IntraAppLink } from "~/components/intraAppLink";
 import { MenuBar } from "~/components/menuBar";
+import {
+  ExternalLink,
+  IntraAppLink,
+} from "~/components/prose";
 
 export default function Story() {
   return (
@@ -55,14 +58,14 @@ export default function Story() {
               </p>
               <p className="p-1">
                 My brother had an
-                {" "}<a className="text-blue-600" href="https://input.club/devices/infinity-ergodox/">
+                {" "}<ExternalLink href="https://input.club/devices/infinity-ergodox/">
                   ErgoDox Infinity
-                </a>{" "}
+                </ExternalLink>{" "}
                 that he had bought in a kit and put together himself,
                 and he had been trying to convince me to get one of my own.
                 Rather than build a kit myself, though,
                 I opted for a preassembled
-                {" "}<a className="text-blue-600" href="https://ergodox-ez.com/">ErgoDox-EZ</a>.
+                {" "}<ExternalLink href="https://ergodox-ez.com/">ErgoDox-EZ</ExternalLink>.
               </p>
               <p className="p-1">
                 It turned out that while it was true that my shoulders were more square after I bought it,
@@ -109,14 +112,14 @@ export default function Story() {
               </h2>
               <p className="p-1">
                 I'm{" "}
-                <a className="text-blue-600" href="https://me.micahrl.com">Micah</a>.
+                <ExternalLink href="https://me.micahrl.com">Micah</ExternalLink>.
                 Hi 👋
               </p>
               <p className="p-1">
                 Please,{" "}
-                <a className="text-blue-600" href="https://me.micahrl.com/standing-invitation">
+                <ExternalLink href="https://me.micahrl.com/standing-invitation">
                   email me
-                </a>.
+                </ExternalLink>.
               </p>
             </div>
 

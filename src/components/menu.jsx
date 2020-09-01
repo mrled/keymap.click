@@ -3,7 +3,7 @@ import React from "react";
 import classnames from "classnames";
 
 import { AppSettings } from "~/components/appSettings";
-import { IntraAppLink } from "~/components/intraAppLink";
+import { IntraAppLink } from "~/components/prose";
 
 export const Menu = ({ visible }) => {
 

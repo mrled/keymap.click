@@ -1,25 +1,25 @@
 
 import React, {
-  useContext,
+  useContext, Component,
 } from "react";
 
 import {
   GuidedTourButtons,
 } from "~/components/guidance";
-import { IntraAppLink } from "~/components/intraAppLink";
 import {
   KeyGrid,
   Legend,
 } from "~/components/key";
+import {
+  IntraAppLink,
+  Para,
+} from "~/components/prose";
 import {
   keyInfoConnectFromClass,
   keyInfoConnectFromClassPrefix,
   keyInfoConnectType,
   keyInfoConnectTypeClassPrefix,
 } from "~/lib/keyConnections";
-import {
-  parseKeyInfo,
-} from "~/lib/keyInfoParser";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 
 const GuideInfo = ({ inGuide = false, guideStep = 0, guideLength = 0 }) => {
@@ -86,16 +86,14 @@ const KeyInfoProse = ({ isSet, textLabel, keyInfo, inGuide, noSelectedGuideKey }
   if (inGuide && noSelectedGuideKey) {
     labelHeader = <></>;
   } else if (isSet) {
-    labelHeader = <p className="py-2">
-      The <kbd>{textLabel}</kbd> key
-    </p>;
+    labelHeader = <Para>The <kbd>{textLabel}</kbd> key</Para>;
   } else if (!isSet) {
-    labelHeader = <p className="py-2">An unset key</p>;
+    labelHeader = <Para>An unset key</Para>;
   }
   return (
     <div className="py-5">
       {labelHeader}
-      {parseKeyInfo(keyInfo)}
+      {keyInfo}
     </div>
   );
 }
@@ -117,32 +115,34 @@ const LegendAttribution = ({ legendData }) => {
 
 const HelpPanel = ({ hydratedState, setGuide, setHelp }) => {
   return (<div>
-    <p>
+    <Para>
       I built this site to show how my
       {" "}<IntraAppLink href="/ergodox">ErgoDox keyboard</IntraAppLink>{" "}
       helped my RSI.
-    </p>
-    <p className="py-1">
+    </Para>
+    <Para>
       You can select any key on the board above to learn more about why it is placed there.
-    </p>
+    </Para>
     {
       hydratedState.keyMap.defaultGuide ? (
-        <p className="py-1">Not sure where to begin? This keyboard layout supports a guided tour &mdash; <button
-          className="p-1 border border-gray-300 rounded-md bg-gray-200"
-          onClick={() => setGuide(hydratedState.keyMap.defaultGuide)}
-          disabled={!hydratedState.keyMap.defaultGuide}
-        >start the tour now!</button></p>
+        <Para>
+          Not sure where to begin? This keyboard layout supports a guided tour &mdash;
+          <button
+            className="p-1 border border-gray-300 rounded-md bg-gray-200"
+            onClick={() => setGuide(hydratedState.keyMap.defaultGuide)}
+            disabled={!hydratedState.keyMap.defaultGuide}
+          >start the tour now!
+        </button>
+        </Para>
       ) : (
-          <p className="py-1">
+          <Para>
             Not sure where to begin?
             While the layout you have currently selected does not support a guided tour,
-          you might try the guided tour available in the <IntraAppLink href="/">default layout</IntraAppLink>.
-          </p>
+            you might try the guided tour available in the <IntraAppLink href="/">default layout</IntraAppLink>.
+          </Para>
         )
     }
-    <p>
-      See also:
-    </p>
+    <Para>See also:</Para>
     <ul className="list-disc my-2 mx-8">
       <li><h2 className="">
         <IntraAppLink href="/about">What is this site?</IntraAppLink>
@@ -275,14 +275,18 @@ export const InfoPanel = () => {
           help={state.help}
           setHelp={setHelp}
         />
-        <p className="py-1">You are viewing the keymap information for: {hydratedState.keyMap.fullName}.</p>
-        <p className="py-1">Select a key from the list above to learn more about it.</p>
+        <Para>You are viewing the keymap information for: {hydratedState.keyMap.fullName}.</Para>
+        <Para>Select a key from the list above to learn more about it.</Para>
         {hydratedState.keyMap.defaultGuide ? (
-          <p className="py-1">Not sure where to begin? <button
-            className="p-1 m-1 border border-gray-300 rounded-md bg-gray-200"
-            onClick={() => { setGuide(hydratedState.keyMap.defaultGuide); }}
-            disabled={!hydratedState.keyMap.defaultGuide}
-          >Start a guided tour!</button></p>
+          <Para>
+            Not sure where to begin?
+            <button
+              className="p-1 m-1 border border-gray-300 rounded-md bg-gray-200"
+              onClick={() => { setGuide(hydratedState.keyMap.defaultGuide); }}
+              disabled={!hydratedState.keyMap.defaultGuide}
+            >Start a guided tour!
+          </button>
+          </Para>
         ) : <></>
         }
       </>

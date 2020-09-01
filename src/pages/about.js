@@ -1,7 +1,9 @@
 import React from "react";
 
-import { IntraAppLink } from "~/components/intraAppLink";
 import { MenuBar } from "~/components/menuBar";
+import {
+  IntraAppLink,
+} from "~/components/prose";
 
 export default function About() {
   return (
