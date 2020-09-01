@@ -95,7 +95,7 @@ const KeyInfoProse = ({ isSet, textLabel, keyInfo, inGuide, noSelectedGuideKey }
   return (
     <div className="py-5">
       {labelHeader}
-      <p className="py-2">{parseKeyInfo(keyInfo)}</p>
+      {parseKeyInfo(keyInfo)}
     </div>
   );
 }
