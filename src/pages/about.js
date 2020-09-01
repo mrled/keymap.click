@@ -24,8 +24,9 @@ export default function About() {
               <p className="p-1">
                 I am building this to show off keyboard layouts for my ErgoDox, and
                 provide explanations for why I made the layout decisions I made. The
-                ErgoDox-EZ has been a huge part of my strategy for dealing with RSI, and
-                I want to be able to visually explain to others how it helped me.
+                ErgoDox-EZ has been a huge part of
+                {" "}<IntraAppLink href="/story">my strategy for dealing with RSI</IntraAppLink>,
+                and I want to be able to visually explain to others how it helped me.
               </p>
             </div>
 
