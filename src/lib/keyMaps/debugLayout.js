@@ -68,15 +68,13 @@ const DebugLayout = {
       size: [3, 2],
       startPos: [1, 1],
       info: [
-        "<p>",
         normalLayoutInfo,
         arrowKeyInfo,
         pageUpDownHomeEndInfo,
         guiKeyInfo,
         bracketKeyInfo,
         volumeControlInfo,
-        "</p>",
-      ].join("</p>\n<p>"),
+      ].join("\n\n"),
       selection: [].concat(
         arrowKeySelection,
         volKeySelection,
