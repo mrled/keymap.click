@@ -65,6 +65,9 @@ It's not always consistent whether I am passing props around or using context.
 Some components do both, when they could just use one or the other.
 It works now, but could be cleaner.
 
+I think the nicest version of this would have each component stating in its doc string
+whether I intend for it to be useful outside of my app context with `useKeymapUistate` or not.
+
 ### Use query string for setting debug level
 
 Makes things simpler, allows me to load debug info on initial page load
@@ -90,12 +93,6 @@ especially keys that don't have good Unicode glyphs like layer or volume keys.
 
 * Make the `<kbd>` elements look like mini keys from the board above?
 * For non-`<kbd>` references, put a tiny rectangular key that looks like a small key from above off to the side?
-
-### Don't parse the key info
-
-Should just require setting the required class names as HTML in the text.
-It's barely more cumbersome this way, and less code.
-I'm already using HTML in the info anyway... might as well remove all this parsing crap.
 
 ### Highlight or color change when mousing over diagram annotations
 
@@ -137,9 +134,20 @@ This would let other people write a .js file and use my app to show them.
 Use the getStaticPaths with a fallback for this, like
 <https://static-tweet.now.sh/>
 
+I think this is going to be harder because I moved to key info prose as JSX,
+and it's no longer a raw string I parse with a function.
+
 ### Write prose in markdown
 
 Annoying to write in HTML, honestly, especially inside a React component.
+
+Not sure what I want is possible:
+
+* smart quotes, apostrophes, emdashes, and so forth are handled for me automatically...
+* ... but I can still use `<CustomComponents>` in my markdown.
+
+And ideally, it would not prohibit pulling in other keymaps client-side,
+so I could eventually allow someone else to use my website without forking my code.
 
 ### Move to typescript
 
@@ -153,13 +161,6 @@ Adding the useKeymapUiState hook was pretty tough. I think having string typing 
 * Use paths rather than query string, everything just looks nicer.
 * Is there a library for query string -like paths?
   Even `/keymap:default/guide:someguide/`; I know some REST APIs work this way.
-
-### Fix messy state crap
-
-State is all over the place because it's hard and I learned it over the course of this project.
-Clean this up.
-
-Josh has mentioned `unstated-next` to me more than once, can that help me?
 
 ## Development notes and completed to do items
 
@@ -1139,3 +1140,21 @@ like the green lines to connect referenced keys, but maybe bolder and/or brighte
 This will make it obvious exactly what's changing and will draw the user's eye to the place I want.
 
 * ✅ Done! This looks really nice and I think it helps tell what's going on especially during the tour.
+
+### Don't parse the key info
+
+Should just require setting the required class names as HTML in the text.
+It's barely more cumbersome this way, and less code.
+I'm already using HTML in the info anyway... might as well remove all this parsing crap.
+
+* ✅ Ended up having to do this in order to get nicer key info like links and stuff --
+  I actually had to just move to writing all the key info prose in JSX.
+
+### Fix messy state crap
+
+State is all over the place because it's hard and I learned it over the course of this project.
+Clean this up.
+
+Josh has mentioned `unstated-next` to me more than once, can that help me?
+
+* ✅ I actually _mostly_ did this with `useKeymapUiState`, although I'd still like to go in and audit where I'm prop drilling vs where I'm using state
