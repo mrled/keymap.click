@@ -12,25 +12,20 @@ Everything that I have decided to definitely do
 ### Release a version 1.0
 
 * ✅ Add a guide
-* 🔲 Add / edit content for all the keys I want
+* ✅ Add / edit content for all the keys I want
 * ✅ Add place for more general info / prose
-* 🔲 Add / edit prose content
+* ✅ Add / edit prose content
 * ✅ Draw orange line to selected key
+* 🔲 Solicit feedback from others
 
-### Add a guide for the main layout
+### Solicit feedback from others
 
-* ✅ Fill out all the info content.
-* 🔲 Edit all the content
+I need outside eyes on this.
 
-### Add content for all the keys I want
-
-* ✅ Fill out key info content with references.
-* 🔲 Edit all the content
-
-### Add prose content
-
-* ✅ Write about what this is, who am I, how this works, what an ErgoDox is, RSI stuff, etc etc.
-* 🔲 Edit all of this.
+* Editing
+* Bug hunting
+* Do I need to remove the menu before shipping 1.0? The more I look at it, the more I hate it.
+* Does this even make sense for someone who hasn't stared at it for 100 hours?
 
 ## Ideas
 
@@ -1158,3 +1153,19 @@ Clean this up.
 Josh has mentioned `unstated-next` to me more than once, can that help me?
 
 * ✅ I actually _mostly_ did this with `useKeymapUiState`, although I'd still like to go in and audit where I'm prop drilling vs where I'm using state
+
+### Add a guide for the main layout
+
+* ✅ Fill out all the info content.
+* ✅ Edit all the content -- first pass complete solo, will solicit editing from others
+
+### Add content for all the keys I want
+
+* ✅ Fill out key info content with references.
+* ✅ Edit all the content -- first pass complete solo, will solicit editing from others
+
+### Add prose content
+
+* ✅ Write about what this is, who am I, how this works, what an ErgoDox is, RSI stuff, etc etc.
+* ✅ Edit all of this. -- first pass complete solo, will solicit editing from others
+
