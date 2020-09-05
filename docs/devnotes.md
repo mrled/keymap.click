@@ -31,6 +31,11 @@ I need outside eyes on this.
 
 Things I might do, but that I haven't decided on yet
 
+### Refactor code in _app.js to hooks
+
+* Refactor fathom stuff to a hook
+* Refactor document dimension stuff to a hook
+
 ### Can I remove the menu?
 
 It seems like having the help page and the menu with settings is redundant.
@@ -40,6 +45,16 @@ Should I instead integrate the help in the menu?
 
 Seems like I shouldn't need both.
 Feels cluttered.
+
+* Make debugging controls invisible.
+  Only accessible via the query string?
+  Hidden page that sets a value to localSettings?
+* Remove keyLegends and keyMaps dropdowns from the settings.
+  Later, incorporate them into the keyInfo panel,
+  maybe via a settings button of some kind.
+* Move site navigation inline on each page,
+  and on the main page use the key info panel.
+  Maybe use a float on the upper right of the content area.
 
 ### Add a guided tour button next to the help button
 
