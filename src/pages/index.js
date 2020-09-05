@@ -3,7 +3,7 @@ import React from "react";
 import log from "loglevel";
 
 import { KeymapUI } from "~/components/keymapUi";
-import { MenuBar } from "~/components/menuBar";
+import { SiteChrome } from "~/components/siteChrome";
 import {
   KeymapUiStateContext,
   useKeymapUiState,
@@ -16,8 +16,9 @@ export default function Home() {
   return (
     <>
       <KeymapUiStateContext.Provider value={keymapUiState}>
-        <MenuBar />
-        <KeymapUI />
+        <SiteChrome>
+          <KeymapUI />
+        </SiteChrome>
       </KeymapUiStateContext.Provider>
     </>
   );

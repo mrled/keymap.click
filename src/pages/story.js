@@ -1,6 +1,6 @@
 import React from "react";
 
-import { MenuBar } from "~/components/menuBar";
+import { SiteChrome } from "~/components/siteChrome";
 import {
   ExternalLink,
   IntraAppLink,
@@ -8,9 +8,7 @@ import {
 
 export default function Story() {
   return (
-    <>
-
-      <MenuBar />
+    <SiteChrome>
 
       <div className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg mx-auto">
 
@@ -127,6 +125,6 @@ export default function Story() {
 
         </div>
       </div>
-    </>
+    </SiteChrome>
   );
 }

@@ -18,40 +18,43 @@ export const KeymapUiSettings = () => {
   } else {
     return (
       <div
-        className="mt-4"
+        className="mt-4 md:m-0"
         id="app-settings"
       >
+        <h2 className="mt-4 md:m-0">Settings</h2>
 
-        <hr />
+        <div className="table">
 
-        <h2 className="mt-4 mb-4 text-2xl">Settings</h2>
+          <div className="table-row">
+            <label htmlFor="legend-selector" className="table-cell text-sm">Key legends</label>
+            <select
+              onChange={(event) => { setLegendMap(event.target.value); }}
+              defaultValue={state.legendMap}
+              name="Legend maps"
+              id="legend-selector"
+              className="table-cell text-sm p-1 m-1"
+            >
+              {Object.keys(legendMaps).map((legendMapName, idx) => {
+                return <option key={idx} value={legendMapName}>{legendMaps[legendMapName].fullName}</option>
+              })}
+            </select>
+          </div>
 
-        <div className="flex flex-wrap">
-          <label htmlFor="legend-selector" className="p-2 m-2 w-1/3">Key legends</label>
-          <select
-            onChange={(event) => { setLegendMap(event.target.value); }}
-            defaultValue={state.legendMap}
-            name="Legend maps"
-            id="legend-selector"
-            className="p-2 m-2 w-1/3"
-          >
-            {Object.keys(legendMaps).map((legendMapName, idx) => {
-              return <option key={idx} value={legendMapName}>{legendMaps[legendMapName].fullName}</option>
-            })}
-          </select>
+          <div className="table-row">
+            <label htmlFor="keymap-selector" className="table-cell text-sm">Key layouts</label>
+            <select
+              onChange={(event) => { setKeyMap(event.target.value); }}
+              defaultValue={state.keyMap}
+              name="Layouts"
+              id="keymap-selector"
+              className="table-cell text-sm p-1 m-1"
+            >
+              {Object.keys(keyMaps).map((keyMapName, idx) => {
+                return <option key={idx} value={keyMapName}>{keyMaps[keyMapName].fullName}</option>
+              })}
+            </select>
+          </div>
 
-          <label htmlFor="keymap-selector" className="p-2 m-2 w-1/3">Key layouts</label>
-          <select
-            onChange={(event) => { setKeyMap(event.target.value); }}
-            defaultValue={state.keyMap}
-            name="Layouts"
-            id="keymap-selector"
-            className="p-2 m-2 w-1/3"
-          >
-            {Object.keys(keyMaps).map((keyMapName, idx) => {
-              return <option key={idx} value={keyMapName}>{keyMaps[keyMapName].fullName}</option>
-            })}
-          </select>
         </div>
 
       </div >

@@ -97,7 +97,7 @@ export const KeymapUI = () => {
       >
 
         <div
-          className="w-full md:mr-8 md:px-4 z-10"
+          className="w-full md:mr-8 md:px-4"
           id="keymap-ui-content-container"
         >
 

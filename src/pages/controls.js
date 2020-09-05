@@ -1,16 +1,15 @@
 import React from "react";
 
-import { MenuBar } from "~/components/menuBar";
+import { SiteChrome } from "~/components/siteChrome";
 import { useAppSettings } from "~/hooks/useAppSettings";
 import {
   IntraAppLink,
 } from "~/components/prose";
 
 export default function Controls() {
-  const { debugLevel, setDebugLevel, advancedMode, setAdvancedMode } = useAppSettings();
+  const { debugLevel, setDebugLevel, advancedMode, setAdvancedMode, dazzlingColor, setDazzlingColor } = useAppSettings();
   return (
-    <>
-      <MenuBar />
+    <SiteChrome>
       <div className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg mx-auto">
         <div className="w-full md:mr-8 md:px-4">
           <div
@@ -54,12 +53,24 @@ export default function Controls() {
                   />
                 </div>
 
+                <div className="table-row">
+                  <label htmlFor="app-dazzling-color-selector" className="p-2 m-2 text-xs table-cell">Enable dazzling color</label>
+                  <input
+                    onChange={() => setDazzlingColor(!dazzlingColor)}
+                    checked={dazzlingColor}
+                    name="Enable dazzling color"
+                    id="app-dazzling-color-selector"
+                    className="p-2 m-2 text-xs table-cell"
+                    type="checkbox"
+                  />
+                </div>
+
               </div>
 
             </div>
           </div>
         </div>
       </div>
-    </>
+    </SiteChrome>
   );
 }

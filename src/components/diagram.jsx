@@ -323,7 +323,7 @@ export const Diagram = ({
     <div
       ref={container}
       id="debug-canvas-container"
-      className="absolute top-0 left-0 pointer-events-none z-50"
+      className="absolute top-0 left-0 pointer-events-none"
     >
       <canvas
         ref={canvas}

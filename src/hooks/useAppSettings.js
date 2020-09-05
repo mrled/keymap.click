@@ -24,9 +24,11 @@ export function useAppSettings() {
 
   const localStorageKeyDebugLevel = "click.keymap.key.debugLevel";
   const localStorageKeyAdvancedMode = "click.keymap.key.advancedMode";
+  const localStorageKeyDazzlingColor = "click.keymap.key.dazzlingColor";
 
   const [debugLevel, setDebugLevel] = useLocalStorage(localStorageKeyDebugLevel, 0);
   const [advancedMode, setAdvancedMode] = useLocalStorage(localStorageKeyAdvancedMode, false);
+  const [dazzlingColor, setDazzlingColor] = useLocalStorage(localStorageKeyDazzlingColor, false);
 
   useEffect(() => {
     handleAppDebugChange(debugLevel);
@@ -35,5 +37,6 @@ export function useAppSettings() {
   return {
     debugLevel, setDebugLevel,
     advancedMode, setAdvancedMode,
+    dazzlingColor, setDazzlingColor,
   }
 }

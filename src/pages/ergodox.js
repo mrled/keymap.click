@@ -1,6 +1,6 @@
 import React from "react";
 
-import { MenuBar } from "~/components/menuBar";
+import { SiteChrome } from "~/components/siteChrome";
 import {
   ExternalLink,
 } from "~/components/prose";
@@ -8,9 +8,7 @@ import { IntraAppLink } from "../components/prose";
 
 export default function About() {
   return (
-    <>
-      <MenuBar />
-
+    <SiteChrome>
       <div className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg mx-auto">
         <div className="w-full md:mr-8 md:px-4">
 
@@ -113,6 +111,6 @@ export default function About() {
           </div>
         </div>
       </div>
-    </>
+    </SiteChrome>
   );
 }

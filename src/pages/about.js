@@ -1,22 +1,20 @@
 import React from "react";
 
-import { MenuBar } from "~/components/menuBar";
+import { SiteChrome } from "~/components/siteChrome";
 import {
   IntraAppLink,
 } from "~/components/prose";
 
 export default function About() {
   return (
-    <>
+    <SiteChrome>
 
-      <MenuBar />
+      <div className="w-full h-full text-sm md:text-base flex max-w-screen-lg mx-auto">
 
-      <div className="w-full h-full text-sm md:text-base p-4 flex max-w-screen-lg mx-auto">
-
-        <div className="w-full md:mr-8 md:px-4">
+        <div className="w-full ">
 
           <div
-            className="border border-gray-300 bg-gray-100 rounded-md p-2 m-2"
+            className="pt-2 mt-2"
           >
 
             <div className="m-4 p-4">
@@ -74,6 +72,6 @@ export default function About() {
 
         </div>
       </div>
-    </>
+    </SiteChrome>
   );
 }

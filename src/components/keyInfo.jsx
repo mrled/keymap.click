@@ -1,6 +1,6 @@
 
 import React, {
-  useContext, Component,
+  useContext,
 } from "react";
 
 import {
@@ -22,6 +22,7 @@ import {
 } from "~/lib/keyConnections";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 
+
 const GuideInfo = ({ inGuide = false, guideStep = 0, guideLength = 0 }) => {
   const ordinalGuideStep = guideStep + 1;
   const duringGuideText = `Guided tour step ${ordinalGuideStep} of ${guideLength}`;
@@ -36,36 +37,21 @@ const GuideInfo = ({ inGuide = false, guideStep = 0, guideLength = 0 }) => {
   }
 }
 
-const HelpButton = ({ help, setHelp }) => {
-  const label = help ? "Close help" : "What is this?"
-  return (
-    <button
-      className="border bg-blue-600 p-2 rounded-md text-white"
-      onClick={() => setHelp(!help)}
-    >
-      {label}
-    </button>
-  );
-}
 
-const PanelNavBar = ({ tbKeyGrid, title, guideInfo, help, setHelp }) => {
+const PanelNavBar = ({ tbKeyGrid, title, guideInfo }) => {
   return (
-    <div className="border-b pb-2 mb-2">
+    <div className="border-b">
       <div className="flex">
         <div className="flex-col px-4">
           {tbKeyGrid}
         </div>
 
-        <div className=" flex-col ml-auto px-4">
-          <HelpButton help={help} setHelp={setHelp} />
+        <div className="flex-col ml-auto px-4">
+          <h2 className="text-lg md:text-2xl">{title}</h2>
         </div >
       </div >
 
-      <div className="">
-        <h2 className="text-lg md:text-2xl">{title}</h2>
-      </div>
-
-      <div className="py-2">
+      <div className="p-1">
         {guideInfo ? guideInfo : <></>}
       </div>
     </div>
@@ -113,50 +99,6 @@ const LegendAttribution = ({ legendData }) => {
   }
 }
 
-const HelpPanel = ({ hydratedState, setGuide, setHelp }) => {
-  return (<div>
-    <Para>
-      I built this site to show how my
-      {" "}<IntraAppLink href="/ergodox">ErgoDox keyboard</IntraAppLink>{" "}
-      helped my RSI.
-    </Para>
-    <Para>
-      You can select any key on the board above to learn more about why it is placed there.
-    </Para>
-    {
-      hydratedState.keyMap.defaultGuide ? (
-        <Para>
-          Not sure where to begin? This keyboard layout supports a guided tour &mdash;
-          <button
-            className="p-1 border border-gray-300 rounded-md bg-gray-200"
-            onClick={() => setGuide(hydratedState.keyMap.defaultGuide)}
-            disabled={!hydratedState.keyMap.defaultGuide}
-          >start the tour now!
-        </button>
-        </Para>
-      ) : (
-          <Para>
-            Not sure where to begin?
-            While the layout you have currently selected does not support a guided tour,
-            you might try the guided tour available in the <IntraAppLink href="/">default layout</IntraAppLink>.
-          </Para>
-        )
-    }
-    <Para>See also:</Para>
-    <ul className="list-disc my-2 mx-8">
-      <li><h2 className="">
-        <IntraAppLink href="/about">What is this site?</IntraAppLink>
-      </h2></li>
-      <li><h2 className="">
-        <IntraAppLink href="/ergodox">What kind of keyboard is this?</IntraAppLink>
-      </h2></li>
-      <li><h2 className="">
-        <IntraAppLink href="/story">Personal history</IntraAppLink>
-      </h2></li>
-    </ul>
-  </div >);
-}
-
 /* A tiny key grid just for use in the title bar of the info panel
  */
 const TitleBarKeyGrid = ({ keyData, legendMap }) => {
@@ -186,14 +128,6 @@ const EmptyTitleBarKeyGrid = () => {
   return <TitleBarKeyGrid keyData={emptyTbKeyData} legendMap={{}} />;
 }
 
-/* A KeyGrid for the title bar when the help menu is active
- */
-const HelpTitleBarKeyGrid = () => {
-  const helpKeyData = { legend: "?", reactKey: 1, };
-  const helpLegendMap = { "?": { glyph: { value: "¿" } }, };
-  return <TitleBarKeyGrid keyData={helpKeyData} legendMap={helpLegendMap} />;
-}
-
 /* A KeyGrid for the title bar which references a key on the keyboard
  */
 const PopulatedTitleBarKeyGrid = ({ keyData, legendMap }) => {
@@ -209,25 +143,13 @@ const PopulatedTitleBarKeyGrid = ({ keyData, legendMap }) => {
 /* An information panel about whatever key/guide we're in, or with an intro
  */
 export const InfoPanel = () => {
-  const { state, hydratedState, setGuide, setHelp } = useContext(KeymapUiStateContext);
+  const { hydratedState, setGuide } = useContext(KeymapUiStateContext);
   const { keyData, legendMap } = hydratedState;
   const legend = Legend(legendMap[keyData.legend]);
 
   const keyDataTbKeyGrid = keyData.id ? <PopulatedTitleBarKeyGrid keyData={keyData} legendMap={legendMap} /> : <EmptyTitleBarKeyGrid />
 
-  if (state.help) {
-    // The help panel is open
-    return (<>
-      <PanelNavBar
-        tbKeyGrid={<HelpTitleBarKeyGrid />}
-        title="What is this?"
-        guideInfo={null}
-        help={state.help}
-        setHelp={setHelp}
-      />
-      <HelpPanel hydratedState={hydratedState} setGuide={setGuide} setHelp={setHelp} />
-    </>);
-  } else if (hydratedState.inGuide) {
+  if (hydratedState.inGuide) {
     // We are in a guide. There may be a selected key, but maybe not.
     const guideInfo = <GuideInfo
       guideStep={hydratedState.guideStepIdx}
@@ -239,8 +161,6 @@ export const InfoPanel = () => {
         tbKeyGrid={keyDataTbKeyGrid}
         title={hydratedState.guideStep.title || "Key information"}
         guideInfo={guideInfo}
-        help={state.help}
-        setHelp={setHelp}
       />
       <KeyInfoProse
         isSet={!keyData.unset}
@@ -258,8 +178,6 @@ export const InfoPanel = () => {
       <PanelNavBar
         tbKeyGrid={keyDataTbKeyGrid}
         title="Key information"
-        help={state.help}
-        setHelp={setHelp}
       />
       <KeyInfoProse isSet={!keyData.unset} keyInfo={keyData.info} textLabel={keyData.name || legend.legend} />
       <LegendAttribution legendData={legend} />
@@ -272,8 +190,6 @@ export const InfoPanel = () => {
           tbKeyGrid={<EmptyTitleBarKeyGrid />}
           title="Welcome"
           guideInfo={null}
-          help={state.help}
-          setHelp={setHelp}
         />
         <Para>You are viewing the keymap information for: {hydratedState.keyMap.fullName}.</Para>
         <Para>Select a key from the list above to learn more about it.</Para>
