@@ -9,8 +9,8 @@ import log from "loglevel";
 
 import {
   AppDebugContext,
+  DocumentDimensionsContext,
 } from "~/components/appContext";
-import { useDocumentSize } from "~/hooks/useDocumentSize";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 import { useWindowSize } from "~/hooks/useWindowSize";
 import {
@@ -198,7 +198,7 @@ export const Diagram = ({
 }) => {
   const canvas = useRef();
   const container = useRef();
-  const [documentSize, updateDocumentSize] = useDocumentSize();
+  const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext)
   const windowSize = useWindowSize();
   const [appDebug, setAppDebug] = useContext(AppDebugContext);
   const { state } = useContext(KeymapUiStateContext);
@@ -215,17 +215,17 @@ export const Diagram = ({
    * and width/height at 100%,
    * while the canvas should also be position: absolute and overflow: visible.
    */
-    canvas.current.style.width = `${documentSize.width}px`;
-    canvas.current.style.height = `${documentSize.height}px`;
-    canvas.current.width = documentSize.width;
-    canvas.current.height = documentSize.height;
+    canvas.current.style.width = `${documentDimensions.width}px`;
+    canvas.current.style.height = `${documentDimensions.height}px`;
+    canvas.current.width = documentDimensions.width;
+    canvas.current.height = documentDimensions.height;
 
     log.debug(`New canvas sizes:\n${canvas.current.style.width} * ${canvas.current.style.height}\n${canvas.current.width} * ${canvas.current.height}`);
-  }, [documentSize]);
+  }, [documentDimensions]);
 
   useEffect(() => {
     updateCanvasSize();
-  }, [documentSize, updateCanvasSize, windowSize]);
+  }, [documentDimensions, updateCanvasSize, windowSize]);
 
   const updateCanvas = useCallback(() => {
     if (!canvas) return;
@@ -317,7 +317,7 @@ export const Diagram = ({
 
   useEffect(() => {
     updateCanvas();
-  }, [appDebug, connections, diamargLeftRect, diamargRightRect, documentSize, keyboardAndPanelRect, updateCanvas, windowSize]);
+  }, [appDebug, connections, diamargLeftRect, diamargRightRect, documentDimensions, keyboardAndPanelRect, updateCanvas, windowSize]);
 
   return (
     <div

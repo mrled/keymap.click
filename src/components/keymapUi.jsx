@@ -12,6 +12,7 @@ import { InfoPanel } from "~/components/keyInfo";
 
 import {
   AppDebugContext,
+  DocumentDimensionsContext,
   VisibleMenuContext,
 } from "~/components/appContext";
 import { Keyboard } from "~/components/keyboard";
@@ -19,7 +20,6 @@ import { VisualDebugStyle } from "~/components/visualDebugStyle";
 import {
   FakeDOMRect,
 } from "~/lib/geometry";
-import { useDocumentSize } from "~/hooks/useDocumentSize";
 import { useKeyConnections } from "~/hooks/useKeyConnections";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 import { useWindowSize } from "~/hooks/useWindowSize";
@@ -28,7 +28,7 @@ import { useWindowSize } from "~/hooks/useWindowSize";
 export const KeymapUI = () => {
   const [appDebug, setAppDebug] = useContext(AppDebugContext);
   const [visibleMenu, setVisibleMenu] = useContext(VisibleMenuContext);
-  const [documentSize, updateDocumentSize] = useDocumentSize();
+  const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext);
   const windowSize = useWindowSize();
   const { state } = useContext(KeymapUiStateContext);
 
@@ -78,8 +78,8 @@ export const KeymapUI = () => {
 
   useEffect(() => {
     log.debug(`Document dimensions should update due to a dependency change...`)
-    updateDocumentSize();
-    // We must NOT pass updateDocumentSize as a dependency for this effect, or it will cause an infinite loop!
+    updateDocumentDimensions();
+    // We must NOT pass updateDocumentDimensions as a dependency for this effect, or it will cause an infinite loop!
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyboardAndPanelRect, state.keyId, visibleMenu]);
 
