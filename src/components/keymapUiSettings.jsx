@@ -32,7 +32,7 @@ export const KeymapUiSettings = () => {
               defaultValue={state.legendMap}
               name="Legend maps"
               id="legend-selector"
-              className="table-cell text-sm p-1 m-1"
+              className="table-cell text-sm p-1 m-1 border"
             >
               {Object.keys(legendMaps).map((legendMapName, idx) => {
                 return <option key={idx} value={legendMapName}>{legendMaps[legendMapName].fullName}</option>
@@ -47,7 +47,7 @@ export const KeymapUiSettings = () => {
               defaultValue={state.keyMap}
               name="Layouts"
               id="keymap-selector"
-              className="table-cell text-sm p-1 m-1"
+              className="table-cell text-sm p-1 m-1 border"
             >
               {Object.keys(keyMaps).map((keyMapName, idx) => {
                 return <option key={idx} value={keyMapName}>{keyMaps[keyMapName].fullName}</option>

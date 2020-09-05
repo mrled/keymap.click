@@ -84,17 +84,37 @@ const MenuBar = () => {
 }
 
 
+const SecretSidebarControls = ({ enabled }) => {
+  if (!enabled) {
+    return <></>;
+  }
+  return <>
+    <div className="mt-4">
+      <h2 className="mb-2">Secrets</h2>
+
+      <ul className="list-disc pl-8 text-xs">
+        <li><IntraAppLink href="/controls">Control panel</IntraAppLink></li>
+      </ul>
+    </div>
+
+    <div className="mt-4">
+      <KeymapUiSettings />
+    </div>
+  </>;
+}
+
+
 const Sidebar = ({ visibleMenu, setVisibleMenu }) => {
   const { advancedMode } = useAppSettings();
   const { dazzlingColor } = useAppSettings();
 
-  const colors = dazzlingColor ? "bg-green-100 border-green-500" : "bg-white border-orange-600"
+  const sideBarColors = dazzlingColor ? "bg-green-100 border-green-500" : "bg-white border-orange-600"
 
   return (
     <div
       className={classnames(
         "fixed inset-y-0 left-0 w-64 px-4 py-4 border-r overflow-auto transform",
-        colors,
+        sideBarColors,
         {
           "translate-x-0 ease-out transition-medium": visibleMenu,
           "-translate-x-full ease-in transition-medium": !visibleMenu,
@@ -122,9 +142,7 @@ const Sidebar = ({ visibleMenu, setVisibleMenu }) => {
         </ul>
       </div>
 
-      <div className="mt-4">
-        {advancedMode ? <KeymapUiSettings /> : <></>}
-      </div>
+      <SecretSidebarControls enabled={advancedMode} />
 
     </div>
   );

@@ -17,7 +17,7 @@ export default function Controls() {
           >
             <div className="m-4 p-4">
               <h1 className="text-2xl pb-4">
-                Controls
+                Control panel
               </h1>
               <p className="py-1">
                 This is a secret.
@@ -33,7 +33,7 @@ export default function Controls() {
                     value={debugLevel}
                     name="Debug levels"
                     id="app-debug-selector"
-                    className="p-2 m-2 text-xs table-cell"
+                    className="p-2 m-2 text-xs table-cell border"
                   >
                     <option value={0}>Off</option>
                     <option value={1}>Extra logging</option>
@@ -63,6 +63,7 @@ export default function Controls() {
                     className="p-2 m-2 text-xs table-cell"
                     type="checkbox"
                   />
+                  <p className="p-2 m-2 text-xs table-cell">(Requires new page load)</p>
                 </div>
 
               </div>

@@ -25,8 +25,8 @@ import {
 /* Colors when drawing diagram lines
  */
 const diagramLineColors = {
-  [keyInfoConnectType.textref]: "#68d391",
-  [keyInfoConnectType.selected]: "#f6ad55",
+  [keyInfoConnectType.textref]: "#68d391ff",  // Opaque, because this green is pretty light
+  [keyInfoConnectType.selected]: "#fbd38d99", // Slightly transparent, because this orange is pretty dark
   debug: "purple",
 }
 
