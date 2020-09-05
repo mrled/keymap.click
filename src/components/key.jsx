@@ -126,8 +126,8 @@ export const Key = ({
     standalone ? standaloneClasses : gridClasses,
     `cursor-pointer p-1 flex justify-center items-center rounded-sm font-mono pointer-events-auto force-outline-none relative`,
     {
-      "bg-orange-300 border border-orange-700 hover:bg-orange-600": active,
-      "bg-orange-100 border border-orange-500 hover:bg-orange-400": otherSelected,
+      "bg-orange-400 border border-orange-700 hover:bg-orange-600": active,
+      "bg-orange-200 border border-orange-500 hover:bg-orange-400": otherSelected,
       "bg-green-200 border border-green-500 hover:bg-green-400": !active && targetKeyActive,
       "bg-gray-200 border border-gray-500 hover:bg-gray-400": !active && !otherSelected && !targetKeyActive,
     },
