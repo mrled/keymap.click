@@ -8,9 +8,9 @@ import React, {
 import log from "loglevel";
 
 import {
-  AppDebugContext,
   DocumentDimensionsContext,
 } from "~/components/appContext";
+import { useAppSettings } from "~/hooks/useAppSettings";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 import { useWindowSize } from "~/hooks/useWindowSize";
 import {
@@ -200,7 +200,7 @@ export const Diagram = ({
   const container = useRef();
   const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext)
   const windowSize = useWindowSize();
-  const [appDebug, setAppDebug] = useContext(AppDebugContext);
+  const { debugLevel } = useAppSettings();
   const { state } = useContext(KeymapUiStateContext);
 
   const updateCanvasSize = useCallback(() => {
@@ -255,7 +255,7 @@ export const Diagram = ({
 
     const keyboardCenter = keyboardAndPanelRect.x + (keyboardAndPanelRect.right - keyboardAndPanelRect.x) / 2;
 
-    if (appDebug.debugLevel > 1) {
+    if (debugLevel > 1) {
       drawVisualDebugInfo(context, keyboardCenter, keyboardAndPanelRect, diamargLeftRect, diamargRightRect);
     }
 
@@ -306,7 +306,7 @@ export const Diagram = ({
       }
     });
   }, [
-    appDebug.debugLevel,
+    debugLevel,
     connections,
     diamargLeftRect,
     diamargRightRect,
@@ -317,7 +317,7 @@ export const Diagram = ({
 
   useEffect(() => {
     updateCanvas();
-  }, [appDebug, connections, diamargLeftRect, diamargRightRect, documentDimensions, keyboardAndPanelRect, updateCanvas, windowSize]);
+  }, [debugLevel, connections, diamargLeftRect, diamargRightRect, documentDimensions, keyboardAndPanelRect, updateCanvas, windowSize]);
 
   return (
     <div

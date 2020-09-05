@@ -2,10 +2,12 @@ import React from "react";
 
 import classnames from "classnames";
 
-import { AppSettings } from "~/components/appSettings";
+import { KeymapUiSettings } from "~/components/keymapUiSettings";
 import { IntraAppLink } from "~/components/prose";
+import { useAppSettings } from "~/hooks/useAppSettings";
 
 export const Menu = ({ visible }) => {
+  const { advancedMode } = useAppSettings();
 
   return (
     <div
@@ -30,7 +32,7 @@ export const Menu = ({ visible }) => {
         </h2></li>
       </ul>
 
-      <AppSettings />
+      {advancedMode ? <KeymapUiSettings /> : <></>}
 
     </div>
   );

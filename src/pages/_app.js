@@ -12,31 +12,15 @@ import "~/styles/keygrid.css";
 import "~/styles/fonts.css";
 
 import {
-  AppDebugContext,
   DocumentDimensionsContext,
   VisibleMenuContext,
-  appDebugDefault,
   visibleMenuDefault,
 } from "~/components/appContext";
 import { AppHead } from "~/components/appHead";
 
-/* Update application state based on the appDebug.
- * Intended to be called from a useEffect() hook that is called on appDebug value change.
- * Expects the hook to pass the new appDebug value.
- */
-export const handleAppDebugChange = (appDebug) => {
-  switch (appDebug.debugLevel) {
-    case 0: log.setLevel(log.levels.SILENT); break;
-    case 1: log.setLevel(log.levels.DEBUG); break;
-    case 2: log.setLevel(log.levels.TRACE); break;
-    default: log.setLevel(log.levels.SILENT); break;
-  }
-  log.debug(`Handled new appDebug value: ${JSON.stringify(appDebug)}`);
-};
 
 function App({ Component, pageProps }) {
 
-  const [appDebug, setAppDebug] = useState(appDebugDefault);
   const [visibleMenu, setVisibleMenu] = useState(visibleMenuDefault);
   const router = useRouter();
 
@@ -84,19 +68,13 @@ function App({ Component, pageProps }) {
     }
   }, [router.events]);
 
-  useEffect(() => {
-    handleAppDebugChange(appDebug);
-  }, [appDebug]);
-
   return <>
-    <AppDebugContext.Provider value={[appDebug, setAppDebug]}>
-      <DocumentDimensionsContext.Provider value={[documentDimensions, updateDocumentDimensions]}>
-        <VisibleMenuContext.Provider value={[visibleMenu, setVisibleMenu]}>
-          <AppHead />
-          <Component {...pageProps} />
-        </VisibleMenuContext.Provider>
-      </DocumentDimensionsContext.Provider>
-    </AppDebugContext.Provider>
+    <DocumentDimensionsContext.Provider value={[documentDimensions, updateDocumentDimensions]}>
+      <VisibleMenuContext.Provider value={[visibleMenu, setVisibleMenu]}>
+        <AppHead />
+        <Component {...pageProps} />
+      </VisibleMenuContext.Provider>
+    </DocumentDimensionsContext.Provider>
   </>
 }
 

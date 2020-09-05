@@ -11,7 +11,6 @@ import { Diagram } from "~/components/diagram";
 import { InfoPanel } from "~/components/keyInfo";
 
 import {
-  AppDebugContext,
   DocumentDimensionsContext,
   VisibleMenuContext,
 } from "~/components/appContext";
@@ -20,13 +19,14 @@ import { VisualDebugStyle } from "~/components/visualDebugStyle";
 import {
   FakeDOMRect,
 } from "~/lib/geometry";
+import { useAppSettings } from "~/hooks/useAppSettings";
 import { useKeyConnections } from "~/hooks/useKeyConnections";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 import { useWindowSize } from "~/hooks/useWindowSize";
 
 
 export const KeymapUI = () => {
-  const [appDebug, setAppDebug] = useContext(AppDebugContext);
+  const { debugLevel } = useAppSettings();
   const [visibleMenu, setVisibleMenu] = useContext(VisibleMenuContext);
   const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext);
   const windowSize = useWindowSize();
@@ -89,7 +89,7 @@ export const KeymapUI = () => {
   return (
     <>
 
-      <VisualDebugStyle enableDebug={appDebug.debugLevel > 1} />
+      <VisualDebugStyle enableDebug={debugLevel > 1} />
 
       <div
         className="w-full h-full text-sm md:text-base p-4 max-w-screen-lg mx-auto"
