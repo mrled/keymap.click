@@ -191,7 +191,11 @@ export const InfoPanel = () => {
           title="Welcome"
           guideInfo={null}
         />
-        <Para>You are viewing the keymap information for: {hydratedState.keyMap.fullName}.</Para>
+        {/* <Para>You are viewing the keymap information for: {hydratedState.keyMap.fullName}.</Para> */}
+        <Para>
+          Welcome to <IntraAppLink href="/">keymap.click</IntraAppLink>!
+          I built this site to show how my <IntraAppLink href="/ergodox">keyboard</IntraAppLink> helped my RSI.
+        </Para>
         <Para>Select a key from the list above to learn more about it.</Para>
         {hydratedState.keyMap.defaultGuide ? (
           <Para>
