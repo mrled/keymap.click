@@ -24,7 +24,6 @@ I need outside eyes on this.
 
 * Editing
 * Bug hunting
-* Do I need to remove the menu before shipping 1.0? The more I look at it, the more I hate it.
 * Does this even make sense for someone who hasn't stared at it for 100 hours?
 
 ## Ideas
@@ -35,26 +34,6 @@ Things I might do, but that I haven't decided on yet
 
 * Refactor fathom stuff to a hook
 * Refactor document dimension stuff to a hook
-
-### Can I remove the menu?
-
-It seems like having the help page and the menu with settings is redundant.
-Should I make a setting panel that works like the help panel?
-
-Should I instead integrate the help in the menu?
-
-Seems like I shouldn't need both.
-Feels cluttered.
-
-* Make debugging controls invisible.
-  Only accessible via the query string?
-  Hidden page that sets a value to localSettings?
-* Remove keyLegends and keyMaps dropdowns from the settings.
-  Later, incorporate them into the keyInfo panel,
-  maybe via a settings button of some kind.
-* Move site navigation inline on each page,
-  and on the main page use the key info panel.
-  Maybe use a float on the upper right of the content area.
 
 ### Add a guided tour button next to the help button
 
@@ -1184,3 +1163,42 @@ Josh has mentioned `unstated-next` to me more than once, can that help me?
 * ✅ Write about what this is, who am I, how this works, what an ErgoDox is, RSI stuff, etc etc.
 * ✅ Edit all of this. -- first pass complete solo, will solicit editing from others
 
+### Can I remove the menu?
+
+It seems like having the help page and the menu with settings is redundant.
+Should I make a setting panel that works like the help panel?
+
+Should I instead integrate the help in the menu?
+
+Seems like I shouldn't need both.
+Feels cluttered.
+
+* Make debugging controls invisible.
+  Only accessible via the query string?
+  Hidden page that sets a value to localSettings?
+* Remove keyLegends and keyMaps dropdowns from the settings.
+  Later, incorporate them into the keyInfo panel,
+  maybe via a settings button of some kind.
+* Move site navigation inline on each page,
+  and on the main page use the key info panel.
+  Maybe use a float on the upper right of the content area.
+
+✅ I removed it.
+
+Now I have a hamburger menu, and it's much better.
+
+I removed the legends and maps dropdowns unless you're in advanced mode,
+which you can set from the control panel.
+
+### Add a control panel
+
+Add `/controls` for features flags etc.
+
+* ✅ Done! Currently has the following features:
+
+* Debug dropdown moved here
+* Added Advanced Mode checkbox, which enables showing keymap/legendmap controls
+  on the hamburger menu for keymapUi.
+* Enabling colors for experimentation
+
+Users aren't expected to touch this, just for feature flags and other dev stuff.
