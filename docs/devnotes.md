@@ -30,6 +30,13 @@ I need outside eyes on this.
 
 Things I might do, but that I haven't decided on yet
 
+### Draw multiple orange lines
+
+Sometimes it would be nice to draw two or three orange lines,
+like for left/right brackets, ctrl keys, alt, etc.
+
+Not sure that this works well for every case, though.
+
 ### Refactor code in _app.js to hooks
 
 * Refactor fathom stuff to a hook
