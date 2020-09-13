@@ -128,7 +128,7 @@ const Sidebar = ({ visibleMenu, setVisibleMenu }) => {
 
       <div className="text-xs py-4">
         <p>
-          My ErgoDox keyboard helped my RSI. Here's how.
+          My ErgoDox keyboard helped my RSI. Here&apos;s how.
         </p>
       </div>
 

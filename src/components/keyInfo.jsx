@@ -198,7 +198,7 @@ export const InfoPanel = () => {
           {" "}<IntraAppLink href="/ergodox">keyboard</IntraAppLink> helped my
           {" "}<IntraAppLink href="/story">RSI</IntraAppLink>.
         </Para>
-        <Para>Select a key from the list above to learn more about it.</Para>
+        <Para>Select a key from the board above to learn more about it.</Para>
         {hydratedState.keyMap.defaultGuide ? (
           <Para>
             Not sure where to begin?

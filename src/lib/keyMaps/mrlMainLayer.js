@@ -56,20 +56,20 @@ const bracketKeyInfo = <>
 </>;
 
 const volumeControlInfo = <Para>
-  It's nice to have dedicated volume keys, but isn't a necessity.
-  I've also experimented with using these keys to enter different function layers, which works well too.
+  It&apos;s nice to have dedicated volume keys, but isn&apos;t a necessity.
+  I&apos;ve also experimented with using these keys to enter different function layers, which works well too.
 </Para>;
 
 const ctrlKeyInfo = <>
   <Para>
     Keeping this key out from under my pinky is vital &mdash;
-    <em>especially</em> since I can't seem to break two decades of Emacs habits.
+    <em>especially</em> since I can&apos;t seem to break two decades of Emacs habits.
   </Para>
   <Para>
     Happily, this is a really excellent location for <kbd>ctrl</kbd>,
     much better than the default QWERTY location,
     and only possible on an ErgoDox,
-    because it's easier to chord with any key on the board.
+    because it&apos;s easier to chord with any key on the board.
   </Para>
   <Para>
     On a normal keyboard, I remap the key in the
@@ -82,11 +82,11 @@ const optKeyInfo = <>
   <Para>
     This key represents either <kbd>opt</kbd>/<kbd>	⌥</kbd> on macOS or <kbd>alt</kbd> on Windows.
     This location is easy to hit with your thumb,
-    and having two of them means you don't have to stretch much.
+    and having two of them means you don&apos;t have to stretch much.
   </Para>
   <Para>
     As <kbd>opt</kbd> + a left/right arrow key is a very common chord,
-    it's worth noting that this placement works well with my
+    it&apos;s worth noting that this placement works well with my
     {" "}<Indicator id="l-f-8-9">left side</Indicator> and
     {" "}<Indicator id="r-f-7-9">right side</Indicator> arrow layer keys.
     I can chord <kbd>opt</kbd>+<kbd>arrow layer</kbd> with one thumb without any strain,
@@ -121,7 +121,7 @@ const arrowLayerKeyInfo = <>
   <Para>
     People more accustomed to the vim way of doing things might prefer
     {" "}<kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd>{" "}
-    instead of the inverted-T I use, to which I say,
+    instead of the inverted-T arrow placement I use, to which I say,
     go wild man, be free.
   </Para>
 </>;
@@ -183,9 +183,9 @@ const MrlMainLayer = {
             <Para>
               Keys highlighted in orange have been moved from their traditional QWERTY location to relieve pain.
             </Para><Para>
-              You'll note that all of them are moved inward,
+              You&apos;ll note that all of them are moved inward,
               such that they are within reach of either the index finger or the thumb.
-              <strong>This is the biggest benefit of the ErgoDox for me.</strong>
+              {" "}<strong>This is the biggest benefit of the ErgoDox for me.</strong>
             </Para><Para>
               I remapped all of these keys in order to relieve what became intense,
               painful strain on the pinky fingers of both hands.
@@ -196,7 +196,8 @@ const MrlMainLayer = {
               It was miserable.
             </Para><Para>
               I am not the first to notice that these keys &mdash;
-              <kbd>esc</kbd>, <kbd>tab</kbd>, <kbd>shift</kbd>, <kbd>backspace</kbd>, <kbd>ctrl</kbd>, and <kbd>return</kbd> &mdash;
+              {" "}<kbd>esc</kbd>, <kbd>tab</kbd>, <kbd>shift</kbd>,
+              {" "}<kbd>backspace</kbd>, <kbd>ctrl</kbd>, and <kbd>return</kbd> &mdash;
               are some of the most commonly used keys on the board,
               and yet we use them with our pinkies, which are the weakest fingers we have.
               Changing the location of these keys has made a massive difference in my day to day life on a keyboard,
@@ -262,7 +263,7 @@ const MrlMainLayer = {
             <Para>
               Changing the location of these keys did not impact my RSI,
               but some of the new locations might be surprising,
-              so it's worth examining what has changed and why.
+              so it&apos;s worth examining what has changed and why.
             </Para>
           </>,
           selection: movedQwertyNonReliefSelection,
@@ -321,7 +322,7 @@ const MrlMainLayer = {
       info: <>
         <Para>
           This placement takes a little getting used to,
-          but it's normal for other Ergodox layouts, and honestly isn't too bad.
+          but it&apos;s normal for other Ergodox layouts, and honestly isn&apos;t too bad.
           It helps me to remember that it mirrors <Indicator kbd id="r-f-13-1">-_</Indicator>{" "}
           on the opposite side of the board.
         </Para>
@@ -452,7 +453,7 @@ const MrlMainLayer = {
         </Para> */}
         <Para>
           Reduces pinky strain over its default location.
-          This is a very natural place for this key, and it's very easy to hit.
+          This is a very natural place for this key, and it&apos;s very easy to hit.
         </Para>
         {/* <Para>
           A good location for <kbd>tab</kbd> must take into account the location of other keys.
@@ -507,7 +508,7 @@ const MrlMainLayer = {
       startPos: [1, 5],
       info: <Para>
         I enabled <kbd>capslock</kbd> on this key for fun,
-        even though I don't really use it.
+        even though I don&apos;t really use it.
         On a normal keyboard, I remap this key to <kbd>ctrl</kbd>,
         but I chose not to keep that mapping so I could better remember the new
         {" "}<Indicator id="l-t-5-5"><kbd>left ctrl</kbd></Indicator> and
@@ -612,7 +613,7 @@ const MrlMainLayer = {
       startPos: [2, 9],
       info: <>
         <Para>
-          Holding this key enters my "function layer",
+          Holding this key enters my &ldquo;function layer&rdquo;,
           transforming every key on the board to a special function.
           For instance, while holding down this key,
           I have access to function keys <kbd>F1</kbd> all the way through <kbd>F20</kbd>,
@@ -634,7 +635,8 @@ const MrlMainLayer = {
       startPos: [4, 9],
       info: <>
         <Para>
-          I haven't found anything useful to map here. In the past I've used it to enter other layers.
+          I haven&apos;t found anything useful to map here.
+          In the past I&apos;ve used it to enter other layers.
         </Para>
       </>,
     },
@@ -645,7 +647,8 @@ const MrlMainLayer = {
       startPos: [6, 9],
       info: <>
         <Para>
-          I haven't found anything useful to map here. In the past I've used it to enter other layers.
+          I haven&apos;t found anything useful to map here.
+          In the past I&apos;ve used it to enter other layers.
         </Para>
       </>,
     },
@@ -773,7 +776,7 @@ const MrlMainLayer = {
           or inputting a whole sequence of characters.
         </Para>
         <Para>
-          It's an advanced part of QMK that I hope to spend more time with in the future.
+          It&apos;s an advanced part of QMK that I hope to spend more time with in the future.
         </Para>
       </>,
     },
@@ -841,7 +844,7 @@ const MrlMainLayer = {
           {" "}<Indicator id="l-t-3-3"><kbd>right</kbd></Indicator> mouse buttons.
         </Para>
         <Para>
-          I don't use this all the time,
+          I don&apos;t use this all the time,
           however when my right arm is feeling particularly in pain or strained,
           it can be nice not to have to reach further to the right for the mouse.
         </Para>
@@ -1049,8 +1052,8 @@ const MrlMainLayer = {
       size: [2, 2],
       startPos: [3, 1],
       info: <Para>
-        Not a very important key, but it's useful sometimes on Windows
-        and I wasn't using this space for anything anyway.
+        Not a very important key, but it&apos;s useful sometimes on Windows
+        and I wasn&apos;t using this space for anything anyway.
       </Para>,
     },
     {
