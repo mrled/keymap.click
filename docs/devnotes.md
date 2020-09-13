@@ -9,23 +9,6 @@ This section isn't well organized.
 
 Everything that I have decided to definitely do
 
-### Release a version 1.0
-
-* ✅ Add a guide
-* ✅ Add / edit content for all the keys I want
-* ✅ Add place for more general info / prose
-* ✅ Add / edit prose content
-* ✅ Draw orange line to selected key
-* 🔲 Solicit feedback from others
-
-### Solicit feedback from others
-
-I need outside eyes on this.
-
-* Editing
-* Bug hunting
-* Does this even make sense for someone who hasn't stared at it for 100 hours?
-
 ## Ideas
 
 Things I might do, but that I haven't decided on yet
@@ -1209,3 +1192,27 @@ Add `/controls` for features flags etc.
 * Enabling colors for experimentation
 
 Users aren't expected to touch this, just for feature flags and other dev stuff.
+
+### Release a version 1.0
+
+* ✅ Add a guide
+* ✅ Add / edit content for all the keys I want
+* ✅ Add place for more general info / prose
+* ✅ Add / edit prose content
+* ✅ Draw orange line to selected key
+* ✅ Solicit feedback from others
+
+All of this is... done, holy shit.
+I need to write a blog post and link it around on the web.
+We can call this a 1.0.
+Holy shit holy shit holy shit.
+
+### Solicit feedback from others
+
+I need outside eyes on this.
+
+* Editing
+* Bug hunting
+* Does this even make sense for someone who hasn't stared at it for 100 hours?
+
+✅ My editorial team liked it!
