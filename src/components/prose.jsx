@@ -1,11 +1,7 @@
 import Link from "next/link";
-import React, {
-  useContext,
-} from "react";
+import React, { useContext } from "react";
 
-import {
-  VisibleMenuContext,
-} from "~/components/appContext";
+import { VisibleMenuContext } from "~/components/appContext";
 import {
   keyInfoConnectFromClass,
   keyInfoConnectFromClassPrefix,
@@ -16,15 +12,15 @@ import {
  * Close the menu, if visible, when linking between pages.
  */
 export const IntraAppLink = ({ href, children }) => {
-  const [/*visibleMenu*/, setVisibleMenu] = useContext(VisibleMenuContext);
+  const [, /*visibleMenu*/ setVisibleMenu] = useContext(VisibleMenuContext);
   return (
     <Link href={href}>
       <a className="text-blue-600" onClick={() => setVisibleMenu(false)}>
         {children}
       </a>
     </Link>
-  )
-}
+  );
+};
 
 /* An external link
  */
@@ -34,13 +30,13 @@ export const ExternalLink = ({ href, children }) => {
       {children}
     </a>
   );
-}
+};
 
 /* A prose paragraph
  */
 export const Para = ({ children }) => {
   return <p className="my-4">{children}</p>;
-}
+};
 
 /* A key indicator
  */
@@ -53,5 +49,4 @@ export const Indicator = ({ children, id, kbd = false }) => {
       {innerSpan}
     </span>
   );
-}
-
+};

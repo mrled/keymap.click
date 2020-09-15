@@ -80,8 +80,8 @@ const DebugLayout = {
         volKeySelection,
         bracketKeySelection,
         pageUpDownHomeEndSelection,
-        guiKeySelection,
-      )
+        guiKeySelection
+      ),
     },
     {
       legend: "1",
@@ -641,7 +641,7 @@ const DebugLayout = {
       info:
         "Option (macOS) or Alt (Windows) works great here as a mirror to Ctrl in the mirror position under the left thumb. The same benefits apply - it's commonly used, and every key on the keyboard is accessible while chording it.",
     },
-  ]
+  ],
 };
 
 export default DebugLayout;

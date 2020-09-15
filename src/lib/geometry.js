@@ -39,7 +39,7 @@ export const smallerRect = (rect, offset = 5) => {
   newRect.y += offset;
   newRect.height -= 2 * offset;
   return newRect;
-}
+};
 
 /* Trace a rect
  * rect:    An existing DOMRect
@@ -51,4 +51,4 @@ export const traceRect = (rect, context) => {
   context.lineTo(rect.right, rect.bottom);
   context.lineTo(rect.right, rect.top);
   context.lineTo(rect.left, rect.top);
-}
+};

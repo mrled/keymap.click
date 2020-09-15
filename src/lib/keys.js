@@ -9,22 +9,29 @@ import MrlMainLayer from "./keyMaps/mrlMainLayer";
 export const keyMaps = {
   DebugLayout: DebugLayout,
   MrlMainLayer: MrlMainLayer,
-}
+};
 
 Object.keys(keyMaps).forEach((keyMapName) => {
-  const keyMap = keyMaps[keyMapName]
+  const keyMap = keyMaps[keyMapName];
   if (!keyMap.guides) {
     keyMap.guides = {};
   }
   keyMap.guides["none"] = {
     fullName: "(none)",
     steps: [],
-  }
-  Object.keys(keyMap.guides).forEach(guideKey => keyMap.guides[guideKey]["name"] = guideKey);
+  };
+  Object.keys(keyMap.guides).forEach(
+    (guideKey) => (keyMap.guides[guideKey]["name"] = guideKey)
+  );
   if (!keyMap.fullName) {
-    keyMap['fullName'] = keyMapName;
+    keyMap["fullName"] = keyMapName;
   }
-  keyMap.allKeys = [].concat(keyMap.leftHandKeys, keyMap.leftThumbKeys, keyMap.rightHandKeys, keyMap.rightThumbKeys);
+  keyMap.allKeys = [].concat(
+    keyMap.leftHandKeys,
+    keyMap.leftThumbKeys,
+    keyMap.rightHandKeys,
+    keyMap.rightThumbKeys
+  );
   keyMap.allKeysById = {};
   keyMap.allKeys.forEach((keyData, keyIdx) => {
     const side = keyData.board[0] == "right" ? "r" : "l";
@@ -42,12 +49,12 @@ export const legendMaps = {
   NoLegends: NoLegends,
   TextLegends: TextLegends,
   UnicodeLegends: UnicodeLegends,
-}
+};
 
 Object.keys(legendMaps).forEach((legendMapName) => {
-  const legendMap = legendMaps[legendMapName]
+  const legendMap = legendMaps[legendMapName];
   if (!legendMap.fullName) {
-    legendMap['fullName'] = legendMapName;
+    legendMap["fullName"] = legendMapName;
   }
 });
 
@@ -55,4 +62,4 @@ export const defaultGuideStep = {
   key: null,
   selection: [],
   guideText: "",
-}
+};

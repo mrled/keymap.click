@@ -1,6 +1,6 @@
 const NoLegends = {
-  "fullName": "Blanks",
-  "fallback": "",
-}
+  fullName: "Blanks",
+  fallback: "",
+};
 
 export default NoLegends;

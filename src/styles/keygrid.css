@@ -3,8 +3,8 @@
  */
 
 :root {
-  --keyboard-grid-unit: 1.0rem;
-  --kid-diamarg-width: calc(var(--keyboard-grid-unit) * 2.0);
+  --keyboard-grid-unit: 1rem;
+  --kid-diamarg-width: calc(var(--keyboard-grid-unit) * 2);
 }
 @media (min-width: 900px) {
   :root {
@@ -80,7 +80,8 @@
   padding-bottom: calc(var(--keyboard-grid-unit) * 9);
 }
 
-.force-outline-none, .force-outline-none:focus {
+.force-outline-none,
+.force-outline-none:focus {
   outline: 0 !important;
 }
 

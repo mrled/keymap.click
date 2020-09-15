@@ -3,9 +3,7 @@ import React, { useEffect } from "react";
 import classnames from "classnames";
 import log from "loglevel";
 
-import {
-  keyHandleDomIdFromKeyId,
-} from "~/lib/keyConnections"
+import { keyHandleDomIdFromKeyId } from "~/lib/keyConnections";
 
 /* This is a small element used as an anchor point to connect a diagram line to this key.
  *
@@ -39,53 +37,58 @@ const KeyHandle = ({ keyId, colStart, handleTop, extraClasses }) => {
   };
 
   const classes = `h-1 w-1 m-0 p-0 border-none pointer-events-none absolute ${extraClasses}`;
-  return <>
-    <div id={keyHandleDomIdFromKeyId(keyId)} style={style} className={classes} />
-  </>;
+  return (
+    <>
+      <div
+        id={keyHandleDomIdFromKeyId(keyId)}
+        style={style}
+        className={classes}
+      />
+    </>
+  );
 };
 
 /* Process a legend object from lib/keys.js,
  * and return a Legend object that can be used inside of a Key
  */
 export const Legend = (legend) => {
-  const defaultFontFace = "font-roboto-mono"
+  const defaultFontFace = "font-roboto-mono";
   const defaultGlyphFontSize = "text-m md:text-m";
   const defaultTextFontSize = "text-2xs md:text-xs";
 
   if (!legend) {
-    return {}
+    return {};
   } else if (legend.image) {
-    const [
-      width,
-      height,
-    ] = legend.image.size ? legend.image.size : [4, 4];
+    const [width, height] = legend.image.size ? legend.image.size : [4, 4];
     return {
-      legend: <>
-        <img
-          src={`legends/${legend.image.value}`}
-          className={`container w-${width} h-${height}`}
-        />
-      </>,
+      legend: (
+        <>
+          <img
+            src={`legends/${legend.image.value}`}
+            className={`container w-${width} h-${height}`}
+          />
+        </>
+      ),
       attrib: legend.image.attrib || "",
-    }
+    };
   } else if (legend.glyph) {
     return {
       legend: legend.glyph.value,
       fontSize: legend.glyph.fontSize || defaultGlyphFontSize,
       fontFace: legend.glyph.fontFace || defaultFontFace,
       attrib: "",
-    }
+    };
   } else if (legend.text) {
     return {
       legend: legend.text.value,
       fontSize: legend.text.fontSize || defaultTextFontSize,
       fontFace: legend.text.fontFace || defaultFontFace,
       attrib: "",
-    }
+    };
   } else {
-    return {}
+    return {};
   }
-}
+};
 
 /* A keyboard key
  * Properties:
@@ -128,8 +131,10 @@ export const Key = ({
     {
       "bg-orange-400 border border-orange-700 hover:bg-orange-600": active,
       "bg-orange-200 border border-orange-500 hover:bg-orange-400": otherSelected,
-      "bg-green-200 border border-green-500 hover:bg-green-400": !active && targetKeyActive,
-      "bg-gray-200 border border-gray-500 hover:bg-gray-400": !active && !otherSelected && !targetKeyActive,
+      "bg-green-200 border border-green-500 hover:bg-green-400":
+        !active && targetKeyActive,
+      "bg-gray-200 border border-gray-500 hover:bg-gray-400":
+        !active && !otherSelected && !targetKeyActive,
     },
     {
       [legend.fontFace]: legend.fontFace,
@@ -140,11 +145,15 @@ export const Key = ({
 
   return (
     <button id={id} onClick={onClick} className={classes}>
-      <KeyHandle keyId={id} colStart={colStart} handleTop={handleTop} extraClasses={keyHandleExtraClasses} />
+      <KeyHandle
+        keyId={id}
+        colStart={colStart}
+        handleTop={handleTop}
+        extraClasses={keyHandleExtraClasses}
+      />
       {legend.legend}
     </button>
   );
-
 };
 
 /* Return a grid of <Key> components
@@ -163,13 +172,17 @@ export const KeyGrid = ({
   keys,
   legends,
   pressedKey,
-  onClickEach = () => { },
+  onClickEach = () => {},
   gridAppendClasses = "",
   targetKeyIds = [],
   keySelection = [],
 }) => {
   useEffect(() => {
-    log.debug(`Building keyGrid '${gridName}' with pressedKey:\n${JSON.stringify(pressedKey)}`);
+    log.debug(
+      `Building keyGrid '${gridName}' with pressedKey:\n${JSON.stringify(
+        pressedKey
+      )}`
+    );
   });
   return (
     <>
@@ -180,11 +193,13 @@ export const KeyGrid = ({
         )}
       >
         {keys.map((keyData) => {
-          const isTargetKey = targetKeyIds.findIndex((id) => id === keyData.id) > -1;
+          const isTargetKey =
+            targetKeyIds.findIndex((id) => id === keyData.id) > -1;
           let isActive, isInSelectedGroup;
           if (pressedKey) {
             isActive = keyData.id === pressedKey.reactKey;
-            isInSelectedGroup = !isActive && keySelection.indexOf(keyData.id) > -1;
+            isInSelectedGroup =
+              !isActive && keySelection.indexOf(keyData.id) > -1;
           } else {
             isActive = false;
             isInSelectedGroup = false;

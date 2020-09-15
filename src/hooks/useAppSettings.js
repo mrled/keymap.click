@@ -1,6 +1,4 @@
-import {
-  useEffect,
-} from "react";
+import { useEffect } from "react";
 
 import log from "loglevel";
 
@@ -12,31 +10,54 @@ import { useLocalStorage } from "~/hooks/useLocalStorage";
  */
 const handleAppDebugChange = (debugLevel) => {
   switch (debugLevel) {
-    case 0: log.setLevel(log.levels.SILENT); break;
-    case 1: log.setLevel(log.levels.DEBUG); break;
-    case 2: log.setLevel(log.levels.TRACE); break;
-    default: log.setLevel(log.levels.SILENT); break;
+    case 0:
+      log.setLevel(log.levels.SILENT);
+      break;
+    case 1:
+      log.setLevel(log.levels.DEBUG);
+      break;
+    case 2:
+      log.setLevel(log.levels.TRACE);
+      break;
+    default:
+      log.setLevel(log.levels.SILENT);
+      break;
   }
-  log.debug(`handleAppDebugChange(): Handled new debugLevel value: ${JSON.stringify(debugLevel)}`);
+  log.debug(
+    `handleAppDebugChange(): Handled new debugLevel value: ${JSON.stringify(
+      debugLevel
+    )}`
+  );
 };
 
 export function useAppSettings() {
-
   const localStorageKeyDebugLevel = "click.keymap.key.debugLevel";
   const localStorageKeyAdvancedMode = "click.keymap.key.advancedMode";
   const localStorageKeyDazzlingColor = "click.keymap.key.dazzlingColor";
 
-  const [debugLevel, setDebugLevel] = useLocalStorage(localStorageKeyDebugLevel, 0);
-  const [advancedMode, setAdvancedMode] = useLocalStorage(localStorageKeyAdvancedMode, false);
-  const [dazzlingColor, setDazzlingColor] = useLocalStorage(localStorageKeyDazzlingColor, false);
+  const [debugLevel, setDebugLevel] = useLocalStorage(
+    localStorageKeyDebugLevel,
+    0
+  );
+  const [advancedMode, setAdvancedMode] = useLocalStorage(
+    localStorageKeyAdvancedMode,
+    false
+  );
+  const [dazzlingColor, setDazzlingColor] = useLocalStorage(
+    localStorageKeyDazzlingColor,
+    false
+  );
 
   useEffect(() => {
     handleAppDebugChange(debugLevel);
   }, [debugLevel]);
 
   return {
-    debugLevel, setDebugLevel,
-    advancedMode, setAdvancedMode,
-    dazzlingColor, setDazzlingColor,
-  }
+    debugLevel,
+    setDebugLevel,
+    advancedMode,
+    setAdvancedMode,
+    dazzlingColor,
+    setDazzlingColor,
+  };
 }

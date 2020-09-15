@@ -20,10 +20,10 @@ like for left/right brackets, ctrl keys, alt, etc.
 
 Not sure that this works well for every case, though.
 
-### Refactor code in _app.js to hooks
+### Refactor code in \_app.js to hooks
 
-* Refactor fathom stuff to a hook
-* Refactor document dimension stuff to a hook
+- Refactor fathom stuff to a hook
+- Refactor document dimension stuff to a hook
 
 ### Add a guided tour button next to the help button
 
@@ -70,8 +70,8 @@ especially keys that don't have good Unicode glyphs like layer or volume keys.
 
 ### Nicer looking key references inside the info panel
 
-* Make the `<kbd>` elements look like mini keys from the board above?
-* For non-`<kbd>` references, put a tiny rectangular key that looks like a small key from above off to the side?
+- Make the `<kbd>` elements look like mini keys from the board above?
+- For non-`<kbd>` references, put a tiny rectangular key that looks like a small key from above off to the side?
 
 ### Highlight or color change when mousing over diagram annotations
 
@@ -122,8 +122,8 @@ Annoying to write in HTML, honestly, especially inside a React component.
 
 Not sure what I want is possible:
 
-* smart quotes, apostrophes, emdashes, and so forth are handled for me automatically...
-* ... but I can still use `<CustomComponents>` in my markdown.
+- smart quotes, apostrophes, emdashes, and so forth are handled for me automatically...
+- ... but I can still use `<CustomComponents>` in my markdown.
 
 And ideally, it would not prohibit pulling in other keymaps client-side,
 so I could eventually allow someone else to use my website without forking my code.
@@ -134,11 +134,11 @@ Adding the useKeymapUiState hook was pretty tough. I think having string typing 
 
 ### Fix messy URLs
 
-* Root always shows a default view
-* Clicking anywhere puts all items in the URL.
+- Root always shows a default view
+- Clicking anywhere puts all items in the URL.
   Currently, default values are not persisted to the URL.
-* Use paths rather than query string, everything just looks nicer.
-* Is there a library for query string -like paths?
+- Use paths rather than query string, everything just looks nicer.
+- Is there a library for query string -like paths?
   Even `/keymap:default/guide:someguide/`; I know some REST APIs work this way.
 
 ## Development notes and completed to do items
@@ -616,17 +616,17 @@ only on mobile.
 
 See commits:
 
-* c57b65a92247d5b054481b942d6784f8d43f7e0b
-* 40aa2231c82410f56300bfc1b80f21666e251273
+- c57b65a92247d5b054481b942d6784f8d43f7e0b
+- 40aa2231c82410f56300bfc1b80f21666e251273
 
 These are consecutive.
 
 In short:
 
-* The _context_ passes object state and function state-setters from parents to children
-* There are a few major components to doing this -
+- The _context_ passes object state and function state-setters from parents to children
+- There are a few major components to doing this -
   the context object, the state, the context provider, and the provider value.
-* For application global state, you have to set the provider in the root, e.g. your `App`,
+- For application global state, you have to set the provider in the root, e.g. your `App`,
   which in my case resides in `~/pages/_app.js`.
 
 Example:
@@ -673,30 +673,30 @@ function App({ Component, pageProps }) {
 A few things to note here:
 
 1. The `useState` call has to be in the `App`, and it can't be inside of `appDebugContext.jsx` anywhere.
-I think this is because the `useState` call must be in a React component that is a parent component
-for everything that consumes this context.
-For a global value like my debug settings,
-the only option is `App`.
+   I think this is because the `useState` call must be in a React component that is a parent component
+   for everything that consumes this context.
+   For a global value like my debug settings,
+   the only option is `App`.
 
 1. We are using `useState` to keep track of state (the debug level),
-and `createContext` to create a global context.
-The state is only directly usable from the component that creates it.
-You cannot export the return value of `useState` and get/set it in other components.
-(This is because of the React Rules of Hooks.)
-You can however use a context and pass the context to child components.
+   and `createContext` to create a global context.
+   The state is only directly usable from the component that creates it.
+   You cannot export the return value of `useState` and get/set it in other components.
+   (This is because of the React Rules of Hooks.)
+   You can however use a context and pass the context to child components.
 
 1. The `value={[appDebug, setAppDebug]}` in the `<AppDebugContext.Provider ...` component is important.
-This is what `useContext()` will return for all the context consumers.
-_If you don't include a setter here, consumers will not be able to set the context._
-Based on some examples on the web and/or the way `useState()` returns the state value and the state setter,
-you might think that `useContext()` always returns the context value and the context setter.
-_Wrong._
-It always returns whatever the `value` attribute of the context provider is set to in the parent element.
-If you are using React state in your context
-and have a state value/setter that you want to be accessible from other components,
-which is our case here,
-then you have to explicitly pass that state value/setter as the `value` attribute.
-(Can you tell this tripped me up for a long time?)
+   This is what `useContext()` will return for all the context consumers.
+   _If you don't include a setter here, consumers will not be able to set the context._
+   Based on some examples on the web and/or the way `useState()` returns the state value and the state setter,
+   you might think that `useContext()` always returns the context value and the context setter.
+   _Wrong._
+   It always returns whatever the `value` attribute of the context provider is set to in the parent element.
+   If you are using React state in your context
+   and have a state value/setter that you want to be accessible from other components,
+   which is our case here,
+   then you have to explicitly pass that state value/setter as the `value` attribute.
+   (Can you tell this tripped me up for a long time?)
 
 #### `~/components/keyboard.jsx`
 
@@ -762,7 +762,7 @@ It's a great example because we use the appDebug value inside of `updateCanvas()
 which we call in an effect hook.
 
 1. As in the previous example, we import `AppDebugContext`
-and get an `appDebug` and `setAppDebug` by calling `useContext(AppDebugContext)`.
+   and get an `appDebug` and `setAppDebug` by calling `useContext(AppDebugContext)`.
 
 1. We use the `appDebug.debugLevel` directly inside of our `updateCanvas()` function
 
@@ -930,30 +930,30 @@ Now it goes through the center of the key as well.
 
 ### The React Chrome dev extension
 
-* It shows you your components, not the HTML they generate. Much less messy.
-* Double click on a component, and see its internal state, hooks in use, props passed to it,
+- It shows you your components, not the HTML they generate. Much less messy.
+- Double click on a component, and see its internal state, hooks in use, props passed to it,
   even current value of effect hooks and so forth. Wow.
 
 ✅ This thing is dope
 
 ### Improve the app title bar thing
 
-* Take up as little vertical space as possible
-* Put title on same line as debug controls
-* Probably hide debug controls behind hamburger menu?
-* I am thinking some kind of About panel should be accessible from there too.
+- Take up as little vertical space as possible
+- Put title on same line as debug controls
+- Probably hide debug controls behind hamburger menu?
+- I am thinking some kind of About panel should be accessible from there too.
 
 Update 20200807:
 
-* ✅ Take up as little vertical space as possible
-* ✅ Put title on same line as debug controls
-* ✅ Probably hide debug controls behind hamburger menu?
-* 🔲 I am thinking some kind of About panel could be accessible from there too (in the future)
-* 🔲 The diagram isn't redrawing when the panel opens, and I'm not sure why.
+- ✅ Take up as little vertical space as possible
+- ✅ Put title on same line as debug controls
+- ✅ Probably hide debug controls behind hamburger menu?
+- 🔲 I am thinking some kind of About panel could be accessible from there too (in the future)
+- 🔲 The diagram isn't redrawing when the panel opens, and I'm not sure why.
 
 Update 20200808
 
-* ✅ The diagram isn't redrawing when the panel opens, and I'm not sure why.
+- ✅ The diagram isn't redrawing when the panel opens, and I'm not sure why.
 
 DONE :)
 
@@ -961,7 +961,7 @@ DONE :)
 
 Decided this was necessary because there are multiple maps now.
 
-* ✅ done 20200809
+- ✅ done 20200809
 
 ### Improve diagram lines
 
@@ -970,60 +970,60 @@ Maybe hard?
 
 20200731: Thinking more about this:
 
-* Build an "orthogonal" diagram, where all the lines are horizontal or vertical, no slopes or curves
-* On the keyboard map, I can cheat --
+- Build an "orthogonal" diagram, where all the lines are horizontal or vertical, no slopes or curves
+- On the keyboard map, I can cheat --
   all the keys on the left hand have diagram lines that are drawn vertically into the left margin,
   and then down to the key information panel;
   similarly, all the keys on the right have lines that are drawn into the right margin.
-* Additionally, I can divide the vertical key space into 7 sections,
+- Additionally, I can divide the vertical key space into 7 sections,
   as there are at most 7 keys that occupy the same vertical space.
   I don't need to adjust the attachment point at run time,
   it can just be static for a key in whatever position.
-* If I ever reposition the keys to more precisely mirror the location of the keys on the physical ErgoDox,
+- If I ever reposition the keys to more precisely mirror the location of the keys on the physical ErgoDox,
   which are not in an exact grid,
   I'll have to modify the attachment point location and might have to set it manually on each key,
   but I still won't have to select it algorithmically.
-* In the information panel, I have to do some calculations.
-* `getClientRects()` returns a list of rects -- one for each line of text -- inside a div.
+- In the information panel, I have to do some calculations.
+- `getClientRects()` returns a list of rects -- one for each line of text -- inside a div.
   I think I can use this to determine how many attachment points are on the same line of text.
-* Then I can place the horizontal lines from the margin into the text such that they don't cover one another.
-* Calculate positions for vertical lines in the margins to they don't cover one another either
+- Then I can place the horizontal lines from the margin into the text such that they don't cover one another.
+- Calculate positions for vertical lines in the margins to they don't cover one another either
 
 Then I can iterate, perhaps:
 
-* Minimizing crossings
-* Automatically moving horizontal lines that are close, if there is room to do so
-* Perhaps that could use a "force-directed" technique?
+- Minimizing crossings
+- Automatically moving horizontal lines that are close, if there is room to do so
+- Perhaps that could use a "force-directed" technique?
   There's a more general document:
   [Graph Drawing Tutorial](http://cs.brown.edu/people/rtamassi/papers/gd-tutorial/gd-constraints.pdf).
   It discusses force directed techniques for graph layout,
   such that nodes might attract or repel one another;
   if nodes repelled one another but were confined to a location within their parent key,
   I could automatically lay out the horizontal lines to be far apart from each other.
-* Experiment with different colors, maybe that helps if there are lines close to each other?
-* Intelligently combine lines that are going to or from the same place.
+- Experiment with different colors, maybe that helps if there are lines close to each other?
+- Intelligently combine lines that are going to or from the same place.
   For instance, two separate places in the text might refer to the same key;
   these could share the vertical line in the margin,
   and only diverge in the info panel.
-* Intelligently use the opposite margin,
+- Intelligently use the opposite margin,
   if doing so would result in shorter lines or less congested margins.
 
 20200805 update:
 
-* Added Diamargs
-* Keyboard sometimes overlaps Diamargs, depending on window width.
+- Added Diamargs
+- Keyboard sometimes overlaps Diamargs, depending on window width.
   TODO: smarten up breakpoints so that this never happens at sane sizes.
 
 20200808 update:
 
-* 🔲 smarten up breakpoints per above
-* ✅ fucking fix margin->keyboard diagram lines overlapping!!
-* 🔲 fix margin->text diagram lines overlapping
+- 🔲 smarten up breakpoints per above
+- ✅ fucking fix margin->keyboard diagram lines overlapping!!
+- 🔲 fix margin->text diagram lines overlapping
 
 20200810 update:
 
-* ✅ smarten up breakpoints per above -- actually going to say this looks pretty ok in the non-pathological case right now
-* ✅ fix margin->text diagram lines overlapping
+- ✅ smarten up breakpoints per above -- actually going to say this looks pretty ok in the non-pathological case right now
+- ✅ fix margin->text diagram lines overlapping
 
 THAT MEANS THIS IS FINALLY DONE!
 
@@ -1034,17 +1034,17 @@ What should I call it instead?
 
 Maybe something related to
 
-* Ergonomics
-* Guided tours
-* RSI
+- Ergonomics
+- Guided tours
+- RSI
 
 ✅ I got keymap.click !!
 ✅ 20200820 update: Eradicated the hated 'keyblay' from source code
 
 ### Release a dev preview
 
-* Improve diagram lines
-* Decide on a final name
+- Improve diagram lines
+- Decide on a final name
 
 ✅ dev preview officially released, posted on my blog about it, hell yeah
 
@@ -1076,29 +1076,29 @@ Some kind of guided tour.
 
 Update 20200823: This exists now, but needs refinement.
 
-* ✅ Basic navigation works!
-* 🔲 Get rid of the guide bar; navigate from the key info panel
-* 🔲 Possible navigation bugs? Maybe need to re-think state to integrate both guide and pressedKey
-* 🔲 Possible initial page load bugs? Make sure the app can't get confused when loading in the middle of a guided tour
-* 🔲 Bug: guide in selection box on initial load sometimes wrong
-* 🔲 Bug: clicking a key doesn't exit the guide
-* 🔲 Add guide for main layout
-* 🔲 Add guide for old layout, or maybe just remove it
+- ✅ Basic navigation works!
+- 🔲 Get rid of the guide bar; navigate from the key info panel
+- 🔲 Possible navigation bugs? Maybe need to re-think state to integrate both guide and pressedKey
+- 🔲 Possible initial page load bugs? Make sure the app can't get confused when loading in the middle of a guided tour
+- 🔲 Bug: guide in selection box on initial load sometimes wrong
+- 🔲 Bug: clicking a key doesn't exit the guide
+- 🔲 Add guide for main layout
+- 🔲 Add guide for old layout, or maybe just remove it
 
 Update 20200829: UI improvements and bug quashing!!
 
 Remaining:
 
-* 🔲 Add guide for main layout - going to break this into a separate task
+- 🔲 Add guide for main layout - going to break this into a separate task
 
 Completed:
 
-* ✅ Get rid of the guide bar; navigate from the key info panel
-* ✅ Possible navigation bugs? Maybe need to re-think state to integrate both guide and pressedKey
-* ✅ Possible initial page load bugs? Make sure the app can't get confused when loading in the middle of a guided tour
-* ✅ Bug: guide in selection box on initial load sometimes wrong
-* ✅ Bug: clicking a key doesn't exit the guide
-* ✅ Add guide for old layout, or maybe just remove it
+- ✅ Get rid of the guide bar; navigate from the key info panel
+- ✅ Possible navigation bugs? Maybe need to re-think state to integrate both guide and pressedKey
+- ✅ Possible initial page load bugs? Make sure the app can't get confused when loading in the middle of a guided tour
+- ✅ Bug: guide in selection box on initial load sometimes wrong
+- ✅ Bug: clicking a key doesn't exit the guide
+- ✅ Add guide for old layout, or maybe just remove it
 
 That means... I can call this item done!
 I think there is still room for improvement,
@@ -1118,7 +1118,7 @@ like the green lines to connect referenced keys, but maybe bolder and/or brighte
 
 This will make it obvious exactly what's changing and will draw the user's eye to the place I want.
 
-* ✅ Done! This looks really nice and I think it helps tell what's going on especially during the tour.
+- ✅ Done! This looks really nice and I think it helps tell what's going on especially during the tour.
 
 ### Don't parse the key info
 
@@ -1126,7 +1126,7 @@ Should just require setting the required class names as HTML in the text.
 It's barely more cumbersome this way, and less code.
 I'm already using HTML in the info anyway... might as well remove all this parsing crap.
 
-* ✅ Ended up having to do this in order to get nicer key info like links and stuff --
+- ✅ Ended up having to do this in order to get nicer key info like links and stuff --
   I actually had to just move to writing all the key info prose in JSX.
 
 ### Fix messy state crap
@@ -1136,22 +1136,22 @@ Clean this up.
 
 Josh has mentioned `unstated-next` to me more than once, can that help me?
 
-* ✅ I actually _mostly_ did this with `useKeymapUiState`, although I'd still like to go in and audit where I'm prop drilling vs where I'm using state
+- ✅ I actually _mostly_ did this with `useKeymapUiState`, although I'd still like to go in and audit where I'm prop drilling vs where I'm using state
 
 ### Add a guide for the main layout
 
-* ✅ Fill out all the info content.
-* ✅ Edit all the content -- first pass complete solo, will solicit editing from others
+- ✅ Fill out all the info content.
+- ✅ Edit all the content -- first pass complete solo, will solicit editing from others
 
 ### Add content for all the keys I want
 
-* ✅ Fill out key info content with references.
-* ✅ Edit all the content -- first pass complete solo, will solicit editing from others
+- ✅ Fill out key info content with references.
+- ✅ Edit all the content -- first pass complete solo, will solicit editing from others
 
 ### Add prose content
 
-* ✅ Write about what this is, who am I, how this works, what an ErgoDox is, RSI stuff, etc etc.
-* ✅ Edit all of this. -- first pass complete solo, will solicit editing from others
+- ✅ Write about what this is, who am I, how this works, what an ErgoDox is, RSI stuff, etc etc.
+- ✅ Edit all of this. -- first pass complete solo, will solicit editing from others
 
 ### Can I remove the menu?
 
@@ -1163,13 +1163,13 @@ Should I instead integrate the help in the menu?
 Seems like I shouldn't need both.
 Feels cluttered.
 
-* Make debugging controls invisible.
+- Make debugging controls invisible.
   Only accessible via the query string?
   Hidden page that sets a value to localSettings?
-* Remove keyLegends and keyMaps dropdowns from the settings.
+- Remove keyLegends and keyMaps dropdowns from the settings.
   Later, incorporate them into the keyInfo panel,
   maybe via a settings button of some kind.
-* Move site navigation inline on each page,
+- Move site navigation inline on each page,
   and on the main page use the key info panel.
   Maybe use a float on the upper right of the content area.
 
@@ -1184,23 +1184,23 @@ which you can set from the control panel.
 
 Add `/controls` for features flags etc.
 
-* ✅ Done! Currently has the following features:
+- ✅ Done! Currently has the following features:
 
-* Debug dropdown moved here
-* Added Advanced Mode checkbox, which enables showing keymap/legendmap controls
+- Debug dropdown moved here
+- Added Advanced Mode checkbox, which enables showing keymap/legendmap controls
   on the hamburger menu for keymapUi.
-* Enabling colors for experimentation
+- Enabling colors for experimentation
 
 Users aren't expected to touch this, just for feature flags and other dev stuff.
 
 ### Release a version 1.0
 
-* ✅ Add a guide
-* ✅ Add / edit content for all the keys I want
-* ✅ Add place for more general info / prose
-* ✅ Add / edit prose content
-* ✅ Draw orange line to selected key
-* ✅ Solicit feedback from others
+- ✅ Add a guide
+- ✅ Add / edit content for all the keys I want
+- ✅ Add place for more general info / prose
+- ✅ Add / edit prose content
+- ✅ Draw orange line to selected key
+- ✅ Solicit feedback from others
 
 All of this is... done, holy shit.
 I need to write a blog post and link it around on the web.
@@ -1211,8 +1211,8 @@ Holy shit holy shit holy shit.
 
 I need outside eyes on this.
 
-* Editing
-* Bug hunting
-* Does this even make sense for someone who hasn't stared at it for 100 hours?
+- Editing
+- Bug hunting
+- Does this even make sense for someone who hasn't stared at it for 100 hours?
 
 ✅ My editorial team liked it!

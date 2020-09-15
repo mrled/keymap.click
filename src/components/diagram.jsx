@@ -1,38 +1,30 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-} from "react";
+import React, { useCallback, useContext, useEffect, useRef } from "react";
 
 import log from "loglevel";
 
-import {
-  DocumentDimensionsContext,
-} from "~/components/appContext";
+import { DocumentDimensionsContext } from "~/components/appContext";
 import { useAppSettings } from "~/hooks/useAppSettings";
 import { useWindowSize } from "~/hooks/useWindowSize";
-import {
-  smallerRect,
-  traceRect,
-} from "~/lib/geometry";
-import {
-  keyInfoConnectType,
-} from "~/lib/keyConnections";
-
+import { smallerRect, traceRect } from "~/lib/geometry";
+import { keyInfoConnectType } from "~/lib/keyConnections";
 
 /* Colors when drawing diagram lines
  */
 const diagramLineColors = {
-  [keyInfoConnectType.textref]: "#68d391ff",  // Opaque, because this green is pretty light
+  [keyInfoConnectType.textref]: "#68d391ff", // Opaque, because this green is pretty light
   [keyInfoConnectType.selected]: "#fbd38d99", // Slightly transparent, because this orange is pretty dark
   debug: "purple",
-}
-
+};
 
 /* Draw debugging lines for visual debugging mode
  */
-const drawVisualDebugInfo = (context, keyboardCenter, keyboardAndPanelRect, diamargLeftRect, diamargRightRect) => {
+const drawVisualDebugInfo = (
+  context,
+  keyboardCenter,
+  keyboardAndPanelRect,
+  diamargLeftRect,
+  diamargRightRect
+) => {
   log.debug(`diagram: visual debugging enabled`);
   context.lineWidth = 2;
 
@@ -41,7 +33,7 @@ const drawVisualDebugInfo = (context, keyboardCenter, keyboardAndPanelRect, diam
   // Also draw a line down the center of the keyboard.
 
   if (keyboardAndPanelRect) {
-    log.debug(`Drawing into the keyboard/panel rectangle...`)
+    log.debug(`Drawing into the keyboard/panel rectangle...`);
     context.beginPath();
     context.strokeStyle = diagramLineColors.debug;
     context.moveTo(keyboardCenter, 0);
@@ -57,9 +49,11 @@ const drawVisualDebugInfo = (context, keyboardCenter, keyboardAndPanelRect, diam
     context.strokeStyle = diagramLineColors.debug;
     context.beginPath();
     traceRect(smallerRect(keyboardAndPanelRect), context);
-    context.stroke()
+    context.stroke();
   } else {
-    log.debug(`diagram: could not draw center line because there was no keyboardAndPanelRect`);
+    log.debug(
+      `diagram: could not draw center line because there was no keyboardAndPanelRect`
+    );
   }
 
   if (diamargLeftRect) {
@@ -67,7 +61,7 @@ const drawVisualDebugInfo = (context, keyboardCenter, keyboardAndPanelRect, diam
     context.strokeStyle = diagramLineColors.debug;
     context.beginPath();
     traceRect(diamargLeftRectInner, context);
-    context.stroke()
+    context.stroke();
   } else {
     log.debug(`diagram: there is no diamargLeftRect`);
   }
@@ -76,12 +70,11 @@ const drawVisualDebugInfo = (context, keyboardCenter, keyboardAndPanelRect, diam
     context.strokeStyle = diagramLineColors.debug;
     context.beginPath();
     traceRect(diamargRightRectInner, context);
-    context.stroke()
+    context.stroke();
   } else {
     log.debug(`diagram: there is no diamargRightRect`);
   }
-}
-
+};
 
 /* Draw all 'textref' lines --
  * lines from key indicators in the key info panel to keys on the board.
@@ -95,9 +88,8 @@ const drawDiagramLineTextref = (
   diamargRightRect,
   diamargLeftRect,
   leftRightIdx,
-  marginInsetTickSize,
+  marginInsetTickSize
 ) => {
-
   const source = connection.sourceCoords;
   const target = connection.targetCoords;
   const lineType = keyInfoConnectType[connection.connectionType];
@@ -108,22 +100,32 @@ const drawDiagramLineTextref = (
 
   const rightMargin = keyboardCenter < target.x;
 
-  const calculateSourceYCoord = (initialSourceYCoord, alreadySeenCoords, tickSize) => {
+  const calculateSourceYCoord = (
+    initialSourceYCoord,
+    alreadySeenCoords,
+    tickSize
+  ) => {
     let result = initialSourceYCoord;
     let idx = 0;
     while (alreadySeenCoords.indexOf(result) > -1) {
       if (idx > 100) {
-        throw new Error(`This is probably an infinite loop`)
+        throw new Error(`This is probably an infinite loop`);
       }
       result += tickSize;
       idx += 1;
     }
-    log.debug(`Selected source Y coordinate of ${result} from initial value of ${initialSourceYCoord}`);
+    log.debug(
+      `Selected source Y coordinate of ${result} from initial value of ${initialSourceYCoord}`
+    );
     alreadySeenCoords.push(result);
     return [result, alreadySeenCoords];
-  }
+  };
 
-  const [sourceInsetY, newCoordList] = calculateSourceYCoord(source.y, leftRightSourceYCoordStartList[rightMargin], sourceYInsetTickSize)
+  const [sourceInsetY, newCoordList] = calculateSourceYCoord(
+    source.y,
+    leftRightSourceYCoordStartList[rightMargin],
+    sourceYInsetTickSize
+  );
   leftRightSourceYCoordStartList[rightMargin] = newCoordList;
 
   /* Return the X coordinate for the vertical line
@@ -134,10 +136,15 @@ const drawDiagramLineTextref = (
     const offset = inset * offsetMultiplier;
     const offsetFrom = rightMargin ? marginRect.right : marginRect.left;
     return offsetFrom + offset;
-  }
+  };
 
   const diamargRect = rightMargin ? diamargRightRect : diamargLeftRect;
-  const marginX = calculateMarginXCoord(diamargRect, rightMargin, leftRightIdx[rightMargin], marginInsetTickSize)
+  const marginX = calculateMarginXCoord(
+    diamargRect,
+    rightMargin,
+    leftRightIdx[rightMargin],
+    marginInsetTickSize
+  );
 
   context.moveTo(source.x, source.y);
   context.lineTo(source.x, sourceInsetY);
@@ -148,15 +155,14 @@ const drawDiagramLineTextref = (
   context.stroke();
 
   leftRightIdx[rightMargin] += 1;
-}
-
+};
 
 /* Draw the 'selected' diagram lines --
  * lines from the title bar key in the key info panel to the key on the board.
  */
 const drawDiagramLineSelected = (
   context,
-  connection,
+  connection
   // keyInfoTop,
 ) => {
   const source = connection.sourceCoords;
@@ -182,8 +188,7 @@ const drawDiagramLineSelected = (
   context.lineTo(target.x, target.y);
 
   context.stroke();
-}
-
+};
 
 /* A diagram, where we draw lines from the key info panel to the board.
  * This component contains a <canvas> element and is overlaid on top of the entire document.
@@ -197,7 +202,9 @@ export const Diagram = ({
 }) => {
   const canvas = useRef();
   const container = useRef();
-  const [documentDimensions, /*updateDocumentDimensions*/] = useContext(DocumentDimensionsContext)
+  const [documentDimensions /*updateDocumentDimensions*/] = useContext(
+    DocumentDimensionsContext
+  );
   const windowSize = useWindowSize();
   const { debugLevel } = useAppSettings();
 
@@ -206,19 +213,21 @@ export const Diagram = ({
     if (!canvas.current) return;
 
     /* Without setting the h/w here, canvas will be some arbitrary small size
-   * canvas.style.{w/h} is the CSS 'style' property of the element in the DOM,
-   * while canvas.{w/h} is the _internal_ dimensions for drawing on.
-   * We want our canvas to cover the entire screen,
-   * so this relies on the container being position: absolute in the top left
-   * and width/height at 100%,
-   * while the canvas should also be position: absolute and overflow: visible.
-   */
+     * canvas.style.{w/h} is the CSS 'style' property of the element in the DOM,
+     * while canvas.{w/h} is the _internal_ dimensions for drawing on.
+     * We want our canvas to cover the entire screen,
+     * so this relies on the container being position: absolute in the top left
+     * and width/height at 100%,
+     * while the canvas should also be position: absolute and overflow: visible.
+     */
     canvas.current.style.width = `${documentDimensions.width}px`;
     canvas.current.style.height = `${documentDimensions.height}px`;
     canvas.current.width = documentDimensions.width;
     canvas.current.height = documentDimensions.height;
 
-    log.debug(`New canvas sizes:\n${canvas.current.style.width} * ${canvas.current.style.height}\n${canvas.current.width} * ${canvas.current.height}`);
+    log.debug(
+      `New canvas sizes:\n${canvas.current.style.width} * ${canvas.current.style.height}\n${canvas.current.width} * ${canvas.current.height}`
+    );
   }, [documentDimensions]);
 
   useEffect(() => {
@@ -248,10 +257,18 @@ export const Diagram = ({
       return;
     }
 
-    const keyboardCenter = keyboardAndPanelRect.x + (keyboardAndPanelRect.right - keyboardAndPanelRect.x) / 2;
+    const keyboardCenter =
+      keyboardAndPanelRect.x +
+      (keyboardAndPanelRect.right - keyboardAndPanelRect.x) / 2;
 
     if (debugLevel > 1) {
-      drawVisualDebugInfo(context, keyboardCenter, keyboardAndPanelRect, diamargLeftRect, diamargRightRect);
+      drawVisualDebugInfo(
+        context,
+        keyboardCenter,
+        keyboardAndPanelRect,
+        diamargLeftRect,
+        diamargRightRect
+      );
     }
 
     /* marginInsetTickSize: the distance between vertical lines in the margin
@@ -275,10 +292,10 @@ export const Diagram = ({
      * leftRightSourceYCoordStartList[rightMargin] will return the Y coordinates that have been found in the correct diamarg
      * in the body of the forEach function below.
      */
-    let leftRightSourceYCoordStartList = { true: [], false: [], };
+    let leftRightSourceYCoordStartList = { true: [], false: [] };
 
     connections.forEach((connection) => {
-      log.debug(`Drawing connection ${connection.stringify()}`)
+      log.debug(`Drawing connection ${connection.stringify()}`);
 
       if (connection.connectionType == keyInfoConnectType.textref) {
         drawDiagramLineTextref(
@@ -290,14 +307,10 @@ export const Diagram = ({
           diamargRightRect,
           diamargLeftRect,
           leftRightIdx,
-          marginInsetTickSize,
+          marginInsetTickSize
         );
       } else if (connection.connectionType == keyInfoConnectType.selected) {
-        drawDiagramLineSelected(
-          context,
-          connection,
-          keyInfoContainerRect.top,
-        );
+        drawDiagramLineSelected(context, connection, keyInfoContainerRect.top);
       }
     });
   }, [
@@ -311,7 +324,16 @@ export const Diagram = ({
 
   useEffect(() => {
     updateCanvas();
-  }, [debugLevel, connections, diamargLeftRect, diamargRightRect, documentDimensions, keyboardAndPanelRect, updateCanvas, windowSize]);
+  }, [
+    debugLevel,
+    connections,
+    diamargLeftRect,
+    diamargRightRect,
+    documentDimensions,
+    keyboardAndPanelRect,
+    updateCanvas,
+    windowSize,
+  ]);
 
   return (
     <div

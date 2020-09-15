@@ -1,6 +1,4 @@
-import React, {
-  useContext,
-} from "react";
+import React, { useContext } from "react";
 
 import { KeyGrid } from "~/components/key";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
@@ -68,5 +66,5 @@ export const Keyboard = ({ targetKeyIds }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

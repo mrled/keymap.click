@@ -3,10 +3,7 @@ import { useState, useEffect } from "react";
 import log from "loglevel";
 
 import { useWindowSize } from "~/hooks/useWindowSize";
-import {
-  Point,
-  absolutifyRect,
-} from "~/lib/geometry"
+import { Point, absolutifyRect } from "~/lib/geometry";
 import {
   Connection,
   defaultKeyInfoConnectType,
@@ -15,7 +12,6 @@ import {
   keyInfoConnectFromClassPrefix,
   keyInfoConnectTypeClassPrefix,
 } from "~/lib/keyConnections";
-
 
 /* Return a new Point, representing a location for the diagram lines to connect on a source element
  *
@@ -32,7 +28,7 @@ const connectionPointFrom = (element) => {
    * We multiply by Math.sign() of the width to ensure correct behavior is width is negative.
    */
   const topLineRect = absolutifyRect(element.getClientRects()[0]);
-  return new Point(topLineRect.x, topLineRect.bottom)
+  return new Point(topLineRect.x, topLineRect.bottom);
 };
 
 /* Return a new Point, representing a location for the diagram lines to connect on a target element
@@ -71,7 +67,9 @@ const getKeyConnections = () => {
       .map((cls) => cls.slice(keyInfoConnectFromClassPrefix.length));
 
     if (targetKeyIds.indexOf("undefined") > -1) {
-      throw new Error(`The indicator '${indicator}' with classes '${indicator.className}' and of id ${indicator.id} has a 'key-info-connect-from-undefined' class, which is the result of a bug elsewhere in the program.`)
+      throw new Error(
+        `The indicator '${indicator}' with classes '${indicator.className}' and of id ${indicator.id} has a 'key-info-connect-from-undefined' class, which is the result of a bug elsewhere in the program.`
+      );
     }
 
     // Convert the indicator class types to a list of bare type strings,
@@ -80,12 +78,17 @@ const getKeyConnections = () => {
       .split(" ")
       .filter((cls) => cls.startsWith(keyInfoConnectTypeClassPrefix))
       .map((cls) => cls.slice(keyInfoConnectTypeClassPrefix.length));
-    const keyConnType = discoveredKeyConnType != "" ? discoveredKeyConnType : defaultKeyInfoConnectType;
+    const keyConnType =
+      discoveredKeyConnType != ""
+        ? discoveredKeyConnType
+        : defaultKeyInfoConnectType;
 
     targetKeyIds.forEach((targetKeyId) => {
       targetKeys.push(targetKeyId);
 
-      const targetKeyHandle = document.getElementById(keyHandleDomIdFromKeyId(targetKeyId));
+      const targetKeyHandle = document.getElementById(
+        keyHandleDomIdFromKeyId(targetKeyId)
+      );
       const targetCoords = connectionPointTo(targetKeyHandle);
 
       log.debug(
@@ -95,7 +98,11 @@ const getKeyConnections = () => {
       );
 
       const connection = new Connection(
-        sourceCoords, targetCoords, targetKeyId, targetKeyHandle, keyConnType
+        sourceCoords,
+        targetCoords,
+        targetKeyId,
+        targetKeyHandle,
+        keyConnType
       );
 
       connections.push(connection);

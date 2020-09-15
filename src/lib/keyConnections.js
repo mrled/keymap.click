@@ -12,7 +12,7 @@ export class Connection {
     targetCoords,
     targetKeyId,
     targetHandle,
-    connectionType = defaultKeyInfoConnectType,
+    connectionType = defaultKeyInfoConnectType
   ) {
     this.sourceCoords = sourceCoords;
     this.targetCoords = targetCoords;
@@ -24,7 +24,7 @@ export class Connection {
   stringify() {
     const srcCoords = JSON.stringify(this.sourceCoords);
     const tgtCoords = JSON.stringify(this.targetCoords);
-    return `Connection: ${srcCoords} => ${tgtCoords} (${this.connectionType})`
+    return `Connection: ${srcCoords} => ${tgtCoords} (${this.connectionType})`;
   }
 }
 
@@ -52,7 +52,7 @@ export const keyInfoConnectTypeClassPrefix = "key-info-connect-type-";
  */
 export const keyHandleDomIdFromKeyId = (keyId) => {
   return `${keyId}-handle`;
-}
+};
 
 /* Types of key info connections.
  * selected: The user- or guide- selected key. Always a single value.

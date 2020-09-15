@@ -14,7 +14,7 @@ export class QueryState {
    * New code should call the exported setQueryState() function
    */
   setQuery(router, newValue) {
-    setQueryState(router, [this, newValue])
+    setQueryState(router, [this, newValue]);
   }
 
   getValue(router) {
@@ -39,9 +39,9 @@ export const setQueryState = (router, ...settingValuePairList) => {
       delete newQuery[setting.key];
     }
   });
-  log.debug(`newQuery: ${JSON.stringify(newQuery)}`)
+  log.debug(`newQuery: ${JSON.stringify(newQuery)}`);
   router.push({
     pathname: router.pathname,
     query: newQuery,
   });
-}
+};

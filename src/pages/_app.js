@@ -1,10 +1,7 @@
-import { useRouter } from 'next/router'
-import React, {
-  useEffect,
-  useState,
-} from 'react'
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 
-import * as Fathom from 'fathom-client'
+import * as Fathom from "fathom-client";
 import log from "loglevel";
 
 import "~/styles/index.css";
@@ -18,12 +15,9 @@ import {
 } from "~/components/appContext";
 import { AppHead } from "~/components/appHead";
 
-
 function App({ Component, pageProps }) {
-
   const [visibleMenu, setVisibleMenu] = useState(visibleMenuDefault);
   const router = useRouter();
-
 
   /* Manage document size context
    * It would be really nice if the document object fired an event when it changed size that we could listen to,
@@ -42,40 +36,49 @@ function App({ Component, pageProps }) {
     };
   };
 
-  const [documentDimensions, setDocumentDimensions] = useState(getCurrentDocumentSize());
+  const [documentDimensions, setDocumentDimensions] = useState(
+    getCurrentDocumentSize()
+  );
 
   const updateDocumentDimensions = () => {
     const newDocumentDimensions = getCurrentDocumentSize();
-    log.debug(`Updating document dimensions\nOld: ${JSON.stringify(documentDimensions)}\nNew: ${JSON.stringify(newDocumentDimensions)}`);
+    log.debug(
+      `Updating document dimensions\nOld: ${JSON.stringify(
+        documentDimensions
+      )}\nNew: ${JSON.stringify(newDocumentDimensions)}`
+    );
     setDocumentDimensions(getCurrentDocumentSize());
-  }
-
+  };
 
   useEffect(() => {
-    Fathom.load('HDMUSVII', {
+    Fathom.load("HDMUSVII", {
       includedDomains: [
-        'keyblay.now.sh',
-        'keymap.click',
-        'keymap-dot-click.vercel.app',
-      ]
+        "keyblay.now.sh",
+        "keymap.click",
+        "keymap-dot-click.vercel.app",
+      ],
     });
     function onRouteChangeComplete() {
       Fathom.trackPageview();
     }
-    router.events.on('routeChangeComplete', onRouteChangeComplete);
+    router.events.on("routeChangeComplete", onRouteChangeComplete);
     return () => {
-      router.events.off('routeChangeComplete', onRouteChangeComplete);
-    }
+      router.events.off("routeChangeComplete", onRouteChangeComplete);
+    };
   }, [router.events]);
 
-  return <>
-    <DocumentDimensionsContext.Provider value={[documentDimensions, updateDocumentDimensions]}>
-      <VisibleMenuContext.Provider value={[visibleMenu, setVisibleMenu]}>
-        <AppHead />
-        <Component {...pageProps} />
-      </VisibleMenuContext.Provider>
-    </DocumentDimensionsContext.Provider>
-  </>
+  return (
+    <>
+      <DocumentDimensionsContext.Provider
+        value={[documentDimensions, updateDocumentDimensions]}
+      >
+        <VisibleMenuContext.Provider value={[visibleMenu, setVisibleMenu]}>
+          <AppHead />
+          <Component {...pageProps} />
+        </VisibleMenuContext.Provider>
+      </DocumentDimensionsContext.Provider>
+    </>
+  );
 }
 
 export default App;

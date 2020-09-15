@@ -1,19 +1,10 @@
 import { useRouter } from "next/router";
-import {
-  createContext,
-  useState,
-} from "react";
+import { createContext, useState } from "react";
 
 import log from "loglevel";
 
-import {
-  QueryState,
-  setQueryState,
-} from "~/lib/appQueryState";
-import {
-  keyMaps,
-  legendMaps,
-} from "~/lib/keys";
+import { QueryState, setQueryState } from "~/lib/appQueryState";
+import { keyMaps, legendMaps } from "~/lib/keys";
 
 const GuideState = new QueryState("guide", "none");
 const GuideStepState = new QueryState("guideStep", 0);
@@ -38,13 +29,15 @@ const KeymapUiStateDefault = {
   keyId: null,
   keyMap: null,
   legendMap: null,
-}
+};
 
 /* Compare two keymapUiState objects
  */
 const keymapUiStateEq = (state1, state2) => {
-  return Object.keys(KeymapUiStateDefault).every(key => state1[key] === state2[key])
-}
+  return Object.keys(KeymapUiStateDefault).every(
+    (key) => state1[key] === state2[key]
+  );
+};
 
 /* Convert a keymapUiState object of name=value to an array of [QueryState, value] pairs
  *
@@ -64,8 +57,11 @@ const keymapUiStateEq = (state1, state2) => {
  * ]
  */
 const stateObjToQueryStringPair = (stateObj) => {
-  return Object.entries(stateObj).map(([key, value]) => [stateByKey[key], value]);
-}
+  return Object.entries(stateObj).map(([key, value]) => [
+    stateByKey[key],
+    value,
+  ]);
+};
 
 /* Given a dict with only scalar values, return the objects we care about
  *
@@ -83,11 +79,13 @@ const hydrateState = (state) => {
 
   const guidesAvailable = Object.entries(keyMap.guides).length > 1; // NOTE: in keys.js, we define a "none" guide for every keyMap.
   const guideStepIdx = Number(state.guideStep || GuideStepState.defaultValue);
-  const inGuide = guide.name !== GuideState.defaultValue
+  const inGuide = guide.name !== GuideState.defaultValue;
   const guideStep = inGuide ? guide.steps[guideStepIdx] : {};
 
   const nextGuideStepIdx = guideStepIdx + 1;
-  const canIncrementGuideStep = inGuide ? nextGuideStepIdx < guide.steps.length : false;
+  const canIncrementGuideStep = inGuide
+    ? nextGuideStepIdx < guide.steps.length
+    : false;
   const prevGuideStepIdx = guideStepIdx - 1;
   const canDecrementGuideStep = inGuide ? prevGuideStepIdx >= 0 : false;
   const guideLength = inGuide ? guide.steps.length : 0;
@@ -115,8 +113,8 @@ const hydrateState = (state) => {
     onFinalGuideStep,
 
     keySelection,
-  }
-}
+  };
+};
 
 export const KeymapUiStateContext = createContext(KeymapUiStateDefault);
 
@@ -132,36 +130,43 @@ export const useKeymapUiState = () => {
       `setStateAndQuery():\n`,
       `Old state: ${JSON.stringify(keymapUiState)}\n`,
       `Old query: ${JSON.stringify(router.query)}\n`,
-      `New data:  ${JSON.stringify(newData)}`,
+      `New data:  ${JSON.stringify(newData)}`
     );
     setKeymapUiState({
       ...keymapUiState,
       ...newData,
     });
-    setQueryState(
-      router,
-      ...stateObjToQueryStringPair(newData),
-    );
+    setQueryState(router, ...stateObjToQueryStringPair(newData));
   };
 
   /* Set the React state from the query string values
    */
   const setStateFromQuery = () => {
     if (!keymapUiStateEq(keymapUiState, router.query)) {
-      log.debug(`Setting state from query\nold state: ${JSON.stringify(keymapUiState)}\nnew state: ${JSON.stringify(router.query)}`)
+      log.debug(
+        `Setting state from query\nold state: ${JSON.stringify(
+          keymapUiState
+        )}\nnew state: ${JSON.stringify(router.query)}`
+      );
       setKeymapUiState({
         ...router.query,
       });
     } else {
-      log.debug(`Not necessary to set state from query; internal state already reflects query string of\n${JSON.stringify(router.query)}`)
+      log.debug(
+        `Not necessary to set state from query; internal state already reflects query string of\n${JSON.stringify(
+          router.query
+        )}`
+      );
     }
-  }
+  };
 
   const setGuide = (guideName) => {
     setStateAndQuery({
       guide: guideName ? guideName : GuideState.defaultValue,
       guideStep: GuideStepState.defaultValue,
-      keyId: guideName ? hydratedState.keyMap.guides[guideName].steps[0].key : SelectedKeyState.defaultValue,
+      keyId: guideName
+        ? hydratedState.keyMap.guides[guideName].steps[0].key
+        : SelectedKeyState.defaultValue,
     });
     return hydratedState.guide;
   };
@@ -215,4 +220,4 @@ export const useKeymapUiState = () => {
     incrementGuideStep,
     decrementGuideStep,
   };
-}
+};
