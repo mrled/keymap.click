@@ -8,6 +8,20 @@ import { useWindowSize } from "~/hooks/useWindowSize";
 import { smallerRect, traceRect } from "~/lib/geometry";
 import { keyInfoConnectType } from "~/lib/keyConnections";
 
+/* Return a new leftRightObject
+ *
+ * A leftRightObject is a JavaScript object with a 'true' key and a 'false' key.
+ * 'true' represents an object on the right; 'false' represents an object on the left.
+ * e.g.:
+ *
+ *    const lrObj = newLeftRightObject(0, 0);
+ *    const leftOrRight = calculateLeftOrRight();
+ *    lrObj[leftOrRight] = 'something';
+ */
+const newLeftRightObject = (initialLeft = 0, initialRight = 0) => {
+  return { true: initialRight, false: initialLeft };
+};
+
 /* Colors when drawing diagram lines
  */
 const diagramLineColors = {
@@ -76,8 +90,25 @@ const drawVisualDebugInfo = (
   }
 };
 
-/* Draw all 'textref' lines --
- * lines from key indicators in the key info panel to keys on the board.
+/* Draw a 'textref' line --
+ * that is, a line from key an indicator in the key info panel to a key on the board.
+ *
+ * context:                           The canvas context
+ * connection:                        A Connection object to draw
+ * keyboardCenter:                    The X coordinate for the center of the keyboard
+ *                                    (not the center of the screen).
+ * leftRightSourceYCoordStartList:    A leftRightObj that tracks Y coordinates that already-drawn
+ *                                    source diagram lines have started from.
+ *                                    Lets us offset horizontal line between source text and
+ *                                    diamarg by sourceYInsetTickSize so that lines are not drawn
+ *                                    on top of each other.
+ *                                    (This function mutates this value.)
+ * sourceYInsetTickSize:              The distance between horizontal lines under the text
+ * diamargRightRect:                  The right diamarg DOMRect
+ * diamargLeftRect:                   The left diamarg DOMRect
+ * leftRightIdx:                      A leftRightObj that tracks the number of vertical lines.
+ *                                    (This function mutates this value.)
+ * marginInsetTickSize:               The distance between vertical lines in the margin
  */
 const drawDiagramLineTextref = (
   context,
@@ -269,28 +300,17 @@ export const Diagram = ({
       );
     }
 
-    /* marginInsetTickSize: the distance between vertical lines in the margin
-     */
+    // the distance between vertical lines in the margin
     const marginInsetTickSize = 5;
 
-    /* sourceYInsetTickSize: the distance between horizontal lines from the source text to the margin
-     */
+    // the distance between horizontal lines from the source text to the margin
     const sourceYInsetTickSize = 3;
 
-    /* leftRightIdx: keep track of number of vertical lines in each diamarg.
-     * right = true and left = false.
-     * leftRightIdx[rightMargin] will return the number of vertical lines in the current diamarg
-     * in the body of the forEach function below.
-     */
-    const leftRightIdx = { true: 0, false: 0 };
+    // keep track of number of vertical lines in each diamarg.
+    let leftRightIdx = newLeftRightObject(0, 0);
 
-    /* leftRightSourceYCoordStartList: keep track of Y coordinates that source diagram lines have started from.
-     * With this info, we can offset the horizontal line between the source text and the diamarg
-     * by some small amount so that two horizontal lines are not drawn on top of each other.
-     * leftRightSourceYCoordStartList[rightMargin] will return the Y coordinates that have been found in the correct diamarg
-     * in the body of the forEach function below.
-     */
-    let leftRightSourceYCoordStartList = { true: [], false: [] };
+    // keep track of Y coordinates that source diagram lines have started from.
+    let leftRightSourceYCoordStartList = newLeftRightObject([], []);
 
     connections.forEach((connection) => {
       log.debug(`Drawing connection ${connection.stringify()}`);
