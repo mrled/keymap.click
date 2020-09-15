@@ -1,8 +1,7 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 
 import classnames from "classnames";
 
-import { VisibleMenuContext } from "~/components/appContext";
 import { KeymapUiSettings } from "~/components/keymapUiSettings";
 import { IntraAppLink } from "~/components/prose";
 import { useAppSettings } from "~/hooks/useAppSettings";
@@ -59,7 +58,7 @@ const MenuBarSpacer = () => {
 };
 
 const MenuBar = () => {
-  const [visibleMenu, setVisibleMenu] = useContext(VisibleMenuContext);
+  const [visibleMenu, setVisibleMenu] = useState(false);
   const { dazzlingColor } = useAppSettings();
 
   const colors = dazzlingColor

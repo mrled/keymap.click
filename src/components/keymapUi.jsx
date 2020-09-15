@@ -5,10 +5,7 @@ import log from "loglevel";
 import { Diagram } from "~/components/diagram";
 import { InfoPanel } from "~/components/keyInfo";
 
-import {
-  DocumentDimensionsContext,
-  VisibleMenuContext,
-} from "~/components/appContext";
+import { DocumentDimensionsContext } from "~/components/appContext";
 import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
 import { FakeDOMRect } from "~/lib/geometry";
@@ -19,7 +16,6 @@ import { useWindowSize } from "~/hooks/useWindowSize";
 
 export const KeymapUI = () => {
   const { debugLevel } = useAppSettings();
-  const [visibleMenu /*setVisibleMenu*/] = useContext(VisibleMenuContext);
   const [, /*documentDimensions*/ updateDocumentDimensions] = useContext(
     DocumentDimensionsContext
   );
@@ -44,7 +40,6 @@ export const KeymapUI = () => {
     }, // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       state.keyId, // If this changes, the size of the keyInfo panel may change
-      visibleMenu, // If this change, the location of the keyboard is shifted down
       windowSize, // If this changes, windows change size horizontally and we may encounter size breakpoints
     ]
   );
@@ -76,7 +71,7 @@ export const KeymapUI = () => {
     (node) => {
       if (node != null) setKeyInfoContainerRect(node.getBoundingClientRect());
     }, // eslint-disable-next-line react-hooks/exhaustive-deps
-    [windowSize, visibleMenu]
+    [windowSize]
   );
 
   useEffect(() => {
@@ -86,7 +81,7 @@ export const KeymapUI = () => {
     updateDocumentDimensions();
     // We must NOT pass updateDocumentDimensions as a dependency for this effect, or it will cause an infinite loop!
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyboardAndPanelRect, state.keyId, visibleMenu]);
+  }, [keyboardAndPanelRect, state.keyId]);
 
   useEffect(() => {
     log.debug(

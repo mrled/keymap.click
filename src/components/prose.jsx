@@ -1,7 +1,6 @@
 import Link from "next/link";
-import React, { useContext } from "react";
+import React from "react";
 
-import { VisibleMenuContext } from "~/components/appContext";
 import {
   keyInfoConnectFromClass,
   keyInfoConnectFromClassPrefix,
@@ -12,12 +11,9 @@ import {
  * Close the menu, if visible, when linking between pages.
  */
 export const IntraAppLink = ({ href, children }) => {
-  const [, /*visibleMenu*/ setVisibleMenu] = useContext(VisibleMenuContext);
   return (
     <Link href={href}>
-      <a className="text-blue-600" onClick={() => setVisibleMenu(false)}>
-        {children}
-      </a>
+      <a className="text-blue-600">{children}</a>
     </Link>
   );
 };

@@ -8,15 +8,10 @@ import "~/styles/index.css";
 import "~/styles/keygrid.css";
 import "~/styles/fonts.css";
 
-import {
-  DocumentDimensionsContext,
-  VisibleMenuContext,
-  visibleMenuDefault,
-} from "~/components/appContext";
+import { DocumentDimensionsContext } from "~/components/appContext";
 import { AppHead } from "~/components/appHead";
 
 function App({ Component, pageProps }) {
-  const [visibleMenu, setVisibleMenu] = useState(visibleMenuDefault);
   const router = useRouter();
 
   /* Manage document size context
@@ -72,10 +67,8 @@ function App({ Component, pageProps }) {
       <DocumentDimensionsContext.Provider
         value={[documentDimensions, updateDocumentDimensions]}
       >
-        <VisibleMenuContext.Provider value={[visibleMenu, setVisibleMenu]}>
-          <AppHead />
-          <Component {...pageProps} />
-        </VisibleMenuContext.Provider>
+        <AppHead />
+        <Component {...pageProps} />
       </DocumentDimensionsContext.Provider>
     </>
   );
