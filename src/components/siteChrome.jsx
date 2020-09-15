@@ -44,7 +44,7 @@ const HamburgerButton = ({ visibleMenu, setVisibleMenu }) => {
 const HomeLink = () => {
   return (
     <>
-      <h1 className="text-xl flex-col p-2 font-roboto-mono" g>
+      <h1 className="text-xl flex-col p-2 font-roboto-mono">
         <IntraAppLink href="/">keymap.click</IntraAppLink>
       </h1>
     </>
