@@ -88,7 +88,7 @@ const volumeControlInfo = (
 const ctrlKeyInfo = (
   <>
     <Para>
-      Keeping this key out from under my pinky is vital &mdash;
+      Keeping this key out from under my pinky is vital &mdash;{" "}
       <em>especially</em> since I can&apos;t seem to break two decades of Emacs
       habits.
     </Para>
