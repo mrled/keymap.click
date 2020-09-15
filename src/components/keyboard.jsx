@@ -8,9 +8,6 @@ import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 export const Keyboard = ({ targetKeyIds }) => {
   const { state, hydratedState, setKeyId } = useContext(KeymapUiStateContext);
 
-  // If the help panel is open, don't highlight keys - that could confuse users
-  const helpIsOpen = state.help;
-
   return (
     <div className="flex items-center justify-center flex-col md:flex-row mt-0">
       <div className="flex flex-col">
@@ -22,8 +19,8 @@ export const Keyboard = ({ targetKeyIds }) => {
             rows="10"
             keys={hydratedState.keyMap.leftHandKeys}
             legends={hydratedState.legendMap}
-            pressedKey={helpIsOpen ? {} : hydratedState.keyData}
-            targetKeyIds={helpIsOpen ? [] : targetKeyIds}
+            pressedKey={hydratedState.keyData}
+            targetKeyIds={targetKeyIds}
             onClickEach={setKeyId}
             keySelection={hydratedState.keySelection}
           />
@@ -33,8 +30,8 @@ export const Keyboard = ({ targetKeyIds }) => {
             rows="6"
             keys={hydratedState.keyMap.leftThumbKeys}
             legends={hydratedState.legendMap}
-            pressedKey={helpIsOpen ? {} : hydratedState.keyData}
-            targetKeyIds={helpIsOpen ? [] : targetKeyIds}
+            pressedKey={hydratedState.keyData}
+            targetKeyIds={targetKeyIds}
             onClickEach={setKeyId}
             gridAppendClasses="keyboard-left-thumb-cluster"
             keySelection={hydratedState.keySelection}
@@ -51,8 +48,8 @@ export const Keyboard = ({ targetKeyIds }) => {
             rows="10"
             keys={hydratedState.keyMap.rightHandKeys}
             legends={hydratedState.legendMap}
-            pressedKey={helpIsOpen ? {} : hydratedState.keyData}
-            targetKeyIds={helpIsOpen ? [] : targetKeyIds}
+            pressedKey={hydratedState.keyData}
+            targetKeyIds={targetKeyIds}
             onClickEach={setKeyId}
             keySelection={hydratedState.keySelection}
           />
@@ -62,8 +59,8 @@ export const Keyboard = ({ targetKeyIds }) => {
             rows="6"
             keys={hydratedState.keyMap.rightThumbKeys}
             legends={hydratedState.legendMap}
-            pressedKey={helpIsOpen ? {} : hydratedState.keyData}
-            targetKeyIds={helpIsOpen ? [] : targetKeyIds}
+            pressedKey={hydratedState.keyData}
+            targetKeyIds={targetKeyIds}
             onClickEach={setKeyId}
             gridAppendClasses="keyboard-right-thumb-cluster"
             keySelection={hydratedState.keySelection}

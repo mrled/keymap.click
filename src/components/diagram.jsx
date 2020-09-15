@@ -11,7 +11,6 @@ import {
   DocumentDimensionsContext,
 } from "~/components/appContext";
 import { useAppSettings } from "~/hooks/useAppSettings";
-import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 import { useWindowSize } from "~/hooks/useWindowSize";
 import {
   smallerRect,
@@ -158,7 +157,7 @@ const drawDiagramLineTextref = (
 const drawDiagramLineSelected = (
   context,
   connection,
-  keyInfoTop,
+  // keyInfoTop,
 ) => {
   const source = connection.sourceCoords;
   const target = connection.targetCoords;
@@ -201,7 +200,6 @@ export const Diagram = ({
   const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext)
   const windowSize = useWindowSize();
   const { debugLevel } = useAppSettings();
-  const { state } = useContext(KeymapUiStateContext);
 
   const updateCanvasSize = useCallback(() => {
     if (!canvas) return;
@@ -238,9 +236,6 @@ export const Diagram = ({
      * until you fully reload the page (e.g. with ctrl-r)
      */
     context.clearRect(0, 0, canvas.current.width, canvas.current.height);
-
-    // If we're in help mode, don't draw at all
-    if (state.help) return;
 
     /* Draw each connection
      * Now that the canvas is the size of the entire screen,
@@ -312,7 +307,6 @@ export const Diagram = ({
     diamargRightRect,
     keyboardAndPanelRect,
     keyInfoContainerRect,
-    state.help
   ]);
 
   useEffect(() => {

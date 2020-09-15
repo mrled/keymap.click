@@ -17,7 +17,6 @@ import {
 
 const GuideState = new QueryState("guide", "none");
 const GuideStepState = new QueryState("guideStep", 0);
-const HelpState = new QueryState("help", false)
 const LegendMapState = new QueryState("legendMap", "MrlLegends");
 const KeyMapState = new QueryState("keyMap", "MrlMainLayer");
 const SelectedKeyState = new QueryState("keyId", null);
@@ -28,7 +27,6 @@ const SelectedKeyState = new QueryState("keyId", null);
 const stateByKey = [
   GuideState,
   GuideStepState,
-  HelpState,
   KeyMapState,
   LegendMapState,
   SelectedKeyState,
@@ -37,7 +35,6 @@ const stateByKey = [
 const KeymapUiStateDefault = {
   guide: null,
   guideStep: null,
-  help: false,
   keyId: null,
   keyMap: null,
   legendMap: null,
@@ -165,7 +162,6 @@ export const useKeymapUiState = () => {
       guide: guideName ? guideName : GuideState.defaultValue,
       guideStep: GuideStepState.defaultValue,
       keyId: guideName ? hydratedState.keyMap.guides[guideName].steps[0].key : SelectedKeyState.defaultValue,
-      help: false,
     });
     return hydratedState.guide;
   };
@@ -174,14 +170,12 @@ export const useKeymapUiState = () => {
     setStateAndQuery({
       guideStep: hydratedState.nextGuideStepIdx,
       keyId: hydratedState.guide.steps[hydratedState.nextGuideStepIdx].key,
-      help: false,
     });
   };
   const decrementGuideStep = () => {
     setStateAndQuery({
       guideStep: hydratedState.prevGuideStepIdx,
       keyId: hydratedState.guide.steps[hydratedState.prevGuideStepIdx].key,
-      help: false,
     });
   };
 
@@ -190,14 +184,12 @@ export const useKeymapUiState = () => {
       guide: GuideState.defaultValue,
       guideStep: GuideStepState.defaultValue,
       keyMap: keyMapName ? keyMapName : KeyMapState.defaultValue,
-      help: false,
     });
   };
 
   const setLegendMap = (legendMapName) => {
     setStateAndQuery({
       legendMap: legendMapName,
-      help: false,
     });
   };
 
@@ -206,14 +198,7 @@ export const useKeymapUiState = () => {
       keyId: keyId || SelectedKeyState.defaultValue,
       guide: GuideState.defaultValue,
       guideStep: GuideStepState.defaultValue,
-      help: false,
     });
-  };
-
-  const setHelp = (newValue) => {
-    setStateAndQuery({
-      help: Boolean(newValue),
-    })
   };
 
   return {
@@ -229,6 +214,5 @@ export const useKeymapUiState = () => {
     setGuide,
     incrementGuideStep,
     decrementGuideStep,
-    setHelp,
   };
 }
