@@ -44,7 +44,7 @@ export default function Controls() {
                 <div className="table-row">
                   <label htmlFor="app-advanced-mode-selector" className="p-2 m-2 text-xs table-cell">Show advanced mode</label>
                   <input
-                    onChange={event => setAdvancedMode(!advancedMode)}
+                    onChange={(/*event*/) => setAdvancedMode(!advancedMode)}
                     checked={advancedMode}
                     name="Show advanced mode"
                     id="app-advanced-mode-selector"

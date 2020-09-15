@@ -197,7 +197,7 @@ export const Diagram = ({
 }) => {
   const canvas = useRef();
   const container = useRef();
-  const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext)
+  const [documentDimensions, /*updateDocumentDimensions*/] = useContext(DocumentDimensionsContext)
   const windowSize = useWindowSize();
   const { debugLevel } = useAppSettings();
 

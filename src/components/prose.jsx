@@ -16,7 +16,7 @@ import {
  * Close the menu, if visible, when linking between pages.
  */
 export const IntraAppLink = ({ href, children }) => {
-  const [visibleMenu, setVisibleMenu] = useContext(VisibleMenuContext);
+  const [/*visibleMenu*/, setVisibleMenu] = useContext(VisibleMenuContext);
   return (
     <Link href={href}>
       <a className="text-blue-600" onClick={() => setVisibleMenu(false)}>

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 
 import classnames from "classnames";
 import log from "loglevel";
@@ -148,7 +148,7 @@ export const Key = ({
 };
 
 /* Return a grid of <Key> components
- * cols: The number of columsn in the grid
+ * cols: The number of columns in the grid
  * rows: Number of rows in the grid
  * keys: List of key data objects (e.g. lib/keys.js)
  * legends: Legend map we are using
@@ -168,7 +168,9 @@ export const KeyGrid = ({
   targetKeyIds = [],
   keySelection = [],
 }) => {
-  log.debug(`Building keyGrid '${gridName}' with pressedKey:\n${JSON.stringify(pressedKey)}`);
+  useEffect(() => {
+    log.debug(`Building keyGrid '${gridName}' with pressedKey:\n${JSON.stringify(pressedKey)}`);
+  });
   return (
     <>
       <div

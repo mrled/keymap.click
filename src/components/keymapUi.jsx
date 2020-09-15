@@ -27,8 +27,8 @@ import { useWindowSize } from "~/hooks/useWindowSize";
 
 export const KeymapUI = () => {
   const { debugLevel } = useAppSettings();
-  const [visibleMenu, setVisibleMenu] = useContext(VisibleMenuContext);
-  const [documentDimensions, updateDocumentDimensions] = useContext(DocumentDimensionsContext);
+  const [visibleMenu, /*setVisibleMenu*/] = useContext(VisibleMenuContext);
+  const [/*documentDimensions*/, updateDocumentDimensions] = useContext(DocumentDimensionsContext);
   const windowSize = useWindowSize();
   const { state } = useContext(KeymapUiStateContext);
 

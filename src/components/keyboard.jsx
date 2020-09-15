@@ -6,7 +6,7 @@ import { KeyGrid } from "~/components/key";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 
 export const Keyboard = ({ targetKeyIds }) => {
-  const { state, hydratedState, setKeyId } = useContext(KeymapUiStateContext);
+  const { hydratedState, setKeyId } = useContext(KeymapUiStateContext);
 
   return (
     <div className="flex items-center justify-center flex-col md:flex-row mt-0">

@@ -127,7 +127,7 @@ const arrowLayerKeyInfo = <>
 </>;
 
 
-const arrowKeySelection = ["l-f-8-9", "l-f-10-9", "r-f-5-9", "r-f-7-9"];
+// const arrowKeySelection = ["l-f-8-9", "l-f-10-9", "r-f-5-9", "r-f-7-9"];
 const volKeySelection = ["r-f-9-9", "r-f-11-9", "r-f-13-9"];
 const bracketKeySelection = ["l-f-1-7", "r-f-13-7"];
 const pageUpDownHomeEndSelection = ["l-t-5-1", "l-t-5-3", "r-t-1-1", "r-t-1-3"];

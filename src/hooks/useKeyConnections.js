@@ -13,7 +13,6 @@ import {
   keyHandleDomIdFromKeyId,
   keyInfoConnectFromClass,
   keyInfoConnectFromClassPrefix,
-  keyInfoConnectType,
   keyInfoConnectTypeClassPrefix,
 } from "~/lib/keyConnections";
 
