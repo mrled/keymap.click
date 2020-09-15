@@ -88,6 +88,23 @@ export const KeymapUI = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyboardAndPanelRect, state.keyId, visibleMenu]);
 
+  useEffect(() => {
+    log.debug(
+      [
+        `Rectangles:`,
+        `diamargLeftRect: ${JSON.stringify(diamargLeftRect)}`,
+        `diamargRightRec: ${JSON.stringify(diamargRightRect)}`,
+        `keyboardAndPanelRect: ${JSON.stringify(keyboardAndPanelRect)}`,
+        `keyInfoContainerRect: ${JSON.stringify(keyInfoContainerRect)}`,
+      ].join("\n")
+    );
+  }, [
+    diamargLeftRect,
+    diamargRightRect,
+    keyInfoContainerRect,
+    keyboardAndPanelRect,
+  ]);
+
   const { connections, targetKeyIds } = useKeyConnections(
     state.keyId,
     keyboardAndPanelRect.top
