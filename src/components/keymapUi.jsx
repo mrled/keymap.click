@@ -9,6 +9,7 @@ import { DocumentDimensionsContext } from "~/components/appContext";
 import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
 import { useAppSettings } from "~/hooks/useAppSettings";
+import { useBoundingClientRect } from "~/hooks/useBoundingClientRect";
 import { useKeyConnections } from "~/hooks/useKeyConnections";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 import { useWindowSize } from "~/hooks/useWindowSize";
@@ -27,49 +28,29 @@ export const KeymapUI = () => {
    * Note that we have to ignore react-hooks/exhaustive-deps,
    * because the dependencies we list are not explicitly used in the hook.
    */
-
-  const [keyboardAndPanelRect, setKeyboardAndPanelRect] = useState(null);
-  const keyboardAndPanel = useCallback(
-    (node) => {
-      if (node !== null) setKeyboardAndPanelRect(node.getBoundingClientRect());
-    }, // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      state.keyId, // If this changes, the size of the keyInfo panel may change
-      windowSize, // If this changes, windows change size horizontally and we may encounter size breakpoints
-    ]
-  );
-
-  const [diamargLeftRect, setDiamargLeftRect] = useState(null);
-  const diamargLeft = useCallback(
-    (node) => {
-      if (node !== null) setDiamargLeftRect(node.getBoundingClientRect());
-    }, // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      keyboardAndPanelRect, // If this changes, the diamargs should both change
-    ]
-  );
-
-  const [diamargRightRect, setDiamargRightRect] = useState(null);
-  const diamargRight = useCallback(
-    (node) => {
-      if (node !== null) setDiamargRightRect(node.getBoundingClientRect());
-    }, // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      keyboardAndPanelRect, // If this changes, the diamargs should both change
-    ]
-  );
-
-  const [keyInfoContainerRect, setKeyInfoContainerRect] = useState(null);
-  const keyInfoContainer = useCallback(
-    (node) => {
-      if (node != null) setKeyInfoContainerRect(node.getBoundingClientRect());
-    }, // eslint-disable-next-line react-hooks/exhaustive-deps
-    [windowSize]
-  );
+  const [keyboardAndPanel, keyboardAndPanelRect] = useBoundingClientRect([
+    state.keyId, // If this changes, the size of the keyInfo panel may change
+    windowSize, // If this changes, windows change size horizontally and we may encounter size breakpoints
+  ]);
+  const [diamargLeft, diamargLeftRect] = useBoundingClientRect([
+    keyboardAndPanelRect, // If this changes, the diamargs should both change
+  ]);
+  const [diamargRight, diamargRightRect] = useBoundingClientRect([
+    keyboardAndPanelRect, // If this changes, the diamargs should both change
+  ]);
+  const [keyInfoContainer, keyInfoContainerRect] = useBoundingClientRect([
+    windowSize,
+  ]);
 
   useEffect(() => {
     log.debug(
-      `Document dimensions should update due to a dependency change...`
+      [
+        `Document dimensions should update due to a dependency change. Rectangles:`,
+        `diamargLeftRect: ${JSON.stringify(diamargLeftRect)}`,
+        `diamargRightRec: ${JSON.stringify(diamargRightRect)}`,
+        `keyboardAndPanelRect: ${JSON.stringify(keyboardAndPanelRect)}`,
+        `keyInfoContainerRect: ${JSON.stringify(keyInfoContainerRect)}`,
+      ].join("\n")
     );
     updateDocumentDimensions();
     // We must NOT pass updateDocumentDimensions as a dependency for this effect, or it will cause an infinite loop!
@@ -85,23 +66,7 @@ export const KeymapUI = () => {
     diamargLeftRect,
     diamargRightRect,
     keyInfoContainerRect,
-  ]);
-
-  useEffect(() => {
-    log.debug(
-      [
-        `Rectangles:`,
-        `diamargLeftRect: ${JSON.stringify(diamargLeftRect)}`,
-        `diamargRightRec: ${JSON.stringify(diamargRightRect)}`,
-        `keyboardAndPanelRect: ${JSON.stringify(keyboardAndPanelRect)}`,
-        `keyInfoContainerRect: ${JSON.stringify(keyInfoContainerRect)}`,
-      ].join("\n")
-    );
-  }, [
-    diamargLeftRect,
-    diamargRightRect,
-    keyInfoContainerRect,
-    keyboardAndPanelRect,
+    windowSize,
   ]);
 
   const { connections, targetKeyIds } = useKeyConnections(
