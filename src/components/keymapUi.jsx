@@ -79,7 +79,18 @@ export const KeymapUI = () => {
     updateDocumentDimensions();
     // We must NOT pass updateDocumentDimensions as a dependency for this effect, or it will cause an infinite loop!
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyboardAndPanelRect, state.keyId]);
+  }, [
+    keyboardAndPanelRect,
+    state.keyId,
+
+    // I would expect keyboardAndPanelRect to imply diamargLeft/RightRect and keyInfoContainerRect,
+    // but I am getting strange renders sometimes, where visual debugging shows that the diagram
+    // does not have correct coordinates for anything, including the these values.
+    // Maybe I need to pass them explicitly?
+    diamargLeftRect,
+    diamargRightRect,
+    keyInfoContainerRect,
+  ]);
 
   useEffect(() => {
     log.debug(
