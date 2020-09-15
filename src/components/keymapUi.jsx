@@ -8,7 +8,6 @@ import { InfoPanel } from "~/components/keyInfo";
 import { DocumentDimensionsContext } from "~/components/appContext";
 import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
-import { FakeDOMRect } from "~/lib/geometry";
 import { useAppSettings } from "~/hooks/useAppSettings";
 import { useKeyConnections } from "~/hooks/useKeyConnections";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
@@ -29,9 +28,7 @@ export const KeymapUI = () => {
    * because the dependencies we list are not explicitly used in the hook.
    */
 
-  const [keyboardAndPanelRect, setKeyboardAndPanelRect] = useState(
-    new FakeDOMRect()
-  );
+  const [keyboardAndPanelRect, setKeyboardAndPanelRect] = useState(null);
   const keyboardAndPanel = useCallback(
     (node) => {
       if (node !== null) setKeyboardAndPanelRect(node.getBoundingClientRect());
@@ -42,7 +39,7 @@ export const KeymapUI = () => {
     ]
   );
 
-  const [diamargLeftRect, setDiamargLeftRect] = useState(new FakeDOMRect());
+  const [diamargLeftRect, setDiamargLeftRect] = useState(null);
   const diamargLeft = useCallback(
     (node) => {
       if (node !== null) setDiamargLeftRect(node.getBoundingClientRect());
@@ -52,7 +49,7 @@ export const KeymapUI = () => {
     ]
   );
 
-  const [diamargRightRect, setDiamargRightRect] = useState(new FakeDOMRect());
+  const [diamargRightRect, setDiamargRightRect] = useState(null);
   const diamargRight = useCallback(
     (node) => {
       if (node !== null) setDiamargRightRect(node.getBoundingClientRect());
@@ -62,9 +59,7 @@ export const KeymapUI = () => {
     ]
   );
 
-  const [keyInfoContainerRect, setKeyInfoContainerRect] = useState(
-    new FakeDOMRect()
-  );
+  const [keyInfoContainerRect, setKeyInfoContainerRect] = useState(null);
   const keyInfoContainer = useCallback(
     (node) => {
       if (node != null) setKeyInfoContainerRect(node.getBoundingClientRect());
@@ -111,7 +106,7 @@ export const KeymapUI = () => {
 
   const { connections, targetKeyIds } = useKeyConnections(
     state.keyId,
-    keyboardAndPanelRect.top
+    keyboardAndPanelRect ? keyboardAndPanelRect.top : 0
   );
 
   return (
