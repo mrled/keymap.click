@@ -5,12 +5,12 @@ import log from "loglevel";
 import { Diagram } from "~/components/diagram";
 import { InfoPanel } from "~/components/keyInfo";
 
-import { DocumentDimensionsContext } from "~/components/appContext";
 import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
 import { useAppSettings } from "~/hooks/useAppSettings";
 import { useBoundingClientRect } from "~/hooks/useBoundingClientRect";
 import { useKeyConnections } from "~/hooks/useKeyConnections";
+import { DocumentDimensionsContext } from "~/hooks/useDocumentDimensions";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 import { useWindowSize } from "~/hooks/useWindowSize";
 

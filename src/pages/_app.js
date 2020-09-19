@@ -1,49 +1,21 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import * as Fathom from "fathom-client";
-import log from "loglevel";
 
 import "~/styles/index.css";
 import "~/styles/keygrid.css";
 import "~/styles/fonts.css";
 
-import { DocumentDimensionsContext } from "~/components/appContext";
 import { AppHead } from "~/components/appHead";
+import {
+  DocumentDimensionsContext,
+  useDocumentDimensions,
+} from "~/hooks/useDocumentDimensions";
 
 function App({ Component, pageProps }) {
   const router = useRouter();
-
-  /* Manage document size context
-   * It would be really nice if the document object fired an event when it changed size that we could listen to,
-   * but it doesn't.
-   * Instead, we use a Context and we allow context consumers to request an update at any time.
-   * We don't allow consumers to set an arbitrary value, only to request that the context value be updated
-   * to the result of getCurrentDocumentSize() here.
-   * Note that we are therefore intentionally not using a memoized callback for updateDocumentDimensions.
-   */
-
-  const getCurrentDocumentSize = () => {
-    const isClient = typeof document === "object";
-    return {
-      width: isClient ? document.documentElement.scrollWidth : undefined,
-      height: isClient ? document.documentElement.scrollHeight : undefined,
-    };
-  };
-
-  const [documentDimensions, setDocumentDimensions] = useState(
-    getCurrentDocumentSize()
-  );
-
-  const updateDocumentDimensions = () => {
-    const newDocumentDimensions = getCurrentDocumentSize();
-    log.debug(
-      `Updating document dimensions\nOld: ${JSON.stringify(
-        documentDimensions
-      )}\nNew: ${JSON.stringify(newDocumentDimensions)}`
-    );
-    setDocumentDimensions(getCurrentDocumentSize());
-  };
+  const docDimensions = useDocumentDimensions();
 
   useEffect(() => {
     Fathom.load("HDMUSVII", {
@@ -64,9 +36,7 @@ function App({ Component, pageProps }) {
 
   return (
     <>
-      <DocumentDimensionsContext.Provider
-        value={[documentDimensions, updateDocumentDimensions]}
-      >
+      <DocumentDimensionsContext.Provider value={docDimensions}>
         <AppHead />
         <Component {...pageProps} />
       </DocumentDimensionsContext.Provider>

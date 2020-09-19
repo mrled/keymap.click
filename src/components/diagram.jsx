@@ -2,8 +2,8 @@ import React, { useCallback, useContext, useEffect, useRef } from "react";
 
 import log from "loglevel";
 
-import { DocumentDimensionsContext } from "~/components/appContext";
 import { useAppSettings } from "~/hooks/useAppSettings";
+import { DocumentDimensionsContext } from "~/hooks/useDocumentDimensions";
 import { useWindowSize } from "~/hooks/useWindowSize";
 import { smallerRect, traceRect } from "~/lib/geometry";
 import { keyInfoConnectType } from "~/lib/keyConnections";
