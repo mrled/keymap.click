@@ -9,6 +9,10 @@ This section isn't well organized.
 
 Everything that I have decided to definitely do
 
+### First load drawing bug
+
+See [bad-first-render-in-production](issues/bad-first-render-in-production).
+
 ## Ideas
 
 Things I might do, but that I haven't decided on yet
