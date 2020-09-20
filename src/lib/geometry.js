@@ -86,3 +86,28 @@ export const domrect2obj = (r) => {
 export const isDOMRect = (obj) => {
   return Object.getPrototypeOf(obj) === Object.getPrototypeOf(new DOMRect());
 };
+
+export const eqDOMRect = (rect1, rect2) => {
+  const rectKeys = [
+    "top",
+    "right",
+    "bottom",
+    "left",
+    "width",
+    "height",
+    "x",
+    "y",
+  ];
+  if (!rect1 && !rect2) {
+    return true;
+  } else if (!rect1 || !rect2) {
+    return false;
+  }
+  for (let idx = 0; idx < rectKeys.length; ++idx) {
+    let key = rectKeys[idx];
+    if (rect1[key] != rect2[key]) {
+      return false;
+    }
+  }
+  return true;
+};

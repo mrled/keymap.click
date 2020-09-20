@@ -1,8 +1,9 @@
 import { useState } from "react";
 
+import { objectTableCompare } from "~/lib/consoleLogHelper";
 import { domrect2obj, isDOMRect } from "~/lib/geometry";
 
-const changeMessageStyle = "color: purple";
+const changeMessageStyle = "color: magenta";
 
 /* Return a loggable object from an arbitrary one
  *
@@ -24,10 +25,9 @@ const makeLoggable = (obj) => {
  */
 const logUnnecessaryStateChange = (stateName, state) => {
   console.log(
-    [
-      `%clogUnnucessaryStateChange for state ${stateName}: State change attempted, but value has not changed`,
-      JSON.stringify(state),
-    ].join("\n")
+    `%clogUnnucessaryStateChange for state ${stateName}: State change attempted, but value has not changed`,
+    changeMessageStyle,
+    state
   );
 };
 
@@ -43,17 +43,14 @@ const logStateChange = (stateName, oldState, newState) => {
     typeof loggableOldState === "object" &&
     typeof loggableNewState === "object"
   ) {
-    let allTableKeys = Object.getOwnPropertyNames(loggableOldState);
-    allTableKeys.concat(Object.keys(loggableNewState));
-    const tableKeys = new Set(allTableKeys);
-    let table = {};
-    tableKeys.forEach((key) => {
-      table[key] = {
-        oldValue: loggableOldState[key],
-        newValue: loggableNewState[key],
-      };
-    });
-    console.log(`%clogStateChange for state ${stateName}`, changeMessageStyle);
+    const table = objectTableCompare(
+      [loggableOldState, loggableNewState],
+      ["oldValue", "newValue"]
+    );
+    console.log(
+      `%clogStateChange for state ${stateName} table:`,
+      changeMessageStyle
+    );
     console.table(table);
   } else {
     console.info(
@@ -93,7 +90,7 @@ export const useLoggedState = (defaultValue, stateName) => {
 export const useIdempotentLoggedState = (
   defaultValue,
   stateName,
-  comparator
+  comparator = (obj1, obj2) => obj1 === obj2
 ) => {
   const [thisState, setThisState] = useState(defaultValue);
   const setIdempotentLoggedStateWrapper = (newValue) => {

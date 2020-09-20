@@ -108,6 +108,21 @@ const getKeyConnections = () => {
       connections.push(connection);
     });
   }
+
+  /* This prevents unnecessary redraws
+   * In JavaScript, two empty arrays are not equal:
+   *    const x = []; const y = [];
+   *    x == y;  // false
+   *    x === y; // false
+   * However, two separate null values ARE equal:
+   *    const x = null; const y = null;
+   *    x == y;  // true
+   *    x === y; // true
+   */
+  if (!connections) {
+    connections = null;
+  }
+
   return {
     connections: connections,
     targetKeyIds: targetKeys,

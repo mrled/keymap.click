@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 
 import classnames from "classnames";
-import log from "loglevel";
 
+import { useWhyDidYouUpdate } from "~/hooks/useWhyDidYouUpdate";
 import { keyHandleDomIdFromKeyId } from "~/lib/keyConnections";
 
 /* This is a small element used as an anchor point to connect a diagram line to this key.
@@ -165,22 +165,20 @@ export const Key = ({
  *   It will be called with the key data object as the first argument
  * appendClasses: Optional string containing classes to append to the parent grid <div>
  */
-export const KeyGrid = ({
-  gridName = "",
-  cols,
-  rows,
-  keys,
-  legends,
-  pressedKey,
-  onClickEach = () => {},
-  gridAppendClasses = "",
-  targetKeyIds = [],
-  keySelection = [],
-}) => {
-  useEffect(() => {
-    log.debug(`Building keyGrid '${gridName}'`);
-    // log.trace([`${gridName} pressedKey:\n${JSON.stringify(pressedKey)}`]);
-  });
+export const KeyGrid = (props) => {
+  const {
+    gridName = "",
+    cols,
+    rows,
+    keys,
+    legends,
+    pressedKey,
+    onClickEach = () => {},
+    gridAppendClasses = "",
+    targetKeyIds = [],
+    keySelection = [],
+  } = props;
+  useWhyDidYouUpdate(`KeyGrid '${gridName}'`, props);
   return (
     <>
       <div

@@ -12,9 +12,12 @@ import { useBoundingClientRect } from "~/hooks/useBoundingClientRect";
 import { useKeyConnections } from "~/hooks/useKeyConnections";
 import { DocumentDimensionsContext } from "~/hooks/useDocumentDimensions";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
+import { useWhyDidYouUpdate } from "~/hooks/useWhyDidYouUpdate";
 import { useWindowSize } from "~/hooks/useWindowSize";
 
 export const KeymapUI = () => {
+  useWhyDidYouUpdate("KeymapUI", {});
+
   const { debugLevel } = useAppSettings();
   const [, updateDocumentDimensions] = useContext(DocumentDimensionsContext);
   const windowSize = useWindowSize();

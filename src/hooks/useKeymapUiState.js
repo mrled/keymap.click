@@ -1,9 +1,8 @@
 import { useRouter } from "next/router";
 import { createContext, useState } from "react";
 
-import log from "loglevel";
-
 import { QueryState, setQueryState } from "~/lib/appQueryState";
+import { objectTableCompare } from "~/lib/consoleLogHelper";
 import { keyMaps, legendMaps } from "~/lib/keys";
 
 const GuideState = new QueryState("guide", "none");
@@ -23,12 +22,18 @@ const stateByKey = [
   SelectedKeyState,
 ].reduce((acc, cur) => Object.assign(acc, { [cur.key]: cur }), {});
 
+/* The default value for keymapUiState
+ *
+ * Unset values should be _undefined_, not null or something else.
+ * This allows us to compare them with router.query directly,
+ * because router.query[SomethingNotPresent] === undefined.
+ */
 const KeymapUiStateDefault = {
-  guide: null,
-  guideStep: null,
-  keyId: null,
-  keyMap: null,
-  legendMap: null,
+  guide: undefined,
+  guideStep: undefined,
+  keyId: undefined,
+  keyMap: undefined,
+  legendMap: undefined,
 };
 
 /* Compare two keymapUiState objects
@@ -126,11 +131,12 @@ export const useKeymapUiState = () => {
   /* Set display state and query in one go
    */
   const setStateAndQuery = (newData) => {
-    log.trace(
-      `setStateAndQuery():\n`,
-      `Old state: ${JSON.stringify(keymapUiState)}\n`,
-      `Old query: ${JSON.stringify(router.query)}\n`,
-      `New data:  ${JSON.stringify(newData)}`
+    console.trace(`setStateAndQuery():`);
+    console.table(
+      objectTableCompare(
+        [keymapUiState, router.query, newData],
+        ["keymapUiState", "router.query", "newData"]
+      )
     );
     setKeymapUiState({
       ...keymapUiState,
@@ -143,19 +149,20 @@ export const useKeymapUiState = () => {
    */
   const setStateFromQuery = () => {
     if (!keymapUiStateEq(keymapUiState, router.query)) {
-      log.debug(
-        `Setting state from query\nold state: ${JSON.stringify(
-          keymapUiState
-        )}\nnew state: ${JSON.stringify(router.query)}`
+      console.log("Setting state from query");
+      console.table(
+        objectTableCompare(
+          [keymapUiState, router.query],
+          ["keymapUiState", "router.query"]
+        )
       );
       setKeymapUiState({
         ...router.query,
       });
     } else {
-      log.debug(
-        `Not necessary to set state from query; internal state already reflects query string of\n${JSON.stringify(
-          router.query
-        )}`
+      console.log(
+        "Not necessary to set state from query; internal state already reflects query string of",
+        router.query
       );
     }
   };
