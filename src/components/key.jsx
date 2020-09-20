@@ -178,11 +178,8 @@ export const KeyGrid = ({
   keySelection = [],
 }) => {
   useEffect(() => {
-    log.debug(
-      `Building keyGrid '${gridName}' with pressedKey:\n${JSON.stringify(
-        pressedKey
-      )}`
-    );
+    log.debug(`Building keyGrid '${gridName}'`);
+    // log.trace([`${gridName} pressedKey:\n${JSON.stringify(pressedKey)}`]);
   });
   return (
     <>

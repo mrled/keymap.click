@@ -1,7 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext } from "react";
 
-import log from "loglevel";
-
+import { useIdempotentLoggedState } from "~/hooks/useLoggedState";
 import { sizeObjEq } from "~/lib/geometry";
 
 /* Manage document size context
@@ -32,29 +31,14 @@ const getCurrentDocumentSize = () => {
 };
 
 export const useDocumentDimensions = () => {
-  const [documentDimensions, setDocumentDimensions] = useState(
-    getCurrentDocumentSize()
+  const [documentDimensions, setDocumentDimensions] = useIdempotentLoggedState(
+    getCurrentDocumentSize(),
+    "documentDimensions",
+    sizeObjEq
   );
 
   const updateDocumentDimensions = () => {
-    const newDims = getCurrentDocumentSize();
-    if (sizeObjEq(newDims, documentDimensions)) {
-      log.debug(
-        [
-          "updateDocumentDimensions() called but document size has not changed from current",
-          JSON.stringify(documentDimensions),
-        ].join("\n")
-      );
-    } else {
-      log.debug(
-        [
-          "updateDocumentDimensions() will update",
-          `Old: ${JSON.stringify(documentDimensions)}`,
-          `New: ${JSON.stringify(newDims)}`,
-        ].join("\n")
-      );
-      setDocumentDimensions(newDims);
-    }
+    setDocumentDimensions(getCurrentDocumentSize());
   };
 
   return [documentDimensions, updateDocumentDimensions];

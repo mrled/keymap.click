@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 
 import log from "loglevel";
 
@@ -28,30 +28,40 @@ export const KeymapUI = () => {
    * Note that we have to ignore react-hooks/exhaustive-deps,
    * because the dependencies we list are not explicitly used in the hook.
    */
-  const [keyboardAndPanel, keyboardAndPanelRect] = useBoundingClientRect([
-    state.keyId, // If this changes, the size of the keyInfo panel may change
-    windowSize, // If this changes, windows change size horizontally and we may encounter size breakpoints
-  ]);
-  const [diamargLeft, diamargLeftRect] = useBoundingClientRect([
-    keyboardAndPanelRect, // If this changes, the diamargs should both change
-  ]);
-  const [diamargRight, diamargRightRect] = useBoundingClientRect([
-    keyboardAndPanelRect, // If this changes, the diamargs should both change
-  ]);
-  const [keyInfoContainer, keyInfoContainerRect] = useBoundingClientRect([
-    windowSize,
-  ]);
+  const [keyboardAndPanel, keyboardAndPanelRect] = useBoundingClientRect(
+    [
+      state.keyId, // If this changes, the size of the keyInfo panel may change
+      windowSize, // If this changes, windows change size horizontally and we may encounter size breakpoints
+    ],
+    "keyboardAndPanel"
+  );
+  const [diamargLeft, diamargLeftRect] = useBoundingClientRect(
+    [
+      keyboardAndPanelRect, // If this changes, the diamargs should both change
+    ],
+    "diamargLeft"
+  );
+  const [diamargRight, diamargRightRect] = useBoundingClientRect(
+    [
+      keyboardAndPanelRect, // If this changes, the diamargs should both change
+    ],
+    "diamargRight"
+  );
+  const [keyInfoContainer, keyInfoContainerRect] = useBoundingClientRect(
+    [windowSize],
+    "keyInfoContainer"
+  );
 
   useEffect(() => {
-    log.debug(
-      [
-        `Document dimensions should update due to a dependency change. Rectangles:`,
-        `diamargLeftRect: ${JSON.stringify(diamargLeftRect)}`,
-        `diamargRightRec: ${JSON.stringify(diamargRightRect)}`,
-        `keyboardAndPanelRect: ${JSON.stringify(keyboardAndPanelRect)}`,
-        `keyInfoContainerRect: ${JSON.stringify(keyInfoContainerRect)}`,
-      ].join("\n")
-    );
+    // log.debug(
+    //   [
+    //     `Document dimensions should update due to a dependency change. Rectangles:`,
+    //     `diamargLeftRect: ${JSON.stringify(diamargLeftRect)}`,
+    //     `diamargRightRec: ${JSON.stringify(diamargRightRect)}`,
+    //     `keyboardAndPanelRect: ${JSON.stringify(keyboardAndPanelRect)}`,
+    //     `keyInfoContainerRect: ${JSON.stringify(keyInfoContainerRect)}`,
+    //   ].join("\n")
+    // );
     updateDocumentDimensions();
     // We must NOT pass updateDocumentDimensions as a dependency for this effect, or it will cause an infinite loop!
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -58,3 +58,31 @@ export const traceRect = (rect, context) => {
 export const sizeObjEq = (size1, size2) => {
   return size1.width === size2.width && size1.height === size2.height;
 };
+
+/* Unfuck DOMRect objects
+ *
+ * Per MDN:
+ * <https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect>
+ * "Properties in the returned DOMRect object are not own properties.
+ * While the in operator and for...in will find returned properties,
+ * other APIs such as Object.keys() will fail.
+ * Moreover, and unexpectedly, the ES2015 and newer features
+ * such as Object.assign() and object rest/spread
+ * will fail to copy returned properties."
+ *
+ * ... I'm sorry fucking what.
+ */
+export const domrect2obj = (r) => {
+  const { top, right, bottom, left, width, height, x, y } = r;
+  return { top, right, bottom, left, width, height, x, y };
+};
+
+/* Test if an object is a DOMRect
+ *
+ * DOMRect objects are totally fucked (per above),
+ * and we have to resort to this bullshit to detect them.
+ * Fucking incredible.
+ */
+export const isDOMRect = (obj) => {
+  return Object.getPrototypeOf(obj) === Object.getPrototypeOf(new DOMRect());
+};

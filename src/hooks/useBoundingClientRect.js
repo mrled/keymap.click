@@ -1,4 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
+
+import { useLoggedState } from "~/hooks/useLoggedState";
 
 /* Get a callback reference and an automatically updated bounding rect for it.
  *
@@ -6,8 +8,8 @@ import { useCallback, useState } from "react";
  *
  * Expects that elementRef is passed as `ref=` to exactly one element.
  */
-export const useBoundingClientRect = (callbackDependencies) => {
-  const [elementRect, setElementRect] = useState(null);
+export const useBoundingClientRect = (callbackDependencies, stateLogName) => {
+  const [elementRect, setElementRect] = useLoggedState(null, stateLogName);
   const elementRef = useCallback((node) => {
     if (node != null) setElementRect(node.getBoundingClientRect());
   }, callbackDependencies);
