@@ -27,7 +27,10 @@ const newLeftRightObject = (initialLeft = 0, initialRight = 0) => {
 const diagramLineColors = {
   [keyInfoConnectType.textref]: "#68d391ff", // Opaque, because this green is pretty light
   [keyInfoConnectType.selected]: "#fbd38d99", // Slightly transparent, because this orange is pretty dark
-  debug: "purple",
+  debugCenterLine: "cornflowerblue",
+  debugKeyboard: "khaki",
+  debugLeft: "lawngreen",
+  debugRight: "red",
 };
 
 /* Draw debugging lines for visual debugging mode
@@ -49,7 +52,7 @@ const drawVisualDebugInfo = (
   if (keyboardAndPanelRect) {
     log.debug(`Drawing into the keyboard/panel rectangle...`);
     context.beginPath();
-    context.strokeStyle = diagramLineColors.debug;
+    context.strokeStyle = diagramLineColors.debugCenterLine;
     context.moveTo(keyboardCenter, 0);
     var idx = 0;
     while (idx <= document.documentElement.scrollHeight) {
@@ -60,7 +63,7 @@ const drawVisualDebugInfo = (
     }
     context.stroke();
 
-    context.strokeStyle = diagramLineColors.debug;
+    context.strokeStyle = diagramLineColors.debugKeyboard;
     context.beginPath();
     traceRect(smallerRect(keyboardAndPanelRect), context);
     context.stroke();
@@ -72,7 +75,7 @@ const drawVisualDebugInfo = (
 
   if (diamargLeftRect) {
     const diamargLeftRectInner = smallerRect(diamargLeftRect);
-    context.strokeStyle = diagramLineColors.debug;
+    context.strokeStyle = diagramLineColors.debugLeft;
     context.beginPath();
     traceRect(diamargLeftRectInner, context);
     context.stroke();
@@ -81,7 +84,7 @@ const drawVisualDebugInfo = (
   }
   if (diamargRightRect) {
     const diamargRightRectInner = smallerRect(diamargRightRect);
-    context.strokeStyle = diagramLineColors.debug;
+    context.strokeStyle = diagramLineColors.debugRight;
     context.beginPath();
     traceRect(diamargRightRectInner, context);
     context.stroke();
