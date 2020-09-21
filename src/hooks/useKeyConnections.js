@@ -31,6 +31,20 @@ const connectionPointFrom = (element) => {
   return new Point(topLineRect.x, topLineRect.bottom);
 };
 
+/* Prevent unnecessary redraws
+ * In JavaScript, two empty arrays are not equal:
+ *    const x = []; const y = [];
+ *    x == y;  // false
+ *    x === y; // false
+ * However, the same array is equal to itself:
+ *    x == x;  // true
+ *    x === x; // true
+ * To deal with this, we define emptyConnections and emptyTargetKeys to []
+ * outside of this function.
+ */
+const emptyConnections = [];
+const emptyTargetKeys = [];
+
 /* Return a new Point, representing a location for the diagram lines to connect on a target element
  */
 const connectionPointTo = (element) => {
@@ -109,18 +123,11 @@ const getKeyConnections = () => {
     });
   }
 
-  /* This prevents unnecessary redraws
-   * In JavaScript, two empty arrays are not equal:
-   *    const x = []; const y = [];
-   *    x == y;  // false
-   *    x === y; // false
-   * However, two separate null values ARE equal:
-   *    const x = null; const y = null;
-   *    x == y;  // true
-   *    x === y; // true
-   */
-  if (!connections) {
-    connections = null;
+  if (connections.length === 0) {
+    connections = emptyConnections;
+  }
+  if (targetKeys.length === 0) {
+    targetKeys = emptyTargetKeys;
   }
 
   return {
@@ -141,8 +148,8 @@ const getKeyConnections = () => {
  *                        so we have to getKeyConnections() again.
  */
 export const useKeyConnections = (fromKey, keyboardStartHeight) => {
-  const [connections, setConnections] = useState();
-  const [targetKeyIds, setTargetKeyIds] = useState();
+  const [connections, setConnections] = useState(emptyConnections);
+  const [targetKeyIds, setTargetKeyIds] = useState(emptyTargetKeys);
   const windowSize = useWindowSize();
 
   useEffect(() => {
