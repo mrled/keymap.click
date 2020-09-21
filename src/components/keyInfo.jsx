@@ -99,11 +99,13 @@ const LegendAttribution = ({ legendData }) => {
 /* A tiny key grid just for use in the title bar of the info panel
  */
 const TitleBarKeyGrid = ({ keyData, legendMap }) => {
-  let modifiedKeyData = Object.assign({}, keyData);
-  modifiedKeyData.startPos = [0, 0];
-  const modifiedKeyId = "title-bar-0-0";
-  modifiedKeyData.reactKey = modifiedKeyId;
-  modifiedKeyData.id = modifiedKeyId;
+  const titleKeyId = "title-bar-0-0";
+  const titleBarKeyDataOverrides = {
+    startPos: [0, 0],
+    reactKey: titleKeyId,
+    id: titleKeyId,
+  };
+  const modifiedKeyData = Object.assign({}, keyData, titleBarKeyDataOverrides);
   return (
     <KeyGrid
       gridName="title bar"
@@ -121,8 +123,7 @@ const TitleBarKeyGrid = ({ keyData, legendMap }) => {
 /* An empty KeyGrid for the title bar.
  */
 const EmptyTitleBarKeyGrid = () => {
-  const emptyTbKeyData = { reactKey: 1 }; // Stave off React warnings
-  return <TitleBarKeyGrid keyData={emptyTbKeyData} legendMap={{}} />;
+  return <TitleBarKeyGrid keyData={{}} legendMap={{}} />;
 };
 
 /* A KeyGrid for the title bar which references a key on the keyboard
