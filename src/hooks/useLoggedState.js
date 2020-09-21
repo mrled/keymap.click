@@ -36,9 +36,10 @@ const logUnnecessaryStateChange = (stateName, state) => {
  * If possible, show a table with a before and after value for an object.
  * Fall back to a JSON.stringify()'d before and after value.
  */
-const logStateChange = (stateName, oldState, newState) => {
+const logStateChange = (stateName, oldState, newState, necessary = true) => {
   const loggableOldState = makeLoggable(oldState);
   const loggableNewState = makeLoggable(newState);
+  const necText = necessary ? "necessary" : "unnecessary";
   if (
     typeof loggableOldState === "object" &&
     typeof loggableNewState === "object"
@@ -48,14 +49,14 @@ const logStateChange = (stateName, oldState, newState) => {
       ["oldValue", "newValue"]
     );
     console.log(
-      `%clogStateChange for state ${stateName} table:`,
+      `%clogStateChange (${necText}) for state ${stateName} table:`,
       changeMessageStyle
     );
     console.table(table);
   } else {
     console.info(
       [
-        `%clogStateChange for state ${stateName}:`,
+        `%clogStateChange (${necText}) for state ${stateName}:`,
         `old: ${JSON.stringify(oldState)}`,
         `new: ${JSON.stringify(newState)}`,
       ].join("\n"),
@@ -95,7 +96,7 @@ export const useIdempotentLoggedState = (
   const [thisState, setThisState] = useState(defaultValue);
   const setIdempotentLoggedStateWrapper = (newValue) => {
     if (comparator(thisState, newValue)) {
-      logUnnecessaryStateChange(stateName, thisState);
+      logStateChange(stateName, thisState, newValue, false);
     } else {
       logStateChange(stateName, thisState, newValue);
       setThisState(newValue);
