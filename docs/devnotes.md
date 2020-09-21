@@ -17,6 +17,11 @@ See [bad-first-render-in-production](issues/bad-first-render-in-production).
 
 Things I might do, but that I haven't decided on yet
 
+### Get rid of loglevel
+
+Use advanced functionality from the console object.
+It only works on recent browsers, but meh.
+
 ### Draw multiple orange lines
 
 Sometimes it would be nice to draw two or three orange lines,

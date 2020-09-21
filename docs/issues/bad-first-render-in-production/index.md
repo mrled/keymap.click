@@ -29,6 +29,7 @@ Here's what it looks like:
 - Maybe CSS isn't getting applied when they get measured? Maybe something React specific is happening?
 - I'm concerned that something I'm doing to measure the DOM isn't going right. That's happening in `useDocumentDimensions.js`.
 - Can I test whether my render is statically generated at build time vs done client-side at page load time?
+- I know the size of the canvas itself is ok, because I have `debug-trans-bg-orange` on it, and the whole screen does go orange.
 
 ## Triggering the bug
 
