@@ -25,6 +25,8 @@ export function useWhyDidYouUpdate(name, props) {
       if (Object.keys(changesObj).length) {
         console.log("[why-did-you-update]", name, changesObj);
       }
+    } else {
+      console.log("[why-did-you-update] (initial render)", name, props);
     }
 
     previousProps.current = props;
