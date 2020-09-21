@@ -2,8 +2,11 @@ import React, { useContext } from "react";
 
 import { KeyGrid } from "~/components/key";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
+import { useWhyDidYouUpdate } from "~/hooks/useWhyDidYouUpdate";
 
-export const Keyboard = ({ targetKeyIds }) => {
+export const Keyboard = (props) => {
+  const { targetKeyIds } = props;
+  useWhyDidYouUpdate("Keyboard", props);
   const { hydratedState, setKeyId } = useContext(KeymapUiStateContext);
 
   return (
