@@ -1,7 +1,5 @@
 import React, { useContext, useEffect } from "react";
 
-import log from "loglevel";
-
 import { Diagram } from "~/components/diagram";
 import { InfoPanel } from "~/components/keyInfo";
 
@@ -19,7 +17,9 @@ export const KeymapUI = () => {
   useWhyDidYouUpdate("KeymapUI", {});
 
   const { debugLevel } = useAppSettings();
-  const [, updateDocumentDimensions] = useContext(DocumentDimensionsContext);
+  const [documentDimensions, updateDocumentDimensions] = useContext(
+    DocumentDimensionsContext
+  );
   const windowSize = useWindowSize();
   const { state } = useContext(KeymapUiStateContext);
 
@@ -84,7 +84,11 @@ export const KeymapUI = () => {
 
   const { connections, targetKeyIds } = useKeyConnections(
     state.keyId,
-    keyboardAndPanelRect ? keyboardAndPanelRect.top : 0
+    keyboardAndPanelRect ? keyboardAndPanelRect.top : 0,
+    documentDimensions,
+    keyInfoContainerRect,
+    diamargLeftRect,
+    diamargRightRect
   );
 
   return (
@@ -147,6 +151,8 @@ export const KeymapUI = () => {
           diamargLeftRect={diamargLeftRect}
           diamargRightRect={diamargRightRect}
           keyInfoContainerRect={keyInfoContainerRect}
+          documentDimensions={documentDimensions}
+          windowSize={windowSize}
         />
       </div>
     </>

@@ -1,10 +1,9 @@
-import React, { useCallback, useContext, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 import log from "loglevel";
 
 import { useAppSettings } from "~/hooks/useAppSettings";
-import { DocumentDimensionsContext } from "~/hooks/useDocumentDimensions";
-import { useWindowSize } from "~/hooks/useWindowSize";
+import { useWhyDidYouUpdate } from "~/hooks/useWhyDidYouUpdate";
 import { smallerRect, traceRect } from "~/lib/geometry";
 import { keyInfoConnectType } from "~/lib/keyConnections";
 
@@ -50,7 +49,10 @@ const drawVisualDebugInfo = (
   // Also draw a line down the center of the keyboard.
 
   if (keyboardAndPanelRect) {
-    log.debug(`Drawing into the keyboard/panel rectangle...`);
+    log.debug(
+      `Drawing into the keyboard/panel rectangle`,
+      keyboardAndPanelRect
+    );
     context.beginPath();
     context.strokeStyle = diagramLineColors.debugCenterLine;
     context.moveTo(keyboardCenter, 0);
@@ -74,6 +76,7 @@ const drawVisualDebugInfo = (
   }
 
   if (diamargLeftRect) {
+    log.debug(`Drawing into diamargLeftRect`, diamargLeftRect);
     const diamargLeftRectInner = smallerRect(diamargLeftRect);
     context.strokeStyle = diagramLineColors.debugLeft;
     context.beginPath();
@@ -83,6 +86,7 @@ const drawVisualDebugInfo = (
     log.debug(`diagram: there is no diamargLeftRect`);
   }
   if (diamargRightRect) {
+    log.debug(`Drawing into diamargRightRect`, diamargRightRect);
     const diamargRightRectInner = smallerRect(diamargRightRect);
     context.strokeStyle = diagramLineColors.debugRight;
     context.beginPath();
@@ -191,7 +195,7 @@ const drawDiagramLineTextref = (
   leftRightIdx[rightMargin] += 1;
 };
 
-/* Draw the 'selected' diagram lines --
+/* Draw a 'selected' diagram line --
  * lines from the title bar key in the key info panel to the key on the board.
  */
 const drawDiagramLineSelected = (
@@ -224,23 +228,110 @@ const drawDiagramLineSelected = (
   context.stroke();
 };
 
+/* Draw the entire diagram
+ */
+const drawDiagram = (
+  canvas,
+  connections,
+  keyboardAndPanelRect,
+  debugLevel,
+  diamargLeftRect,
+  diamargRightRect,
+  keyInfoContainerRect
+) => {
+  if (!canvas) return;
+  if (!canvas.current) return;
+
+  const context = canvas.current.getContext("2d");
+
+  /* Clear the canvas completely before drawing
+   * Without this, fast refresh during development will show old paths and new paths
+   * until you fully reload the page (e.g. with ctrl-r)
+   */
+  context.clearRect(0, 0, canvas.current.width, canvas.current.height);
+
+  /* Draw each connection
+   * Now that the canvas is the size of the entire screen,
+   * we can easily just draw lines connecting the bounding rectangles of the sources/targets.
+   */
+  log.debug(`The lines object is a ${typeof connections}, and it logs as:`);
+  log.debug(connections);
+  if (!connections) {
+    log.debug("No connections to set");
+    return;
+  }
+  if (!keyboardAndPanelRect) {
+    console.debug("keyboardAndPanelRect is null?");
+    return;
+  }
+
+  const keyboardCenter =
+    keyboardAndPanelRect.x +
+    (keyboardAndPanelRect.right - keyboardAndPanelRect.x) / 2;
+
+  if (debugLevel > 1) {
+    drawVisualDebugInfo(
+      context,
+      keyboardCenter,
+      keyboardAndPanelRect,
+      diamargLeftRect,
+      diamargRightRect
+    );
+  }
+
+  // the distance between vertical lines in the margin
+  const marginInsetTickSize = 5;
+
+  // the distance between horizontal lines from the source text to the margin
+  const sourceYInsetTickSize = 3;
+
+  // keep track of number of vertical lines in each diamarg.
+  let leftRightIdx = newLeftRightObject(0, 0);
+
+  // keep track of Y coordinates that source diagram lines have started from.
+  let leftRightSourceYCoordStartList = newLeftRightObject([], []);
+
+  connections.forEach((connection) => {
+    log.debug(`Drawing connection ${connection.stringify()}`);
+
+    if (connection.connectionType == keyInfoConnectType.textref) {
+      drawDiagramLineTextref(
+        context,
+        connection,
+        keyboardCenter,
+        leftRightSourceYCoordStartList,
+        sourceYInsetTickSize,
+        diamargRightRect,
+        diamargLeftRect,
+        leftRightIdx,
+        marginInsetTickSize
+      );
+    } else if (connection.connectionType == keyInfoConnectType.selected) {
+      drawDiagramLineSelected(context, connection, keyInfoContainerRect.top);
+    }
+  });
+};
+
 /* A diagram, where we draw lines from the key info panel to the board.
  * This component contains a <canvas> element and is overlaid on top of the entire document.
  */
-export const Diagram = ({
-  connections,
-  keyboardAndPanelRect,
-  diamargLeftRect,
-  diamargRightRect,
-  keyInfoContainerRect,
-}) => {
+export const Diagram = (props) => {
+  const {
+    connections,
+    keyboardAndPanelRect,
+    diamargLeftRect,
+    diamargRightRect,
+    keyInfoContainerRect,
+    documentDimensions,
+    windowSize,
+  } = props;
+  useWhyDidYouUpdate("Diagram", props);
+
   const canvas = useRef();
   const container = useRef();
-  const [documentDimensions] = useContext(DocumentDimensionsContext);
-  const windowSize = useWindowSize();
   const { debugLevel } = useAppSettings();
 
-  const updateCanvasSize = useCallback(() => {
+  useEffect(() => {
     if (!canvas) return;
     if (!canvas.current) return;
 
@@ -260,91 +351,18 @@ export const Diagram = ({
     log.debug(
       `New canvas sizes:\n${canvas.current.style.width} * ${canvas.current.style.height}\n${canvas.current.width} * ${canvas.current.height}`
     );
-  }, [documentDimensions]);
+  }, [documentDimensions, windowSize]);
 
   useEffect(() => {
-    updateCanvasSize();
-  }, [documentDimensions, updateCanvasSize, windowSize]);
-
-  const updateCanvas = useCallback(() => {
-    if (!canvas) return;
-    if (!canvas.current) return;
-
-    const context = canvas.current.getContext("2d");
-
-    /* Clear the canvas completely before drawing
-     * Without this, fast refresh during development will show old paths and new paths
-     * until you fully reload the page (e.g. with ctrl-r)
-     */
-    context.clearRect(0, 0, canvas.current.width, canvas.current.height);
-
-    /* Draw each connection
-     * Now that the canvas is the size of the entire screen,
-     * we can easily just draw lines connecting the bounding rectangles of the sources/targets.
-     */
-    log.debug(`The lines object is a ${typeof connections}, and it logs as:`);
-    log.debug(connections);
-    if (!connections) {
-      log.debug("No connections to set");
-      return;
-    }
-
-    const keyboardCenter =
-      keyboardAndPanelRect.x +
-      (keyboardAndPanelRect.right - keyboardAndPanelRect.x) / 2;
-
-    if (debugLevel > 1) {
-      drawVisualDebugInfo(
-        context,
-        keyboardCenter,
-        keyboardAndPanelRect,
-        diamargLeftRect,
-        diamargRightRect
-      );
-    }
-
-    // the distance between vertical lines in the margin
-    const marginInsetTickSize = 5;
-
-    // the distance between horizontal lines from the source text to the margin
-    const sourceYInsetTickSize = 3;
-
-    // keep track of number of vertical lines in each diamarg.
-    let leftRightIdx = newLeftRightObject(0, 0);
-
-    // keep track of Y coordinates that source diagram lines have started from.
-    let leftRightSourceYCoordStartList = newLeftRightObject([], []);
-
-    connections.forEach((connection) => {
-      log.debug(`Drawing connection ${connection.stringify()}`);
-
-      if (connection.connectionType == keyInfoConnectType.textref) {
-        drawDiagramLineTextref(
-          context,
-          connection,
-          keyboardCenter,
-          leftRightSourceYCoordStartList,
-          sourceYInsetTickSize,
-          diamargRightRect,
-          diamargLeftRect,
-          leftRightIdx,
-          marginInsetTickSize
-        );
-      } else if (connection.connectionType == keyInfoConnectType.selected) {
-        drawDiagramLineSelected(context, connection, keyInfoContainerRect.top);
-      }
-    });
-  }, [
-    debugLevel,
-    connections,
-    diamargLeftRect,
-    diamargRightRect,
-    keyboardAndPanelRect,
-    keyInfoContainerRect,
-  ]);
-
-  useEffect(() => {
-    updateCanvas();
+    drawDiagram(
+      canvas,
+      connections,
+      keyboardAndPanelRect,
+      debugLevel,
+      diamargLeftRect,
+      diamargRightRect,
+      keyInfoContainerRect
+    );
   }, [
     debugLevel,
     connections,
@@ -352,8 +370,8 @@ export const Diagram = ({
     diamargRightRect,
     documentDimensions,
     keyboardAndPanelRect,
-    updateCanvas,
     windowSize,
+    keyInfoContainerRect,
   ]);
 
   return (

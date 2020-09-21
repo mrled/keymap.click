@@ -147,7 +147,14 @@ const getKeyConnections = () => {
  *                        the coordinates of all keys and identifiers will change,
  *                        so we have to getKeyConnections() again.
  */
-export const useKeyConnections = (fromKey, keyboardStartHeight) => {
+export const useKeyConnections = (
+  fromKey,
+  keyboardStartHeight,
+  documentDimensions,
+  keyInfoContainerRect,
+  diamargLeftRect,
+  diamargRightRect
+) => {
   const [connections, setConnections] = useState(emptyConnections);
   const [targetKeyIds, setTargetKeyIds] = useState(emptyTargetKeys);
   const windowSize = useWindowSize();
@@ -156,7 +163,15 @@ export const useKeyConnections = (fromKey, keyboardStartHeight) => {
     const data = getKeyConnections();
     setConnections(data.connections);
     setTargetKeyIds(data.targetKeyIds);
-  }, [fromKey, keyboardStartHeight, windowSize]);
+  }, [
+    fromKey,
+    keyboardStartHeight,
+    documentDimensions,
+    keyInfoContainerRect,
+    diamargLeftRect,
+    diamargRightRect,
+    windowSize,
+  ]);
 
   return {
     connections,
