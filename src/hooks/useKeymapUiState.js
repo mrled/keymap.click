@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { createContext, useState } from "react";
+import { createContext, useCallback, useState } from "react";
 
 import { QueryState, setQueryState } from "~/lib/appQueryState";
 import { objectTableCompare } from "~/lib/consoleLogHelper";
@@ -10,6 +10,10 @@ const GuideStepState = new QueryState("guideStep", 0);
 const LegendMapState = new QueryState("legendMap", "MrlLegends");
 const KeyMapState = new QueryState("keyMap", "MrlMainLayer");
 const SelectedKeyState = new QueryState("keyId", null);
+
+/* Prevent unnecessary redraws
+ */
+const emptyIdempotentStateObject = {};
 
 /* A table for looking up the state object by its key
  * E.g. stateByKey.guide === GuideState
@@ -80,12 +84,14 @@ const hydrateState = (state) => {
   const legendMap = legendMaps[state.legendMap || LegendMapState.defaultValue];
   const guide = keyMap.guides[state.guide || GuideState.defaultValue];
 
-  const keyData = keyMap.allKeysById[state.keyId] || {};
+  const keyData = keyMap.allKeysById[state.keyId] || emptyIdempotentStateObject;
 
   const guidesAvailable = Object.entries(keyMap.guides).length > 1; // NOTE: in keys.js, we define a "none" guide for every keyMap.
   const guideStepIdx = Number(state.guideStep || GuideStepState.defaultValue);
   const inGuide = guide.name !== GuideState.defaultValue;
-  const guideStep = inGuide ? guide.steps[guideStepIdx] : {};
+  const guideStep = inGuide
+    ? guide.steps[guideStepIdx]
+    : emptyIdempotentStateObject;
 
   const nextGuideStepIdx = guideStepIdx + 1;
   const canIncrementGuideStep = inGuide
@@ -126,24 +132,32 @@ export const KeymapUiStateContext = createContext(KeymapUiStateDefault);
 export const useKeymapUiState = () => {
   const router = useRouter();
   const [keymapUiState, setKeymapUiState] = useState(KeymapUiStateDefault);
-  const hydratedState = hydrateState(keymapUiState);
+
+  const hydrateStateCallback = useCallback(() => hydrateState(keymapUiState), [
+    keymapUiState,
+  ]);
+
+  const hydratedState = hydrateStateCallback(keymapUiState);
 
   /* Set display state and query in one go
    */
-  const setStateAndQuery = (newData) => {
-    console.trace(`setStateAndQuery():`);
-    console.table(
-      objectTableCompare(
-        [keymapUiState, router.query, newData],
-        ["keymapUiState", "router.query", "newData"]
-      )
-    );
-    setKeymapUiState({
-      ...keymapUiState,
-      ...newData,
-    });
-    setQueryState(router, ...stateObjToQueryStringPair(newData));
-  };
+  const setStateAndQuery = useCallback(
+    (newData) => {
+      console.trace(`setStateAndQuery():`);
+      console.table(
+        objectTableCompare(
+          [keymapUiState, router.query, newData],
+          ["keymapUiState", "router.query", "newData"]
+        )
+      );
+      setKeymapUiState({
+        ...keymapUiState,
+        ...newData,
+      });
+      setQueryState(router, ...stateObjToQueryStringPair(newData));
+    },
+    [keymapUiState, router]
+  );
 
   /* Set the React state from the query string values
    */
@@ -167,51 +181,71 @@ export const useKeymapUiState = () => {
     }
   };
 
-  const setGuide = (guideName) => {
-    setStateAndQuery({
-      guide: guideName ? guideName : GuideState.defaultValue,
-      guideStep: GuideStepState.defaultValue,
-      keyId: guideName
-        ? hydratedState.keyMap.guides[guideName].steps[0].key
-        : SelectedKeyState.defaultValue,
-    });
-    return hydratedState.guide;
-  };
+  const setGuide = useCallback(
+    (guideName) => {
+      setStateAndQuery({
+        guide: guideName ? guideName : GuideState.defaultValue,
+        guideStep: GuideStepState.defaultValue,
+        keyId: guideName
+          ? hydratedState.keyMap.guides[guideName].steps[0].key
+          : SelectedKeyState.defaultValue,
+      });
+      return hydratedState.guide;
+    },
+    [hydratedState.guide, hydratedState.keyMap.guides, setStateAndQuery]
+  );
 
-  const incrementGuideStep = () => {
+  const incrementGuideStep = useCallback(() => {
     setStateAndQuery({
       guideStep: hydratedState.nextGuideStepIdx,
       keyId: hydratedState.guide.steps[hydratedState.nextGuideStepIdx].key,
     });
-  };
-  const decrementGuideStep = () => {
+  }, [
+    hydratedState.guide.steps,
+    hydratedState.nextGuideStepIdx,
+    setStateAndQuery,
+  ]);
+  const decrementGuideStep = useCallback(() => {
     setStateAndQuery({
       guideStep: hydratedState.prevGuideStepIdx,
       keyId: hydratedState.guide.steps[hydratedState.prevGuideStepIdx].key,
     });
-  };
+  }, [
+    hydratedState.guide.steps,
+    hydratedState.prevGuideStepIdx,
+    setStateAndQuery,
+  ]);
 
-  const setKeyMap = (keyMapName) => {
-    setStateAndQuery({
-      guide: GuideState.defaultValue,
-      guideStep: GuideStepState.defaultValue,
-      keyMap: keyMapName ? keyMapName : KeyMapState.defaultValue,
-    });
-  };
+  const setKeyMap = useCallback(
+    (keyMapName) => {
+      setStateAndQuery({
+        guide: GuideState.defaultValue,
+        guideStep: GuideStepState.defaultValue,
+        keyMap: keyMapName ? keyMapName : KeyMapState.defaultValue,
+      });
+    },
+    [setStateAndQuery]
+  );
 
-  const setLegendMap = (legendMapName) => {
-    setStateAndQuery({
-      legendMap: legendMapName,
-    });
-  };
+  const setLegendMap = useCallback(
+    (legendMapName) => {
+      setStateAndQuery({
+        legendMap: legendMapName,
+      });
+    },
+    [setStateAndQuery]
+  );
 
-  const setKeyId = (keyId) => {
-    setStateAndQuery({
-      keyId: keyId || SelectedKeyState.defaultValue,
-      guide: GuideState.defaultValue,
-      guideStep: GuideStepState.defaultValue,
-    });
-  };
+  const setKeyId = useCallback(
+    (keyId) => {
+      setStateAndQuery({
+        keyId: keyId || SelectedKeyState.defaultValue,
+        guide: GuideState.defaultValue,
+        guideStep: GuideStepState.defaultValue,
+      });
+    },
+    [setStateAndQuery]
+  );
 
   return {
     // Properties
