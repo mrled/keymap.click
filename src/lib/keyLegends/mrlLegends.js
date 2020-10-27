@@ -348,7 +348,7 @@ const MrlLegends = {
     },
   },
   layer_arrow: {
-    text: { value: "←↑↓→" },
+    text: { value: "←↓↑→" },
   },
 };
 

@@ -123,7 +123,7 @@ const UnicodeLegends = {
     glyph: { value: "⇪" },
   },
   layer_arrow: {
-    text: { value: "←↑↓→" },
+    text: { value: "←↓↑→" },
   },
 };
 
