@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 
 import log from "loglevel";
 
@@ -159,7 +159,7 @@ export const useKeyConnections = (
   const [targetKeyIds, setTargetKeyIds] = useState(emptyTargetKeys);
   const windowSize = useWindowSize();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const data = getKeyConnections();
     setConnections(data.connections);
     setTargetKeyIds(data.targetKeyIds);

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useLayoutEffect } from "react";
 
 import { Diagram } from "~/components/diagram";
 import { InfoPanel } from "~/components/keyInfo";
@@ -55,7 +55,7 @@ export const KeymapUI = () => {
     "keyInfoContainer"
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // log.debug(
     //   [
     //     `Document dimensions should update due to a dependency change. Rectangles:`,

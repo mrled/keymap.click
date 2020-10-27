@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 
 import log from "loglevel";
 
@@ -331,7 +331,7 @@ export const Diagram = (props) => {
   const container = useRef();
   const { debugLevel } = useAppSettings();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!canvas) return;
     if (!canvas.current) return;
 
@@ -353,7 +353,7 @@ export const Diagram = (props) => {
     );
   }, [documentDimensions, windowSize]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     drawDiagram(
       canvas,
       connections,

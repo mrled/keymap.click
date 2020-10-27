@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
 
 export function useWindowSize() {
   const isClient = typeof window === "object";
@@ -12,7 +12,7 @@ export function useWindowSize() {
 
   const [windowSize, setWindowSize] = useState(getSize());
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isClient) {
       return false;
     }

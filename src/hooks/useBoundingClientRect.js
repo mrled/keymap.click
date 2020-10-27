@@ -1,11 +1,11 @@
-import { useCallback } from "react";
+import { useLayoutEffect, useRef } from "react";
 
 import { useIdempotentLoggedState } from "~/hooks/useLoggedState";
-import { eqDOMRect } from "~/lib/geometry";
+import { eqDOMRect, FakeDOMRect } from "~/lib/geometry";
 
 /* Get a callback reference and an automatically updated bounding rect for it.
  *
- * Takes a list of dependencies to pass to useCallback.
+ * Takes a list of dependencies to pass to useLayoutEffect.
  *
  * Expects that elementRef is passed as `ref=` to exactly one element.
  */
@@ -15,8 +15,13 @@ export const useBoundingClientRect = (callbackDependencies, stateLogName) => {
     stateLogName,
     eqDOMRect
   );
-  const elementRef = useCallback((node) => {
-    if (node != null) setElementRect(node.getBoundingClientRect());
-  }, callbackDependencies);
+  const elementRef = useRef();
+  useLayoutEffect(() => {
+    setElementRect(
+      elementRef.current
+        ? elementRef.current.getBoundingClientRect()
+        : new FakeDOMRect()
+    );
+  }, [...callbackDependencies, elementRef.current]);
   return [elementRef, elementRect];
 };
