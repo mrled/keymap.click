@@ -1,6 +1,7 @@
 # keymap.click
 
-Experiments in keyboard layout demonstration
+A visual keymap explanation --
+how an ErgoDox keyboard helped my RSI.
 
 See it in action:
 <https://keymap.click>

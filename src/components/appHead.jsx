@@ -4,7 +4,7 @@ import React from "react";
 export const AppHead = () => {
   return (
     <Head>
-      <title>keymap.click: experiments in keyboard layouts</title>
+      <title>keymap.click: A visual keymap explanation</title>
       <link rel="icon" href="/favicon.ico" />
       <meta
         name="viewport"
@@ -14,12 +14,12 @@ export const AppHead = () => {
       <meta
         name="og:title"
         property="og:title"
-        content="keymap.click: experiments in keyboard layouts"
+        content="keymap.click: A visual keymap explanation"
       />
       <meta
         name="og:description"
         property="og:description"
-        content="A visual explanation of how an ErgoDox keyboard helped my RSI."
+        content="How an ErgoDox keyboard helped my RSI."
       />
       <meta property="og:url" content="https://keymap.click" />
       <link rel="icon" type="image/png" href="/command_32.png" sizes="32x32" />
@@ -44,11 +44,11 @@ export const AppHead = () => {
       />
       <meta
         name="twitter:title"
-        content="keymap.click: experiments in keyboard layouts"
+        content="keymap.click: A visual keymap explanation"
       />
       <meta
         name="twitter:description"
-        content="A visual explanation of how an ErgoDox keyboard helped my RSI."
+        content="How an ErgoDox keyboard helped my RSI."
       />
       <meta name="twitter:image:width" content="310" />
       <meta name="twitter:image:height" content="285" />
