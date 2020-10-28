@@ -2,29 +2,21 @@
 
 Experiments in keyboard layout demonstration
 
-You might be able to see it in action here:
+See it in action:
 <https://keymap.click>
-
-That site is used for development,
-and may not always be working.
 
 ![Screenshot](docs/screenshot.png?raw=true "Screenshot")
 
 ## What is this?
 
-First and foremost, it's a work in progress.
-
-Its goal is to be able to show off keyboard layouts for my ErgoDox,
+My goal is to be able to show off keyboard layouts for my ErgoDox,
 and provide explanations for why I made the layout decisions I made.
 The ErgoDox-EZ has been a huge part of my strategy for dealing with RSI,
 and I want to be able to visually explain to others how it helped me.
 
 It's also a way for me to learn modern web development.
-(Reminder: work in progress.)
 I've never built a web app like this before,
-I have only limited experience with JavaScript,
-and I've always wanted to improve my design sense and layout skills.
-I'll get a lot of new experience with this project.
+and I built it in about 5 months of nights and weekends.
 
 ## How it's built
 
@@ -69,3 +61,5 @@ I'm using `prettier` so I don't have to have a dumb code formatting opinion.
   [the `<kbd>` element](https://shkspr.mobi/blog/2020/05/better-keyboard-buttons-in-html/)
 - Xah Lee's useful
   [list of unicode computing symbols](http://xahlee.info/comp/unicode_computing_symbols.html)
+- @Robin on the Tailwind Discord server, who helped me solve
+  [a layout bug on initial load](docs/issues/bad-first-render-in-production/index.md)
