@@ -22,6 +22,59 @@ Here's what it looks like:
 
 <img src="bug-no-debugging.png">
 
+## The solution
+
+**When I configured `purgecss` properly, this went away.**
+
+I got some very kind help from @Robin on the Tailwind Discord server.
+Thank you very much.
+
+I think the problem is that the browser executes my React code and downloads the CSS at the same time.
+If the CSS has been purged,
+the CSS download wins the race,
+and the DOM element is correctly measured after CSS is applied.
+
+But if the CSS has not been purged,
+as of today,
+[Tailwind weighs in at over 2MB before compression](https://tailwindcss.com/docs/controlling-file-size).
+The DOM element does not get measured correctly on the initial load,
+or when force-refreshing,
+because the CSS takes so long to download.
+
+I am very happy to see this problem gone,
+but I am worried that I haven't fixed the underlying issue.
+It seems to me that I have just made it more likely that my CSS load will win a race,
+but that I haven't fixed the underlying race condition.
+For instance, what happens if a user's connection is quite slow?
+
+I adapted my DOM element measurement code directly from
+[the official React docs](https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node),
+which at the time of this writing looks like this:
+
+```javascript
+function MeasureExample() {
+  const [height, setHeight] = useState(0);
+
+  const measuredRef = useCallback((node) => {
+    if (node !== null) {
+      setHeight(node.getBoundingClientRect().height);
+    }
+  }, []);
+
+  return (
+    <>
+      <h1 ref={measuredRef}>Hello, world</h1>
+      <h2>The above header is {Math.round(height)}px tall</h2>
+    </>
+  );
+}
+```
+
+If the node in question is sized according to CSS that gets loaded asynchronously --
+for example, in external stylesheets, as mine is --
+I'm not sure what I can do to make sure it is rendered correctly on the first load.
+If you do, please [email me](mailto:me@micahrl.com).
+
 ## Work log
 
 - Hypothesis: something to do with static site generation?
