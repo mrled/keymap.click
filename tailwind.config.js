@@ -6,6 +6,7 @@ module.exports = {
   purge: {
     content: ["./src/**/*.js", "./src/**/*.jsx"],
     options: {
+      // TODO: rename all these classes with some string constant
       whitelistPatterns: [
         /^row\-span.*/,
         /^row\-start.*/,
