@@ -55,12 +55,3 @@ I'm using `prettier` so I don't have to have a dumb code formatting opinion.
   [ErgoDox-EZ](https://ergodox-ez.com/):
   I doubt I would have tried to build one on my own.
   Thank you for making it easier to get.
-- Wikimedia Commons for the
-  [Looped square on white background.svg](https://commons.wikimedia.org/wiki/File:Looped_square_on_white_background.svg)
-  which I use as an icon.
-- Terence Eden for making me aware of
-  [the `<kbd>` element](https://shkspr.mobi/blog/2020/05/better-keyboard-buttons-in-html/)
-- Xah Lee's useful
-  [list of unicode computing symbols](http://xahlee.info/comp/unicode_computing_symbols.html)
-- @Robin on the Tailwind Discord server, who helped me solve
-  [a layout bug on initial load](docs/issues/bad-first-render-in-production/index.md)

@@ -155,6 +155,9 @@ const Sidebar = ({ visibleMenu, setVisibleMenu }) => {
           <li>
             <IntraAppLink href="/story">Personal history</IntraAppLink>
           </li>
+          <li>
+            <IntraAppLink href="/colophon">Colophon</IntraAppLink>
+          </li>
         </ul>
       </div>
 
