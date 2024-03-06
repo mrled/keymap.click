@@ -6,6 +6,5 @@ module.exports = {
     { pattern: /^row\-start.*/ },
     { pattern: /^col\-span.*/ },
     { pattern: /^col\-start.*/ },
-    { pattern: /^key\-info\-connect.*/ },
   ],
 };
