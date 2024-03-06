@@ -1,19 +1,11 @@
 module.exports = {
-  future: {
-    purgeLayersByDefault: true,
-    removeDeprecatedGapUtilities: true,
-  },
-  purge: {
-    content: ["./src/**/*.js", "./src/**/*.jsx"],
-    options: {
-      // TODO: rename all these classes with some string constant
-      whitelistPatterns: [
-        /^row\-span.*/,
-        /^row\-start.*/,
-        /^col\-span.*/,
-        /^col\-start.*/,
-        /^key\-info\-connect.*/,
-      ],
-    },
-  },
+  content: ["./src/**/*.js", "./src/**/*.jsx"],
+  safelist: [
+    // TODO: rename all these classes with some string constant
+    { pattern: /^row\-span.*/ },
+    { pattern: /^row\-start.*/ },
+    { pattern: /^col\-span.*/ },
+    { pattern: /^col\-start.*/ },
+    { pattern: /^key\-info\-connect.*/ },
+  ],
 };

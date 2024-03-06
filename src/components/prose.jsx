@@ -12,8 +12,8 @@ import {
  */
 export const IntraAppLink = ({ href, children }) => {
   return (
-    <Link href={href}>
-      <a className="text-blue-600">{children}</a>
+    <Link href={href} className="text-blue-600">
+      {children}
     </Link>
   );
 };
