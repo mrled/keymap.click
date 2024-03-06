@@ -1,8 +1,9 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 import log from "loglevel";
 
 import { useAppSettings } from "~/hooks/useAppSettings";
+import { useIsomorphicLayoutEffect } from "~/hooks/useIsomorphicLayoutEffect";
 import { useWhyDidYouUpdate } from "~/hooks/useWhyDidYouUpdate";
 import { smallerRect, traceRect } from "~/lib/geometry";
 import { keyInfoConnectType } from "~/lib/keyConnections";
@@ -331,7 +332,7 @@ export const Diagram = (props) => {
   const container = useRef();
   const { debugLevel } = useAppSettings();
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!canvas) return;
     if (!canvas.current) return;
 
@@ -353,7 +354,7 @@ export const Diagram = (props) => {
     );
   }, [documentDimensions, windowSize]);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     drawDiagram(
       canvas,
       connections,

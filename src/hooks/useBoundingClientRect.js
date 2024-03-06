@@ -1,6 +1,7 @@
-import { useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
 
 import { useIdempotentLoggedState } from "~/hooks/useLoggedState";
+import { useIsomorphicLayoutEffect } from "~/hooks/useIsomorphicLayoutEffect";
 import { eqDOMRect, FakeDOMRect } from "~/lib/geometry";
 
 /* Get a callback reference and an automatically updated bounding rect for it.
@@ -16,12 +17,15 @@ export const useBoundingClientRect = (callbackDependencies, stateLogName) => {
     eqDOMRect
   );
   const elementRef = useRef();
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     setElementRect(
       elementRef.current
         ? elementRef.current.getBoundingClientRect()
         : new FakeDOMRect()
     );
-  }, [...callbackDependencies, elementRef.current]);
+    // Because callbackDependencies must come from the caller,
+    // we can't use the eslint rule of exhaustive-deps.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...callbackDependencies, elementRef, setElementRect]);
   return [elementRef, elementRect];
 };

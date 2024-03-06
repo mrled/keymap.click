@@ -1,7 +1,8 @@
-import { useState, useLayoutEffect } from "react";
+import { useState } from "react";
 
 import log from "loglevel";
 
+import { useIsomorphicLayoutEffect } from "~/hooks/useIsomorphicLayoutEffect";
 import { useWindowSize } from "~/hooks/useWindowSize";
 import { Point, absolutifyRect } from "~/lib/geometry";
 import {
@@ -159,7 +160,7 @@ export const useKeyConnections = (
   const [targetKeyIds, setTargetKeyIds] = useState(emptyTargetKeys);
   const windowSize = useWindowSize();
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const data = getKeyConnections();
     setConnections(data.connections);
     setTargetKeyIds(data.targetKeyIds);

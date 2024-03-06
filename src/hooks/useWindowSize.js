@@ -1,4 +1,6 @@
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useCallback, useState } from "react";
+
+import { useIsomorphicLayoutEffect } from "~/hooks/useIsomorphicLayoutEffect";
 
 export function useWindowSize() {
   const isClient = typeof window === "object";
@@ -12,7 +14,7 @@ export function useWindowSize() {
 
   const [windowSize, setWindowSize] = useState(getSize());
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!isClient) {
       return false;
     }

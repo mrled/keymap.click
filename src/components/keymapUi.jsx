@@ -1,4 +1,4 @@
-import React, { useContext, useLayoutEffect } from "react";
+import React, { useContext } from "react";
 
 import { Diagram } from "~/components/diagram";
 import { InfoPanel } from "~/components/keyInfo";
@@ -7,6 +7,7 @@ import { Keyboard } from "~/components/keyboard";
 import { VisualDebugStyle } from "~/components/visualDebugStyle";
 import { useAppSettings } from "~/hooks/useAppSettings";
 import { useBoundingClientRect } from "~/hooks/useBoundingClientRect";
+import { useIsomorphicLayoutEffect } from "~/hooks/useIsomorphicLayoutEffect";
 import { useKeyConnections } from "~/hooks/useKeyConnections";
 import { DocumentDimensionsContext } from "~/hooks/useDocumentDimensions";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
@@ -55,7 +56,7 @@ export const KeymapUI = () => {
     "keyInfoContainer"
   );
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     // log.debug(
     //   [
     //     `Document dimensions should update due to a dependency change. Rectangles:`,

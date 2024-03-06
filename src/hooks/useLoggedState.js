@@ -20,17 +20,6 @@ const makeLoggable = (obj) => {
   }
 };
 
-/* Emit a log message for a state change that was not necessary
- * because the state is idempotent and the old and new values are the same.
- */
-const logUnnecessaryStateChange = (stateName, state) => {
-  console.log(
-    `%clogUnnucessaryStateChange for state ${stateName}: State change attempted, but value has not changed`,
-    changeMessageStyle,
-    state
-  );
-};
-
 /* Emit a log message for a state change.
  *
  * If possible, show a table with a before and after value for an object.
