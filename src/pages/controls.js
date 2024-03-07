@@ -10,8 +10,6 @@ export default function Controls() {
     setDebugLevel,
     advancedMode,
     setAdvancedMode,
-    dazzlingColor,
-    setDazzlingColor,
   } = useAppSettings();
   return (
     <SiteChrome>
@@ -61,26 +59,6 @@ export default function Controls() {
                 className="p-2 m-2 text-xs table-cell"
                 type="checkbox"
               />
-            </div>
-
-            <div className="table-row">
-              <label
-                htmlFor="app-dazzling-color-selector"
-                className="p-2 m-2 text-xs table-cell"
-              >
-                Enable dazzling color
-              </label>
-              <input
-                onChange={() => setDazzlingColor(!dazzlingColor)}
-                checked={dazzlingColor}
-                name="Enable dazzling color"
-                id="app-dazzling-color-selector"
-                className="p-2 m-2 text-xs table-cell"
-                type="checkbox"
-              />
-              <p className="p-2 m-2 text-xs table-cell">
-                (Requires new page load)
-              </p>
             </div>
           </div>
         </div>

@@ -59,16 +59,11 @@ const MenuBarSpacer = () => {
 
 const MenuBar = () => {
   const [visibleMenu, setVisibleMenu] = useState(false);
-  const { dazzlingColor } = useAppSettings();
-
-  const colors = dazzlingColor
-    ? "bg-orange-100 border-orange-700"
-    : "bg-white border-orange-600";
 
   return (
     <div className="w-full mx-auto fixed px-1">
       <div
-        className={`w-full max-w-screen-lg mx-auto border-r border-l border-b rounded-b-md ${colors}`}
+        className="w-full max-w-screen-lg mx-auto border-r border-l border-b rounded-b-md bg-white border-orange-600"
         id="menu-bar-container"
       >
         <div>
@@ -111,17 +106,11 @@ const SecretSidebarControls = ({ enabled }) => {
 
 const Sidebar = ({ visibleMenu, setVisibleMenu }) => {
   const { advancedMode } = useAppSettings();
-  const { dazzlingColor } = useAppSettings();
-
-  const sideBarColors = dazzlingColor
-    ? "bg-green-100 border-green-500"
-    : "bg-white border-orange-600";
 
   return (
     <div
       className={classnames(
-        "fixed inset-y-0 left-0 w-64 px-4 py-4 border-r overflow-auto transform",
-        sideBarColors,
+        "fixed inset-y-0 left-0 w-64 px-4 py-4 border-r overflow-auto transform bg-white border-orange-600",
         {
           "translate-x-0 ease-out transition-medium": visibleMenu,
           "-translate-x-full ease-in transition-medium": !visibleMenu,
