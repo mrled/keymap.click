@@ -293,7 +293,6 @@ const MrlLegends = {
     },
     image: {
       value: "misc/menu-key.svg",
-      size: [6, 6],
       attrib:
         "Public domain, published by OpenClipart, https://freesvg.org/menu-key-icon-vector-illustration",
     },

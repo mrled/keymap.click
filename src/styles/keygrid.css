@@ -12,60 +12,75 @@
   }
 }
 
-.grid-rows-10-keyb {
-  grid-template-rows: repeat(10, var(--keyboard-grid-unit));
-}
-.grid-rows-6-keyb {
-  grid-template-rows: repeat(6, var(--keyboard-grid-unit));
-}
-.grid-rows-4-keyb {
-  grid-template-rows: repeat(4, var(--keyboard-grid-unit));
-}
-.grid-rows-3-keyb {
-  grid-template-rows: repeat(3, var(--keyboard-grid-unit));
-}
-.grid-rows-2-keyb {
-  grid-template-rows: repeat(2, var(--keyboard-grid-unit));
+/* A grid of keys, like a keyboard would have */
+div.keygrid {
+  display: grid;
+  pointer-events: none;
+  user-select: none;
 }
 
-.grid-cols-15-keyb {
-  grid-template-columns: repeat(15, var(--keyboard-grid-unit));
-}
-.grid-cols-6-keyb {
-  grid-template-columns: repeat(6, var(--keyboard-grid-unit));
-}
-.grid-cols-4-keyb {
-  grid-template-columns: repeat(4, var(--keyboard-grid-unit));
-}
-.grid-cols-3-keyb {
-  grid-template-columns: repeat(3, var(--keyboard-grid-unit));
-}
-.grid-cols-2-keyb {
-  grid-template-columns: repeat(2, var(--keyboard-grid-unit));
+/* A single key */
+button.keyboard-key {
+  padding: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.125rem;
+  font-family: monospace;
+  pointer-events: auto;
+  outline: none;
+  position: relative;
+  background-color: var(--button-bg-enabled);
+  border: 1px solid var(--key-border);
+  &:hover {
+    background-color: var(--key-hover-bg);
+  }
+  &.active-key {
+    background-color: var(--key-active-bg);
+    border: 1px solid var(--key-active-border);
+    &:hover {
+      background-color: var(--key-active-hover-bg);
+    }
+  }
+  &.related-to-active-key {
+    background-color: var(--key-related-active-bg);
+    border: 1px solid var(--key-related-active-border);
+    &:hover {
+      background-color: var(--key-related-active-hover-bg);
+    }
+  }
+  &.diagram-target-key {
+    background-color: var(--key-diagram-target-bg);
+    border: 1px solid var(--key-diagram-target-border);
+    &:hover {
+      background-color: var(--key-diagram-target-hover-bg);
+    }
+  }
 }
 
+/* A key that's not part of a keygrid */
 .standalone-key {
   display: inline-block;
 }
-.standalone-key-w-1 {
-  width: var(--keyboard-grid-unit);
-}
-.standalone-key-w-2 {
-  width: calc(var(--keyboard-grid-unit) * 2);
-}
-.standalone-key-w-3 {
-  width: calc(var(--keyboard-grid-unit) * 3);
-}
-.standalone-key-h-2 {
-  height: calc(var(--keyboard-grid-unit) * 2);
-}
-.standalone-key-h-3 {
-  height: calc(var(--keyboard-grid-unit) * 3);
-}
-.standalone-key-h-4 {
-  height: calc(var(--keyboard-grid-unit) * 4);
+
+/* A key handle, which is an invisible element inside a key that can be used as an anchor point in a diagram */
+.key-handle {
+  height: 0.25rem; /* h-1 */
+  width: 0.25rem; /* w-1 */
+  margin: 0; /* m-0 */
+  padding: 0; /* p-0 */
+  border: none; /* border-none */
+  pointer-events: none; /* pointer-events-none */
+  position: absolute; /* absolute */
 }
 
+/* An image used as a legend for a key */
+img.key-legend {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Left and right thumb clusters of an ErgoDox keyboard */
 .keyboard-left-thumb-cluster {
   transform: translateX(calc(var(--keyboard-grid-unit) * -2))
     translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(25deg);
@@ -78,11 +93,6 @@
   transform-origin: calc(var(--keyboard-grid-unit) * 6)
     calc(var(--keyboard-grid-unit) * 2);
   padding-bottom: calc(var(--keyboard-grid-unit) * 9);
-}
-
-.force-outline-none,
-.force-outline-none:focus {
-  outline: 0 !important;
 }
 
 .kid-diamarg {

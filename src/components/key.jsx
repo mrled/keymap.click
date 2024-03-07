@@ -1,7 +1,5 @@
 import React from "react";
 
-import classnames from "classnames";
-
 import { useWhyDidYouUpdate } from "~/hooks/useWhyDidYouUpdate";
 import { keyHandleDomIdFromKeyId } from "~/lib/keyConnections";
 
@@ -36,13 +34,12 @@ const KeyHandle = ({ keyId, colStart, handleTop, extraClasses }) => {
     transform: `translateY(${yOffset}px)`,
   };
 
-  const classes = `h-1 w-1 m-0 p-0 border-none pointer-events-none absolute ${extraClasses}`;
   return (
     <>
       <div
         id={keyHandleDomIdFromKeyId(keyId)}
         style={style}
-        className={classes}
+        className={`key-handle ${extraClasses}`}
       />
     </>
   );
@@ -52,21 +49,17 @@ const KeyHandle = ({ keyId, colStart, handleTop, extraClasses }) => {
  * and return a Legend object that can be used inside of a Key
  */
 export const Legend = (legend) => {
-  const defaultFontFace = "font-roboto-mono";
-  const defaultGlyphFontSize = "text-m md:text-m";
-  const defaultTextFontSize = "text-2xs md:text-xs";
+  const defaultFontFace = "font-roboto-mono"; // TODO: remove-tailwind
+  const defaultGlyphFontSize = "text-m md:text-m"; // TODO: remove-tailwind
+  const defaultTextFontSize = "text-2xs md:text-xs"; // TODO: remove-tailwind
 
   if (!legend) {
     return {};
   } else if (legend.image) {
-    const [width, height] = legend.image.size ? legend.image.size : [4, 4];
     return {
       legend: (
         <>
-          <img
-            src={`legends/${legend.image.value}`}
-            className={`container w-${width} h-${height}`}
-          />
+          <img src={`legends/${legend.image.value}`} className="key-legend" />
         </>
       ),
       attrib: legend.image.attrib || "",
@@ -122,29 +115,49 @@ export const Key = ({
   const [col, row] = size;
   const [colStart, rowStart] = startPos;
 
-  const gridClasses = `col-span-${col} row-span-${row} col-start-${colStart} row-start-${rowStart}`;
-  const standaloneClasses = `standalone-key standalone-key-w-${col} standalone-key-h-${row}`;
+  // The style prop if this key is being rendered in a grid
+  const gridStyleProp = {
+    gridColumnStart: colStart,
+    gridRowStart: rowStart,
+    gridColumnEnd: `span ${col}`,
+    gridRowEnd: `span ${row}`,
+  };
 
-  const classes = classnames(
-    standalone ? standaloneClasses : gridClasses,
-    `p-1 flex justify-center items-center rounded-sm font-mono pointer-events-auto force-outline-none relative`,
-    {
-      "bg-orange-400 border border-orange-700 hover:bg-orange-600": active,
-      "bg-orange-200 border border-orange-500 hover:bg-orange-400": otherSelected,
-      "bg-green-200 border border-green-500 hover:bg-green-400":
-        !active && targetKeyActive,
-      "bg-gray-200 border border-gray-500 hover:bg-gray-400":
-        !active && !otherSelected && !targetKeyActive,
-    },
-    {
-      [legend.fontFace]: legend.fontFace,
-      [legend.fontSize]: legend.fontSize,
-    },
-    extraClasses
-  );
+  // The style prop if this key is being rendered as a standalone key
+  const standaloneStyleProp = {
+    width: `calc(var(--keyboard-grid-unit) * ${col})`,
+    height: `calc(var(--keyboard-grid-unit) * ${row})`,
+  };
+
+  const style = standalone ? standaloneStyleProp : gridStyleProp;
+
+  const gridClasses = ``;
+  const standaloneClasses = `standalone-key`;
+
+  let classes = "keyboard-key";
+  classes += standalone ? standaloneClasses : gridClasses;
+  if (active) {
+    classes += " active-key";
+  } else if (otherSelected) {
+    classes += " related-to-active-key";
+  } else if (targetKeyActive) {
+    classes += " diagram-target-key";
+  }
+
+  // TODO: remove-tailwind
+  if (legend.fontFace) {
+    classes += ` ${legend.fontFace}`;
+  }
+  if (legend.fontSize) {
+    classes += ` ${legend.fontSize}`;
+  }
+
+  if (extraClasses) {
+    classes += ` ${extraClasses}`;
+  }
 
   return (
-    <button id={id} onClick={onClick} className={classes}>
+    <button id={id} onClick={onClick} className={classes} style={style}>
       <KeyHandle
         keyId={id}
         colStart={colStart}
@@ -182,10 +195,11 @@ export const KeyGrid = (props) => {
   return (
     <>
       <div
-        className={classnames(
-          `grid grid-cols-${cols}-keyb grid-rows-${rows}-keyb pointer-events-none select-none`,
-          gridAppendClasses
-        )}
+        className={`keygrid ${gridAppendClasses}`}
+        style={{
+          gridTemplateColumns: `repeat(${cols}, var(--keyboard-grid-unit))`,
+          gridTemplateRows: `repeat(${rows}, var(--keyboard-grid-unit))`,
+        }}
       >
         {keys.map((keyData) => {
           const isTargetKey =
