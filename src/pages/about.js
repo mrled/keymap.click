@@ -1,7 +1,7 @@
 import React from "react";
+import Link from "next/link";
 
 import { SiteChrome } from "~/components/siteChrome";
-import { ExternalLink, IntraAppLink } from "~/components/prose";
 
 export default function About() {
   return (
@@ -9,11 +9,8 @@ export default function About() {
       <h1>What is this?</h1>
       <p>This site is a visual explanation of my keyboard layout.</p>
       <p>
-        The keyboard, an <IntraAppLink href="/ergodox">ErgoDox-EZ</IntraAppLink>
-        , has been a huge part of{" "}
-        <IntraAppLink href="/story">
-          my strategy for dealing with RSI
-        </IntraAppLink>
+        The keyboard, an <Link href="/ergodox">ErgoDox-EZ</Link>, has been a
+        huge part of <Link href="/story">my strategy for dealing with RSI</Link>
         . Maybe it can help you too.
       </p>
 
@@ -28,19 +25,15 @@ export default function About() {
         under much stronger thumbs.
       </p>
       <p>
-        Take{" "}
-        <IntraAppLink href="/?guide=mrlGuide">the guided tour</IntraAppLink> for
-        specifics.
+        Take <Link href="/?guide=mrlGuide">the guided tour</Link> for specifics.
       </p>
 
       <h2>Development</h2>
       <p>This is a work in progress.</p>
       <p>
         I&apos;m building it{" "}
-        <ExternalLink href="https://github.com/mrled/keymap.click">
-          on GitHub
-        </ExternalLink>
-        . Issues and contributions welcome.
+        <a href="https://github.com/mrled/keymap.click">on GitHub</a>. Issues
+        and contributions welcome.
       </p>
       <p>
         This project represents a lot of firsts for me. It is my first project

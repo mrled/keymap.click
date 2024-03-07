@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import Link from "next/link";
 
 import { KeymapUiSettings } from "~/components/keymapUiSettings";
-import { IntraAppLink } from "~/components/prose";
 import { useAppSettings } from "~/hooks/useAppSettings";
 
 const HamburgerButton = ({ visibleMenu, setVisibleMenu }) => {
@@ -43,7 +43,7 @@ const HomeLink = () => {
   return (
     <>
       <h1 className="site-title">
-        <IntraAppLink href="/">keymap.click</IntraAppLink>
+        <Link href="/">keymap.click</Link>
       </h1>
     </>
   );
@@ -84,7 +84,7 @@ const SecretSidebarControls = ({ enabled }) => {
 
         <ul className="list-disc pl-8 text-xs">
           <li>
-            <IntraAppLink href="/controls">Control panel</IntraAppLink>
+            <Link href="/controls">Control panel</Link>
           </li>
         </ul>
       </div>
@@ -119,18 +119,16 @@ const Sidebar = ({ visibleMenu, setVisibleMenu }) => {
 
         <ul className="list-disc pl-8 text-xs">
           <li>
-            <IntraAppLink href="/about">What is this site?</IntraAppLink>
+            <Link href="/about">What is this site?</Link>
           </li>
           <li>
-            <IntraAppLink href="/ergodox">
-              What kind of keyboard is this?
-            </IntraAppLink>
+            <Link href="/ergodox">What kind of keyboard is this?</Link>
           </li>
           <li>
-            <IntraAppLink href="/story">Personal history</IntraAppLink>
+            <Link href="/story">Personal history</Link>
           </li>
           <li>
-            <IntraAppLink href="/colophon">Colophon</IntraAppLink>
+            <Link href="/colophon">Colophon</Link>
           </li>
         </ul>
       </div>

@@ -1,8 +1,8 @@
 import React from "react";
+import Link from "next/link";
 
 import { SiteChrome } from "~/components/siteChrome";
 import { useAppSettings } from "~/hooks/useAppSettings";
-import { IntraAppLink } from "~/components/prose";
 
 export default function Controls() {
   const {
@@ -16,8 +16,7 @@ export default function Controls() {
       <div className="control-panel">
         <h1>Control panel</h1>
         <p>
-          This is a secret.{" "}
-          <IntraAppLink href="/">Return to safety</IntraAppLink>.
+          This is a secret. <Link href="/">Return to safety</Link>.
         </p>
 
         <div className="control-table">

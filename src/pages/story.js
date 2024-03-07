@@ -1,7 +1,7 @@
 import React from "react";
+import Link from "next/link";
 
 import { SiteChrome } from "~/components/siteChrome";
-import { ExternalLink, IntraAppLink } from "~/components/prose";
 
 export default function Story() {
   return (
@@ -31,25 +31,24 @@ export default function Story() {
         that trying a split keyboard could help by keeping my shoulders square
         and, along with a desk at the proper height, keeping my elbows at right
         angles. I&apos;d found several options and ultimately decided I wanted
-        to try an <IntraAppLink href="/ergodox">ErgoDox keyboard</IntraAppLink>.
+        to try an <Link href="/ergodox">ErgoDox keyboard</Link>.
       </p>
       <p>
         My brother had an{" "}
-        <ExternalLink href="https://input.club/devices/infinity-ergodox/">
+        <a href="https://input.club/devices/infinity-ergodox/">
           ErgoDox Infinity
-        </ExternalLink>{" "}
+        </a>{" "}
         that he had bought as a kit and put together himself, and attempted to
         convince me to get one of my own. Rather than build a kit myself,
         though, I opted for a preassembled{" "}
-        <ExternalLink href="https://ergodox-ez.com/">ErgoDox-EZ</ExternalLink>.
+        <a href="https://ergodox-ez.com/">ErgoDox-EZ</a>.
       </p>
       <p>
         It turned out that while it was true that my shoulders were more square
         when I used it, I had not anticipated a much more significant benefit. I
         could remap every painful key under my pinkies to keys under my thumbs.
-        For instance, I moved{" "}
-        <IntraAppLink href="/?keyId=l-t-1-3">the shift key</IntraAppLink> to an
-        easy location under my left thumb.
+        For instance, I moved <Link href="/?keyId=l-t-1-3">the shift key</Link>{" "}
+        to an easy location under my left thumb.
       </p>
       <p>
         Before this, pinkies on both hands hurt. A lot. They would alternate,
@@ -75,15 +74,11 @@ export default function Story() {
 
       <h2>About me</h2>
       <p>
-        I&apos;m{" "}
-        <ExternalLink href="https://me.micahrl.com">Micah</ExternalLink>. Hi 👋
+        I&apos;m <a href="https://me.micahrl.com">Micah</a>. Hi 👋
       </p>
       <p>
         Please,{" "}
-        <ExternalLink href="https://me.micahrl.com/standing-invitation">
-          email me
-        </ExternalLink>
-        .
+        <a href="https://me.micahrl.com/standing-invitation">email me</a>.
       </p>
     </SiteChrome>
   );

@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
+import Link from "next/link";
 
 import { GuidedTourButtons } from "~/components/guidance";
 import { KeyGrid, Legend } from "~/components/key";
-import { IntraAppLink, Para } from "~/components/prose";
 import {
   keyInfoConnectFromClass,
   keyInfoConnectFromClassPrefix,
@@ -66,12 +66,12 @@ const KeyInfoProse = ({
     labelHeader = <></>;
   } else if (isSet) {
     labelHeader = (
-      <Para>
+      <p>
         The <kbd>{textLabel}</kbd> key
-      </Para>
+      </p>
     );
   } else if (!isSet) {
-    labelHeader = <Para>An unset key</Para>;
+    labelHeader = <p>An unset key</p>;
   }
   return (
     <div className="py-5">
@@ -199,15 +199,14 @@ export const InfoPanel = () => {
           title="Welcome"
           guideInfo={null}
         />
-        <Para>
-          Welcome to <IntraAppLink href="/">keymap.click</IntraAppLink>! I built
-          this site to show how my{" "}
-          <IntraAppLink href="/ergodox">keyboard</IntraAppLink> helped my{" "}
-          <IntraAppLink href="/story">RSI</IntraAppLink>.
-        </Para>
-        <Para>Select a key from the board above to learn more about it.</Para>
+        <p>
+          Welcome to <Link href="/">keymap.click</Link>! I built this site to
+          show how my <Link href="/ergodox">keyboard</Link> helped my{" "}
+          <Link href="/story">RSI</Link>.
+        </p>
+        <p>Select a key from the board above to learn more about it.</p>
         {hydratedState.keyMap.defaultGuide ? (
-          <Para>
+          <p>
             Not sure where to begin?
             <button
               className="p-1 m-1 border border-gray-300 rounded-md bg-gray-200"
@@ -218,7 +217,7 @@ export const InfoPanel = () => {
             >
               Start a guided tour!
             </button>
-          </Para>
+          </p>
         ) : (
           <></>
         )}
