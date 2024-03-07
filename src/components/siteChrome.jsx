@@ -170,7 +170,7 @@ export const SiteChrome = ({ children }) => {
   return (
     <div className="">
       <MenuBarSpacer />
-      <div className="">{children}</div>
+      <main>{children}</main>
       <div className="absolute top-0 mx-auto">
         <MenuBar />
       </div>

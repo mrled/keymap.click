@@ -96,15 +96,8 @@ export const KeymapUI = () => {
     <>
       <VisualDebugStyle enableDebug={debugLevel > 1} />
 
-      <div
-        className="w-full h-full text-sm md:text-base p-4 max-w-screen-lg mx-auto"
-        id="keymap-ui-outer-wrapper-container"
-      >
-        <div
-          className="w-full md:mr-8 md:px-4"
-          id="keymap-ui-content-container"
-        >
-          {/* Some notes on naming:
+      <div className="w-full md:mr-8 p-4">
+        {/* Some notes on naming:
               KID is Keyboard, InfoPanel, Diamargs.
               - The Keyboard is a <Keyboard> component.
               - The InfoPanel is our <InfoPanel> component.
@@ -112,50 +105,49 @@ export const KeymapUI = () => {
                 They are narrow divs on either side of the Keyboard/InfoPanel reserved for diagram lines.
               The diagram lines are drawn from the Keyboard, to the InfoPanel, via the Diamargs.
           */}
-          <div className="flex" id="keymap-ui-kid-container">
-            <div
-              className="flex flex-col kid-diamarg m-0 p-0 border-0 debug-bg-red"
-              id="keymap-ui-diamarg-left"
-              ref={diamargLeft}
-            />
+        <div className="flex" id="keymap-ui-kid-container">
+          <div
+            className="flex flex-col kid-diamarg m-0 p-0 border-0 debug-bg-red"
+            id="keymap-ui-diamarg-left"
+            ref={diamargLeft}
+          />
+
+          <div
+            className="flex flex-col kid-center m-0 p-0 border-0"
+            id="keymap-ui-keyboard-and-panel-container"
+            ref={keyboardAndPanel}
+          >
+            <Keyboard targetKeyIds={targetKeyIds} />
 
             <div
-              className="flex flex-col kid-center m-0 p-0 border-0"
-              id="keymap-ui-keyboard-and-panel-container"
-              ref={keyboardAndPanel}
+              className="bottom-auto top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto w-full debug-bg-teal"
+              id="keymap-ui-info-panel-container"
+              ref={keyInfoContainer}
             >
-              <Keyboard targetKeyIds={targetKeyIds} />
-
-              <div
-                className="bottom-auto top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto w-full debug-bg-teal"
-                id="keymap-ui-info-panel-container"
-                ref={keyInfoContainer}
-              >
-                <InfoPanel />
-              </div>
+              <InfoPanel />
             </div>
-
-            <div
-              className="flex flex-col kid-diamarg m-0 p-0 border-0 debug-bg-red"
-              id="keymap-ui-diamarg-right"
-              ref={diamargRight}
-            />
           </div>
-        </div>
 
-        {/* We place the canvas last and therefore we do not need to specify a z-index -
-         * it is naturally on top of the other content.
-         */}
-        <Diagram
-          connections={connections}
-          keyboardAndPanelRect={keyboardAndPanelRect}
-          diamargLeftRect={diamargLeftRect}
-          diamargRightRect={diamargRightRect}
-          keyInfoContainerRect={keyInfoContainerRect}
-          documentDimensions={documentDimensions}
-          windowSize={windowSize}
-        />
+          <div
+            className="flex flex-col kid-diamarg m-0 p-0 border-0 debug-bg-red"
+            id="keymap-ui-diamarg-right"
+            ref={diamargRight}
+          />
+        </div>
       </div>
+
+      {/* We place the canvas last and therefore we do not need to specify a z-index -
+       * it is naturally on top of the other content.
+       */}
+      <Diagram
+        connections={connections}
+        keyboardAndPanelRect={keyboardAndPanelRect}
+        diamargLeftRect={diamargLeftRect}
+        diamargRightRect={diamargRightRect}
+        keyInfoContainerRect={keyInfoContainerRect}
+        documentDimensions={documentDimensions}
+        windowSize={windowSize}
+      />
     </>
   );
 };
