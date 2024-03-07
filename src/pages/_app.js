@@ -3,9 +3,11 @@ import React, { useEffect } from "react";
 
 import * as Fathom from "fathom-client";
 
+import "~/styles/vars.css";
 import "~/styles/index.css";
-import "~/styles/keygrid.css";
+import "~/styles/diagram.css";
 import "~/styles/fonts.css";
+import "~/styles/keygrid.css";
 
 import { AppHead } from "~/components/appHead";
 import {

@@ -379,12 +379,12 @@ export const Diagram = (props) => {
     <div
       ref={container}
       id="debug-canvas-container"
-      className="absolute top-0 left-0 pointer-events-none"
+      className="diagram-canvas-container"
     >
       <canvas
         ref={canvas}
         id="debug-canvas"
-        className="absolute overflow-visible debug-border-orange debug-trans-bg-orange"
+        className="keyboard-diagram debug-border-orange debug-trans-bg-orange"
       />
     </div>
   );
