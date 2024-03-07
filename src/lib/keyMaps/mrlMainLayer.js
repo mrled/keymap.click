@@ -174,6 +174,9 @@ const arrowLayerKeyInfo = (
       <kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> instead of the
       inverted-T arrow placement I use, to which I say, go wild man, be free.
     </Para>
+    <Para>
+      Try playing with this layer in <IntraAppLink href="/arrowDemo">this demo</IntraAppLink>.
+    </Para>
   </>
 );
 
