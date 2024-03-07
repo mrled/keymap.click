@@ -86,7 +86,7 @@ const KeyInfoProse = ({
 const LegendAttribution = ({ legendData }) => {
   if (legendData.attrib) {
     return (
-      <div className="text-2xs">
+      <div className="legend-attribution">
         <h2>Legend Attribution:</h2>
         <p>{legendData.attrib}</p>
       </div>
@@ -193,13 +193,12 @@ export const InfoPanel = () => {
   } else {
     // No key is selected and we are not in a guide
     return (
-      <>
+      <div className="key-info-panel">
         <PanelNavBar
           tbKeyGrid={<EmptyTitleBarKeyGrid />}
           title="Welcome"
           guideInfo={null}
         />
-        {/* <Para>You are viewing the keymap information for: {hydratedState.keyMap.fullName}.</Para> */}
         <Para>
           Welcome to <IntraAppLink href="/">keymap.click</IntraAppLink>! I built
           this site to show how my{" "}
@@ -223,7 +222,7 @@ export const InfoPanel = () => {
         ) : (
           <></>
         )}
-      </>
+      </div>
     );
   }
 };

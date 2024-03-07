@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-import classnames from "classnames";
-
 import { KeymapUiSettings } from "~/components/keymapUiSettings";
 import { IntraAppLink } from "~/components/prose";
 import { useAppSettings } from "~/hooks/useAppSettings";
@@ -44,17 +42,11 @@ const HamburgerButton = ({ visibleMenu, setVisibleMenu }) => {
 const HomeLink = () => {
   return (
     <>
-      <h1 className="text-xl flex-col p-2 font-roboto-mono">
+      <h1 className="site-title">
         <IntraAppLink href="/">keymap.click</IntraAppLink>
       </h1>
     </>
   );
-};
-
-/* Hold a little space for the menu bar at the top of the page
- */
-const MenuBarSpacer = () => {
-  return <div className="h-8" />;
 };
 
 const MenuBar = () => {
@@ -106,17 +98,10 @@ const SecretSidebarControls = ({ enabled }) => {
 
 const Sidebar = ({ visibleMenu, setVisibleMenu }) => {
   const { advancedMode } = useAppSettings();
+  const classes = "sidebar" + (visibleMenu ? " sidebar-visible" : "");
 
   return (
-    <div
-      className={classnames(
-        "fixed inset-y-0 left-0 w-64 px-4 py-4 border-r overflow-auto transform bg-white border-orange-600",
-        {
-          "translate-x-0 ease-out transition-medium": visibleMenu,
-          "-translate-x-full ease-in transition-medium": !visibleMenu,
-        }
-      )}
-    >
+    <div className={classes}>
       <div className="flex">
         <HomeLink />
         <HamburgerButton
@@ -157,8 +142,7 @@ const Sidebar = ({ visibleMenu, setVisibleMenu }) => {
 
 export const SiteChrome = ({ children }) => {
   return (
-    <div className="">
-      <MenuBarSpacer />
+    <div className="site-chrome">
       <main>{children}</main>
       <div className="absolute top-0 mx-auto">
         <MenuBar />

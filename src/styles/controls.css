@@ -1,0 +1,33 @@
+/* The secret control panel */
+
+
+.control-panel {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--button-border-color);
+  border-radius: 0.375rem;
+  padding: 1.5rem;
+  margin: 1.5rem;
+
+  .control-table {
+    display: table;
+    margin: 1rem 0;
+    > div {
+      display: table-row;
+      font-size: 0.75rem;
+      > label {
+        display: table-cell;
+        margin: 0.5rem 1rem;
+      }
+      > input {
+        display: table-cell;
+        margin: 0.5rem 1rem;
+      }
+      > select {
+        display: table-cell;
+        margin: 0.5rem 1rem;
+        padding: 0.25rem;
+        border: 1px solid var(--button-border-color);
+      }
+    }
+  }
+}

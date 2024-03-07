@@ -23,6 +23,7 @@
   --key-diagram-target-hover-bg: #48bb78;
 }
 
+/* TODO: remove-tailwind */
 .text-2xs {
   font-size: 0.5em;
 }
@@ -41,16 +42,46 @@ main {
   width: 100%;
   height: 100%;
   font-size: 0.875rem;
-  display: flex;
   max-width: 1024px;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 1.5rem;
+  padding: 1rem 2rem;
 }
 
 @media (min-width: 768px) {
   main {
     font-size: 1rem;
   }
+}
+
+h1 {
+  font-size: 1.875rem;
+  padding: 1rem 0;
+}
+
+h1.site-title {
+  font-size: 1.25rem;
+  padding: 0.5rem 0;
+  font-family: "Roboto Mono", monospace;
+}
+
+h2 {
+  font-size: 1.5rem;
+  padding: 1rem 0;
+}
+
+h2.keyboard-title {
+  font-size: 1.25rem;
+}
+
+p {
+  padding: 0.5rem 0;
+}
+
+ul {
+  padding: 1rem 0 1rem 2rem;
+  list-style-type: disc;
 }
 
 button.guide-bar-button {

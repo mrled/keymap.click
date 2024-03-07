@@ -1,6 +1,10 @@
 /* Variables used in other styles */
 
 :root {
+  --page-bg: white;
+  --page-fg: black;
+  --panel-bg: #f7fafc;
+
   --button-border-color: #d1d5db;
   --button-text-enabled: black;
   --button-text-disabled: #9ca3af;

@@ -1,0 +1,37 @@
+/* The sidebar */
+
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 16rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-right: 1px solid var(--key-active-hover-bg);
+  overflow: auto;
+  background-color: var(--page-bg);
+
+  /* Handle transitions when hiding/showing */
+  transform: translateX(-100%);
+  transition-property: transform;
+  transition-duration: 0.3s;
+  &.sidebar-visible {
+    transform: translateX(0);
+    transition-timing-function: ease-out;
+  }
+
+  h2 {
+    font-size: 1rem;
+    padding: 0;
+  }
+  p {
+    padding: 0;
+  }
+  ul {
+    padding: 0 1rem;
+  }
+}

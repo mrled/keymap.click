@@ -31,7 +31,7 @@ export const ExternalLink = ({ href, children }) => {
 /* A prose paragraph
  */
 export const Para = ({ children }) => {
-  return <p className="my-4">{children}</p>;
+  return <p>{children}</p>;
 };
 
 /* A key indicator

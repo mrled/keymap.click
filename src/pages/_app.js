@@ -3,11 +3,16 @@ import React, { useEffect } from "react";
 
 import * as Fathom from "fathom-client";
 
+// Ordered imports
 import "~/styles/vars.css";
 import "~/styles/index.css";
+// Alphabetized imports
+import "~/styles/controls.css";
 import "~/styles/diagram.css";
 import "~/styles/fonts.css";
+import "~/styles/keyInfoPanel.css";
 import "~/styles/keygrid.css";
+import "~/styles/siteChrome.css";
 
 import { AppHead } from "~/components/appHead";
 import {
