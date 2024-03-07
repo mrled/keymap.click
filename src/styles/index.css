@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --button-border-color: #d1d5db;
+  --button-text-enabled: black;
+  --button-text-disabled: #9ca3af;
+  --button-bg-enabled: #e5e7eb;
+}
+
 .text-2xs {
   font-size: 0.5em;
 }
@@ -32,3 +39,16 @@ main {
   }
 }
 
+button.guide-bar-button {
+  padding: 0.25rem; /* p-1 */
+  margin: 0.25rem; /* m-1 */
+  border: 1px solid var(--button-border-color);
+  width: 3rem; /* w-12 */
+  font-size: 0.75rem; /* text-xs */
+  color: var(--button-text-disabled);
+}
+
+button.guide-bar-button-enabled {
+  color: var(--button-text-enabled);
+  background-color: var(--button-bg-enabled);
+}

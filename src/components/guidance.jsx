@@ -10,15 +10,12 @@ const GuideBarButton = ({
   enabled = true,
   onClick = () => {},
 }) => {
+  let classes = "guide-bar-button";
+  if (enabled) {
+    classes += " guide-bar-button-enabled";
+  }
   return (
-    <button
-      className={classnames("p-1 m-1 border border-gray-300 w-12 text-xs", {
-        "text-gray-400": !enabled,
-        "bg-gray-200": enabled,
-      })}
-      onClick={onClick}
-      disabled={!enabled}
-    >
+    <button className={classes} onClick={onClick} disabled={!enabled}>
       {children}
     </button>
   );

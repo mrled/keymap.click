@@ -127,7 +127,7 @@ export const Key = ({
 
   const classes = classnames(
     standalone ? standaloneClasses : gridClasses,
-    `cursor-pointer p-1 flex justify-center items-center rounded-sm font-mono pointer-events-auto force-outline-none relative`,
+    `p-1 flex justify-center items-center rounded-sm font-mono pointer-events-auto force-outline-none relative`,
     {
       "bg-orange-400 border border-orange-700 hover:bg-orange-600": active,
       "bg-orange-200 border border-orange-500 hover:bg-orange-400": otherSelected,
