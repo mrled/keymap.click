@@ -9,11 +9,7 @@ import {
  */
 export const Indicator = ({ children, id, kbd = false }) => {
   const innerSpan = kbd ? <kbd>{children}</kbd> : children;
-  return (
-    <span
-      className={`${keyInfoConnectFromClass} ${keyInfoConnectFromClassPrefix}${id} bg-green-200 truncate`}
-    >
-      {innerSpan}
-    </span>
-  );
+  const connectToId = `${keyInfoConnectFromClassPrefix}${id}`;
+  const classes = `key-indicator ${keyInfoConnectFromClass} ${connectToId}`;
+  return <span className={classes}>{innerSpan}</span>;
 };

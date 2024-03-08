@@ -15,6 +15,8 @@
   overflow: auto;
   background-color: var(--page-bg);
 
+  font-size: 0.75rem;
+
   /* Handle transitions when hiding/showing */
   transform: translateX(-100%);
   transition-property: transform;
@@ -24,14 +26,66 @@
     transition-timing-function: ease-out;
   }
 
+  h1 {
+    padding-bottom: 1rem;
+  }
   h2 {
     font-size: 1rem;
-    padding: 0;
+    padding: 1rem 0;
   }
   p {
     padding: 0;
   }
   ul {
     padding: 0 1rem;
+  }
+
+  .sidebar-menu {
+    display: flex;
+  }
+}
+
+button.sitechrome-button {
+  display: inline;
+  padding: 0.5rem;
+  .button-legend-container {
+    width: 1rem;
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+    span {
+      display: inline-block;
+      font-size: 1.5rem;
+      line-height: 1.75rem;
+      margin-top: -0.25rem;
+    }
+  }
+}
+
+.menu-bar {
+  position: fixed;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+
+  width: 100%;
+  max-width: 1024px;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+
+  border-right: 1px solid var(--key-active-hover-bg);
+  border-left: 1px solid var(--key-active-hover-bg);
+  border-bottom: 1px solid var(--key-active-hover-bg);
+  border-top: none;
+  border-radius: 0 0 0.375rem 0.375rem;
+
+  background-color: var(--page-bg);
+
+  .menu-bar-items {
+    display: flex;
+    flex-direction: row;
   }
 }

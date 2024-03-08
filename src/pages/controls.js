@@ -19,7 +19,7 @@ export default function Controls() {
           This is a secret. <Link href="/">Return to safety</Link>.
         </p>
 
-        <div className="control-table">
+        <div className="controls-table-layout">
           <div>
             <label htmlFor="app-debug-selector">Debug level</label>
             <select

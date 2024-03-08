@@ -193,41 +193,39 @@ export const KeyGrid = (props) => {
   } = props;
   useWhyDidYouUpdate(`KeyGrid '${gridName}'`, props);
   return (
-    <>
-      <div
-        className={`keygrid ${gridAppendClasses}`}
-        style={{
-          gridTemplateColumns: `repeat(${cols}, var(--keyboard-grid-unit))`,
-          gridTemplateRows: `repeat(${rows}, var(--keyboard-grid-unit))`,
-        }}
-      >
-        {keys.map((keyData) => {
-          const isTargetKey =
-            targetKeyIds.findIndex((id) => id === keyData.id) > -1;
-          let isActive, isInSelectedGroup;
-          if (pressedKey) {
-            isActive = keyData.id === pressedKey.reactKey;
-            isInSelectedGroup =
-              !isActive && keySelection.indexOf(keyData.id) > -1;
-          } else {
-            isActive = false;
-            isInSelectedGroup = false;
-          }
-          return (
-            <Key
-              id={keyData.id}
-              legend={Legend(legends[keyData.legend])}
-              targetKeyActive={isTargetKey}
-              active={isActive}
-              otherSelected={isInSelectedGroup}
-              key={keyData.reactKey}
-              keyData={keyData}
-              onClick={() => onClickEach(keyData.id)}
-              keyHandleExtraClasses={keyData.keyHandleExtraClasses || null}
-            />
-          );
-        })}
-      </div>
-    </>
+    <div
+      className={`keygrid ${gridAppendClasses}`}
+      style={{
+        gridTemplateColumns: `repeat(${cols}, var(--keyboard-grid-unit))`,
+        gridTemplateRows: `repeat(${rows}, var(--keyboard-grid-unit))`,
+      }}
+    >
+      {keys.map((keyData) => {
+        const isTargetKey =
+          targetKeyIds.findIndex((id) => id === keyData.id) > -1;
+        let isActive, isInSelectedGroup;
+        if (pressedKey) {
+          isActive = keyData.id === pressedKey.reactKey;
+          isInSelectedGroup =
+            !isActive && keySelection.indexOf(keyData.id) > -1;
+        } else {
+          isActive = false;
+          isInSelectedGroup = false;
+        }
+        return (
+          <Key
+            id={keyData.id}
+            legend={Legend(legends[keyData.legend])}
+            targetKeyActive={isTargetKey}
+            active={isActive}
+            otherSelected={isInSelectedGroup}
+            key={keyData.reactKey}
+            keyData={keyData}
+            onClick={() => onClickEach(keyData.id)}
+            keyHandleExtraClasses={keyData.keyHandleExtraClasses || null}
+          />
+        );
+      })}
+    </div>
   );
 };

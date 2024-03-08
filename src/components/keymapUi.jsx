@@ -57,15 +57,6 @@ export const KeymapUI = () => {
   );
 
   useIsomorphicLayoutEffect(() => {
-    // log.debug(
-    //   [
-    //     `Document dimensions should update due to a dependency change. Rectangles:`,
-    //     `diamargLeftRect: ${JSON.stringify(diamargLeftRect)}`,
-    //     `diamargRightRec: ${JSON.stringify(diamargRightRect)}`,
-    //     `keyboardAndPanelRect: ${JSON.stringify(keyboardAndPanelRect)}`,
-    //     `keyInfoContainerRect: ${JSON.stringify(keyInfoContainerRect)}`,
-    //   ].join("\n")
-    // );
     updateDocumentDimensions();
     // We must NOT pass updateDocumentDimensions as a dependency for this effect, or it will cause an infinite loop!
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,7 +87,7 @@ export const KeymapUI = () => {
     <>
       <VisualDebugStyle enableDebug={debugLevel > 1} />
 
-      <div className="w-full md:mr-8 p-4">
+      <div>
         {/* Some notes on naming:
               KID is Keyboard, InfoPanel, Diamargs.
               - The Keyboard is a <Keyboard> component.
@@ -105,34 +96,21 @@ export const KeymapUI = () => {
                 They are narrow divs on either side of the Keyboard/InfoPanel reserved for diagram lines.
               The diagram lines are drawn from the Keyboard, to the InfoPanel, via the Diamargs.
           */}
-        <div className="flex" id="keymap-ui-kid-container">
-          <div
-            className="flex flex-col kid-diamarg m-0 p-0 border-0 debug-bg-red"
-            id="keymap-ui-diamarg-left"
-            ref={diamargLeft}
-          />
+        <div className="keymap-ui-kid-container">
+          <div className="keymap-ui-diamarg debug-bg-red" ref={diamargLeft} />
 
-          <div
-            className="flex flex-col kid-center m-0 p-0 border-0"
-            id="keymap-ui-keyboard-and-panel-container"
-            ref={keyboardAndPanel}
-          >
+          <div className="keymap-ui-center-panel" ref={keyboardAndPanel}>
             <Keyboard targetKeyIds={targetKeyIds} />
 
             <div
-              className="bottom-auto top-0 left-0 right-0 border border-gray-300 bg-gray-100 rounded-md p-4 mb-4 mx-auto w-full debug-bg-teal"
-              id="keymap-ui-info-panel-container"
+              className="keymap-ui-keyinfo-container debug-bg-teal"
               ref={keyInfoContainer}
             >
               <InfoPanel />
             </div>
           </div>
 
-          <div
-            className="flex flex-col kid-diamarg m-0 p-0 border-0 debug-bg-red"
-            id="keymap-ui-diamarg-right"
-            ref={diamargRight}
-          />
+          <div className="keymap-ui-diamarg debug-bg-red" ref={diamargRight} />
         </div>
       </div>
 

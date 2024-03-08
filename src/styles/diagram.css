@@ -14,3 +14,11 @@ canvas.keyboard-diagram {
   position: absolute;
   overflow: visible;
 }
+
+/* A reference in prose to a key on the board.
+ *
+ */
+.key-indicator {
+  text-overflow: truncate;
+  background-color: var(--key-diagram-target-bg);
+}

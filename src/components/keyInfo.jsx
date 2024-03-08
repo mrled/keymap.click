@@ -20,9 +20,7 @@ const GuideInfo = ({ inGuide = false, guideStep = 0, guideLength = 0 }) => {
   } else {
     return (
       <>
-        <p className="text-xs">
-          {inGuide ? duringGuideText : availableGuideText}
-        </p>
+        <p>{inGuide ? duringGuideText : availableGuideText}</p>
         <GuidedTourButtons />
       </>
     );
@@ -31,16 +29,12 @@ const GuideInfo = ({ inGuide = false, guideStep = 0, guideLength = 0 }) => {
 
 const PanelNavBar = ({ tbKeyGrid, title, guideInfo }) => {
   return (
-    <div className="border-b">
-      <div className="flex">
-        <div className="flex-col px-4">{tbKeyGrid}</div>
-
-        <div className="flex-col ml-auto px-4">
-          <h2 className="text-lg md:text-2xl">{title}</h2>
-        </div>
+    <div className="panel-nav-bar">
+      <div className="panel-nav-title">
+        {tbKeyGrid}
+        <h2>{title}</h2>
       </div>
-
-      <div className="p-1">{guideInfo ? guideInfo : <></>}</div>
+      {guideInfo ? guideInfo : <></>}
     </div>
   );
 };
@@ -74,7 +68,7 @@ const KeyInfoProse = ({
     labelHeader = <p>An unset key</p>;
   }
   return (
-    <div className="py-5">
+    <div className="key-info-prose">
       {labelHeader}
       {keyInfo}
     </div>
@@ -209,7 +203,7 @@ export const InfoPanel = () => {
           <p>
             Not sure where to begin?
             <button
-              className="p-1 m-1 border border-gray-300 rounded-md bg-gray-200"
+              className="start-guided-tour-button"
               onClick={() => {
                 setGuide(hydratedState.keyMap.defaultGuide);
               }}

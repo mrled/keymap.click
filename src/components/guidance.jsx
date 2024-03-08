@@ -1,7 +1,4 @@
-import React, { useContext, useRef } from "react";
-
-import classnames from "classnames";
-import log from "loglevel";
+import React, { useContext } from "react";
 
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 

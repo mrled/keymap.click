@@ -6,34 +6,30 @@ import { useAppSettings } from "~/hooks/useAppSettings";
 
 const HamburgerButton = ({ visibleMenu, setVisibleMenu }) => {
   const crossSvg = (
-    <div className="w-4">
-      <svg fill="none" viewBox="0 0 24 24" className="h-6 w-6">
-        <path
-          d="M6 18L18 6M6 6L18 18"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          stroke="currentColor"
-        />
-      </svg>
-    </div>
+    <svg fill="none" viewBox="0 0 24 24">
+      <path
+        d="M6 18L18 6M6 6L18 18"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        stroke="currentColor"
+      />
+    </svg>
   );
 
-  const hamburgerString = (
-    <div className="w-4">
-      <span className="text-xl">☰</span>
-    </div>
-  );
+  const hamburgerString = <span>☰</span>;
 
   return (
     <>
       <button
-        className="inline p-2"
+        className="sitechrome-button"
         onClick={() => {
           setVisibleMenu((s) => !s);
         }}
       >
-        {visibleMenu ? crossSvg : hamburgerString}
+        <div className="button-legend-container">
+          {visibleMenu ? crossSvg : hamburgerString}
+        </div>
       </button>
     </>
   );
@@ -53,22 +49,15 @@ const MenuBar = () => {
   const [visibleMenu, setVisibleMenu] = useState(false);
 
   return (
-    <div className="w-full mx-auto fixed px-1">
-      <div
-        className="w-full max-w-screen-lg mx-auto border-r border-l border-b rounded-b-md bg-white border-orange-600"
-        id="menu-bar-container"
-      >
-        <div>
-          <div className="flex flex-row">
-            <HamburgerButton
-              visibleMenu={visibleMenu}
-              setVisibleMenu={setVisibleMenu}
-            />
-            <HomeLink />
-          </div>
-        </div>
-        <Sidebar visibleMenu={visibleMenu} setVisibleMenu={setVisibleMenu} />
+    <div className="menu-bar">
+      <div className="menu-bar-items">
+        <HamburgerButton
+          visibleMenu={visibleMenu}
+          setVisibleMenu={setVisibleMenu}
+        />
+        <HomeLink />
       </div>
+      <Sidebar visibleMenu={visibleMenu} setVisibleMenu={setVisibleMenu} />
     </div>
   );
 };
@@ -79,19 +68,13 @@ const SecretSidebarControls = ({ enabled }) => {
   }
   return (
     <>
-      <div className="mt-4">
-        <h2 className="mb-2">Secrets</h2>
-
-        <ul className="list-disc pl-8 text-xs">
-          <li>
-            <Link href="/controls">Control panel</Link>
-          </li>
-        </ul>
-      </div>
-
-      <div className="mt-4">
-        <KeymapUiSettings />
-      </div>
+      <h2>Secrets</h2>
+      <ul>
+        <li>
+          <Link href="/controls">Control panel</Link>
+        </li>
+      </ul>
+      <KeymapUiSettings />
     </>
   );
 };
@@ -102,7 +85,7 @@ const Sidebar = ({ visibleMenu, setVisibleMenu }) => {
 
   return (
     <div className={classes}>
-      <div className="flex">
+      <div className="sidebar-menu">
         <HomeLink />
         <HamburgerButton
           visibleMenu={visibleMenu}
@@ -110,14 +93,12 @@ const Sidebar = ({ visibleMenu, setVisibleMenu }) => {
         />
       </div>
 
-      <div className="text-xs py-4">
-        <p>My ErgoDox keyboard helped my RSI. Here&apos;s how.</p>
-      </div>
+      <p>My ErgoDox keyboard helped my RSI. Here&apos;s how.</p>
 
-      <div className="">
-        <h2 className="mb-2">Navigation</h2>
+      <div>
+        <h2>Navigation</h2>
 
-        <ul className="list-disc pl-8 text-xs">
+        <ul>
           <li>
             <Link href="/about">What is this site?</Link>
           </li>
@@ -140,11 +121,9 @@ const Sidebar = ({ visibleMenu, setVisibleMenu }) => {
 
 export const SiteChrome = ({ children }) => {
   return (
-    <div className="site-chrome">
+    <>
       <main>{children}</main>
-      <div className="absolute top-0 mx-auto">
-        <MenuBar />
-      </div>
-    </div>
+      <MenuBar />
+    </>
   );
 };
