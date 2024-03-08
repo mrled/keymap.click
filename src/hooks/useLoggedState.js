@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { useAppSettings } from "./useAppSettings";
 import { objectTableCompare } from "~/lib/consoleLogHelper";
 import { domrect2obj, isDOMRect } from "~/lib/geometry";
 
@@ -60,8 +61,11 @@ const logStateChange = (stateName, oldState, newState, necessary = true) => {
  */
 export const useLoggedState = (defaultValue, stateName) => {
   const [thisState, setThisState] = useState(defaultValue);
+  const { debugLevel } = useAppSettings();
   const setLoggedStateWrapper = (newValue) => {
-    logStateChange(stateName, thisState, newValue);
+    if (debugLevel > 0) {
+      logStateChange(stateName, thisState, newValue);
+    }
     setThisState(newValue);
   };
   return [thisState, setLoggedStateWrapper];
@@ -83,11 +87,13 @@ export const useIdempotentLoggedState = (
   comparator = (obj1, obj2) => obj1 === obj2
 ) => {
   const [thisState, setThisState] = useState(defaultValue);
+  const { debugLevel } = useAppSettings();
   const setIdempotentLoggedStateWrapper = (newValue) => {
-    if (comparator(thisState, newValue)) {
-      logStateChange(stateName, thisState, newValue, false);
-    } else {
-      logStateChange(stateName, thisState, newValue);
+    const stateChangeRequired = !comparator(thisState, newValue);
+    if (debugLevel > 0) {
+      logStateChange(stateName, thisState, newValue, stateChangeRequired);
+    }
+    if (stateChangeRequired) {
       setThisState(newValue);
     }
   };

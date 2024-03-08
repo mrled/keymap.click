@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 
+import { useAppSettings } from "./useAppSettings";
+
 /* Log which props changed to cause a component to render.
  *
  * <https://usehooks.com/useWhyDidYouUpdate/>
@@ -9,7 +11,13 @@ export function useWhyDidYouUpdate(name, props) {
   // Mutable ref to store props for comparison next time this hook runs.
   const previousProps = useRef();
 
+  const { debugLevel } = useAppSettings();
+
   useEffect(() => {
+    if (debugLevel === 0) {
+      return;
+    }
+
     if (previousProps.current) {
       const allKeys = Object.keys({ ...previousProps.current, ...props });
       const changesObj = {};

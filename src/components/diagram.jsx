@@ -262,7 +262,7 @@ const drawDiagram = (
     return;
   }
   if (!keyboardAndPanelRect) {
-    console.debug("keyboardAndPanelRect is null?");
+    log.debug("keyboardAndPanelRect is null?");
     return;
   }
 
