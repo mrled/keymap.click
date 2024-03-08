@@ -4,7 +4,6 @@ import { Diagram } from "~/components/diagram";
 import { InfoPanel } from "~/components/keyInfo";
 
 import { Keyboard } from "~/components/keyboard";
-import { VisualDebugStyle } from "~/components/visualDebugStyle";
 import { useAppSettings } from "~/hooks/useAppSettings";
 import { useBoundingClientRect } from "~/hooks/useBoundingClientRect";
 import { useIsomorphicLayoutEffect } from "~/hooks/useIsomorphicLayoutEffect";
@@ -85,8 +84,6 @@ export const KeymapUI = () => {
 
   return (
     <>
-      <VisualDebugStyle enableDebug={debugLevel > 1} />
-
       <div>
         {/* Some notes on naming:
               KID is Keyboard, InfoPanel, Diamargs.
