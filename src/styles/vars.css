@@ -8,21 +8,21 @@
   --button-border-color: #d1d5db;
   --button-text-enabled: black;
   --button-text-disabled: #9ca3af;
-  --button-bg-enabled: #e5e7eb;
+  --button-bg-enabled: #edf2f7;
 
   --key-fg: black;
-  --key-bg: #e5e7eb;
-  --key-border: #6b7280;
-  --key-hover-bg: #9ca3af;
+  --key-bg: #edf2f7;
+  --key-border: #a0aec0;
+  --key-hover-bg: #cbd5e0;
   --key-active-bg: #f6ad55;
   --key-active-border: #c05621;
   --key-active-hover-bg: #dd6b20;
-  --key-related-active-bg: #fed7aa;
+  --key-related-active-bg: #feebc8;
   --key-related-active-border: #ed8936;
   --key-related-active-hover-bg: #f6ad55;
   --key-diagram-target-bg: #c6f6d5;
   --key-diagram-target-border: #48bb78;
-  --key-diagram-target-hover-bg: #48bb78;
+  --key-diagram-target-hover-bg: #68d391;
 
   --link-fg: rgba(49,130,206,1)
 }

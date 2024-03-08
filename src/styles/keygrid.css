@@ -88,7 +88,7 @@ button.keyboard-key {
   pointer-events: auto;
   outline: none;
   position: relative;
-  background-color: var(--button-bg-enabled);
+  background-color: var(--key-bg);
   border: 1px solid var(--key-border);
   &:hover {
     background-color: var(--key-hover-bg);
