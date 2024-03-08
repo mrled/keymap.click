@@ -21,13 +21,8 @@ and I built it in about 5 months of nights and weekends.
 
 ## How it's built
 
-- next.js
-
-Other prerequisites:
-
 - Node and NPM
-- Autoprefixer (`npm install -g autoprefixer`)
-- PostCSS (`npm install -g postcss-cli`)
+- next.js and React
 
 Development mode:
 
