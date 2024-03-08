@@ -47,12 +47,16 @@ const KeyHandle = ({ keyId, colStart, handleTop, extraClasses }) => {
 
 /* Process a legend object from lib/keys.js,
  * and return a Legend object that can be used inside of a Key
+ *
+ * Legends can be one of several types:
+ *   image: An image file name
+ *     May contain attribution text
+ *   glyph: A single character
+ *     Shown at a larger size than text types
+ *   text: A string
+ *     Shown at a smaller size than glyph types so it will fit in the key
  */
 export const Legend = (legend) => {
-  const defaultFontFace = "font-roboto-mono"; // TODO: remove-tailwind
-  const defaultGlyphFontSize = "text-m md:text-m"; // TODO: remove-tailwind
-  const defaultTextFontSize = "text-2xs md:text-xs"; // TODO: remove-tailwind
-
   if (!legend) {
     return {};
   } else if (legend.image) {
@@ -62,20 +66,19 @@ export const Legend = (legend) => {
           <img src={`legends/${legend.image.value}`} className="key-legend" />
         </>
       ),
+      type: "image",
       attrib: legend.image.attrib || "",
     };
   } else if (legend.glyph) {
     return {
       legend: legend.glyph.value,
-      fontSize: legend.glyph.fontSize || defaultGlyphFontSize,
-      fontFace: legend.glyph.fontFace || defaultFontFace,
+      type: "glyph",
       attrib: "",
     };
   } else if (legend.text) {
     return {
       legend: legend.text.value,
-      fontSize: legend.text.fontSize || defaultTextFontSize,
-      fontFace: legend.text.fontFace || defaultFontFace,
+      type: "text",
       attrib: "",
     };
   } else {
@@ -134,7 +137,7 @@ export const Key = ({
   const gridClasses = ``;
   const standaloneClasses = `standalone-key`;
 
-  let classes = "keyboard-key";
+  let classes = `keyboard-key legend-type-${legend.type}`;
   classes += standalone ? standaloneClasses : gridClasses;
   if (active) {
     classes += " active-key";
@@ -142,14 +145,6 @@ export const Key = ({
     classes += " related-to-active-key";
   } else if (targetKeyActive) {
     classes += " diagram-target-key";
-  }
-
-  // TODO: remove-tailwind
-  if (legend.fontFace) {
-    classes += ` ${legend.fontFace}`;
-  }
-  if (legend.fontSize) {
-    classes += ` ${legend.fontSize}`;
   }
 
   if (extraClasses) {

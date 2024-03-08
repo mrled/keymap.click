@@ -54,6 +54,9 @@ div.keyboard-sub-board {
   }
 }
 div.keyboard-sub-board-left {
+  > h2 {
+    margin-right: auto;
+  }
   > .keygrid-container {
     flex-direction: row;
   }
@@ -81,7 +84,7 @@ button.keyboard-key {
   justify-content: center;
   align-items: center;
   border-radius: 0.125rem;
-  font-family: monospace;
+  font-family: "Roboto Mono", monospace;
   pointer-events: auto;
   outline: none;
   position: relative;
@@ -109,6 +112,25 @@ button.keyboard-key {
     border: 1px solid var(--key-diagram-target-border);
     &:hover {
       background-color: var(--key-diagram-target-hover-bg);
+    }
+  }
+
+  &.legend-type-image {
+  }
+  &.legend-type-glyph {
+    font-size: 0.875rem;
+  }
+  &.legend-type-text {
+    font-size: 0.5rem;
+  }
+}
+@media (min-width: 768px) {
+  button.keyboard-key {
+    &.legend-type-glyph {
+      font-size: 1rem;
+    }
+    &.legend-type-text {
+      font-size: 0.75rem;
     }
   }
 }

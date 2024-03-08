@@ -5,7 +5,3 @@
   src: local("Roboto Mono"), local("Roboto-Mono"), local("RobotoMono"),
     url("../../public/fonts/RobotoMono-VariableFont_wght.woff2") format("woff2");
 }
-
-.font-roboto-mono {
-  font-family: "Roboto Mono", monospace;
-}

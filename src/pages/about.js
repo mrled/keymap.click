@@ -38,10 +38,11 @@ export default function About() {
       <p>
         This project represents a lot of firsts for me. It is my first project
         with a graphical UI in years, my first ever NextJS or React project, the
-        first time I&apos;ve used Tailwind CSS, and the first web project
-        I&apos;ve built with a UI that I&apos;m proud of. It&apos;s the best GUI
-        I&apos;ve ever designed. I made my first commit May 24, 2020, and I
-        didn&apos;t know a thing about how React or Next worked at that time.
+        first time I had used Tailwind CSS, the first project I migrated away
+        from Tailwind CSS, and the first web project I&apos;ve built with a UI
+        that I&apos;m proud of. It&apos;s the best GUI I&apos;ve ever designed.
+        I made my first commit May 24, 2020, and I didn&apos;t know a thing
+        about how React or Next worked at that time.
       </p>
       <p>And I did it all on my ErgoDox.</p>
     </SiteChrome>

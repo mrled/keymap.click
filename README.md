@@ -22,7 +22,6 @@ and I built it in about 5 months of nights and weekends.
 ## How it's built
 
 - next.js
-- tailwind
 
 Other prerequisites:
 
