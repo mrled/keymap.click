@@ -85,4 +85,4 @@ if (!customElements.get("key-handle")) {
   customElements.define("key-handle", KeyHandle);
 }
 
-// export { KeyHandle };
+export { KeyHandle };
