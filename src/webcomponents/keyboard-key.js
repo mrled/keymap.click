@@ -1,4 +1,3 @@
-// import { KeyHandle } from "~/webcomponents/key-handle";
 import "~/webcomponents/key-handle";
 
 /* A keyboard key
@@ -15,7 +14,6 @@ import "~/webcomponents/key-handle";
  *                              Four characters is the most that will fit on a 2x2 key.
  *   legend-image:              A file path to an image to use for the legend.
  *                              If this is set, it will override legend-text.
- *   on-click:                  An onClick function
  *   standalone:                Return with classes for standalone rendering,
  *                              rather than the default which returns with classes for rendering in a grid
  *   id:                        Key id, for drawing diagram lines
@@ -25,18 +23,8 @@ import "~/webcomponents/key-handle";
  *   key-extra-classes:         Extra classes for the key (this element)
  *   key-handle-extra-classes:  Extra classes for the key handle (the child <key-handle> element)
  *   key-handle-top:            True if the key handle should be at the top of the key
- *
- * Properties of the old React component:
- *   key-data:                  An object e.g. from lib/keys.js
- *   legend:                    A Legend object
- *   on-click:                  An onClick function
- *   standalone:                Return with classes for standalone rendering,
- *                              rather than the default which returns with classes for rendering in a grid
- *   id:                        Key id, for drawing diagram lines
- *   active:                    True if this key has been selected by the user
- *   other-selected:            True if this key is a member of the same group as the key selected by the user
- *   target-key-active:         True if this key is the target of a diagram liner
- *   key-handle-extra-classes:  Extra classes for the key handle
+ * Relevant properties of the superclass (HTMLButtonElement):
+ *   onclick:                   An onClick function
  */
 class KeyboardKey extends HTMLButtonElement {
   static get observedAttributes() {
