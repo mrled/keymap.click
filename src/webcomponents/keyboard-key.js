@@ -18,8 +18,8 @@ import "~/webcomponents/key-handle";
  *                              rather than the default which returns with classes for rendering in a grid
  *   id:                        Key id, for drawing diagram lines
  *   active:                    True if this key has been selected by the user
- *   other-selected:            True if this key is a member of the same group as the key selected by the user
- *   target-key-active:         True if this key is the target of a diagram liner
+ *   related-to-active:         True if this key is a member of the same group as the key selected by the user
+ *   target-of-indicator:       True if this key is the target of a diagram liner
  *   key-extra-classes:         Extra classes for the key (this element)
  *   key-handle-extra-classes:  Extra classes for the key handle (the child <key-handle> element)
  *   key-handle-top:            True if the key handle should be at the top of the key
@@ -35,8 +35,8 @@ class KeyboardKey extends HTMLButtonElement {
       "standalone",
       "id",
       "active",
-      "other-selected",
-      "target-key-active",
+      "related-to-active",
+      "target-of-indicator",
       "key-extra-classes",
       "key-handle-extra-classes",
       "key-handle-top",
@@ -57,13 +57,10 @@ class KeyboardKey extends HTMLButtonElement {
 
   updateComponent() {
     const position = this.getAttribute("position") || "";
-    const standalone = this.getAttribute("standalone") === "true";
+    const standalone = this.getAttribute("standalone") !== null;
     const legendText = this.getAttribute("legend-text") || "";
     const legendImage = this.getAttribute("legend-image") || "";
     const id = this.getAttribute("id");
-    const active = this.getAttribute("active") === "true";
-    const otherSelected = this.getAttribute("other-selected") === "true";
-    const targetKeyActive = this.getAttribute("target-key-active") === "true";
     const extraClasses = this.getAttribute("key-extra-classes") || "";
     const keyHandleTop = this.getAttribute("key-handle-top") === "true";
     const keyHandleExtraClasses =
@@ -77,13 +74,6 @@ class KeyboardKey extends HTMLButtonElement {
     yloc = yloc || "auto";
 
     this.className = extraClasses;
-    if (active) {
-      this.className += " active-key";
-    } else if (otherSelected) {
-      this.className += " related-to-active-key";
-    } else if (targetKeyActive) {
-      this.className += " diagram-target-key";
-    }
 
     if (standalone) {
       // The style prop if this key is being rendered as a standalone key

@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 
-import { KeyGrid } from "~/components/key";
 import { KeymapUiStateContext } from "~/hooks/useKeymapUiState";
 import { useWhyDidYouUpdate } from "~/hooks/useWhyDidYouUpdate";
+import { WCKeyGrid } from "~/webcomponents/reactWrapper";
 
 export const Keyboard = (props) => {
   const { targetKeyIds } = props;
@@ -14,7 +14,7 @@ export const Keyboard = (props) => {
       <div className="keyboard-sub-board keyboard-sub-board-left">
         <h2>Left hand</h2>
         <div className="keygrid-container">
-          <KeyGrid
+          <WCKeyGrid
             gridName="left finger"
             cols="15"
             rows="10"
@@ -25,7 +25,7 @@ export const Keyboard = (props) => {
             onClickEach={setKeyId}
             keySelection={hydratedState.keySelection}
           />
-          <KeyGrid
+          <WCKeyGrid
             gridName="left thumb"
             cols="6"
             rows="6"
@@ -43,7 +43,7 @@ export const Keyboard = (props) => {
       <div className="keyboard-sub-board keyboard-sub-board-right">
         <h2>Right hand</h2>
         <div className="keygrid-container">
-          <KeyGrid
+          <WCKeyGrid
             gridName="right finger"
             cols="15"
             rows="10"
@@ -54,7 +54,7 @@ export const Keyboard = (props) => {
             onClickEach={setKeyId}
             keySelection={hydratedState.keySelection}
           />
-          <KeyGrid
+          <WCKeyGrid
             gridName="right thumb"
             cols="6"
             rows="6"

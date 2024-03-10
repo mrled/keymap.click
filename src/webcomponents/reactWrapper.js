@@ -89,3 +89,52 @@ export const KeyIndicator = dynamic(
     ssr: false,
   }
 );
+
+export const WCKeyGrid = dynamic(
+  () =>
+    import("~/webcomponents/key-grid").then(() => {
+      const Component = ({
+        keys,
+        legends,
+        onClickEach,
+        pressedKey,
+        targetKeyIds,
+        keySelection,
+        children,
+        ...props
+      }) => {
+        const keyGridRef = useRef(null);
+
+        useEffect(() => {
+          if (keyGridRef.current && keys) {
+            keyGridRef.current.createKeys({
+              keys,
+              legends,
+              onClickEach,
+              pressedKey,
+              targetKeyIds,
+              keySelection,
+            });
+          }
+        }, [
+          keys,
+          legends,
+          onClickEach,
+          pressedKey,
+          targetKeyIds,
+          keySelection,
+        ]);
+
+        return (
+          <key-grid ref={keyGridRef} {...props}>
+            {children}
+          </key-grid>
+        );
+      };
+      Component.displayName = "KeyGrid";
+      return Component;
+    }),
+  {
+    ssr: false,
+  }
+);

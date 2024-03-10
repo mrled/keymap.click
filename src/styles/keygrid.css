@@ -70,8 +70,9 @@ div.keyboard-sub-board-right {
   }
 }
 
-/* A grid of keys, like a keyboard would have */
-div.keygrid {
+/* A grid of keys, like a keyboard would have
+ */
+div.keygrid, key-grid {
   display: grid;
   pointer-events: none;
   user-select: none;
@@ -90,31 +91,52 @@ button[is="keyboard-key"] {
   position: relative;
   background-color: var(--key-bg);
   border: 1px solid var(--key-border);
+
   &:hover {
     background-color: var(--key-hover-bg);
   }
-  &.active-key {
-    background-color: var(--key-active-bg);
-    border: 1px solid var(--key-active-border);
-    &:hover {
-      background-color: var(--key-active-hover-bg);
-    }
-  }
-  &.related-to-active-key {
-    background-color: var(--key-related-active-bg);
-    border: 1px solid var(--key-related-active-border);
-    &:hover {
-      background-color: var(--key-related-active-hover-bg);
-    }
-  }
-  &.diagram-target-key {
+
+  /* The order is important for the three selectors below.
+   * When selectors overlap, the last one defined wins.
+   *
+   * Of active, related-to-active, and target-of-indicator,
+   * we want the active styling to apply --
+   * related-to-active will be a list of key IDs which always includes the active key,
+   * and the active key is always the target of an indicator from the key info panel title bar.
+   *
+   * Currently we don't have any keys which are both related-to-active and target-of-indicator,
+   * and mostly that won't make sense because
+   * you wouldn't usually need to draw a diagram line to another key related to the active key.
+   * But if it did happen that wa6, we'd probably want the related-to-active styling to apply.
+   */;
+  &[target-of-indicator] {
     background-color: var(--key-diagram-target-bg);
     border: 1px solid var(--key-diagram-target-border);
     &:hover {
       background-color: var(--key-diagram-target-hover-bg);
     }
   }
+  &[related-to-active] {
+    background-color: var(--key-related-active-bg);
+    border: 1px solid var(--key-related-active-border);
+    &:hover {
+      background-color: var(--key-related-active-hover-bg);
+    }
+  }
+  &[active] {
+    background-color: var(--key-active-bg);
+    border: 1px solid var(--key-active-border);
+    &:hover {
+      background-color: var(--key-active-hover-bg);
+    }
+  }
 
+  /* Glyph legends contain one character like `A` or two characters like `;:`,
+   * and are shown in a larger font.
+   * Text legends contain longer strings like `PgUp`,
+   * probably restricted to four characters,
+   * and are shown in a smaller font to fit in the space.
+   */
   &.legend-type-glyph {
     font-size: 0.875rem;
   }
@@ -127,7 +149,6 @@ button[is="keyboard-key"] {
     width: 1rem;
     height: 1rem;
   }
-
 }
 
 @media (min-width: 768px) {

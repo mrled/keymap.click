@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Link from "next/link";
 
 import { GuidedTourButtons } from "~/components/guidance";
-import { KeyGrid } from "~/components/key";
+import { WCKeyGrid } from "~/webcomponents/reactWrapper";
 import {
   keyInfoConnectFromClass,
   keyInfoConnectFromClassPrefix,
@@ -101,7 +101,7 @@ const TitleBarKeyGrid = ({ keyData, legendMap }) => {
   };
   const modifiedKeyData = Object.assign({}, keyData, titleBarKeyDataOverrides);
   return (
-    <KeyGrid
+    <WCKeyGrid
       gridName="title bar"
       // Use a constant size so that elements below/right of this one
       // don't change location when we select different keys
