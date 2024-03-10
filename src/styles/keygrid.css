@@ -78,7 +78,7 @@ div.keygrid {
 }
 
 /* A single key */
-button.keyboard-key {
+button[is="keyboard-key"] {
   padding: 0.25rem;
   display: flex;
   justify-content: center;
@@ -115,17 +115,23 @@ button.keyboard-key {
     }
   }
 
-  &.legend-type-image {
-  }
   &.legend-type-glyph {
     font-size: 0.875rem;
   }
   &.legend-type-text {
     font-size: 0.5rem;
   }
+
+  /* An image used as a legend for a key */
+  >img {
+    width: 1rem;
+    height: 1rem;
+  }
+
 }
+
 @media (min-width: 768px) {
-  button.keyboard-key {
+  button[is="keyboard-key"] {
     &.legend-type-glyph {
       font-size: 1rem;
     }
@@ -149,12 +155,6 @@ button.keyboard-key {
   border: none; /* border-none */
   pointer-events: none; /* pointer-events-none */
   position: absolute; /* absolute */
-}
-
-/* An image used as a legend for a key */
-img.key-legend {
-  width: 1rem;
-  height: 1rem;
 }
 
 /* Left and right thumb clusters of an ErgoDox keyboard */

@@ -104,7 +104,17 @@ const getKeyConnections = () => {
       const targetKeyHandle = document.getElementById(
         keyHandleDomIdFromKeyId(targetKeyId)
       );
-      const targetCoords = connectionPointTo(targetKeyHandle);
+
+      // If the target key handle is not found, we'll draw a line to the top left corner of the window.
+      // This keeps the entire program from crashing.
+      const targetCoords = targetKeyHandle
+        ? connectionPointTo(targetKeyHandle)
+        : new Point(0, 0);
+      if (!targetKeyHandle) {
+        console.error(
+          `The target key handle with ID ${targetKeyId} is not defined.`
+        );
+      }
 
       log.debug(
         `Found key connection from source at ${sourceCoords.x},${sourceCoords.y}`,

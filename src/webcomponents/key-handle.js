@@ -1,5 +1,7 @@
 import { keyHandleDomIdFromKeyId } from "~/lib/keyConnections";
 
+// TODO: should this be its own component, or just a part of keyboard-key ?
+
 /* KeyHandle: a small element used as an anchor point to connect a diagram line to this key.
  *
  * We use this because it is transformed with the outer element,
@@ -54,10 +56,6 @@ class KeyHandle extends HTMLElement {
       extraClasses,
     } = this.retrieveAttributes();
 
-    if (!window.whatever) {
-      window.whatever = this;
-    }
-
     if (!keyId) {
       return;
     }
@@ -86,3 +84,5 @@ class KeyHandle extends HTMLElement {
 if (!customElements.get("key-handle")) {
   customElements.define("key-handle", KeyHandle);
 }
+
+// export { KeyHandle };

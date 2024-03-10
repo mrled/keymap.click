@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Link from "next/link";
 
 import { GuidedTourButtons } from "~/components/guidance";
-import { KeyGrid, Legend } from "~/components/key";
+import { KeyGrid } from "~/components/key";
 import {
   keyInfoConnectFromClass,
   keyInfoConnectFromClassPrefix,
@@ -137,7 +137,21 @@ const PopulatedTitleBarKeyGrid = ({ keyData, legendMap }) => {
 export const InfoPanel = () => {
   const { hydratedState, setGuide } = useContext(KeymapUiStateContext);
   const { keyData, legendMap } = hydratedState;
-  const legend = Legend(legendMap[keyData.legend]);
+  let legend = legendMap[keyData.legend];
+
+  if (!legend) {
+    // This can happen for keys left blank
+    // console.log(`No legend for keyData: ${keyData.legend}`);
+    legend = {};
+  }
+  let textLabel = keyData.name;
+  if (!textLabel) {
+    if (legend.text) {
+      textLabel = legend.text.value;
+    } else if (legend.glyph) {
+      textLabel = legend.glyph.value;
+    }
+  }
 
   const keyDataTbKeyGrid = keyData.id ? (
     <PopulatedTitleBarKeyGrid keyData={keyData} legendMap={legendMap} />
@@ -166,7 +180,7 @@ export const InfoPanel = () => {
           inGuide={true}
           noSelectedGuideKey={!hydratedState.guideStep.key}
           keyInfo={hydratedState.guideStep.text || keyData.info}
-          textLabel={keyData.name || legend.legend || null}
+          textLabel={textLabel}
         />
         <LegendAttribution legendData={legend} />
       </>
@@ -179,7 +193,7 @@ export const InfoPanel = () => {
         <KeyInfoProse
           isSet={!keyData.unset}
           keyInfo={keyData.info}
-          textLabel={keyData.name || legend.legend}
+          textLabel={textLabel}
         />
         <LegendAttribution legendData={legend} />
       </>
