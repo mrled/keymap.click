@@ -34,7 +34,7 @@ export const Keyboard = (props) => {
             pressedKey={hydratedState.keyData}
             targetKeyIds={targetKeyIds}
             onClickEach={setKeyId}
-            gridAppendClasses="keyboard-left-thumb-cluster"
+            class="keyboard-left-thumb-cluster"
             keySelection={hydratedState.keySelection}
           />
         </div>
@@ -63,7 +63,7 @@ export const Keyboard = (props) => {
             pressedKey={hydratedState.keyData}
             targetKeyIds={targetKeyIds}
             onClickEach={setKeyId}
-            gridAppendClasses="keyboard-right-thumb-cluster"
+            class="keyboard-right-thumb-cluster"
             keySelection={hydratedState.keySelection}
           />
         </div>

@@ -90,6 +90,13 @@ export const KeyIndicator = dynamic(
   }
 );
 
+/* Wrapper for key-grid
+ *
+ * Has special handling for creating keys from props.
+ * This used to be done in the React component's constructor,
+ * but the web component's constructor isn't the right place to do it --
+ * we want users of the web component to be able to define their child keys as HTML if they wish.
+ */
 export const WCKeyGrid = dynamic(
   () =>
     import("~/webcomponents/key-grid").then(() => {

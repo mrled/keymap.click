@@ -93,7 +93,6 @@ class KeyboardKey extends HTMLButtonElement {
     // We also avoid setting innerText directly, as that will remove all other child nodes.
 
     if (legendImage) {
-      this.className += " legend-type-image";
       if (this.legendTextNode) {
         this.removeChild(this.legendTextNode);
         delete this.legendTextNode;
@@ -113,6 +112,7 @@ class KeyboardKey extends HTMLButtonElement {
         this.appendChild(this.legendTextNode);
       }
       this.legendTextNode.textContent = legendText;
+      // TODO: can CSS change font size based on length of the string? Then we could remove these classes.
       if (legendText.length <= 2) {
         this.className += " legend-type-glyph";
       } else {

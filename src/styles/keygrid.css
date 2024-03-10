@@ -72,7 +72,7 @@ div.keyboard-sub-board-right {
 
 /* A grid of keys, like a keyboard would have
  */
-div.keygrid, key-grid {
+key-grid {
   display: grid;
   pointer-events: none;
   user-select: none;
