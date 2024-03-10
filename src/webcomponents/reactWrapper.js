@@ -73,3 +73,19 @@ export const Key = dynamic(
     ssr: false,
   }
 );
+
+export const KeyIndicator = dynamic(
+  () =>
+    import("~/webcomponents/key-indicator").then(() => {
+      const Component = ({ children, ...props }) => (
+        <span is="key-indicator" {...props}>
+          {children}
+        </span>
+      );
+      Component.displayName = "KeyIndicator";
+      return Component;
+    }),
+  {
+    ssr: false,
+  }
+);
