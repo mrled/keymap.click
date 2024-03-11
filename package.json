@@ -2,23 +2,27 @@
   "name": "keymap-dot-click",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "next build",
-    "dev": "NODE_OPTIONS='--inspect' next dev",
-    "devlocalnet": "NODE_OPTIONS='--inspect' next dev --hostname 0.0.0.0",
+    "next-build": "next build",
+    "next-dev": "NODE_OPTIONS='--inspect' next dev",
+    "next-devlocalnet": "NODE_OPTIONS='--inspect' next dev --hostname 0.0.0.0",
+    "next-start": "next start",
+    "next": "next",
     "lint": "eslint",
     "lintall": "eslint .",
-    "start": "next start",
-    "next": "next"
+    "website-dev": "vite",
+    "website-build": "vite build",
+    "website-preview": "vite preview"
   },
   "dependencies": {
     "fathom-client": "^3.0.0",
     "loglevel": "^1.7.0",
     "next": "^14.1.2",
-    "postcss": "^8.4.35",
-    "postcss-reporter": "^7.1.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "vite": "^5.1.5",
+    "vite-tsconfig-paths": "^4.3.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.18",

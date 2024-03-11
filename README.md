@@ -19,6 +19,23 @@ It's also a way for me to learn modern web development.
 I've never built a web app like this before,
 and I built it in about 5 months of nights and weekends.
 
+## WIP: moving to web components
+
+I'm migrating away from Next.JS and React to vanilla JS and web components.
+I will build a reusable package that can be embedded in any webpage
+to show a keymap and optionally a tour of the layout.
+
+I'll migrate the <https://keymap.click> site away from Next/React as well
+to something simpler --
+currently exploring something small made with Vite.
+
+The website with the content about RSI and ErgoDox boards
+will be disentangled from the components that show keyboards and provide tours.
+
+I also want to support other keyboard models --
+I'm typing this rn on a Voyager :) --
+and proper layer support.
+
 ## How it's built
 
 - Node and NPM
