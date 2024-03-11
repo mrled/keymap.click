@@ -23,7 +23,6 @@ export const Diagram = (props) => {
   useWhyDidYouUpdate("Diagram", props);
 
   const canvas = useRef();
-  const container = useRef();
   const { debugLevel } = useAppSettings();
 
   useIsomorphicLayoutEffect(() => {
@@ -34,7 +33,7 @@ export const Diagram = (props) => {
      * canvas.style.{w/h} is the CSS 'style' property of the element in the DOM,
      * while canvas.{w/h} is the _internal_ dimensions for drawing on.
      * We want our canvas to cover the entire screen,
-     * so this relies on the container being position: absolute in the top left
+     * so this relies on it being position: absolute in the top left
      * and width/height at 100%,
      * while the canvas should also be position: absolute and overflow: visible.
      */
@@ -70,16 +69,10 @@ export const Diagram = (props) => {
   ]);
 
   return (
-    <div
-      ref={container}
-      id="debug-canvas-container"
-      className="diagram-canvas-container"
-    >
-      <canvas
-        ref={canvas}
-        id="debug-canvas"
-        className="keyboard-diagram debug-border-orange debug-trans-bg-orange"
-      />
-    </div>
+    <canvas
+      ref={canvas}
+      id="debug-canvas"
+      className="keyboard-diagram debug-border-orange debug-trans-bg-orange"
+    />
   );
 };

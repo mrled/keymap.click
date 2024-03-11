@@ -1,17 +1,12 @@
 /* Diagramming styles
  */
 
-/* A div that contains the diagram canvas element */
-.diagram-canvas-container {
+/* The diagram canvas element */
+canvas.keyboard-diagram {
   position: absolute;
   top: 0;
   left: 0;
   pointer-events: none;
-}
-
-/* The diagram canvas element */
-canvas.keyboard-diagram {
-  position: absolute;
   overflow: visible;
 }
 
