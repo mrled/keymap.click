@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-import { KeyIndicator } from "~/webcomponents/reactWrapper";
+import { WCKeyIndicator } from "~/webcomponents/reactWrapper";
 
 const normalLayoutInfo = <p>Unchanged from normal QWERTY keyboard layout</p>;
 
@@ -42,9 +42,9 @@ const bracketKeyInfo = (
       <kbd>shift</kbd> key. When I first got my ErgoDox, using shift with either
       hand had become excruciating, and I desperately needed to shift without
       using my pinky. To accomplish this, I remapped{" "}
-      <KeyIndicator id="l-t-1-3">
+      <WCKeyIndicator id="l-t-1-3">
         <kbd>shift</kbd>
-      </KeyIndicator>{" "}
+      </WCKeyIndicator>{" "}
       to under the thumb. However, moving shift to a new location without
       removing the normal QWERTY shift mapping gave me too much of a crutch, so
       I needed to remove shift from its normal location.
@@ -53,13 +53,13 @@ const bracketKeyInfo = (
       Even so, why brackets? On the ErgoDox default layout, the brackets are in
       an awkward place anyway, and the shift keys are actually easier to reach
       than the default location for{" "}
-      <KeyIndicator id="r-f-9-9">
+      <WCKeyIndicator id="r-f-9-9">
         <kbd>[</kbd>
-      </KeyIndicator>{" "}
+      </WCKeyIndicator>{" "}
       and{" "}
-      <KeyIndicator id="r-f-11-9">
+      <WCKeyIndicator id="r-f-11-9">
         <kbd>]</kbd>
-      </KeyIndicator>
+      </WCKeyIndicator>
       .
     </p>
   </>
@@ -87,9 +87,9 @@ const ctrlKeyInfo = (
     </p>
     <p>
       On a normal keyboard, I remap the key in the{" "}
-      <KeyIndicator id="l-f-1-5">
+      <WCKeyIndicator id="l-f-1-5">
         <kbd>capslock</kbd>
-      </KeyIndicator>{" "}
+      </WCKeyIndicator>{" "}
       position to <kbd>ctrl</kbd>; for this layout, I had to remove that mapping
       to stop me from falling back to old habits.
     </p>
@@ -106,10 +106,10 @@ const optKeyInfo = (
     <p>
       As <kbd>opt</kbd> + a left/right arrow key is a very common chord,
       it&apos;s worth noting that this placement works well with my{" "}
-      <KeyIndicator id="l-f-8-9">left side</KeyIndicator> and{" "}
-      <KeyIndicator id="r-f-7-9">right side</KeyIndicator> arrow layer keys. I
-      can chord <kbd>opt</kbd>+<kbd>arrow layer</kbd> with one thumb without any
-      strain, and use the other hand to move the cursor with the arrow keys.
+      <WCKeyIndicator id="l-f-8-9">left side</WCKeyIndicator> and{" "}
+      <WCKeyIndicator id="r-f-7-9">right side</WCKeyIndicator> arrow layer keys.
+      I can chord <kbd>opt</kbd>+<kbd>arrow layer</kbd> with one thumb without
+      any strain, and use the other hand to move the cursor with the arrow keys.
     </p>
   </>
 );
@@ -118,31 +118,31 @@ const arrowLayerKeyInfo = (
   <>
     <p>
       Enter an arrow layer, where{" "}
-      <KeyIndicator id="l-f-8-3">
+      <WCKeyIndicator id="l-f-8-3">
         <kbd>e</kbd>
-      </KeyIndicator>{" "}
-      <KeyIndicator id="l-f-6-5">
+      </WCKeyIndicator>{" "}
+      <WCKeyIndicator id="l-f-6-5">
         <kbd>s</kbd>
-      </KeyIndicator>{" "}
-      <KeyIndicator id="l-f-8-5">
+      </WCKeyIndicator>{" "}
+      <WCKeyIndicator id="l-f-8-5">
         <kbd>d</kbd>
-      </KeyIndicator>{" "}
-      <KeyIndicator id="l-f-10-5">
+      </WCKeyIndicator>{" "}
+      <WCKeyIndicator id="l-f-10-5">
         <kbd>f</kbd>
-      </KeyIndicator>{" "}
+      </WCKeyIndicator>{" "}
       and{" "}
-      <KeyIndicator id="r-f-7-3">
+      <WCKeyIndicator id="r-f-7-3">
         <kbd>i</kbd>
-      </KeyIndicator>{" "}
-      <KeyIndicator id="r-f-5-5">
+      </WCKeyIndicator>{" "}
+      <WCKeyIndicator id="r-f-5-5">
         <kbd>j</kbd>
-      </KeyIndicator>{" "}
-      <KeyIndicator id="r-f-7-5">
+      </WCKeyIndicator>{" "}
+      <WCKeyIndicator id="r-f-7-5">
         <kbd>k</kbd>
-      </KeyIndicator>{" "}
-      <KeyIndicator id="r-f-9-5">
+      </WCKeyIndicator>{" "}
+      <WCKeyIndicator id="r-f-9-5">
         <kbd>l</kbd>
-      </KeyIndicator>{" "}
+      </WCKeyIndicator>{" "}
       are arrow keys.
     </p>
     <p>
@@ -422,9 +422,9 @@ const MrlMainLayer = {
             This placement takes a little getting used to, but it&apos;s normal
             for other Ergodox layouts, and honestly isn&apos;t too bad. It helps
             me to remember that it mirrors{" "}
-            <KeyIndicator id="r-f-13-1">
+            <WCKeyIndicator id="r-f-13-1">
               <kbd>-_</kbd>
-            </KeyIndicator>{" "}
+            </WCKeyIndicator>{" "}
             on the opposite side of the board.
           </p>
         </>
@@ -474,7 +474,7 @@ const MrlMainLayer = {
         <>
           <p>
             Reduces pinky strain compared to its QWERTY position, which is above{" "}
-            <KeyIndicator id="l-f-1-1">this key</KeyIndicator> on a QWERTY
+            <WCKeyIndicator id="l-f-1-1">this key</WCKeyIndicator> on a QWERTY
             keyboard &mdash; a position that is not actually available on an
             ErgoDox.
           </p>
@@ -502,16 +502,16 @@ const MrlMainLayer = {
           <p>
             Slightly different from the location of this key on a normal QWERTY
             keyboard. You could theoretically swap it with{" "}
-            <KeyIndicator id="l-f-1-1">
+            <WCKeyIndicator id="l-f-1-1">
               <kbd>=/+</kbd>
-            </KeyIndicator>{" "}
+            </WCKeyIndicator>{" "}
             to keep the QWERTY position, but I decided I preferred that key to
             mirror <kbd>-/_</kbd> on the opposite side of the keyboard so I
             would remember it more easily. That leaves this space as the best
             fit for this key. Additionally, while this is the location for the
             tab key on a normal keyboard, that key is much better suited for a{" "}
-            <KeyIndicator id="l-f-14-3">different location</KeyIndicator> under
-            a stronger finger than the pinky.
+            <WCKeyIndicator id="l-f-14-3">different location</WCKeyIndicator>{" "}
+            under a stronger finger than the pinky.
           </p>
         </>
       ),
@@ -566,13 +566,13 @@ const MrlMainLayer = {
           <p>
             A good location for <kbd>tab</kbd> must take into account the
             location of other keys. In this layout, I can easily chord with{" "}
-            <KeyIndicator id="l-f-14-6">
+            <WCKeyIndicator id="l-f-14-6">
               <kbd>cmd</kbd>
-            </KeyIndicator>{" "}
+            </WCKeyIndicator>{" "}
             to switch programs on macOS,{" "}
-            <KeyIndicator id="l-f-10-9">
+            <WCKeyIndicator id="l-f-10-9">
               <kbd>alt</kbd>
-            </KeyIndicator>{" "}
+            </WCKeyIndicator>{" "}
             to switch programs on Windows along with other keys like{" "}
             <kbd>ctrl</kbd>, and <kbd>shift</kbd>.
           </p>
@@ -593,13 +593,13 @@ const MrlMainLayer = {
           don&apos;t really use it. On a normal keyboard, I remap this key to{" "}
           <kbd>ctrl</kbd>, but I chose not to keep that mapping so I could
           better remember the new{" "}
-          <KeyIndicator id="l-t-5-5">
+          <WCKeyIndicator id="l-t-5-5">
             <kbd>left ctrl</kbd>
-          </KeyIndicator>{" "}
+          </WCKeyIndicator>{" "}
           and{" "}
-          <KeyIndicator id="r-t-1-5">
+          <WCKeyIndicator id="r-t-1-5">
             <kbd>right ctrl</kbd>
-          </KeyIndicator>{" "}
+          </WCKeyIndicator>{" "}
           locations.
         </p>
       ),
@@ -804,21 +804,21 @@ const MrlMainLayer = {
           </p>
           <p>
             I can easily reach any key necessary &mdash; the longest reach is to{" "}
-            <KeyIndicator id="l-f-1-1">
+            <WCKeyIndicator id="l-f-1-1">
               <kbd>=/+</kbd>
-            </KeyIndicator>
+            </WCKeyIndicator>
             , and I can do that easily, repeatedly, painlessly, and with room to
             spare.
           </p>
           <p>
             I did have to remap the normal locations for{" "}
-            <KeyIndicator id="l-f-1-7">
+            <WCKeyIndicator id="l-f-1-7">
               <kbd>left shift</kbd>
-            </KeyIndicator>{" "}
+            </WCKeyIndicator>{" "}
             and{" "}
-            <KeyIndicator id="r-f-13-7">
+            <WCKeyIndicator id="r-f-13-7">
               <kbd>right shift</kbd>
-            </KeyIndicator>{" "}
+            </WCKeyIndicator>{" "}
             to other keys in order to train my hands to use this new location.
             After a day or two the new locations felt very fast and natural.
           </p>
@@ -951,27 +951,27 @@ const MrlMainLayer = {
         <>
           <p>
             Holding this key activates a mouse layer where{" "}
-            <KeyIndicator id="l-f-8-3">
+            <WCKeyIndicator id="l-f-8-3">
               <kbd>e</kbd>
-            </KeyIndicator>{" "}
-            <KeyIndicator id="l-f-6-5">
+            </WCKeyIndicator>{" "}
+            <WCKeyIndicator id="l-f-6-5">
               <kbd>s</kbd>
-            </KeyIndicator>{" "}
-            <KeyIndicator id="l-f-8-5">
+            </WCKeyIndicator>{" "}
+            <WCKeyIndicator id="l-f-8-5">
               <kbd>d</kbd>
-            </KeyIndicator>{" "}
-            <KeyIndicator id="l-f-10-5">
+            </WCKeyIndicator>{" "}
+            <WCKeyIndicator id="l-f-10-5">
               <kbd>f</kbd>
-            </KeyIndicator>{" "}
+            </WCKeyIndicator>{" "}
             control the mouse cursor. I also use some keys under the thumbs for
             clicking{" "}
-            <KeyIndicator id="l-t-1-3">
+            <WCKeyIndicator id="l-t-1-3">
               <kbd>left</kbd>
-            </KeyIndicator>{" "}
+            </WCKeyIndicator>{" "}
             and{" "}
-            <KeyIndicator id="l-t-3-3">
+            <WCKeyIndicator id="l-t-3-3">
               <kbd>right</kbd>
-            </KeyIndicator>{" "}
+            </WCKeyIndicator>{" "}
             mouse buttons.
           </p>
           <p>
@@ -1209,16 +1209,16 @@ const MrlMainLayer = {
         <>
           <p>
             As with{" "}
-            <KeyIndicator id="l-t-3-3">
+            <WCKeyIndicator id="l-t-3-3">
               <kbd>backspace</kbd>
-            </KeyIndicator>
+            </WCKeyIndicator>
             , I hit this key pretty hard, so moving it out from under a pinky
             finger eased pain right away.
           </p>
           <p>This was easy to get used to</p>
           <p>
             The default ErgoDox layout has it{" "}
-            <KeyIndicator id="r-t-5-3">one key over</KeyIndicator>, but I
+            <WCKeyIndicator id="r-t-5-3">one key over</WCKeyIndicator>, but I
             preferred <kbd>space</kbd> in that spot instead, so I moved return
             here.
           </p>
@@ -1236,9 +1236,9 @@ const MrlMainLayer = {
           A great place for <kbd>space</kbd>. I initially had mirrored{" "}
           <kbd>space</kbd> keys, one under each thumb, but eventually moved the
           left thumb to be{" "}
-          <KeyIndicator id="l-t-1-3">
+          <WCKeyIndicator id="l-t-1-3">
             <kbd>shift</kbd>
-          </KeyIndicator>
+          </WCKeyIndicator>
           , which was immediately a huge positive for me.
         </p>
       ),

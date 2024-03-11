@@ -19,7 +19,7 @@
 import React, { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 
-export const KeyHandle = dynamic(
+export const WCKeyHandle = dynamic(
   () =>
     import("~/webcomponents/key-handle").then(() => {
       const Component = ({ children, ...props }) => (
@@ -40,7 +40,7 @@ export const KeyHandle = dynamic(
  * while I need to pass a function reference from my React code.
  * TODO: how will this work when we have converted the whole app to web components and no longer have React?
  */
-export const Key = dynamic(
+export const WCKeyboardKey = dynamic(
   () =>
     import("~/webcomponents/keyboard-key").then(() => {
       const Component = ({ onClick, children, ...props }) => {
@@ -74,7 +74,7 @@ export const Key = dynamic(
   }
 );
 
-export const KeyIndicator = dynamic(
+export const WCKeyIndicator = dynamic(
   () =>
     import("~/webcomponents/key-indicator").then(() => {
       const Component = ({ children, ...props }) => (
