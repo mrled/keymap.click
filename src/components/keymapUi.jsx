@@ -4,7 +4,6 @@ import { Diagram } from "~/components/diagram";
 import { InfoPanel } from "~/components/keyInfo";
 
 import { Keyboard } from "~/components/keyboard";
-import { useAppSettings } from "~/hooks/useAppSettings";
 import { useBoundingClientRect } from "~/hooks/useBoundingClientRect";
 import { useIsomorphicLayoutEffect } from "~/hooks/useIsomorphicLayoutEffect";
 import { useKeyConnections } from "~/hooks/useKeyConnections";
@@ -16,7 +15,6 @@ import { useWindowSize } from "~/hooks/useWindowSize";
 export const KeymapUI = () => {
   useWhyDidYouUpdate("KeymapUI", {});
 
-  const { debugLevel } = useAppSettings();
   const [documentDimensions, updateDocumentDimensions] = useContext(
     DocumentDimensionsContext
   );
