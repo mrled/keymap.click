@@ -20,7 +20,7 @@
  * In smaller screen sizes, two halves should be shown vertically.
  * For larger screen sizes, they should be shown next to each other.
  */
-div.keyboard {
+div.keyboard, key-board {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,7 +28,7 @@ div.keyboard {
   margin-top: 0;
 }
 @media (min-width: 768px) {
-  div.keyboard {
+  div.keyboard, key-board {
     flex-direction: row;
   }
 }

@@ -145,3 +145,52 @@ export const WCKeyGrid = dynamic(
     ssr: false,
   }
 );
+
+/* Wrapper for keyboard-ergodox
+ */
+export const WCKeyBoardErgodox = dynamic(
+  () =>
+    import("~/webcomponents/key-board-ergodox").then(() => {
+      const component = ({
+        keys,
+        legends,
+        onClickEach,
+        pressedKey,
+        targetKeyIds,
+        keySelection,
+        children,
+        ...props
+      }) => {
+        const boardRef = useRef(null);
+        useEffect(() => {
+          if (boardRef.current && keys && keys.keyMap) {
+            boardRef.current.createChildren({
+              keys,
+              legends,
+              onClickEach,
+              pressedKey,
+              targetKeyIds,
+              keySelection,
+            });
+          }
+        }, [
+          keys,
+          legends,
+          onClickEach,
+          pressedKey,
+          targetKeyIds,
+          keySelection,
+        ]);
+        return (
+          <keyboard-ergodox ref={boardRef} {...props}>
+            {children}
+          </keyboard-ergodox>
+        );
+      };
+      component.displayName = "ErgodoxKeyboard";
+      return component;
+    }),
+  {
+    ssr: false,
+  }
+);
