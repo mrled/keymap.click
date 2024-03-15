@@ -2,8 +2,6 @@ import { useRouter } from "next/router";
 import { createContext, useCallback, useState } from "react";
 
 import { QueryState, setQueryState } from "~/lib/appQueryState";
-import { objectTableCompare } from "~/lib/consoleLogHelper";
-import { useAppSettings } from "~/hooks/useAppSettings";
 import { keyMaps, legendMaps } from "~/lib/keys";
 
 const GuideState = new QueryState("guide", "none");
@@ -133,7 +131,6 @@ export const KeymapUiStateContext = createContext(KeymapUiStateDefault);
 export const useKeymapUiState = () => {
   const router = useRouter();
   const [keymapUiState, setKeymapUiState] = useState(KeymapUiStateDefault);
-  const { debugLevel } = useAppSettings();
   const hydrateStateCallback = useCallback(() => hydrateState(keymapUiState), [
     keymapUiState,
   ]);
@@ -144,47 +141,22 @@ export const useKeymapUiState = () => {
    */
   const setStateAndQuery = useCallback(
     (newData) => {
-      if (debugLevel > 1) {
-        console.trace(`setStateAndQuery():`);
-        console.table(
-          objectTableCompare(
-            [keymapUiState, router.query, newData],
-            ["keymapUiState", "router.query", "newData"]
-          )
-        );
-      }
       setKeymapUiState({
         ...keymapUiState,
         ...newData,
       });
       setQueryState(router, ...stateObjToQueryStringPair(newData));
     },
-    [debugLevel, keymapUiState, router]
+    [keymapUiState, router]
   );
 
   /* Set the React state from the query string values
    */
   const setStateFromQuery = () => {
     if (!keymapUiStateEq(keymapUiState, router.query)) {
-      if (debugLevel > 1) {
-        console.log("Setting state from query");
-        console.table(
-          objectTableCompare(
-            [keymapUiState, router.query],
-            ["keymapUiState", "router.query"]
-          )
-        );
-      }
       setKeymapUiState({
         ...router.query,
       });
-    } else {
-      if (debugLevel > 1) {
-        console.log(
-          "Not necessary to set state from query; internal state already reflects query string of",
-          router.query
-        );
-      }
     }
   };
 
