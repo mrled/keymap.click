@@ -20,7 +20,7 @@
  * In smaller screen sizes, two halves should be shown vertically.
  * For larger screen sizes, they should be shown next to each other.
  */
-div.keyboard, key-board {
+div.keyboard, key-board, key-board-ergodox {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,7 +28,7 @@ div.keyboard, key-board {
   margin-top: 0;
 }
 @media (min-width: 768px) {
-  div.keyboard, key-board {
+  div.keyboard, key-board, key-board-ergodox {
     flex-direction: row;
   }
 }
@@ -109,21 +109,21 @@ button[is="keyboard-key"] {
    * you wouldn't usually need to draw a diagram line to another key related to the active key.
    * But if it did happen that wa6, we'd probably want the related-to-active styling to apply.
    */;
-  &[target-of-indicator] {
+  &[target-of-indicator="true"] {
     background-color: var(--key-diagram-target-bg);
     border: 1px solid var(--key-diagram-target-border);
     &:hover {
       background-color: var(--key-diagram-target-hover-bg);
     }
   }
-  &[related-to-active] {
+  &[related-to-active="true"] {
     background-color: var(--key-related-active-bg);
     border: 1px solid var(--key-related-active-border);
     &:hover {
       background-color: var(--key-related-active-hover-bg);
     }
   }
-  &[active] {
+  &[active="true"] {
     background-color: var(--key-active-bg);
     border: 1px solid var(--key-active-border);
     &:hover {
@@ -179,13 +179,13 @@ button[is="keyboard-key"] {
 }
 
 /* Left and right thumb clusters of an ErgoDox keyboard */
-.keyboard-left-thumb-cluster {
+.keyboard-left-thumb-cluster, key-grid[name="ergodox-left-thumb"] {
   transform: translateX(calc(var(--keyboard-grid-unit) * -2))
     translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(25deg);
   transform-origin: 0 calc(var(--keyboard-grid-unit) * 2);
   padding-bottom: calc(var(--keyboard-grid-unit) * 9);
 }
-.keyboard-right-thumb-cluster {
+.keyboard-right-thumb-cluster, key-grid[name="ergodox-right-thumb"] {
   transform: translateX(calc(var(--keyboard-grid-unit) * 2))
     translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(-25deg);
   transform-origin: calc(var(--keyboard-grid-unit) * 6)
@@ -193,39 +193,50 @@ button[is="keyboard-key"] {
   padding-bottom: calc(var(--keyboard-grid-unit) * 9);
 }
 
-.keymap-ui-kid-container {
-  display: flex;
-  .keymap-ui-diamarg {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
-    border: none;
-    width: var(--kid-diamarg-width);
-  }
-  .keymap-ui-center-panel {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
-    border: none;
-    width: calc(100% - (var(--kid-diamarg-width) * 2));
-  }
-  .keymap-ui-keyinfo-container {
-    bottom: auto;
-    top: 0;
-    left: 0;
-    right: 0;
-    border: 1px solid #d1d5db;
-    background-color: #f7fafc;
-    border-radius: 0.375rem;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    margin-left: auto;
-    margin-right: auto;
+.key-map-ui, key-map-ui {
 
-    .key-info-prose {
-      margin: 1.125rem 0;
+ /* key-map-ui is a custom element, which doesn't get block by default.
+  * If we don't set it here, position:relative of this + position:absolute of the canvas
+  * will not work as expected.
+  */
+  display: block;
+
+  position: relative;
+  .keymap-ui-kid-container {
+    display: flex;
+    .keymap-ui-diamarg {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+      border: none;
+      width: var(--kid-diamarg-width);
+    }
+    .keymap-ui-center-panel {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+      border: none;
+      width: calc(100% - (var(--kid-diamarg-width) * 2));
+    }
+    .keymap-ui-keyinfo-container {
+      bottom: auto;
+      top: 0;
+      left: 0;
+      right: 0;
+      text-align: left;
+      border: 1px solid #d1d5db;
+      background-color: #f7fafc;
+      border-radius: 0.375rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      margin-left: auto;
+      margin-right: auto;
+
+      .key-info-prose {
+        margin: 1.125rem 0;
+      }
     }
   }
 }

@@ -65,7 +65,12 @@ h2.keyboard-title {
   font-size: 1.25rem;
 }
 
-h3, h4, h5, h6 {
+h3 {
+  font-size: 1.25rem;
+  font-weight: inherit;
+}
+
+h4, h5, h6 {
   font-size: inherit;
   font-weight: inherit;
 }

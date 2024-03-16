@@ -1,3 +1,4 @@
+import { keyMaps, legendMaps } from "~/lib/keys";
 import "~/webcomponents/keyboard-key";
 
 /* KeyGrid: An HTML grid template for keyboard keys.
@@ -9,76 +10,221 @@ import "~/webcomponents/keyboard-key";
  *
  * Create child <keyboard-key> elements directly,
  * or use the createKeys() method to create them from key data.
+ * When creating keys in HTML, you must create child <keyboard-key> elements too.
+ * When using createKeys(),
+ * just pass in the list of key IDs and it will create the child elements for you.
  *
  * Attributes:
- *   name:                  The name of the grid; used internally but not displayed.
- *                          TODO: name attribute was used in React but may be removable now.
+ *   name:                  The name of the grid, used for styling with key-grid[name=THISVALUE].
  *   cols:                  The number of columns in the grid
  *   rows:                  Number of rows in the grid
+ *   selected-key:          The ID of the currently selected key
+ *   indicated-keys:        A list of key IDs that are pointed to by <key-indicator> elements
+ *   keymap-name:           The name of the keymap to use
+ *                          (keymap must be defined by this name in lib/keys.js `keyMaps` object)
+ *   legendmap-name:        The name of the legend map to use
+ *                          (legend map must be defined by this name in lib/keys.js `legendMaps` object)
+ *   ignore-clicks:         If true, don't handle clicks on the keys
  */
 class KeyGrid extends HTMLElement {
   static get observedAttributes() {
-    return ["name", "cols", "rows"];
+    return [
+      "name",
+      "cols",
+      "rows",
+      "selected-key",
+      "indicated-keys",
+      "keymap-name",
+      "legendmap-name",
+      "ignore-clicks",
+    ];
   }
 
   constructor() {
     super();
+    this.keyData = {};
+    this.indicatedKeys = [];
+    // TODO: don't hard code these defaults here
+    this.keyMap = keyMaps.MrlMainLayer;
+    this.legendMap = legendMaps.MrlLegends;
   }
 
+  /* Handle initial element creation
+   */
   connectedCallback() {
-    this.updateComponent();
+    // Call attributeChangedCallback for each attribute to set initial state.
+    this.attributeChangedCallback("cols", null, this.getAttribute("cols"));
+    this.attributeChangedCallback("rows", null, this.getAttribute("rows"));
+    const selectedKey = this.getAttribute("selected-key");
+    this.attributeChangedCallback("selected-key", null, selectedKey);
+    const keymapName = this.getAttribute("keymap-name");
+    this.keyMap = keyMaps[keymapName];
+    const legendMapName = this.getAttribute("legendmap-name");
+    this.legendMap = legendMaps[legendMapName];
+    this.ignoreClicks = this.getAttribute("ignore-clicks") === "true";
   }
 
+  /* Handle attribute changes
+   */
   attributeChangedCallback(name, oldValue, newValue) {
-    this.updateComponent();
+    switch (name) {
+      case "name":
+        break;
+      case "cols":
+        const cols = parseInt(newValue, 10) || 0;
+        this.style.gridTemplateColumns = `repeat(${cols}, var(--keyboard-grid-unit))`;
+        break;
+      case "rows":
+        const rows = parseInt(newValue, 10) || 0;
+        this.style.gridTemplateRows = `repeat(${rows}, var(--keyboard-grid-unit))`;
+        break;
+      case "selected-key":
+        if (!newValue) {
+          this.selectedKeyData = {};
+          break;
+        }
+        // We allow the selected key to be invalid,
+        // because the user might be about to select a new key map.
+        const newKeyData = this.keyMap.allKeysById[newValue] || {};
+        // if (!newKeyData) {
+        //   console.error(`KeyGrid: No key found for ${newValue}`);
+        //   this.selectedKeyData = {};
+        //   break;
+        // }
+        this.selectedKeyData = newKeyData;
+        this.setSelectedKey();
+        break;
+      case "indicated-keys":
+        this.indicatedKeys = newValue.split(",");
+        break;
+      case "keymap-name":
+        const newKeyMap = keyMaps[newValue];
+        if (!newKeyMap) {
+          console.error(`KeyGrid: No keymap found for ${newValue}`);
+          break;
+        }
+        this.keyMap = newKeyMap;
+        this.recreateKeys();
+        break;
+      case "legendmap-name":
+        const newLegendMap = legendMaps[newValue];
+        if (!newLegendMap) {
+          console.error(`KeyGrid: No legendmap found for ${newValue}`);
+          break;
+        }
+        this.legendMap = newLegendMap;
+        this.recreateKeys();
+        break;
+      case "ignore-clicks":
+        this.ignoreClicks = newValue === "true";
+        break;
+      default:
+        console.error(`KeyGrid: Unhandled attribute: ${name}`);
+    }
   }
 
-  updateComponent() {
-    this.name = this.getAttribute("name");
-    const cols = parseInt(this.getAttribute("cols"), 10) || 0;
-    const rows = parseInt(this.getAttribute("rows"), 10) || 0;
-    this.style.gridTemplateColumns = `repeat(${cols}, var(--keyboard-grid-unit))`;
-    this.style.gridTemplateRows = `repeat(${rows}, var(--keyboard-grid-unit))`;
+  // TODO: do we need to cache these getters?
+
+  /* Get all the child <keyboard-key> elements
+   */
+  get keyElements() {
+    return (
+      Array.from(this.querySelectorAll("button", { is: "keyboard-key" })) || []
+    );
   }
 
+  /* Get a map of all the child <keyboard-key> elements by ID
+   */
+  get keyElementsById() {
+    return this.keyElements.reduce((acc, elem) => {
+      const elemId = elem.getAttribute("id");
+      acc[elemId] = elem;
+      return acc;
+    }, {});
+  }
+
+  /* Get a list of all the key IDs of the child <keyboard-key> elements
+   */
+  get keyIds() {
+    return this.keyElements.map((elem) => elem.getAttribute("id"));
+  }
+
+  /* Remove all child keys.
+   * Useful when working with this element programmatically.
+   */
   removeAllChildren() {
     while (this.firstChild) {
       this.removeChild(this.firstChild);
     }
   }
 
+  // TODO: it's actually the keymap UI that controls the selected key
+  // and whether any key-indicator elements point to any keys in the grid
+  // ... so we should move all the logic like that up there I think.
+
+  /* Given the ID of a child key,
+   * set its active, related-to-active, and target-of-indicator attributes
+   * based on the currently selected key.
+   */
+  setChildKeyAttributes(keyId) {
+    const keyElement = this.keyElementsById[keyId];
+    if (!keyElement) {
+      // Maybe the key hasn't been created yet
+      return;
+    }
+    let active = false;
+    let relatedToActive = false;
+    let targetOfIndicator = false;
+    if (keyId === this.selectedKeyData.id) {
+      active = true;
+    } else if (
+      this.selectedKeyData.selection &&
+      this.selectedKeyData.selection.indexOf(keyId) > -1
+    ) {
+      relatedToActive = true;
+      // TODO: implement targetKeyIds
+      // } else if (targetKeyIds.indexOf(keyId) > -1) {
+      //   targetOfIndicator = true;
+    }
+    if (keyId === "title-bar-0-0") {
+      console.log(
+        `Setting attributes for ${keyId}: ${active} ${relatedToActive} ${targetOfIndicator}`
+      );
+    }
+    keyElement.setAttribute("active", active);
+    keyElement.setAttribute("related-to-active", relatedToActive);
+    keyElement.setAttribute("target-of-indicator", targetOfIndicator);
+  }
+
+  /* Update all the child key elements based on the currently selected key.
+   */
+  setSelectedKey() {
+    this.keyIds.map((keyId) => this.setChildKeyAttributes(keyId));
+  }
+
+  /* An onClick function for each <keyboard-key> element.
+   * Send a "key-selected" custom event with the key ID.
+   */
+  #keyboardKeyOnClick(keyId) {
+    // console.log(`KeyGrid.#keyboardKeyOnClick(${keyId})`);
+    const event = new CustomEvent("key-selected", {
+      bubbles: true,
+      detail: keyId,
+    });
+    this.dispatchEvent(event);
+  }
+
   /* Create a single <keyboard-key> element from key data
    */
-  createKey(
-    keyData,
-    legends,
-    onClickEach,
-    targetKeyIds,
-    pressedKey,
-    keySelection
-  ) {
-    keyData = keyData || {};
-    legends = legends || {};
-    onClickEach = onClickEach || (() => {});
-    targetKeyIds = targetKeyIds || [];
-    pressedKey = pressedKey || "";
-    keySelection = keySelection || [];
-    window.whatever = keyData;
-    // TODO: this requires that we rebuild the keyboard every time pressedKey changes
-    // In a WebComponents world, that isn't the right way to do it.
-    // Do something else instead.
-    const isTargetKey = targetKeyIds.findIndex((id) => id === keyData.id) > -1;
-    let isActive, isInSelectedGroup;
-    if (pressedKey) {
-      isActive = keyData.id === pressedKey.reactKey;
-      isInSelectedGroup = !isActive && keySelection.indexOf(keyData.id) > -1;
-    } else {
-      isActive = false;
-      isInSelectedGroup = false;
+  #createKey(keyId) {
+    if (!keyId || !this.keyMap || !this.keyMap.allKeysById[keyId]) {
+      return;
     }
+    const keyData = this.keyMap.allKeysById[keyId];
     const { size = [2, 2], startPos = ["auto", "auto"], legend } = keyData;
     const position = `${size[0]} ${size[1]} ${startPos[0]} ${startPos[1]}`;
-    const legendData = legends[legend];
+
+    const legendData = this.legendMap[legend];
     let legendText = "";
     let legendImage = "";
     // TODO: don't differentiate between text and glyph here
@@ -105,15 +251,18 @@ class KeyGrid extends HTMLElement {
     key.setAttribute("legend-text", legendText);
     key.setAttribute("legend-image", legendImage);
     key.setAttribute("id", keyData.id);
-    if (isActive) key.setAttribute("active", true);
-    if (isInSelectedGroup) key.setAttribute("related-to-active", true);
-    if (isTargetKey) key.setAttribute("target-of-indicator", true);
     // TODO: keyHandeExtraClasses is a hack, can we remove it?
     const keyHandleExtraClasses = keyData.keyHandleExtraClasses || "";
     key.setAttribute("key-handle-extra-classes", keyHandleExtraClasses);
     key.setAttribute("key-handle-top", keyData.keyHandleTop);
-    key.onclick = () => onClickEach(keyData.id);
+
+    this.setChildKeyAttributes(keyId);
+
+    if (!this.ignoreClicks) key.onclick = () => this.#keyboardKeyOnClick(keyId);
+
     this.appendChild(key);
+
+    this.keyData[keyData.id] = key;
 
     return key;
   }
@@ -129,25 +278,21 @@ class KeyGrid extends HTMLElement {
    *                  e.g. you might have the same text for all of home/end/pgup/pgdn
    *                  and you want to show them all as related when any one of them is pressed.
    */
-  createKeys({
-    keys,
-    legends,
-    onClickEach,
-    targetKeyIds,
-    pressedKey,
-    keySelection,
-  }) {
+  createKeys(keyIds) {
     this.removeAllChildren();
-    keys.map((keyData) => {
-      this.createKey(
-        keyData,
-        legends,
-        onClickEach,
-        targetKeyIds,
-        pressedKey,
-        keySelection
-      );
-    });
+    console.log(`Creating keys for ${keyIds}`);
+    keyIds.map((keyId) => this.#createKey(keyId));
+  }
+
+  /* Re-create keys after changing keymap or legendmap
+   * First get a copy of all the key IDs from our existing children,
+   * then remove all the children and create new ones from the key IDs.
+   */
+  recreateKeys() {
+    const keyIds = this.keyIds;
+    if (keyIds) {
+      this.createKeys(keyIds);
+    }
   }
 }
 

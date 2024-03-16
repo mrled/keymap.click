@@ -19,6 +19,7 @@
   }
 }
 
+/* TODO: get rid of this when we get rid of React */
 .panel-nav-bar {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -36,6 +37,24 @@
       margin-left: auto;
       padding: 0.5rem;
     }
+  }
+}
+
+key-info-nav-bar {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  border-bottom: 1px solid var(--button-border-color);
+  display: flex;
+
+  > * {
+    flex-direction: column;
+    padding: 0 1rem;
+  }
+
+  h2 {
+    display: inline;
+    margin-left: auto;
+    padding: 0.5rem;
   }
 }
 

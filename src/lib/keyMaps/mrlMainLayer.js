@@ -1,166 +1,149 @@
-import React from "react";
-import Link from "next/link";
+const normalLayoutInfo = [`Unchanged from normal QWERTY keyboard layout`];
 
-import { WCKeyIndicator } from "~/webcomponents/reactWrapper";
+const pageUpDownHomeEndInfo = [
+  `
+    I keep the four <kbd>page up</kbd>, <kbd>page down</kbd>, <kbd>home</kbd>,
+    and <kbd>end</kbd> keys here. I find them useful, but not mandatory. They
+    tend to be heavily used on Windows and other Microsoft products like
+    Outlook and VS Code, and much less useful on macOS.
+  `,
+  `
+    These keys are difficult for me to use without actually looking down at
+    the keyboard.
+  `,
+];
 
-const normalLayoutInfo = <p>Unchanged from normal QWERTY keyboard layout</p>;
-
-const pageUpDownHomeEndInfo = (
-  <>
-    <p>
-      I keep the four <kbd>page up</kbd>, <kbd>page down</kbd>, <kbd>home</kbd>,
-      and <kbd>end</kbd> keys here. I find them useful, but not mandatory. They
-      tend to be heavily used on Windows and other Microsoft products like
-      Outlook and VS Code, and much less useful on macOS.
-    </p>
-    <p>
-      These keys are difficult for me to use without actually looking down at
-      the keyboard.
-    </p>
-  </>
-);
-
-const guiKeyInfo = (
-  <>
-    <p>
-      This key represents either <kbd>cmd</kbd>/<kbd>⌘</kbd> on macOS or{" "}
+const guiKeyInfo = [
+  `
+      This key represents either <kbd>cmd</kbd>/<kbd>⌘</kbd> on macOS or
       <kbd>win</kbd> on Windows. Keeping it in this location makes it very easy
       to hit any application shortcut without remapping them in the operating
       system or straining your hands.
-    </p>
-  </>
-);
+    `,
+];
 
-const bracketKeyInfo = (
-  <>
-    <p>
+const bracketKeyInfo = [
+  `
       Brackets work really well for me here, and shift keys work really poorly
       for me here, so this odd key placement is a win-win for me.
-    </p>
-    <p>
-      The most important aspect of this placement is that it is <em>not</em> a{" "}
+    `,
+  `
+      The most important aspect of this placement is that it is <em>not</em> a
       <kbd>shift</kbd> key. When I first got my ErgoDox, using shift with either
       hand had become excruciating, and I desperately needed to shift without
-      using my pinky. To accomplish this, I remapped{" "}
-      <WCKeyIndicator id="l-t-1-3">
+      using my pinky. To accomplish this, I remapped
+      <key-indicator id="l-t-1-3">
         <kbd>shift</kbd>
-      </WCKeyIndicator>{" "}
+      </key-indicator>
       to under the thumb. However, moving shift to a new location without
       removing the normal QWERTY shift mapping gave me too much of a crutch, so
       I needed to remove shift from its normal location.
-    </p>
-    <p>
+    `,
+  `
       Even so, why brackets? On the ErgoDox default layout, the brackets are in
       an awkward place anyway, and the shift keys are actually easier to reach
-      than the default location for{" "}
-      <WCKeyIndicator id="r-f-9-9">
+      than the default location for
+      <key-indicator id="r-f-9-9">
         <kbd>[</kbd>
-      </WCKeyIndicator>{" "}
-      and{" "}
-      <WCKeyIndicator id="r-f-11-9">
+      </key-indicator>
+      and
+      <key-indicator id="r-f-11-9">
         <kbd>]</kbd>
-      </WCKeyIndicator>
+      </key-indicator>
       .
-    </p>
-  </>
-);
+    `,
+];
 
-const volumeControlInfo = (
-  <p>
+const volumeControlInfo = [
+  `
     It&apos;s nice to have dedicated volume keys, but isn&apos;t a necessity.
     I&apos;ve also experimented with using these keys to enter different
     function layers, which works well too.
-  </p>
-);
+  `,
+];
 
-const ctrlKeyInfo = (
-  <>
-    <p>
-      Keeping this key out from under my pinky is vital &mdash;{" "}
+const ctrlKeyInfo = [
+  `
+      Keeping this key out from under my pinky is vital &mdash;
       <em>especially</em> since I can&apos;t seem to break two decades of Emacs
       habits.
-    </p>
-    <p>
+    `,
+  `
       Happily, this is a really excellent location for <kbd>ctrl</kbd>, much
       better than the default QWERTY location, and only possible on an ErgoDox,
       because it&apos;s easier to chord with any key on the board.
-    </p>
-    <p>
-      On a normal keyboard, I remap the key in the{" "}
-      <WCKeyIndicator id="l-f-1-5">
+    `,
+  `
+      On a normal keyboard, I remap the key in the
+      <key-indicator id="l-f-1-5">
         <kbd>capslock</kbd>
-      </WCKeyIndicator>{" "}
+      </key-indicator>
       position to <kbd>ctrl</kbd>; for this layout, I had to remove that mapping
       to stop me from falling back to old habits.
-    </p>
-  </>
-);
+    `,
+];
 
-const optKeyInfo = (
-  <>
-    <p>
-      This key represents either <kbd>opt</kbd>/<kbd> ⌥</kbd> on macOS or{" "}
+const optKeyInfo = [
+  `
+      This key represents either <kbd>opt</kbd>/<kbd> ⌥</kbd> on macOS or
       <kbd>alt</kbd> on Windows. This location is easy to hit with your thumb,
       and having two of them means you don&apos;t have to stretch much.
-    </p>
-    <p>
+    `,
+  `
       As <kbd>opt</kbd> + a left/right arrow key is a very common chord,
-      it&apos;s worth noting that this placement works well with my{" "}
-      <WCKeyIndicator id="l-f-8-9">left side</WCKeyIndicator> and{" "}
-      <WCKeyIndicator id="r-f-7-9">right side</WCKeyIndicator> arrow layer keys.
+      it&apos;s worth noting that this placement works well with my
+      <key-indicator id="l-f-8-9">left side</key-indicator> and
+      <key-indicator id="r-f-7-9">right side</key-indicator> arrow layer keys.
       I can chord <kbd>opt</kbd>+<kbd>arrow layer</kbd> with one thumb without
       any strain, and use the other hand to move the cursor with the arrow keys.
-    </p>
-  </>
-);
+    `,
+];
 
-const arrowLayerKeyInfo = (
-  <>
-    <p>
-      Enter an arrow layer, where{" "}
-      <WCKeyIndicator id="l-f-8-3">
+const arrowLayerKeyInfo = [
+  `
+      Enter an arrow layer, where
+      <key-indicator id="l-f-8-3">
         <kbd>e</kbd>
-      </WCKeyIndicator>{" "}
-      <WCKeyIndicator id="l-f-6-5">
+      </key-indicator>
+      <key-indicator id="l-f-6-5">
         <kbd>s</kbd>
-      </WCKeyIndicator>{" "}
-      <WCKeyIndicator id="l-f-8-5">
+      </key-indicator>
+      <key-indicator id="l-f-8-5">
         <kbd>d</kbd>
-      </WCKeyIndicator>{" "}
-      <WCKeyIndicator id="l-f-10-5">
+      </key-indicator>
+      <key-indicator id="l-f-10-5">
         <kbd>f</kbd>
-      </WCKeyIndicator>{" "}
-      and{" "}
-      <WCKeyIndicator id="r-f-7-3">
+      </key-indicator>
+      and
+      <key-indicator id="r-f-7-3">
         <kbd>i</kbd>
-      </WCKeyIndicator>{" "}
-      <WCKeyIndicator id="r-f-5-5">
+      </key-indicator>
+      <key-indicator id="r-f-5-5">
         <kbd>j</kbd>
-      </WCKeyIndicator>{" "}
-      <WCKeyIndicator id="r-f-7-5">
+      </key-indicator>
+      <key-indicator id="r-f-7-5">
         <kbd>k</kbd>
-      </WCKeyIndicator>{" "}
-      <WCKeyIndicator id="r-f-9-5">
+      </key-indicator>
+      <key-indicator id="r-f-9-5">
         <kbd>l</kbd>
-      </WCKeyIndicator>{" "}
+      </key-indicator>
       are arrow keys.
-    </p>
-    <p>
-      This is a fantastically useful idea that I did not invent. I got{" "}
-      <a href="https://tonsky.me/blog/cursor-keys/">the original vision</a> from{" "}
+    `,
+  `
+      This is a fantastically useful idea that I did not invent. I got
+      <a href="https://tonsky.me/blog/cursor-keys/">the original vision</a> from
       <a href="https://tonsky.me/">Nikita</a>, who has a much nicer website than
       I do. His solution is really good, but I cannot use <kbd>capslock</kbd> to
       activate the arrow layer; on a normal QWERTY keyboard, I must remap that
       key to <kbd>ctrl</kbd>, and more importantly I want to avoid chording keys
       with my pinky as much as possible.
-    </p>
-    <p>
-      People more accustomed to the vim way of doing things might prefer{" "}
+    `,
+  `
+      People more accustomed to the vim way of doing things might prefer
       <kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> instead of the
       inverted-T arrow placement I use, to which I say, go wild man, be free.
-    </p>
-  </>
-);
+    `,
+];
 
 // const arrowKeySelection = ["l-f-8-9", "l-f-10-9", "r-f-5-9", "r-f-7-9"];
 const volKeySelection = ["r-f-9-9", "r-f-11-9", "r-f-13-9"];
@@ -248,6 +231,9 @@ const extraFeaturesSelection = [
 
 const MrlMainLayer = {
   fullName: "Main layer",
+  welcome: [
+    `Welcome to my keymap. I wrote this guide to explain how my ErgoDox helped my RSI.`,
+  ],
   defaultGuide: "mrlGuide",
   guides: {
     mrlGuide: {
@@ -255,85 +241,79 @@ const MrlMainLayer = {
       steps: [
         {
           title: "Welcome to the guide to my main keyboard layout",
-          text: (
-            <>
-              <p>
+          text: [
+            `
                 Keys highlighted in orange have been moved from their
                 traditional QWERTY location to relieve pain.
-              </p>
-              <p>
+              `,
+            `
                 You&apos;ll note that all of them are moved inward, such that
-                they are within reach of either the index finger or the thumb.{" "}
+                they are within reach of either the index finger or the thumb.
                 <strong>
                   This is the biggest benefit of the ErgoDox for me.
                 </strong>
-              </p>
-              <p>
+              `,
+            `
                 I remapped all of these keys in order to relieve what became
                 intense, painful strain on the pinky fingers of both hands. At
                 its worst, the tendon on the outside of each forearm from
                 pinky-side of the palm to the elbow would be swollen, rock hard,
                 and painful to touch. Touching any keys with my pinkies would
                 feel like tiny stabs of pain. It was miserable.
-              </p>
-              <p>
-                I am not the first to notice that these keys &mdash;{" "}
-                <kbd>esc</kbd>, <kbd>tab</kbd>, <kbd>shift</kbd>,{" "}
-                <kbd>backspace</kbd>, <kbd>ctrl</kbd>, and <kbd>return</kbd>{" "}
+              `,
+            `
+                I am not the first to notice that these keys &mdash;
+                <kbd>esc</kbd>, <kbd>tab</kbd>, <kbd>shift</kbd>,
+                <kbd>backspace</kbd>, <kbd>ctrl</kbd>, and <kbd>return</kbd>
                 &mdash; are some of the most commonly used keys on the board,
                 and yet we use them with our pinkies, which are the weakest
                 fingers we have. Changing the location of these keys has made a
                 massive difference in my day to day life on a keyboard, and it
                 was easy to learn.
-              </p>
-              <p>Once I changed these keys, my pain decreased drastically.</p>
-            </>
-          ),
+              `,
+            `Once I changed these keys, my pain decreased drastically.`,
+          ],
           selection: pinkyReliefSelection,
         },
         {
           title: "QWERTY keys",
-          text: (
-            <>
-              <p>
+          text: [
+            `
                 While the most significant benefit of the ErgoDox is the ability
                 to remap keys, see how many keys remain in their default QWERTY
                 position. The benefits I got were cheap. I could keep most of
                 what I knew from regular keyboards.
-              </p>
-              <p>
+              `,
+            `
                 Even for these QWERTY keys, though, there is something special
                 about the ErgoDox layout. The keys are <em>ortholinear</em>,
                 which means that they are arrayed in neat columns rather than
                 offset like a traditional QWERTY keyboard. This way, my fingers
                 extend straight out, or curl straight in, to hit any key.
-              </p>
-              <p>
-                Towards the center and tilted at an angle, you will notice the{" "}
+              `,
+            `
+                Towards the center and tilted at an angle, you will notice the
                 <em>thumb clusters</em>. This design lets you use the powerful
                 muscles in your thumbs to strike the most commonly used keys.
-              </p>
-              <p>
+              `,
+            `
                 Additionally, you can see that the keyboard is actually two
                 independent boards. They are connected by a flexible cable, and
                 can be positioned straight in front of your arms. This helps
                 keep correct posture and relaxed shoulders.
-              </p>
-            </>
-          ),
+              `,
+          ],
           selection: qwertySelection,
         },
         {
           title: "Changing key locations to relieve my pinky",
-          text: (
-            <>
-              <p>
+          text: [
+            `
                 Here are the most important keys I moved again. This is just the
                 same group of keys as on step one.
-              </p>
-              <p>In the following steps, we will examine them individually.</p>
-            </>
-          ),
+              `,
+            `In the following steps, we will examine them individually.`,
+          ],
           selection: pinkyReliefSelection,
         },
         { key: "l-f-14-1" },
@@ -347,19 +327,17 @@ const MrlMainLayer = {
         { key: "r-t-3-3" },
         {
           title: "Other remapped keys",
-          text: (
-            <>
-              <p>
+          text: [
+            `
                 Due to the layout of the ErgoDox, some keys had to be moved from
                 their normal QWERTY positions.
-              </p>
-              <p>
+              `,
+            `
                 Changing the location of these keys did not impact my RSI, but
                 some of the new locations might be surprising, so it&apos;s
                 worth examining what has changed and why.
-              </p>
-            </>
-          ),
+              `,
+          ],
           selection: movedQwertyNonReliefSelection,
         },
         { key: "l-f-1-1" },
@@ -378,16 +356,14 @@ const MrlMainLayer = {
         },
         {
           title: "Layers and extra features",
-          text: (
-            <>
-              <p>
-                Since the board is powered by{" "}
-                <Link href="/ergodox#qmk">QMK</Link>, I can also get extra
+          text: [
+            `
+                Since the board is powered by
+                <a href="https://qmk.fm/">QMK</a>, I can also get extra
                 features besides just moving keys around. See the next few steps
                 of the guide for special keys and cool tricks.
-              </p>
-            </>
-          ),
+              `,
+          ],
           selection: extraFeaturesSelection,
         },
         { key: "l-f-2-9" },
@@ -400,11 +376,7 @@ const MrlMainLayer = {
         },
         {
           title: "The end",
-          text: (
-            <>
-              <p>Thanks for all the clicks.</p>
-            </>
-          ),
+          text: [`Thanks for all the clicks.`],
         },
       ],
     },
@@ -416,19 +388,17 @@ const MrlMainLayer = {
       board: ["left", "finger"],
       size: [3, 2],
       startPos: [1, 1],
-      info: (
-        <>
-          <p>
+      info: [
+        `
             This placement takes a little getting used to, but it&apos;s normal
             for other Ergodox layouts, and honestly isn&apos;t too bad. It helps
-            me to remember that it mirrors{" "}
-            <WCKeyIndicator id="r-f-13-1">
+            me to remember that it mirrors
+            <key-indicator id="r-f-13-1">
               <kbd>-_</kbd>
-            </WCKeyIndicator>{" "}
+            </key-indicator>
             on the opposite side of the board.
-          </p>
-        </>
-      ),
+          `,
+      ],
     },
     {
       legend: "1",
@@ -470,25 +440,23 @@ const MrlMainLayer = {
       name: "escape",
       board: ["left", "finger"],
       startPos: [14, 1],
-      info: (
-        <>
-          <p>
-            Reduces pinky strain compared to its QWERTY position, which is above{" "}
-            <WCKeyIndicator id="l-f-1-1">this key</WCKeyIndicator> on a QWERTY
+      info: [
+        `
+            Reduces pinky strain compared to its QWERTY position, which is above
+            <key-indicator id="l-f-1-1">this key</key-indicator> on a QWERTY
             keyboard &mdash; a position that is not actually available on an
             ErgoDox.
-          </p>
-          <p>
+          `,
+        `
             <kbd>esc</kbd> is used often enough in computing I think any
             RSI-afflicted user would benefit from this new location, but I
             recommend it especially to heavy vim users.
-          </p>
-          <p>
+          `,
+        `
             This placement is easy to remember, particularly because the default
             location is unavailable to remind you.
-          </p>
-        </>
-      ),
+          `,
+      ],
     },
 
     // top alpha row
@@ -497,24 +465,22 @@ const MrlMainLayer = {
       board: ["left", "finger"],
       size: [3, 2],
       startPos: [1, 3],
-      info: (
-        <>
-          <p>
+      info: [
+        `
             Slightly different from the location of this key on a normal QWERTY
-            keyboard. You could theoretically swap it with{" "}
-            <WCKeyIndicator id="l-f-1-1">
+            keyboard. You could theoretically swap it with
+            <key-indicator id="l-f-1-1">
               <kbd>=/+</kbd>
-            </WCKeyIndicator>{" "}
+            </key-indicator>
             to keep the QWERTY position, but I decided I preferred that key to
             mirror <kbd>-/_</kbd> on the opposite side of the keyboard so I
             would remember it more easily. That leaves this space as the best
             fit for this key. Additionally, while this is the location for the
-            tab key on a normal keyboard, that key is much better suited for a{" "}
-            <WCKeyIndicator id="l-f-14-3">different location</WCKeyIndicator>{" "}
+            tab key on a normal keyboard, that key is much better suited for a
+            <key-indicator id="l-f-14-3">different location</key-indicator>
             under a stronger finger than the pinky.
-          </p>
-        </>
-      ),
+          `,
+      ],
     },
     {
       legend: "q",
@@ -557,27 +523,25 @@ const MrlMainLayer = {
       board: ["left", "finger"],
       size: [2, 3],
       startPos: [14, 3],
-      info: (
-        <>
-          <p>
+      info: [
+        `
             Reduces pinky strain over its default location. This is a very
             natural place for this key, and it&apos;s very easy to hit.
-          </p>
-          <p>
+          `,
+        `
             A good location for <kbd>tab</kbd> must take into account the
-            location of other keys. In this layout, I can easily chord with{" "}
-            <WCKeyIndicator id="l-f-14-6">
+            location of other keys. In this layout, I can easily chord with
+            <key-indicator id="l-f-14-6">
               <kbd>cmd</kbd>
-            </WCKeyIndicator>{" "}
-            to switch programs on macOS,{" "}
-            <WCKeyIndicator id="l-f-10-9">
+            </key-indicator>
+            to switch programs on macOS,
+            <key-indicator id="l-f-10-9">
               <kbd>alt</kbd>
-            </WCKeyIndicator>{" "}
-            to switch programs on Windows along with other keys like{" "}
+            </key-indicator>
+            to switch programs on Windows along with other keys like
             <kbd>ctrl</kbd>, and <kbd>shift</kbd>.
-          </p>
-        </>
-      ),
+          `,
+      ],
     },
 
     // middle / home alpha row
@@ -587,22 +551,22 @@ const MrlMainLayer = {
       board: ["left", "finger"],
       size: [3, 2],
       startPos: [1, 5],
-      info: (
-        <p>
+      info: [
+        `
           I enabled <kbd>capslock</kbd> on this key for fun, even though I
-          don&apos;t really use it. On a normal keyboard, I remap this key to{" "}
+          don&apos;t really use it. On a normal keyboard, I remap this key to
           <kbd>ctrl</kbd>, but I chose not to keep that mapping so I could
-          better remember the new{" "}
-          <WCKeyIndicator id="l-t-5-5">
+          better remember the new
+          <key-indicator id="l-t-5-5">
             <kbd>left ctrl</kbd>
-          </WCKeyIndicator>{" "}
-          and{" "}
-          <WCKeyIndicator id="r-t-1-5">
+          </key-indicator>
+          and
+          <key-indicator id="r-t-1-5">
             <kbd>right ctrl</kbd>
-          </WCKeyIndicator>{" "}
+          </key-indicator>
           locations.
-        </p>
-      ),
+        `,
+      ],
     },
     {
       legend: "a",
@@ -700,9 +664,8 @@ const MrlMainLayer = {
       name: "function layer",
       board: ["left", "finger"],
       startPos: [2, 9],
-      info: (
-        <>
-          <p>
+      info: [
+        `
             Holding this key enters my &ldquo;function layer&rdquo;,
             transforming every key on the board to a special function. For
             instance, while holding down this key, I have access to function
@@ -710,43 +673,37 @@ const MrlMainLayer = {
             media keys, keys to control screen brightness, and even keys to
             access even more esoteric layers I use for testing or controlling
             the color of the LEDs underneath the keyboard.
-          </p>
-          <p>
-            For more information on layers, see{" "}
-            <Link href="/ergodox">the ErgoDox page</Link> or{" "}
+          `,
+        `
+            For more information on layers, see
             <a href="https://docs.qmk.fm/#/feature_layers">QMK documentation</a>
             .
-          </p>
-        </>
-      ),
+          `,
+      ],
     },
     {
       unset: true,
       name: "Unset",
       board: ["left", "finger"],
       startPos: [4, 9],
-      info: (
-        <>
-          <p>
+      info: [
+        `
             I haven&apos;t found anything useful to map here. In the past
             I&apos;ve used it to enter other layers.
-          </p>
-        </>
-      ),
+          `,
+      ],
     },
     {
       unset: true,
       name: "Unset",
       board: ["left", "finger"],
       startPos: [6, 9],
-      info: (
-        <>
-          <p>
+      info: [
+        `
             I haven&apos;t found anything useful to map here. In the past
             I&apos;ve used it to enter other layers.
-          </p>
-        </>
-      ),
+          `,
+      ],
     },
     {
       legend: "layer_arrow",
@@ -772,14 +729,14 @@ const MrlMainLayer = {
       board: ["left", "thumb"],
       size: [2, 2],
       startPos: [3, 1],
-      info: (
-        <p>
-          Some people will use this all the time; others might use{" "}
+      info: [
+        `
+          Some people will use this all the time; others might use
           <kbd>ctrl</kbd>-<kbd>d</kbd> instead and not need it much. Nice to at
           least have available for <kbd>ctrl</kbd>-<kbd>alt</kbd>-
           <kbd>delete</kbd>.
-        </p>
-      ),
+        `,
+      ],
     },
     {
       legend: "home",
@@ -796,34 +753,32 @@ const MrlMainLayer = {
       board: ["left", "thumb"],
       size: [2, 4],
       startPos: [1, 3],
-      info: (
-        <>
-          <p>
+      info: [
+        `
             Moving this key under my thumb was the single most important key
             remap to address my pinky strain.
-          </p>
-          <p>
-            I can easily reach any key necessary &mdash; the longest reach is to{" "}
-            <WCKeyIndicator id="l-f-1-1">
+          `,
+        `
+            I can easily reach any key necessary &mdash; the longest reach is to
+            <key-indicator id="l-f-1-1">
               <kbd>=/+</kbd>
-            </WCKeyIndicator>
+            </key-indicator>
             , and I can do that easily, repeatedly, painlessly, and with room to
             spare.
-          </p>
-          <p>
-            I did have to remap the normal locations for{" "}
-            <WCKeyIndicator id="l-f-1-7">
+          `,
+        `
+            I did have to remap the normal locations for
+            <key-indicator id="l-f-1-7">
               <kbd>left shift</kbd>
-            </WCKeyIndicator>{" "}
-            and{" "}
-            <WCKeyIndicator id="r-f-13-7">
+            </key-indicator>
+            and
+            <key-indicator id="r-f-13-7">
               <kbd>right shift</kbd>
-            </WCKeyIndicator>{" "}
+            </key-indicator>
             to other keys in order to train my hands to use this new location.
             After a day or two the new locations felt very fast and natural.
-          </p>
-        </>
-      ),
+          `,
+      ],
     },
     {
       legend: "backspace",
@@ -831,21 +786,19 @@ const MrlMainLayer = {
       board: ["left", "thumb"],
       size: [2, 4],
       startPos: [3, 3],
-      info: (
-        <>
-          <p>
+      info: [
+        `
             Having this very commonly used key under a strong thumb is a huge
             improvement over having it under a weak pinky finger. I apparently
             have a habit of hammering this key pretty hard, a fact I learned
             about myself very painfully on a QWERTY keyboard once each press of
             this key started to induce a sharp pain in my right hand.
-          </p>
-          <p>
+          `,
+        `
             I found this new location easy to get used to, which must be why it
             is also the location in the default ErgoDox-EZ layout.
-          </p>
-        </>
-      ),
+          `,
+      ],
     },
     {
       legend: "end",
@@ -873,28 +826,26 @@ const MrlMainLayer = {
       name: "leader key",
       board: ["right", "finger"],
       startPos: [1, 1],
-      info: (
-        <>
-          <p>
-            This is a cool{" "}
+      info: [
+        `
+            This is a cool
             <a href="https://beta.docs.qmk.fm/using-qmk/advanced-keycodes/feature_leader_key">
               feature of the QMK firmware
-            </a>{" "}
+            </a>
             that I honestly almost never use.
-          </p>
-          <p>
+          `,
+        `
             It is a key that is designed to work like the vim leader key. You
             can set a key sequence to activate any functionality, including
-            holding down several keys at once (perhaps <kbd>ctrl</kbd>{" "}
+            holding down several keys at once (perhaps <kbd>ctrl</kbd>
             <kbd>alt</kbd> <kbd>delete</kbd>) or inputting a whole sequence of
             characters.
-          </p>
-          <p>
+          `,
+        `
             It&apos;s an advanced part of QMK that I hope to spend more time
             with in the future.
-          </p>
-        </>
-      ),
+          `,
+      ],
     },
     {
       legend: "6",
@@ -947,40 +898,38 @@ const MrlMainLayer = {
       board: ["right", "finger"],
       size: [2, 3],
       startPos: [1, 3],
-      info: (
-        <>
-          <p>
-            Holding this key activates a mouse layer where{" "}
-            <WCKeyIndicator id="l-f-8-3">
+      info: [
+        `
+            Holding this key activates a mouse layer where
+            <key-indicator id="l-f-8-3">
               <kbd>e</kbd>
-            </WCKeyIndicator>{" "}
-            <WCKeyIndicator id="l-f-6-5">
+            </key-indicator>
+            <key-indicator id="l-f-6-5">
               <kbd>s</kbd>
-            </WCKeyIndicator>{" "}
-            <WCKeyIndicator id="l-f-8-5">
+            </key-indicator>
+            <key-indicator id="l-f-8-5">
               <kbd>d</kbd>
-            </WCKeyIndicator>{" "}
-            <WCKeyIndicator id="l-f-10-5">
+            </key-indicator>
+            <key-indicator id="l-f-10-5">
               <kbd>f</kbd>
-            </WCKeyIndicator>{" "}
+            </key-indicator>
             control the mouse cursor. I also use some keys under the thumbs for
-            clicking{" "}
-            <WCKeyIndicator id="l-t-1-3">
+            clicking
+            <key-indicator id="l-t-1-3">
               <kbd>left</kbd>
-            </WCKeyIndicator>{" "}
-            and{" "}
-            <WCKeyIndicator id="l-t-3-3">
+            </key-indicator>
+            and
+            <key-indicator id="l-t-3-3">
               <kbd>right</kbd>
-            </WCKeyIndicator>{" "}
+            </key-indicator>
             mouse buttons.
-          </p>
-          <p>
+          `,
+        `
             I don&apos;t use this all the time, however when my right arm is
             feeling particularly in pain or strained, it can be nice not to have
             to reach further to the right for the mouse.
-          </p>
-        </>
-      ),
+          `,
+      ],
     },
     {
       legend: "y",
@@ -1183,12 +1132,12 @@ const MrlMainLayer = {
       board: ["right", "thumb"],
       size: [2, 2],
       startPos: [3, 1],
-      info: (
-        <p>
+      info: [
+        `
           Not a very important key, but it&apos;s useful sometimes on Windows
           and I wasn&apos;t using this space for anything anyway.
-        </p>
-      ),
+        `,
+      ],
     },
     {
       legend: "pgdn",
@@ -1205,25 +1154,23 @@ const MrlMainLayer = {
       board: ["right", "thumb"],
       size: [2, 4],
       startPos: [3, 3],
-      info: (
-        <>
-          <p>
-            As with{" "}
-            <WCKeyIndicator id="l-t-3-3">
+      info: [
+        `
+            As with
+            <key-indicator id="l-t-3-3">
               <kbd>backspace</kbd>
-            </WCKeyIndicator>
+            </key-indicator>
             , I hit this key pretty hard, so moving it out from under a pinky
             finger eased pain right away.
-          </p>
-          <p>This was easy to get used to</p>
-          <p>
-            The default ErgoDox layout has it{" "}
-            <WCKeyIndicator id="r-t-5-3">one key over</WCKeyIndicator>, but I
+          `,
+        `This was easy to get used to`,
+        `
+            The default ErgoDox layout has it
+            <key-indicator id="r-t-5-3">one key over</key-indicator>, but I
             preferred <kbd>space</kbd> in that spot instead, so I moved return
             here.
-          </p>
-        </>
-      ),
+          `,
+      ],
     },
     {
       legend: "space",
@@ -1231,17 +1178,17 @@ const MrlMainLayer = {
       board: ["right", "thumb"],
       size: [2, 4],
       startPos: [5, 3],
-      info: (
-        <p>
-          A great place for <kbd>space</kbd>. I initially had mirrored{" "}
+      info: [
+        `
+          A great place for <kbd>space</kbd>. I initially had mirrored
           <kbd>space</kbd> keys, one under each thumb, but eventually moved the
-          left thumb to be{" "}
-          <WCKeyIndicator id="l-t-1-3">
+          left thumb to be
+          <key-indicator id="l-t-1-3">
             <kbd>shift</kbd>
-          </WCKeyIndicator>
+          </key-indicator>
           , which was immediately a huge positive for me.
-        </p>
-      ),
+        `,
+      ],
     },
     {
       legend: "ctrl",

@@ -146,7 +146,7 @@ export const WCKeyGrid = dynamic(
   }
 );
 
-/* Wrapper for keyboard-ergodox
+/* Wrapper for key-board-ergodox
  */
 export const WCKeyBoardErgodox = dynamic(
   () =>

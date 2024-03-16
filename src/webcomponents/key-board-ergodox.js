@@ -1,3 +1,4 @@
+import { keyMaps, legendMaps } from "~/lib/keys";
 import { KeyBoard } from "~/webcomponents/key-board";
 import "~/webcomponents/key-grid";
 
@@ -8,22 +9,34 @@ import "~/webcomponents/key-grid";
  */
 class KeyBoardErgodox extends KeyBoard {
   static get observedAttributes() {
-    return [];
+    return ["selected-key"];
   }
 
   constructor() {
     super();
   }
 
-  connectedCallback() {
-    this.updateComponent();
-  }
+  connectedCallback() {}
 
   attributeChangedCallback(name, oldValue, newValue) {
-    this.updateComponent();
+    switch (name) {
+      case "selected-key":
+        this.updateSelectedKeyInKeyGrids(newValue);
+        break;
+      default:
+        console.error(`KeyBoardErgodox: Unhandled attribute: ${name}`);
+        break;
+    }
   }
 
-  updateComponent() {}
+  /* Update the selected key in the keymap
+   */
+  updateSelectedKeyInKeyGrids(keyId) {
+    const keyGrids = this.querySelectorAll("key-grid");
+    keyGrids.forEach((grid) => {
+      grid.setAttribute("selected-key", keyId);
+    });
+  }
 
   /* Create key-grid and keyboard-key elements from key data for this board.
    *
@@ -31,98 +44,82 @@ class KeyBoardErgodox extends KeyBoard {
    * (Not necessary if you want to just list all the child elements in HTML.
    *
    * Arguments:
-   *   keyData:       List of key data objects (e.g. lib/keys.js)
-   *   legends:       Legend map we are using
-   *   onClickEach:   Optional function to call onClick for each <Key> component
-   *                  It will be called with the key data object as the first argument
-   *   pressedKey:    The ID of the key that is currently pressed, if any
-   *   targetKeyIds:  The ID of keys that are targets of <key-indicator>s
-   *   keySelection:  An array of key IDs that are part of a selection,
-   *                  e.g. you might have the same text for all of home/end/pgup/pgdn
-   *                  and you want to show them all as related when any one of them is pressed.
+   *   keymapName:    Name of the keymap to use, define in lib/keys.js
+   *   legendmapName: Name of the legend map to use, defined in lib/keys.js
    */
-  createChildren({
-    keys,
-    legends,
-    onClickEach,
-    targetKeyIds,
-    pressedKey,
-    keySelection,
-  }) {
-    console.log("KeyboardErgodox.createChildren()");
+  createChildren({ keymapName, legendmapName }) {
     this.removeAllChildren();
-    if (!this.leftSubBoard) {
-      this.leftSubBoard = document.createElement("div");
-      this.leftSubBoard.className =
-        "keyboard-sub-board keyboard-sub-board-left";
-      this.appendChild(this.leftSubBoard);
-    }
-    if (!this.leftFingerGrid) {
-      this.leftFingerGrid = document.createElement("key-grid");
-      this.leftFingerGrid.setAttribute("gridName", "left finger");
-      this.leftFingerGrid.setAttribute("cols", "15");
-      this.leftFingerGrid.setAttribute("rows", "10");
-      this.leftSubBoard.appendChild(this.leftFingerGrid);
-    }
-    this.leftFingerGrid.createKeys({
-      keys: keys.keyMap.leftHandKeys,
-      legends: legends,
-      onClickEach: onClickEach,
-      targetKeyIds: targetKeyIds,
-      pressedKey: pressedKey,
-      keySelection: keySelection,
-    });
-    if (!this.leftThumbGrid) {
-      this.leftThumbGrid = document.createElement("key-grid");
-      this.leftThumbGrid.setAttribute("gridName", "left thumb");
-      this.leftThumbGrid.setAttribute("cols", "6");
-      this.leftThumbGrid.setAttribute("rows", "6");
-      this.leftSubBoard.appendChild(this.leftThumbGrid);
-    }
-    this.leftThumbGrid.createKeys({
-      keys: keys.keyMap.leftThumbKeys,
-      legends: legends,
-      onClickEach: onClickEach,
-      targetKeyIds: targetKeyIds,
-      pressedKey: pressedKey,
-      keySelection: keySelection,
-    });
-    if (!this.rightSubBoard) {
-      this.rightSubBoard = document.createElement("div");
-      this.rightSubBoard.className =
-        "keyboard-sub-board keyboard-sub-board-right";
-      this.appendChild(this.rightSubBoard);
-    }
-    if (!this.rightFingerGrid) {
-      this.rightFingerGrid = document.createElement("key-grid");
-      this.rightFingerGrid.setAttribute("gridName", "right finger");
-      this.rightFingerGrid.setAttribute("cols", "15");
-      this.rightFingerGrid.setAttribute("rows", "10");
-      this.rightSubBoard.appendChild(this.rightFingerGrid);
-    }
-    this.rightFingerGrid.createKeys({
-      keys: keys.keyMap.rightHandKeys,
-      legends: legends,
-      onClickEach: onClickEach,
-      targetKeyIds: targetKeyIds,
-      pressedKey: pressedKey,
-      keySelection: keySelection,
-    });
-    if (!this.rightThumbGrid) {
-      this.rightThumbGrid = document.createElement("key-grid");
-      this.rightThumbGrid.setAttribute("gridName", "right thumb");
-      this.rightThumbGrid.setAttribute("cols", "6");
-      this.rightThumbGrid.setAttribute("rows", "6");
-      this.rightSubBoard.appendChild(this.rightThumbGrid);
-    }
-    this.rightThumbGrid.createKeys({
-      keys: keys.keyMap.rightThumbKeys,
-      legends: legends,
-      onClickEach: onClickEach,
-      targetKeyIds: targetKeyIds,
-      pressedKey: pressedKey,
-      keySelection: keySelection,
-    });
+
+    console.log(`Creating children for ${keymapName} and ${legendmapName}`);
+    const keys = keyMaps[keymapName];
+
+    const leftSubBoard = document.createElement("div");
+    leftSubBoard.className = "keyboard-sub-board keyboard-sub-board-left";
+    this.appendChild(leftSubBoard);
+
+    const leftTitle = document.createElement("h2");
+    leftTitle.textContent = "Left hand";
+    leftSubBoard.appendChild(leftTitle);
+
+    const leftGridContainer = document.createElement("div");
+    leftGridContainer.className = "keygrid-container";
+    leftSubBoard.appendChild(leftGridContainer);
+
+    const leftFingerGrid = document.createElement("key-grid");
+    leftFingerGrid.setAttribute("name", "ergodox-left-finger");
+    leftFingerGrid.setAttribute("cols", "15");
+    leftFingerGrid.setAttribute("rows", "10");
+    leftFingerGrid.setAttribute("selected-key", "");
+    leftFingerGrid.setAttribute("keymap-name", keymapName);
+    leftFingerGrid.setAttribute("legendmap-name", legendmapName);
+    const leftHandKeyIds = keys.leftHandKeys.map((key) => key.id);
+    leftFingerGrid.createKeys(leftHandKeyIds);
+    leftGridContainer.appendChild(leftFingerGrid);
+
+    const leftThumbGrid = document.createElement("key-grid");
+    leftThumbGrid.setAttribute("name", "ergodox-left-thumb");
+    leftThumbGrid.setAttribute("cols", "6");
+    leftThumbGrid.setAttribute("rows", "6");
+    leftThumbGrid.setAttribute("selected-key", "");
+    leftThumbGrid.setAttribute("keymap-name", keymapName);
+    leftThumbGrid.setAttribute("legendmap-name", legendmapName);
+    const leftThumbKeyIds = keys.leftThumbKeys.map((key) => key.id);
+    leftThumbGrid.createKeys(leftThumbKeyIds);
+    leftGridContainer.appendChild(leftThumbGrid);
+
+    const rightSubBoard = document.createElement("div");
+    rightSubBoard.className = "keyboard-sub-board keyboard-sub-board-right";
+    this.appendChild(rightSubBoard);
+
+    const rightTitle = document.createElement("h2");
+    rightTitle.textContent = "Right hand";
+    rightSubBoard.appendChild(rightTitle);
+
+    const rightGridContainer = document.createElement("div");
+    rightGridContainer.className = "keygrid-container";
+    rightSubBoard.appendChild(rightGridContainer);
+
+    const rightFingerGrid = document.createElement("key-grid");
+    rightFingerGrid.setAttribute("name", "ergodox-right-finger");
+    rightFingerGrid.setAttribute("cols", "15");
+    rightFingerGrid.setAttribute("rows", "10");
+    rightFingerGrid.setAttribute("selected-key", "");
+    rightFingerGrid.setAttribute("keymap-name", keymapName);
+    rightFingerGrid.setAttribute("legendmap-name", legendmapName);
+    const rightHandKeyIds = keys.rightHandKeys.map((key) => key.id);
+    rightFingerGrid.createKeys(rightHandKeyIds);
+    rightGridContainer.appendChild(rightFingerGrid);
+
+    const rightThumbGrid = document.createElement("key-grid");
+    rightThumbGrid.setAttribute("name", "ergodox-right-thumb");
+    rightThumbGrid.setAttribute("cols", "6");
+    rightThumbGrid.setAttribute("rows", "6");
+    rightThumbGrid.setAttribute("selected-key", "");
+    rightThumbGrid.setAttribute("keymap-name", keymapName);
+    rightThumbGrid.setAttribute("legendmap-name", legendmapName);
+    const rightThumbKeyIds = keys.rightThumbKeys.map((key) => key.id);
+    rightThumbGrid.createKeys(rightThumbKeyIds);
+    rightGridContainer.appendChild(rightThumbGrid);
   }
 
   removeAllChildren() {
@@ -132,8 +129,8 @@ class KeyBoardErgodox extends KeyBoard {
   }
 }
 
-if (!customElements.get("keyboard-ergodox")) {
-  customElements.define("keyboard-ergodox", KeyBoardErgodox);
+if (!customElements.get("key-board-ergodox")) {
+  customElements.define("key-board-ergodox", KeyBoardErgodox);
 }
 
 export { KeyBoardErgodox as KeyboardErgodox };
