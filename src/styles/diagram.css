@@ -11,9 +11,8 @@ canvas.keyboard-diagram {
 }
 
 /* A reference in prose to a key on the board.
- *
  */
-span[is="key-indicator"] {
+key-indicator {
   text-overflow: truncate;
   background-color: var(--key-diagram-target-bg);
 }

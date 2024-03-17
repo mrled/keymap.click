@@ -10,7 +10,7 @@ class KeyBoard extends HTMLElement {
 
   /* Subclasses should implement this method to create child elements.
    */
-  createChildren({ keymapName, legendmapName }) {}
+  createChildren({ keymapName }) {}
 }
 
 if (!customElements.get("key-board")) {

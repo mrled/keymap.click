@@ -2,6 +2,7 @@ import { keyMaps, legendMaps } from "~/lib/keys";
 import { drawDiagram } from "~/lib/diagram";
 
 import "~/webcomponents/key-board-ergodox";
+import "~/webcomponents/key-indicator";
 import "~/webcomponents/key-info-nav-bar";
 
 /* The UI of the keymap, including a keyboard, an info panel, and the canvas diagram.
@@ -16,16 +17,20 @@ import "~/webcomponents/key-info-nav-bar";
  * The diagram lines are drawn from the Keyboard, to the InfoPanel, via the Diamargs.
  */
 class KeyMapUI extends HTMLElement {
-  static get observedAttributes() {
-    return ["keyboard-element", "selected-key"];
-  }
-
   constructor() {
     super();
     this.trackedElements = {};
+
+    /* Listen for this event emitted by any child element.
+     * (Make sure the child element emits it with bubbles: true so that we can catch it from any depth.)
+     */
     this.addEventListener("key-selected", this.#handleKeySelected);
   }
 
+  /* Run this code when the element is added to the DOM.
+   * This might be before or after attributes are changed.
+   * Run whether the element is created from HTML or from JavaScript.
+   */
   connectedCallback() {
     // TODO: ensure this is a valid keyboard element name or do something that doesn't break execution if it's not
     const keyboardName = this.getAttribute("keyboard-element");
@@ -47,9 +52,9 @@ class KeyMapUI extends HTMLElement {
 
     const keyboard = this.#makeTrackedChild("keyboard", keyboardName);
     // TODO: don't hardcode keymaps/legendmaps
+    // TODO: how can we allow the user to built their keyboard in HTML without calling createChildren?
     keyboard.createChildren({
       keymapName: "MrlMainLayer",
-      legendmapName: "MrlLegends",
     });
     // TODO: What used to be onClickEach is now a global variable.
     //
@@ -94,6 +99,34 @@ class KeyMapUI extends HTMLElement {
     this.resizeObserver.observe(kidContainer);
   }
 
+  /* Call attributeChangedCallback when any of these attributes are changed from JavaScript
+   * (changes to other attributes are ignored).
+   */
+  static get observedAttributes() {
+    return ["keyboard-element", "selected-key"];
+  }
+
+  /* Run this code when an attribute is changed from JavaScript.
+   * Does not run if an attribute is set when defined on the element in HTML.
+   */
+  attributeChangedCallback(name, oldValue, newValue) {
+    /* Create a new element if it doesn't exist, or return the existing one.
+     * Track the element by name so we can work with it later.
+     */
+
+    switch (name) {
+      case "keyboard-element":
+        this.#updateKeyboard(newValue);
+        break;
+      case "selected-key":
+        this.#updateSelectedKey(newValue);
+        break;
+      default:
+        console.error(`KeyMapUI: Unhandled attribute: ${name}`);
+        break;
+    }
+  }
+
   /* Handle a change to the keyboard-element attribute
    */
   #updateKeyboard(keyboardName) {
@@ -119,18 +152,35 @@ class KeyMapUI extends HTMLElement {
    */
   #updateSelectedKey(selectedKey) {
     const keyData = keyMaps.MrlMainLayer.allKeysById[selectedKey];
-    // console.log("KeyMapUI#updateSelectedKey()", selectedKey, keyData);
 
+    // Update the key in the key info navbar
     const navBar = this.#makeTrackedChild("navBar", "key-info-nav-bar");
     navBar.setAttribute("key-id", selectedKey);
 
+    // Update the key info prose including descriptions etc.
+    // Get all the key IDs that are targets of <key-indicator>s.
     const indicatedKeys = this.#setKeyInfoContent(keyData);
 
-    this.trackedElements["keyboard"].setAttribute("selected-key", selectedKey);
-
-    this.querySelectorAll("key-grid").forEach((grid) =>
-      grid.setAttribute("indicated-keys", indicatedKeys.join(","))
+    // Update every key on the board
+    // Make sure not to include the key in the nav bar which needs special handling
+    const keyboard = this.trackedElements["keyboard"];
+    const keyboardKeys = Array.from(
+      keyboard.querySelectorAll("button", { is: "keyboard-key" })
     );
+    keyboardKeys.forEach((key) => {
+      const keyId = key.getAttribute("id");
+      if (!keyId) {
+        console.error(`KeyMapUI: Keyboard child key has no id: ${key}`);
+        return;
+      }
+      const active = keyId === selectedKey;
+      const inKeySelection =
+        !active && keyData.selection && keyData.selection.indexOf(keyId) > -1;
+      const indicatorTarget = indicatedKeys.indexOf(keyId) > -1;
+      key.setAttribute("active", active);
+      key.setAttribute("related-to-active", inKeySelection);
+      key.setAttribute("target-of-indicator", indicatorTarget);
+    });
 
     // drawDiagram(this.diagram, [], )
   }
@@ -171,8 +221,11 @@ class KeyMapUI extends HTMLElement {
       keyData.info.forEach((paragraph) => {
         const p = document.createElement("p");
         p.innerHTML = paragraph;
-        p.querySelectorAll("key-indicator").forEach((indicator) => {
-          keyIndicators.push(indicator.getAttribute("key-id"));
+        const indicators = p.querySelectorAll("key-indicator");
+        if (indicators.lenth > 0) window.whatever = indicators;
+        Array.from(indicators).forEach((indicator) => {
+          console.log(JSON.stringify(indicator));
+          keyIndicators.push(indicator.getAttribute("id"));
         });
         infoProse.appendChild(p);
       });
@@ -186,7 +239,7 @@ class KeyMapUI extends HTMLElement {
    * This is a custom event that is fired by <keyboard-key> elements.
    */
   #handleKeySelected(event) {
-    console.log(`KeyMapUI.#handleKeySelected(${JSON.stringify(event)})`);
+    // console.log(`KeyMapUI.#handleKeySelected(${event.detail})`);
     const keyId = event.detail;
     this.setAttribute("selected-key", keyId);
   }
@@ -198,62 +251,6 @@ class KeyMapUI extends HTMLElement {
       this.trackedElements[name] = document.createElement(element);
     }
     return this.trackedElements[name];
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    /* Create a new element if it doesn't exist, or return the existing one.
-     * Track the element by name so we can work with it later.
-     */
-
-    switch (name) {
-      case "keyboard-element":
-        this.#updateKeyboard(newValue);
-        break;
-      case "selected-key":
-        this.#updateSelectedKey(newValue);
-        break;
-      default:
-        console.error(`KeyMapUI: Unhandled attribute: ${name}`);
-        break;
-    }
-  }
-
-  updateComponentOld() {
-    this.innerHTML = `
-    <>
-    <div>
-      <div className="keymap-ui-kid-container">
-        <div className="keymap-ui-diamarg debug-bg-red" ref={diamargLeft} />
-
-        <div className="keymap-ui-center-panel" ref={keyboardAndPanel}>
-          <Keyboard targetKeyIds={targetKeyIds} />
-
-          <div
-            className="keymap-ui-keyinfo-container debug-bg-teal"
-            ref={keyInfoContainer}
-          >
-            <InfoPanel />
-          </div>
-        </div>
-
-        <div className="keymap-ui-diamarg debug-bg-red" ref={diamargRight} />
-      </div>
-    </div>
-
-    {/* We place the canvas last and therefore we do not need to specify a z-index -
-     * it is naturally on top of the other content.
-     */}
-    <Diagram
-      connections={connections}
-      keyboardAndPanelRect={keyboardAndPanelRect}
-      diamargLeftRect={diamargLeftRect}
-      diamargRightRect={diamargRightRect}
-      keyInfoContainerRect={keyInfoContainerRect}
-      documentDimensions={documentDimensions}
-      windowSize={windowSize}
-    />
-  </>;
-    `;
   }
 }
 

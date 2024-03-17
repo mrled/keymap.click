@@ -1,4 +1,4 @@
-import { keyMaps, legendMaps } from "~/lib/keys";
+import { keyMaps } from "~/lib/keys";
 import { KeyBoard } from "~/webcomponents/key-board";
 import "~/webcomponents/key-grid";
 
@@ -8,9 +8,7 @@ import "~/webcomponents/key-grid";
  * or use the createChildren() method to create them from state data.
  */
 class KeyBoardErgodox extends KeyBoard {
-  static get observedAttributes() {
-    return ["selected-key"];
-  }
+  static get observedAttributes() {}
 
   constructor() {
     super();
@@ -18,25 +16,7 @@ class KeyBoardErgodox extends KeyBoard {
 
   connectedCallback() {}
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    switch (name) {
-      case "selected-key":
-        this.updateSelectedKeyInKeyGrids(newValue);
-        break;
-      default:
-        console.error(`KeyBoardErgodox: Unhandled attribute: ${name}`);
-        break;
-    }
-  }
-
-  /* Update the selected key in the keymap
-   */
-  updateSelectedKeyInKeyGrids(keyId) {
-    const keyGrids = this.querySelectorAll("key-grid");
-    keyGrids.forEach((grid) => {
-      grid.setAttribute("selected-key", keyId);
-    });
-  }
+  attributeChangedCallback(name, oldValue, newValue) {}
 
   /* Create key-grid and keyboard-key elements from key data for this board.
    *
@@ -47,10 +27,13 @@ class KeyBoardErgodox extends KeyBoard {
    *   keymapName:    Name of the keymap to use, define in lib/keys.js
    *   legendmapName: Name of the legend map to use, defined in lib/keys.js
    */
-  createChildren({ keymapName, legendmapName }) {
+  createChildren({ keymapName }) {
     this.removeAllChildren();
 
-    console.log(`Creating children for ${keymapName} and ${legendmapName}`);
+    // TODO: the ErgoDox should define its OWN list of physical keys
+    // which is independent of the keymap or the layer or whatever.
+    // The keymaps and legendmaps should use these keys as identifiers for the keys.
+    // That will make keyboards independent of keymaps/layers/legendmaps.
     const keys = keyMaps[keymapName];
 
     const leftSubBoard = document.createElement("div");
@@ -69,9 +52,6 @@ class KeyBoardErgodox extends KeyBoard {
     leftFingerGrid.setAttribute("name", "ergodox-left-finger");
     leftFingerGrid.setAttribute("cols", "15");
     leftFingerGrid.setAttribute("rows", "10");
-    leftFingerGrid.setAttribute("selected-key", "");
-    leftFingerGrid.setAttribute("keymap-name", keymapName);
-    leftFingerGrid.setAttribute("legendmap-name", legendmapName);
     const leftHandKeyIds = keys.leftHandKeys.map((key) => key.id);
     leftFingerGrid.createKeys(leftHandKeyIds);
     leftGridContainer.appendChild(leftFingerGrid);
@@ -80,9 +60,6 @@ class KeyBoardErgodox extends KeyBoard {
     leftThumbGrid.setAttribute("name", "ergodox-left-thumb");
     leftThumbGrid.setAttribute("cols", "6");
     leftThumbGrid.setAttribute("rows", "6");
-    leftThumbGrid.setAttribute("selected-key", "");
-    leftThumbGrid.setAttribute("keymap-name", keymapName);
-    leftThumbGrid.setAttribute("legendmap-name", legendmapName);
     const leftThumbKeyIds = keys.leftThumbKeys.map((key) => key.id);
     leftThumbGrid.createKeys(leftThumbKeyIds);
     leftGridContainer.appendChild(leftThumbGrid);
@@ -103,9 +80,6 @@ class KeyBoardErgodox extends KeyBoard {
     rightFingerGrid.setAttribute("name", "ergodox-right-finger");
     rightFingerGrid.setAttribute("cols", "15");
     rightFingerGrid.setAttribute("rows", "10");
-    rightFingerGrid.setAttribute("selected-key", "");
-    rightFingerGrid.setAttribute("keymap-name", keymapName);
-    rightFingerGrid.setAttribute("legendmap-name", legendmapName);
     const rightHandKeyIds = keys.rightHandKeys.map((key) => key.id);
     rightFingerGrid.createKeys(rightHandKeyIds);
     rightGridContainer.appendChild(rightFingerGrid);
@@ -114,9 +88,6 @@ class KeyBoardErgodox extends KeyBoard {
     rightThumbGrid.setAttribute("name", "ergodox-right-thumb");
     rightThumbGrid.setAttribute("cols", "6");
     rightThumbGrid.setAttribute("rows", "6");
-    rightThumbGrid.setAttribute("selected-key", "");
-    rightThumbGrid.setAttribute("keymap-name", keymapName);
-    rightThumbGrid.setAttribute("legendmap-name", legendmapName);
     const rightThumbKeyIds = keys.rightThumbKeys.map((key) => key.id);
     rightThumbGrid.createKeys(rightThumbKeyIds);
     rightGridContainer.appendChild(rightThumbGrid);

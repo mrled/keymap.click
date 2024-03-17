@@ -5,7 +5,7 @@ import {
 
 /* KeyIndicator: an element off the keyboard that points to some key on the keyboard via a diagram line.
  */
-class KeyIndicator extends HTMLSpanElement {
+class KeyIndicator extends HTMLElement {
   static get observedAttributes() {
     return ["id"];
   }
@@ -33,7 +33,7 @@ class KeyIndicator extends HTMLSpanElement {
 }
 
 if (!customElements.get("key-indicator")) {
-  customElements.define("key-indicator", KeyIndicator, { extends: "span" });
+  customElements.define("key-indicator", KeyIndicator);
 }
 
 export { KeyIndicator };
