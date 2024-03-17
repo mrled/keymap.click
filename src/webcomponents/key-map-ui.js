@@ -1,5 +1,6 @@
-import { keyMaps, legendMaps } from "~/lib/keys";
 import { drawDiagram } from "~/lib/diagram";
+import { Connection } from "~/lib/keyConnections";
+import { keyMaps, legendMaps } from "~/lib/keys";
 
 import "~/webcomponents/key-board-ergodox";
 import "~/webcomponents/key-indicator";
@@ -153,13 +154,21 @@ class KeyMapUI extends HTMLElement {
   #updateSelectedKey(selectedKey) {
     const keyData = keyMaps.MrlMainLayer.allKeysById[selectedKey];
 
+    // Connections to draw on the diagram
+    const connections = [];
+
     // Update the key in the key info navbar
     const navBar = this.#makeTrackedChild("navBar", "key-info-nav-bar");
     navBar.setAttribute("key-id", selectedKey);
+    const navBarHandle = navBar.querySelector("key-handle");
 
     // Update the key info prose including descriptions etc.
     // Get all the key IDs that are targets of <key-indicator>s.
-    const indicatedKeys = this.#setKeyInfoContent(keyData);
+    const proseKeyIndicators = this.#setKeyInfoContent(keyData);
+    const indicatedKeyIds = proseKeyIndicators.map((indicator) =>
+      indicator.getAttribute("id")
+    );
+    const indicatedElementsById = {};
 
     // Update every key on the board
     // Make sure not to include the key in the nav bar which needs special handling
@@ -176,13 +185,45 @@ class KeyMapUI extends HTMLElement {
       const active = keyId === selectedKey;
       const inKeySelection =
         !active && keyData.selection && keyData.selection.indexOf(keyId) > -1;
-      const indicatorTarget = indicatedKeys.indexOf(keyId) > -1;
+      const indicatorTarget = indicatedKeyIds.indexOf(keyId) > -1;
       key.setAttribute("active", active);
       key.setAttribute("related-to-active", inKeySelection);
       key.setAttribute("target-of-indicator", indicatorTarget);
+
+      const keyHandle = key.querySelector("key-handle");
+      if (active) {
+        // Make the connection from the navbar key to this key
+        connections.push(
+          Connection.fromElements(navBarHandle, keyHandle, "selected")
+        );
+      } else if (indicatorTarget) {
+        // Store the key handle for making a connection later
+        indicatedElementsById[keyId] = keyHandle;
+      }
     });
 
-    // drawDiagram(this.diagram, [], )
+    // Make connections from prose indicators to the keys they indicate.
+    // Doing this here lets us ensure we are correct even in weird cases
+    // like if a key is indicated by multiple indicators (untested).
+    proseKeyIndicators.forEach((indicator) => {
+      connections.push(
+        Connection.fromElements(
+          indicator,
+          indicatedElementsById[indicator.getAttribute("id")],
+          "textref"
+        )
+      );
+    });
+
+    drawDiagram(
+      this.trackedElements["diagram"],
+      connections,
+      this.trackedElements["centerPanel"].getBoundingClientRect(),
+      this.trackedElements["diamargLeft"].getBoundingClientRect(),
+      this.trackedElements["diamargRight"].getBoundingClientRect(),
+      this.trackedElements["infoProse"].getBoundingClientRect(),
+      5
+    );
   }
 
   /* Set the key information content for the selected key
@@ -223,10 +264,9 @@ class KeyMapUI extends HTMLElement {
         p.innerHTML = paragraph;
         const indicators = p.querySelectorAll("key-indicator");
         if (indicators.lenth > 0) window.whatever = indicators;
-        Array.from(indicators).forEach((indicator) => {
-          console.log(JSON.stringify(indicator));
-          keyIndicators.push(indicator.getAttribute("id"));
-        });
+        Array.from(indicators).forEach((indicator) =>
+          keyIndicators.push(indicator)
+        );
         infoProse.appendChild(p);
       });
 

@@ -226,26 +226,53 @@ const drawDiagramLineSelected = (
 };
 
 /* Draw the entire diagram
+ *
+ * Arguments:
+ * canvas: The canvas element
+ * connections: An array of Connection objects
+ * keyboardAndPanelRect: The bounding rectangle of the keyboard and info panel
+ * diamargLeftRect: The left diamarg DOMRect
+ * diamargRightRect: The right diamarg DOMRect
+ * keyInfoContainerRect: The key info panel DOMRect
+ * debugLevel: The debug level
  */
 export const drawDiagram = (
   canvas,
   connections,
   keyboardAndPanelRect,
-  debugLevel,
   diamargLeftRect,
   diamargRightRect,
-  keyInfoContainerRect
+  keyInfoContainerRect,
+  debugLevel
 ) => {
-  if (!canvas) return;
-  if (!canvas.current) return;
-
-  const context = canvas.current.getContext("2d");
+  const context = canvas.getContext("2d");
 
   /* Clear the canvas completely before drawing
    * Without this, fast refresh during development will show old paths and new paths
    * until you fully reload the page (e.g. with ctrl-r)
    */
-  context.clearRect(0, 0, canvas.current.width, canvas.current.height);
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+  /* Convert all coordinates to those within the canvas element.
+   * Our canvas does not cover the whole document,
+   * so we have to subtract the top and left of the canvas from all coordinates.
+   */
+  // TODO: is this the cleanest way to do this?
+  const canvasRect = canvas.getBoundingClientRect();
+  keyboardAndPanelRect.x -= canvasRect.left;
+  keyboardAndPanelRect.y -= canvasRect.top;
+  diamargLeftRect.x -= canvasRect.left;
+  diamargLeftRect.y -= canvasRect.top;
+  diamargRightRect.x -= canvasRect.left;
+  diamargRightRect.y -= canvasRect.top;
+  keyInfoContainerRect.x -= canvasRect.left;
+  keyInfoContainerRect.y -= canvasRect.top;
+  connections.forEach((connection) => {
+    connection.sourceCoords.x -= canvasRect.left;
+    connection.sourceCoords.y -= canvasRect.top;
+    connection.targetCoords.x -= canvasRect.left;
+    connection.targetCoords.y -= canvasRect.top;
+  });
 
   /* Draw each connection
    * Now that the canvas is the size of the entire screen,
