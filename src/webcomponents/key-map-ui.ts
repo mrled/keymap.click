@@ -1,5 +1,5 @@
 import { drawDiagram } from "~/lib/diagram";
-import { Connection } from "~/lib/keyConnections";
+import { ConnectionPair } from "~/lib/keyConnections";
 import { keyMaps, legendMaps } from "~/lib/keys";
 
 import "~/webcomponents/key-board-ergodox";
@@ -180,7 +180,7 @@ class KeyMapUI extends HTMLElement {
     const keyData = keyMaps.MrlMainLayer.allKeysById[selectedKey];
 
     // Connections to draw on the diagram
-    const connections: Connection[] = [];
+    const connectionPairs: ConnectionPair[] = [];
 
     // Update the key in the key info navbar
     const navBar = this.#makeTrackedChild("navBar", "key-info-nav-bar");
@@ -228,8 +228,8 @@ class KeyMapUI extends HTMLElement {
       if (active) {
         // Make the connection from the navbar key to this key
         // console.log(`KeyMapUI: Found active key: ${keyId}`)
-        connections.push(
-          Connection.fromElements(navBarHandle, keyHandle, "selected")
+        connectionPairs.push(
+          new ConnectionPair(navBarHandle, keyHandle, "selected")
         );
       } else if (indicatorTarget) {
         // Store the key handle for making a connection later
@@ -252,12 +252,12 @@ class KeyMapUI extends HTMLElement {
         console.error(`KeyMapUI: Key indicator has no target: ${indicatorId}`);
         return;
       }
-      connections.push(Connection.fromElements(indicator,indicated,"textref"));
+      connectionPairs.push(new ConnectionPair(indicator,indicated,"textref"));
     });
 
     drawDiagram(
       this.trackedElements["diagram"],
-      connections,
+      connectionPairs.map((c) => c.connection),
       this.trackedElements["centerPanel"].getBoundingClientRect(),
       this.trackedElements["diamargLeft"].getBoundingClientRect(),
       this.trackedElements["diamargRight"].getBoundingClientRect(),

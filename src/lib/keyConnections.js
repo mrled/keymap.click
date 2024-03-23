@@ -15,24 +15,38 @@ export class Connection {
     this.connectionType = connectionType;
   }
 
-  /* Create a new Connection from two elements
-   */
-  static fromElements(sourceElement, targetElement, connectionType) {
-    const sourceCoords = connectionPointFrom(sourceElement);
-    const targetCoords = connectionPointTo(targetElement);
-    const targetKeyId = targetElement.getAttribute("id");
-    return new Connection(
-      sourceCoords,
-      targetCoords,
-      targetKeyId,
-      connectionType
-    );
-  }
-
   stringify() {
     const srcCoords = JSON.stringify(this.sourceCoords);
     const tgtCoords = JSON.stringify(this.targetCoords);
     return `Connection: ${srcCoords} => ${tgtCoords} (${this.connectionType})`;
+  }
+}
+
+/* A pair of elements that will be connected on the diagram.
+ *
+ * Contains the elements themselves -- not coordinates.
+ * We want to be able to track which elements are connected,
+ * without having to re-query the DOM for them,
+ * so we can update the diagram when their positions change,
+ * perhaps if the window is resized.
+ *
+ * Arguments:
+ *   source:    The source element
+ *   target:    The target element
+ *   type:      Either "textref" (green) or "selected" (orange).
+ */
+export class ConnectionPair {
+  constructor(source, target, type) {
+    this.source = source;
+    this.target = target;
+    this.type = type;
+  }
+
+  get connection() {
+    const sourceCoords = connectionPointFrom(this.source);
+    const targetCoords = connectionPointTo(this.target);
+    const targetKeyId = targetElement.getAttribute("id");
+    return new Connection(sourceCoords, targetCoords, targetKeyId, this.type);
   }
 }
 
