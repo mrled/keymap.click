@@ -104,4 +104,4 @@ if (!customElements.get("key-board-ergodox")) {
   customElements.define("key-board-ergodox", KeyBoardErgodox);
 }
 
-export { KeyBoardErgodox as KeyboardErgodox };
+export { KeyBoardErgodox };
