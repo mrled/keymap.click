@@ -4,11 +4,21 @@ import { Point, absolutifyRect } from "~/lib/geometry.js";
  * sourceCoords:    Coordinates for a source element in the key info panel.
  * targetCoords:    Coordinates for a target key in the keyboard.
  * targetKeyId:     ID for the target key.
- * type:            Either "textref" (green) or "selected" (orange).
- *                  See also keyInfoConnectType object
+ * type:            A KeyInfoConnectType value.
+ * TODO: do we need targetKeyId at all?
  */
 export class Connection {
-  constructor(sourceCoords, targetCoords, targetKeyId, connectionType) {
+  sourceCoords: Point;
+  targetCoords: Point;
+  targetKeyId: string;
+  connectionType: KeyInfoConnectType;
+
+  constructor(
+    sourceCoords: Point,
+    targetCoords: Point,
+    targetKeyId: string,
+    connectionType: KeyInfoConnectType
+  ) {
     this.sourceCoords = sourceCoords;
     this.targetCoords = targetCoords;
     this.targetKeyId = targetKeyId;
@@ -36,7 +46,11 @@ export class Connection {
  *   type:      Either "textref" (green) or "selected" (orange).
  */
 export class ConnectionPair {
-  constructor(source, target, type) {
+  source: Element;
+  target: Element;
+  type: KeyInfoConnectType;
+
+  constructor(source: Element, target: Element, type: KeyInfoConnectType) {
     this.source = source;
     this.target = target;
     this.type = type;
@@ -45,14 +59,14 @@ export class ConnectionPair {
   get connection() {
     const sourceCoords = connectionPointFrom(this.source);
     const targetCoords = connectionPointTo(this.target);
-    const targetKeyId = targetElement.getAttribute("id");
+    const targetKeyId = this.target.getAttribute("id") || "";
     return new Connection(sourceCoords, targetCoords, targetKeyId, this.type);
   }
 }
 
 /* Return a new Point, representing a location for the diagram lines to connect on a source element
  */
-export const connectionPointFrom = (element) => {
+export const connectionPointFrom = (element: Element) => {
   /* Could use element.getBoundingClientRect(),
    * but if the text is split between two or more lines that'll make a rectangle larger that I want.
    * I use the first rect in the return value of .getClientRects() instead
@@ -64,7 +78,7 @@ export const connectionPointFrom = (element) => {
 
 /* Return a new Point, representing a location for the diagram lines to connect on a target element
  */
-export const connectionPointTo = (element) => {
+export const connectionPointTo = (element: Element) => {
   const rect = absolutifyRect(element.getBoundingClientRect());
   return new Point(rect.x, rect.y);
 };
@@ -85,23 +99,21 @@ export const keyInfoConnectFromClassPrefix = "key-info-connect-from-";
 
 /* To specify the type of indicator, prefix the type with this string.
  * Either "textref" (green) or "selected" (orange).
- * See also keyInfoConnectType object.
+ * See also KeyInfoConnectType enum.
  */
 export const keyInfoConnectTypeClassPrefix = "key-info-connect-type-";
 
 /* The string used as the DOM ID for a key's handle
  */
-export const keyHandleDomIdFromKeyId = (keyId) => {
+export const keyHandleDomIdFromKeyId = (keyId: string) => {
   return `${keyId}-handle`;
 };
 
 /* Types of key info connections.
- * selected: The user- or guide- selected key. Always a single value.
- * textref: A key referenced in text from the key info panel. Zero, one, two, or more are possible.
+ * Selected: The user- or guide- selected key. There is only ever one of these.
+ * TextRef: A key referenced in text from the key info panel. Zero, one, two, or more are possible.
  */
-export const keyInfoConnectType = {
-  textref: "textref",
-  selected: "selected",
-};
-
-export const defaultKeyInfoConnectType = keyInfoConnectType.textref;
+export enum KeyInfoConnectType {
+  TextRef = "textref",
+  Selected = "selected",
+}

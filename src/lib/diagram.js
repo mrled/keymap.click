@@ -1,7 +1,7 @@
 import log from "loglevel";
 
 import { smallerRect, traceRect } from "~/lib/geometry";
-import { keyInfoConnectType } from "~/lib/keyConnections";
+import { KeyInfoConnectType } from "~/lib/keyConnections";
 
 /* Return a new leftRightObject
  *
@@ -21,8 +21,8 @@ const newLeftRightObject = (initialLeft = 0, initialRight = 0) => {
  * TODO: does this belong in CSS?
  */
 const diagramLineColors = {
-  [keyInfoConnectType.textref]: "#68d391ff", // Opaque, because this green is pretty light
-  [keyInfoConnectType.selected]: "#fbd38d99", // Slightly transparent, because this orange is pretty dark
+  [KeyInfoConnectType.TextRef]: "#68d391ff", // Opaque, because this green is pretty light
+  [KeyInfoConnectType.Selected]: "#fbd38d99", // Slightly transparent, because this orange is pretty dark
   debugCenterLine: "cornflowerblue",
   debugKeyboard: "khaki",
   debugLeft: "lawngreen",
@@ -127,7 +127,7 @@ const drawDiagramLineTextref = (
 ) => {
   const source = connection.sourceCoords;
   const target = connection.targetCoords;
-  const lineType = keyInfoConnectType[connection.connectionType];
+  const lineType = KeyInfoConnectType[connection.connectionType];
 
   context.strokeStyle = diagramLineColors[lineType];
   context.lineWidth = 1;
@@ -202,7 +202,7 @@ const drawDiagramLineSelected = (
 ) => {
   const source = connection.sourceCoords;
   const target = connection.targetCoords;
-  const lineType = keyInfoConnectType[connection.connectionType];
+  const lineType = KeyInfoConnectType[connection.connectionType];
 
   context.strokeStyle = diagramLineColors[lineType];
   context.lineWidth = 2;
@@ -318,7 +318,7 @@ export const drawDiagram = (
   connections.forEach((connection) => {
     log.debug(`Drawing connection ${connection.stringify()}`);
 
-    if (connection.connectionType == keyInfoConnectType.textref) {
+    if (connection.connectionType == KeyInfoConnectType.TextRef) {
       drawDiagramLineTextref(
         context,
         connection,
@@ -330,7 +330,7 @@ export const drawDiagram = (
         leftRightIdx,
         marginInsetTickSize
       );
-    } else if (connection.connectionType == keyInfoConnectType.selected) {
+    } else if (connection.connectionType == KeyInfoConnectType.Selected) {
       drawDiagramLineSelected(context, connection, keyInfoContainerRect.top);
     }
   });

@@ -1,5 +1,5 @@
 import { drawDiagram } from "~/lib/diagram";
-import { ConnectionPair } from "~/lib/keyConnections";
+import { ConnectionPair, KeyInfoConnectType } from "~/lib/keyConnections";
 import { keyMaps, legendMaps } from "~/lib/keys";
 
 import "~/webcomponents/key-board-ergodox";
@@ -224,11 +224,15 @@ class KeyMapUI extends HTMLElement {
         console.log(`KeyMapUI: Key has no handle: ${keyId}`);
         return;
       }
-      if (active) {
+      if (active && navBarHandle) {
         // Make the connection from the navbar key to this key
         // console.log(`KeyMapUI: Found active key: ${keyId}`)
         connectionPairs.push(
-          new ConnectionPair(navBarHandle, keyHandle, "selected")
+          new ConnectionPair(
+            navBarHandle,
+            keyHandle,
+            KeyInfoConnectType.Selected
+          )
         );
       } else if (indicatorTarget) {
         // Store the key handle for making a connection later
@@ -251,7 +255,9 @@ class KeyMapUI extends HTMLElement {
         console.error(`KeyMapUI: Key indicator has no target: ${indicatorId}`);
         return;
       }
-      connectionPairs.push(new ConnectionPair(indicator, indicated, "textref"));
+      connectionPairs.push(
+        new ConnectionPair(indicator, indicated, KeyInfoConnectType.TextRef)
+      );
     });
 
     drawDiagram(
