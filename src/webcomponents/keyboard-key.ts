@@ -27,6 +27,10 @@ import "~/webcomponents/key-handle";
  *   onclick:                   An onClick function
  */
 class KeyboardKey extends HTMLButtonElement {
+  legendTextNode: Text | null;
+  legendImageElement: Element | null;
+  keyHandleElement: Element | null;
+
   static get observedAttributes() {
     return [
       "position",
@@ -45,13 +49,16 @@ class KeyboardKey extends HTMLButtonElement {
 
   constructor() {
     super();
+    this.legendTextNode = null;
+    this.legendImageElement = null;
+    this.keyHandleElement = null;
   }
 
   connectedCallback() {
     this.updateComponent();
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     this.updateComponent();
   }
 
@@ -60,7 +67,7 @@ class KeyboardKey extends HTMLButtonElement {
     const standalone = this.getAttribute("standalone") !== null;
     const legendText = this.getAttribute("legend-text") || "";
     const legendImage = this.getAttribute("legend-image") || "";
-    const id = this.getAttribute("id");
+    const id = this.getAttribute("id") || "";
     const extraClasses = this.getAttribute("key-extra-classes") || "";
     const keyHandleTop = this.getAttribute("key-handle-top") === "true";
     const keyHandleExtraClasses =
@@ -95,7 +102,7 @@ class KeyboardKey extends HTMLButtonElement {
     if (legendImage) {
       if (this.legendTextNode) {
         this.removeChild(this.legendTextNode);
-        delete this.legendTextNode;
+        this.legendTextNode = null;
       }
       if (!this.legendImageElement) {
         this.legendImageElement = document.createElement("img");
@@ -105,7 +112,7 @@ class KeyboardKey extends HTMLButtonElement {
     } else {
       if (this.legendImageElement) {
         this.removeChild(this.legendImageElement);
-        delete this.legendImageElement;
+        this.legendImageElement = null;
       }
       if (!this.legendTextNode) {
         this.legendTextNode = document.createTextNode(legendText);
@@ -126,7 +133,7 @@ class KeyboardKey extends HTMLButtonElement {
     }
     this.keyHandleElement.setAttribute("key-id", id);
     this.keyHandleElement.setAttribute("col-start", xloc);
-    this.keyHandleElement.setAttribute("handle-top", keyHandleTop);
+    this.keyHandleElement.setAttribute("handle-top", keyHandleTop.toString());
     this.keyHandleElement.setAttribute("extra-classes", keyHandleExtraClasses);
   }
 }

@@ -1,38 +1,29 @@
 /* A simple point
  */
 export class Point {
-  constructor(x, y) {
+  x: number;
+  y: number;
+  constructor(x: number, y: number) {
     this.x = x || 0;
     this.y = y || 0;
   }
-  static fromRect(rect) {
+  static fromRect(rect: DOMRect) {
     return new Point(rect.x, rect.y);
   }
 }
 
 /* Return a new rect with absolute positioning
  */
-export const absolutifyRect = (rect) => {
+export const absolutifyRect = (rect: DOMRect) => {
   const abs = DOMRect.fromRect(rect);
   abs.x += window.scrollX;
   abs.y += window.scrollY;
   return abs;
 };
 
-/* Why the fuck is the DOMRect constructor considered experimental?
- */
-export class FakeDOMRect {
-  constructor(x, y, width, height) {
-    this.x = x || 0;
-    this.y = y || 0;
-    this.width = width || 0;
-    this.height = height || 0;
-  }
-}
-
 /* Return a new rect inside the input rect
  */
-export const smallerRect = (rect, offset = 5) => {
+export const smallerRect = (rect: DOMRect, offset: number = 5) => {
   const newRect = DOMRect.fromRect(rect);
   newRect.x += offset;
   newRect.width -= 2 * offset;
@@ -45,18 +36,12 @@ export const smallerRect = (rect, offset = 5) => {
  * rect:    An existing DOMRect
  * context: Ah HTML canvas context
  */
-export const traceRect = (rect, context) => {
+export const traceRect = (rect: DOMRect, context: CanvasRenderingContext2D) => {
   context.moveTo(rect.left, rect.top);
   context.lineTo(rect.left, rect.bottom);
   context.lineTo(rect.right, rect.bottom);
   context.lineTo(rect.right, rect.top);
   context.lineTo(rect.left, rect.top);
-};
-
-/* Compare the .width and .height properties on two objects
- */
-export const sizeObjEq = (size1, size2) => {
-  return size1.width === size2.width && size1.height === size2.height;
 };
 
 /* Unfuck DOMRect objects
@@ -71,8 +56,10 @@ export const sizeObjEq = (size1, size2) => {
  * will fail to copy returned properties."
  *
  * ... I'm sorry fucking what.
+ *
+ * TODO: is this still necessary in 2024?
  */
-export const domrect2obj = (r) => {
+export const domrect2obj = (r: DOMRect) => {
   const { top, right, bottom, left, width, height, x, y } = r;
   return { top, right, bottom, left, width, height, x, y };
 };
@@ -82,32 +69,27 @@ export const domrect2obj = (r) => {
  * DOMRect objects are totally fucked (per above),
  * and we have to resort to this bullshit to detect them.
  * Fucking incredible.
+ *
+ * TODO: is this still necessary in 2024?
  */
-export const isDOMRect = (obj) => {
+export const isDOMRect = (obj: any) => {
   return Object.getPrototypeOf(obj) === Object.getPrototypeOf(new DOMRect());
 };
 
-export const eqDOMRect = (rect1, rect2) => {
-  const rectKeys = [
-    "top",
-    "right",
-    "bottom",
-    "left",
-    "width",
-    "height",
-    "x",
-    "y",
-  ];
+export const eqDOMRect = (rect1: DOMRect, rect2: DOMRect) => {
   if (!rect1 && !rect2) {
     return true;
   } else if (!rect1 || !rect2) {
     return false;
   }
-  for (let idx = 0; idx < rectKeys.length; ++idx) {
-    let key = rectKeys[idx];
-    if (rect1[key] != rect2[key]) {
-      return false;
-    }
-  }
-  return true;
+  return (
+    rect1.left === rect2.left &&
+    rect1.top === rect2.top &&
+    rect1.right === rect2.right &&
+    rect1.bottom === rect2.bottom &&
+    rect1.width === rect2.width &&
+    rect1.height === rect2.height &&
+    rect1.x === rect2.x &&
+    rect1.y === rect2.y
+  );
 };
