@@ -3,5 +3,5 @@
   font-style: normal;
   font-weight: 400;
   src: local("Roboto Mono"), local("Roboto-Mono"), local("RobotoMono"),
-    url("../../public/fonts/RobotoMono-VariableFont_wght.woff2") format("woff2");
+    url("/fonts/RobotoMono-VariableFont_wght.woff2") format("woff2");
 }
