@@ -3,8 +3,8 @@ import { ConnectionPair } from "~/lib/keyConnections";
 import { keyMaps, legendMaps } from "~/lib/keys";
 
 import "~/webcomponents/key-board-ergodox";
-import {KeyHandle} from "~/webcomponents/key-handle";
-import {KeyIndicator} from "~/webcomponents/key-indicator";
+import { KeyHandle } from "~/webcomponents/key-handle";
+import { KeyIndicator } from "~/webcomponents/key-indicator";
 import "~/webcomponents/key-info-nav-bar";
 
 /* The UI of the keymap, including a keyboard, an info panel, and the canvas diagram.
@@ -19,13 +19,12 @@ import "~/webcomponents/key-info-nav-bar";
  * The diagram lines are drawn from the Keyboard, to the InfoPanel, via the Diamargs.
  */
 class KeyMapUI extends HTMLElement {
-  trackedElements:  {[key: string]: HTMLElement} ;
+  trackedElements: { [key: string]: HTMLElement };
   resizeObserver: ResizeObserver;
 
   constructor() {
     super();
     this.trackedElements = {};
-
 
     /* Listen for changes to the size of the browser window,
      * and resize the canvas to match the size of the kidContainer.
@@ -136,20 +135,19 @@ class KeyMapUI extends HTMLElement {
   /* Resize the canvas to the size of the kidContainer.
    */
   #resizeCanvas = () => {
-      // console.log(
-      //   `resizeCanvas() ${diagram.width}x${diagram.height} => ${kidContainer.offsetWidth}x${kidContainer.offsetHeight}`
-      // );
-      const diagram = this.trackedElements["diagram"];
-      const kidContainer = this.trackedElements["kidContainer"];
-      if (!diagram || !kidContainer) {
-        // These elements must not have been created yet
-        return;
-      }
-      const diagramCanvas = diagram as HTMLCanvasElement;
-      diagramCanvas.width = kidContainer.offsetWidth;
-      diagramCanvas.height = kidContainer.offsetHeight;
-    };
-
+    // console.log(
+    //   `resizeCanvas() ${diagram.width}x${diagram.height} => ${kidContainer.offsetWidth}x${kidContainer.offsetHeight}`
+    // );
+    const diagram = this.trackedElements["diagram"];
+    const kidContainer = this.trackedElements["kidContainer"];
+    if (!diagram || !kidContainer) {
+      // These elements must not have been created yet
+      return;
+    }
+    const diagramCanvas = diagram as HTMLCanvasElement;
+    diagramCanvas.width = kidContainer.offsetWidth;
+    diagramCanvas.height = kidContainer.offsetHeight;
+  };
 
   /* Handle a change to the keyboard-element attribute
    */
@@ -193,7 +191,7 @@ class KeyMapUI extends HTMLElement {
     const indicatedKeyIds = proseKeyIndicators.map((indicator) =>
       indicator.getAttribute("id")
     );
-    const indicatedElementsById: {[key: string]: KeyHandle} = {};
+    const indicatedElementsById: { [key: string]: KeyHandle } = {};
 
     // Update every key on the board
     // Make sure not to include the key in the nav bar which needs special handling
@@ -202,8 +200,9 @@ class KeyMapUI extends HTMLElement {
     // I can't seem to get JUST my custom button subclass from querySelectorAll...
     // Neither querySelectorAll('keyboard-key') nor
     // querySelectorAll('button', {is: 'keyboard-key'}) work.
-    const keyboardKeys = Array.from(keyboard.querySelectorAll('button'))
-      .filter(b => b.getAttribute("is") === "keyboard-key");
+    const keyboardKeys = Array.from(keyboard.querySelectorAll("button")).filter(
+      (b) => b.getAttribute("is") === "keyboard-key"
+    );
 
     console.log(`KeyMapUI: Found ${keyboardKeys.length} keys`);
     keyboardKeys.forEach((key) => {
@@ -234,7 +233,7 @@ class KeyMapUI extends HTMLElement {
       } else if (indicatorTarget) {
         // Store the key handle for making a connection later
         // console.log(`KeyMapUI: Storing key handle for ${keyId}`);
-        indicatedElementsById[keyId] = (keyHandle as KeyHandle);
+        indicatedElementsById[keyId] = keyHandle as KeyHandle;
       }
     });
 
@@ -252,7 +251,7 @@ class KeyMapUI extends HTMLElement {
         console.error(`KeyMapUI: Key indicator has no target: ${indicatorId}`);
         return;
       }
-      connectionPairs.push(new ConnectionPair(indicator,indicated,"textref"));
+      connectionPairs.push(new ConnectionPair(indicator, indicated, "textref"));
     });
 
     drawDiagram(
@@ -274,7 +273,7 @@ class KeyMapUI extends HTMLElement {
     while (infoProse.firstChild) {
       infoProse.removeChild(infoProse.firstChild);
     }
-      const keyIndicators: KeyIndicator[] = [];
+    const keyIndicators: KeyIndicator[] = [];
     if (keyData) {
       const h3 = document.createElement("h3");
 
@@ -309,9 +308,8 @@ class KeyMapUI extends HTMLElement {
         );
         infoProse.appendChild(p);
       });
-
     }
-      return keyIndicators;
+    return keyIndicators;
   }
 
   /* Handle a key being selected on the keyboard
