@@ -27,8 +27,8 @@
   },
   "include": [
     "**/*.js",
-    "**/*.ts"
-, "src/webcomponents/key-map-ui.js.bak", "src/lib/keyConnections.js.bak"  ],
+    "**/*.ts",
+  ],
   "exclude": [
     "node_modules"
   ]
