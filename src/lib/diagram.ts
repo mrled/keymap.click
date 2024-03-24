@@ -3,37 +3,10 @@ import log from "loglevel";
 import { smallerRect, traceRect } from "~/lib/geometry";
 import { Connection, KeyInfoConnectType } from "~/lib/keyConnections";
 
-/* Return a new leftRightObject
- *
- * A leftRightObject is a JavaScript object with a 'true' key and a 'false' key.
- * 'true' represents an object on the right; 'false' represents an object on the left.
- * e.g.:
- *
- *    const lrObj = newLeftRightObject(0, 0);
- *    const leftOrRight = calculateLeftOrRight();
- *    lrObj[leftOrRight] = 'something';
- *
- * UPDATE: apparently you can't have literal booleans as keys for objects,
- * and JavaScript has been converting them to strings silently.
- * Furthermore, fucking Prettier won't let me use "true" or "false" strings here,
- * converting them to boolean literals!!
- * TODO: do something else entirely this is stupid.
- */
-interface ILeftRightObject {
-  t: any; // TODO: typing
-  f: any; // TODO: typing
-}
-function newLeftRightObject(
-  initialLeft: any = 0,
-  initialRight: any = 0
-): ILeftRightObject {
-  return { t: initialRight, f: initialLeft };
-}
-
 /* Colors when drawing diagram lines
  * TODO: does this belong in CSS?
  */
-const diagramLineColors = {
+const diagramLineColors: { [key: string]: string } = {
   [KeyInfoConnectType.TextRef]: "#68d391ff", // Opaque, because this green is pretty light
   [KeyInfoConnectType.Selected]: "#fbd38d99", // Slightly transparent, because this orange is pretty dark
   debugCenterLine: "cornflowerblue",
@@ -114,90 +87,60 @@ const drawVisualDebugInfo = (
  * connection:                        A Connection object to draw
  * keyboardCenter:                    The X coordinate for the center of the keyboard
  *                                    (not the center of the screen).
- * leftRightSourceYCoordStartList:    A leftRightObj that tracks Y coordinates that already-drawn
- *                                    source diagram lines have started from.
- *                                    Lets us offset horizontal line between source text and
- *                                    diamarg by sourceYInsetTickSize so that lines are not drawn
- *                                    on top of each other.
+ * leftDiagramYCoordinates:           An array of Y coordinates in the left margin
+ *                                    that have already been drawn on.
+ *                                    (This function mutates this value.)
+ * rightDiagramYCoordinates:         rAn array of Y coordinates in the right margin
+ *                                    that have already been drawn on.
  *                                    (This function mutates this value.)
  * sourceYInsetTickSize:              The distance between horizontal lines under the text
  * diamargRightRect:                  The right diamarg DOMRect
  * diamargLeftRect:                   The left diamarg DOMRect
- * leftRightIdx:                      A leftRightObj that tracks the number of vertical lines.
- *                                    (This function mutates this value.)
  * marginInsetTickSize:               The distance between vertical lines in the margin
  */
 const drawDiagramLineTextref = (
   context: CanvasRenderingContext2D,
   connection: Connection,
   keyboardCenter: number,
-  leftRightSourceYCoordStartList: ILeftRightObject,
+  leftDiagramYCoordinates: number[],
+  rightDiagramYCoordinates: number[],
   sourceYInsetTickSize: number,
   diamargRightRect: DOMRect,
   diamargLeftRect: DOMRect,
-  leftRightIdx: ILeftRightObject,
   marginInsetTickSize: number
 ) => {
   const source = connection.sourceCoords;
   const target = connection.targetCoords;
-  const lineType = connection.connectionType;
 
-  context.strokeStyle = diagramLineColors[lineType];
+  context.strokeStyle = diagramLineColors[connection.connectionType];
   context.lineWidth = 1;
   context.beginPath();
 
+  // If true, draw this diagram line in the right margin; otherwise, the left
   const rightMargin = keyboardCenter < target.x;
 
-  function calculateSourceYCoord(
-    initialSourceYCoord: number,
-    alreadySeenCoords: number[],
-    tickSize: number
-  ): [number, number[]] {
-    let result = initialSourceYCoord;
-    let idx = 0;
-    while (alreadySeenCoords.indexOf(result) > -1) {
-      if (idx > 100) {
-        throw new Error(`This is probably an infinite loop`);
-      }
-      result += tickSize;
-      idx += 1;
-    }
-    log.debug(
-      `Selected source Y coordinate of ${result} from initial value of ${initialSourceYCoord}`
-    );
-    alreadySeenCoords.push(result);
-    return [result, alreadySeenCoords];
+  const alreadySeenCoords = rightMargin
+    ? rightDiagramYCoordinates
+    : leftDiagramYCoordinates;
+  if (alreadySeenCoords.length > 100) {
+    throw new Error(`This is probably an infinite loop`);
   }
-
-  const [sourceInsetY, newCoordList] = calculateSourceYCoord(
-    source.y,
-    leftRightSourceYCoordStartList[rightMargin ? "t" : "f"],
-    sourceYInsetTickSize
+  let sourceInsetY = source.y;
+  while (alreadySeenCoords.indexOf(sourceInsetY) > -1) {
+    sourceInsetY += sourceYInsetTickSize;
+  }
+  alreadySeenCoords.push(sourceInsetY);
+  log.debug(
+    `Selected source Y coordinate of ${sourceInsetY} from initial value of ${source.y}`
   );
-  leftRightSourceYCoordStartList[rightMargin ? "t" : "f"] = newCoordList;
-
-  /* Return the X coordinate for the vertical line
-   */
-  const calculateMarginXCoord = (
-    marginRect: DOMRect,
-    rightMargin: boolean,
-    idx: number,
-    tickSize: number
-  ) => {
-    const inset = idx * tickSize;
-    const offsetMultiplier = rightMargin ? -1 : 1;
-    const offset = inset * offsetMultiplier;
-    const offsetFrom = rightMargin ? marginRect.right : marginRect.left;
-    return offsetFrom + offset;
-  };
 
   const diamargRect = rightMargin ? diamargRightRect : diamargLeftRect;
-  const marginX = calculateMarginXCoord(
-    diamargRect,
-    rightMargin,
-    leftRightIdx[rightMargin ? "t" : "f"],
-    marginInsetTickSize
-  );
+
+  const marginXInset = alreadySeenCoords.length * marginInsetTickSize;
+  const marginXOffsetMultiplier = rightMargin ? -1 : 1;
+  const marginXOffset = marginXInset * marginXOffsetMultiplier;
+  const marginXFrom = rightMargin ? diamargRect.right : diamargRect.left;
+  const marginX = marginXFrom + marginXOffset;
 
   context.moveTo(source.x, source.y);
   context.lineTo(source.x, sourceInsetY);
@@ -207,7 +150,7 @@ const drawDiagramLineTextref = (
 
   context.stroke();
 
-  leftRightIdx[rightMargin ? "t" : "f"] += 1;
+  // leftRightIdx[rightMargin] += 1;
 };
 
 /* Draw a 'selected' diagram line --
@@ -220,9 +163,8 @@ const drawDiagramLineSelected = (
 ) => {
   const source = connection.sourceCoords;
   const target = connection.targetCoords;
-  const lineType = connection.connectionType;
 
-  context.strokeStyle = diagramLineColors[lineType];
+  context.strokeStyle = diagramLineColors[connection.connectionType];
   context.lineWidth = 2;
   context.beginPath();
 
@@ -331,18 +273,11 @@ export const drawDiagram = (
   // the distance between horizontal lines from the source text to the margin
   const sourceYInsetTickSize = 3;
 
-  // keep track of number of vertical lines in each diamarg.
-  let leftRightIdx = newLeftRightObject(0, 0);
-
-  // keep track of Y coordinates that source diagram lines have started from.
+  // Arrays of Y coordinates in the margins that have already been drawn on.
   let leftDiagramYCoordinates: number[] = [];
   let rightDiagramYCoordinates: number[] = [];
-  let leftRightSourceYCoordStartList = newLeftRightObject(
-    leftDiagramYCoordinates,
-    rightDiagramYCoordinates
-  );
 
-  connections.forEach((connection) => {
+  connections.forEach((connection: Connection) => {
     log.debug(`Drawing connection ${connection.stringify()}`);
 
     if (connection.connectionType == KeyInfoConnectType.TextRef) {
@@ -350,15 +285,14 @@ export const drawDiagram = (
         context,
         connection,
         keyboardCenter,
-        leftRightSourceYCoordStartList,
+        leftDiagramYCoordinates,
+        rightDiagramYCoordinates,
         sourceYInsetTickSize,
         diamargRightRect,
         diamargLeftRect,
-        leftRightIdx,
         marginInsetTickSize
       );
     } else if (connection.connectionType == KeyInfoConnectType.Selected) {
-      // drawDiagramLineSelected(context, connection, keyInfoContainerRect.top);
       drawDiagramLineSelected(context, connection);
     }
   });
