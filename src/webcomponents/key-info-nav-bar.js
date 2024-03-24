@@ -1,12 +1,10 @@
 import { keyMaps, legendMaps } from "~/lib/keys";
 
-import "~/webcomponents/key-grid";
-
 /* Title bar for a key-info-panel
  *
  * TODO: Support guides
  */
-class KeyInfoNavBar extends HTMLElement {
+export class KeyInfoNavBar extends HTMLElement {
   static get observedAttributes() {
     return ["key-id"];
   }
@@ -77,9 +75,3 @@ class KeyInfoNavBar extends HTMLElement {
     this.appendChild(titleh2);
   }
 }
-
-if (!customElements.get("key-info-nav-bar")) {
-  customElements.define("key-info-nav-bar", KeyInfoNavBar);
-}
-
-export { KeyInfoNavBar };

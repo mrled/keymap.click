@@ -1,13 +1,12 @@
 import { keyMaps } from "~/lib/keys";
 import { KeyBoard } from "~/webcomponents/key-board";
-import "~/webcomponents/key-grid";
 
 /* An ErgoDox keyboard.
  *
  * Create child elements directly,
  * or use the createChildren() method to create them from state data.
  */
-class KeyBoardErgodox extends KeyBoard {
+export class KeyBoardErgodox extends KeyBoard {
   static get observedAttributes() {}
 
   constructor() {
@@ -99,9 +98,3 @@ class KeyBoardErgodox extends KeyBoard {
     }
   }
 }
-
-if (!customElements.get("key-board-ergodox")) {
-  customElements.define("key-board-ergodox", KeyBoardErgodox);
-}
-
-export { KeyBoardErgodox };

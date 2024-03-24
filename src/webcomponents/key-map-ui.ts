@@ -2,10 +2,8 @@ import { drawDiagram } from "~/lib/diagram";
 import { ConnectionPair, KeyInfoConnectType } from "~/lib/keyConnections";
 import { keyMaps, legendMaps } from "~/lib/keys";
 
-import "~/webcomponents/key-board-ergodox";
 import { KeyHandle } from "~/webcomponents/key-handle";
 import { KeyIndicator } from "~/webcomponents/key-indicator";
-import "~/webcomponents/key-info-nav-bar";
 
 /* The UI of the keymap, including a keyboard, an info panel, and the canvas diagram.
  *
@@ -18,7 +16,7 @@ import "~/webcomponents/key-info-nav-bar";
  *
  * The diagram lines are drawn from the Keyboard, to the InfoPanel, via the Diamargs.
  */
-class KeyMapUI extends HTMLElement {
+export class KeyMapUI extends HTMLElement {
   trackedElements: { [key: string]: HTMLElement };
   resizeObserver: ResizeObserver;
 
@@ -338,9 +336,3 @@ class KeyMapUI extends HTMLElement {
     return this.trackedElements[name];
   }
 }
-
-if (!customElements.get("key-map-ui")) {
-  customElements.define("key-map-ui", KeyMapUI);
-}
-
-export { KeyMapUI };

@@ -16,7 +16,7 @@ import { keyHandleDomIdFromKeyId } from "~/lib/keyConnections";
  * However, it is so small that this doesn't matter.
  * The diagram line still looks good inside the <Key>.
  */
-class KeyHandle extends HTMLElement {
+export class KeyHandle extends HTMLElement {
   static get observedAttributes() {
     return ["key-id", "col-start", "handle-top", "extra-classes"];
   }
@@ -80,9 +80,3 @@ class KeyHandle extends HTMLElement {
     return yOffset;
   }
 }
-
-if (!customElements.get("key-handle")) {
-  customElements.define("key-handle", KeyHandle);
-}
-
-export { KeyHandle };

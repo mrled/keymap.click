@@ -1,5 +1,3 @@
-import "~/webcomponents/key-handle";
-
 /* A keyboard key
  * Properties of the web component:
  *   position:                  A string containing the size and starting location of the key,
@@ -26,7 +24,7 @@ import "~/webcomponents/key-handle";
  * Relevant properties of the superclass (HTMLButtonElement):
  *   onclick:                   An onClick function
  */
-class KeyboardKey extends HTMLButtonElement {
+export class KeyboardKey extends HTMLButtonElement {
   legendTextNode: Text | null;
   legendImageElement: Element | null;
   keyHandleElement: Element | null;
@@ -137,9 +135,3 @@ class KeyboardKey extends HTMLButtonElement {
     this.keyHandleElement.setAttribute("extra-classes", keyHandleExtraClasses);
   }
 }
-
-if (!customElements.get("keyboard-key")) {
-  customElements.define("keyboard-key", KeyboardKey, { extends: "button" });
-}
-
-export { KeyboardKey };

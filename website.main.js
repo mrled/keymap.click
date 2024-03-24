@@ -16,8 +16,8 @@ import "./src/styles/keygrid.css";
 import "./src/styles/keyInfoPanel.css";
 import "./src/styles/siteChrome.css";
 
-import "./src/webcomponents/keyboard-key";
-import "./src/webcomponents/key-map-ui";
+import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
+registerAllKeymapClickWebComponents();
 
 import { keyMaps, legendMaps } from "./src/lib/keys";
 

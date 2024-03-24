@@ -5,7 +5,7 @@ import {
 
 /* KeyIndicator: an element off the keyboard that points to some key on the keyboard via a diagram line.
  */
-class KeyIndicator extends HTMLElement {
+export class KeyIndicator extends HTMLElement {
   static get observedAttributes() {
     return ["id"];
   }
@@ -31,9 +31,3 @@ class KeyIndicator extends HTMLElement {
     }
   }
 }
-
-if (!customElements.get("key-indicator")) {
-  customElements.define("key-indicator", KeyIndicator);
-}
-
-export { KeyIndicator };

@@ -3,7 +3,7 @@
  * Specific boards should extend this class.
  */
 
-class KeyBoard extends HTMLElement {
+export class KeyBoard extends HTMLElement {
   constructor() {
     super();
   }
@@ -12,9 +12,3 @@ class KeyBoard extends HTMLElement {
    */
   createChildren({ keymapName }) {}
 }
-
-if (!customElements.get("key-board")) {
-  customElements.define("key-board", KeyBoard);
-}
-
-export { KeyBoard };

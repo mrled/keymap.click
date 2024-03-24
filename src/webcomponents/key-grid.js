@@ -1,5 +1,4 @@
 import { keyMaps, legendMaps } from "~/lib/keys";
-import "~/webcomponents/keyboard-key";
 
 /* KeyGrid: An HTML grid template for keyboard keys.
  *
@@ -26,7 +25,7 @@ import "~/webcomponents/keyboard-key";
  *   legendmap-name:        The name of the legend map to use
  *                          (legend map must be defined by this name in lib/keys.js `legendMaps` object)
  */
-class KeyGrid extends HTMLElement {
+export class KeyGrid extends HTMLElement {
   static get observedAttributes() {
     return ["name", "cols", "rows", "keymap-name", "legendmap-name"];
   }
@@ -208,9 +207,3 @@ class KeyGrid extends HTMLElement {
     }
   }
 }
-
-if (!customElements.get("key-grid")) {
-  customElements.define("key-grid", KeyGrid);
-}
-
-export { KeyGrid };
