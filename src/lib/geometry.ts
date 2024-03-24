@@ -12,6 +12,10 @@ export class Point {
   }
 }
 
+/* A simple size
+ */
+export class Size extends Point {}
+
 /* Return a new rect with absolute positioning
  */
 export const absolutifyRect = (rect: DOMRect) => {
