@@ -29,7 +29,7 @@ export class KeyHandle extends HTMLElement {
     this.updateComponent();
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     this.updateComponent();
   }
 
@@ -41,7 +41,7 @@ export class KeyHandle extends HTMLElement {
   retrieveAttributes() {
     const attributes = {
       keyId: this.getAttribute("key-id"),
-      colStart: parseInt(this.getAttribute("col-start"), 10) || 0,
+      colStart: parseInt(this.getAttribute("col-start") || "0", 10) || 0,
       handleTop: this.getAttribute("handle-top") === "true",
       extraClasses: this.getAttribute("extra-classes") || "",
     };
@@ -74,7 +74,7 @@ export class KeyHandle extends HTMLElement {
    * don't overwrite each other.
    * It's not perfect, but it should be pretty good for non-pathological keymaps.
    */
-  calculateYOffset(colStart, handleTop) {
+  calculateYOffset(colStart: number, handleTop: boolean) {
     const yOffsetMultiplier = handleTop ? -1 : 1;
     const yOffset = colStart * yOffsetMultiplier;
     return yOffset;

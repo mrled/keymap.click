@@ -1,5 +1,5 @@
 import { KeyBoardErgodox } from "~/webcomponents/key-board-ergodox";
-import { KeyBoard } from "~/webcomponents/key-board";
+// import { KeyBoard } from "~/webcomponents/key-board";
 import { KeyGrid } from "~/webcomponents/key-grid";
 import { KeyHandle } from "~/webcomponents/key-handle";
 import { KeyIndicator } from "~/webcomponents/key-indicator";
@@ -22,7 +22,7 @@ const registrations: Registration[] = [
     defineOptions: { extends: "button" },
   },
   { elementName: "key-grid", elementClass: KeyGrid },
-  { elementName: "key-board", elementClass: KeyBoard },
+  // { elementName: "key-board", elementClass: KeyBoard }, // Can't define abstract classes
   { elementName: "key-board-ergodox", elementClass: KeyBoardErgodox },
   { elementName: "key-info-nav-bar", elementClass: KeyInfoNavBar },
   { elementName: "key-map-ui", elementClass: KeyMapUI },

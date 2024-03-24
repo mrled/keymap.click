@@ -1,10 +1,13 @@
 import { keyMaps, legendMaps } from "~/lib/keys";
+import { KeyGrid } from "./key-grid";
 
 /* Title bar for a key-info-panel
  *
  * TODO: Support guides
  */
 export class KeyInfoNavBar extends HTMLElement {
+  trackedElements: { [key: string]: HTMLElement };
+
   static get observedAttributes() {
     return ["key-id"];
   }
@@ -17,7 +20,11 @@ export class KeyInfoNavBar extends HTMLElement {
   /* Create a new element if it doesn't exist, or return the existing one.
    * Track the element by name so we can work with it later.
    */
-  #makeTrackedChild(name, element, options) {
+  #makeTrackedChild(
+    name: string,
+    element: string,
+    options?: ElementCreationOptions
+  ) {
     if (!this.trackedElements[name]) {
       this.trackedElements[name] = document.createElement(element, options);
     }
@@ -43,7 +50,7 @@ export class KeyInfoNavBar extends HTMLElement {
     this.append(titleGrid, titleh2);
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     switch (name) {
       case "key-id":
         this.#updateKeyId(newValue);
@@ -54,7 +61,7 @@ export class KeyInfoNavBar extends HTMLElement {
     }
   }
 
-  #updateKeyId(keyId) {
+  #updateKeyId(keyId: string | null) {
     // TODO: don't hard code keymaps/legendmaps
     const key = keyId ? keyMaps.MrlMainLayer.allKeysById[keyId] : {};
     const modifiedTitleKeyId = "title-bar-0-0";
@@ -65,7 +72,10 @@ export class KeyInfoNavBar extends HTMLElement {
     const modifiedKeyMap = keyMaps.MrlMainLayer;
     modifiedKeyMap.allKeysById[modifiedTitleKeyId] = modifiedKeyData;
 
-    const titleGrid = this.#makeTrackedChild("titleGrid", "key-grid");
+    const titleGrid = this.#makeTrackedChild(
+      "titleGrid",
+      "key-grid"
+    ) as KeyGrid;
     titleGrid.keyMap = modifiedKeyMap;
     titleGrid.setAttribute("selected-key", modifiedTitleKeyId); // Setting the selected key has to happen AFTER all the child keys are recreated
     titleGrid.createKeys([modifiedTitleKeyId]);

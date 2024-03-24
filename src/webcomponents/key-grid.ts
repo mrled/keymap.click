@@ -26,6 +26,10 @@ import { keyMaps, legendMaps } from "~/lib/keys";
  *                          (legend map must be defined by this name in lib/keys.js `legendMaps` object)
  */
 export class KeyGrid extends HTMLElement {
+  keyData: any; // TODO: typing
+  keyMap: any; // TODO: typing
+  legendMap: any; // TODO: typing
+
   static get observedAttributes() {
     return ["name", "cols", "rows", "keymap-name", "legendmap-name"];
   }
@@ -42,17 +46,17 @@ export class KeyGrid extends HTMLElement {
    */
   connectedCallback() {
     // Call attributeChangedCallback for each attribute to set initial state.
-    this.attributeChangedCallback("cols", null, this.getAttribute("cols"));
-    this.attributeChangedCallback("rows", null, this.getAttribute("rows"));
-    const keymapName = this.getAttribute("keymap-name");
+    this.attributeChangedCallback("cols", "", this.getAttribute("cols") || "");
+    this.attributeChangedCallback("rows", "", this.getAttribute("rows") || "");
+    const keymapName = this.getAttribute("keymap-name") || "";
     this.keyMap = keyMaps[keymapName];
-    const legendMapName = this.getAttribute("legendmap-name");
+    const legendMapName = this.getAttribute("legendmap-name") || "";
     this.legendMap = legendMaps[legendMapName];
   }
 
   /* Handle attribute changes
    */
-  attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     switch (name) {
       case "name":
         break;
@@ -92,25 +96,31 @@ export class KeyGrid extends HTMLElement {
   /* Get all the child <keyboard-key> elements
    */
   get keyElements() {
-    return (
-      Array.from(this.querySelectorAll("button", { is: "keyboard-key" })) || []
+    return Array.from(this.querySelectorAll("button")).filter(
+      (b) => b.getAttribute("is") === "keyboard-key"
     );
   }
 
   /* Get a map of all the child <keyboard-key> elements by ID
    */
-  get keyElementsById() {
-    return this.keyElements.reduce((acc, elem) => {
+  get keyElementsById(): Record<string, Element> {
+    return this.keyElements.reduce<Record<string, Element>>((acc, elem) => {
       const elemId = elem.getAttribute("id");
-      acc[elemId] = elem;
+      if (!elemId) {
+        console.log("KeyGrid: key element has no ID", elem);
+      } else {
+        acc[elemId] = elem;
+      }
       return acc;
     }, {});
   }
 
   /* Get a list of all the key IDs of the child <keyboard-key> elements
    */
-  get keyIds() {
-    return this.keyElements.map((elem) => elem.getAttribute("id"));
+  get keyIds(): string[] {
+    return this.keyElements
+      .filter((elem) => elem.hasAttribute("id"))
+      .map((elem) => elem.getAttribute("id") as string);
   }
 
   /* Remove all child keys.
@@ -124,7 +134,7 @@ export class KeyGrid extends HTMLElement {
 
   /* Create a single <keyboard-key> element from key data
    */
-  #createKey(keyId) {
+  #createKey(keyId: string) {
     // TODO: get physical key layout from the keyboard, and don't set up legends here.
     // Instead, set up legends in the controller key-map-ui.
     if (!keyId || !this.keyMap || !this.keyMap.allKeysById[keyId]) {
@@ -191,7 +201,7 @@ export class KeyGrid extends HTMLElement {
    *                  e.g. you might have the same text for all of home/end/pgup/pgdn
    *                  and you want to show them all as related when any one of them is pressed.
    */
-  createKeys(keyIds) {
+  createKeys(keyIds: string[]) {
     this.removeAllChildren();
     keyIds.map((keyId) => this.#createKey(keyId));
   }

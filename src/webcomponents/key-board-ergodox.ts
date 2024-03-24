@@ -1,5 +1,6 @@
 import { keyMaps } from "~/lib/keys";
 import { KeyBoard } from "~/webcomponents/key-board";
+import { KeyGrid } from "./key-grid";
 
 /* An ErgoDox keyboard.
  *
@@ -7,15 +8,9 @@ import { KeyBoard } from "~/webcomponents/key-board";
  * or use the createChildren() method to create them from state data.
  */
 export class KeyBoardErgodox extends KeyBoard {
-  static get observedAttributes() {}
-
   constructor() {
     super();
   }
-
-  connectedCallback() {}
-
-  attributeChangedCallback(name, oldValue, newValue) {}
 
   /* Create key-grid and keyboard-key elements from key data for this board.
    *
@@ -26,7 +21,7 @@ export class KeyBoardErgodox extends KeyBoard {
    *   keymapName:    Name of the keymap to use, define in lib/keys.js
    *   legendmapName: Name of the legend map to use, defined in lib/keys.js
    */
-  createChildren({ keymapName }) {
+  createChildren({ keymapName }: { keymapName: string }) {
     this.removeAllChildren();
 
     // TODO: the ErgoDox should define its OWN list of physical keys
@@ -47,19 +42,19 @@ export class KeyBoardErgodox extends KeyBoard {
     leftGridContainer.className = "keygrid-container";
     leftSubBoard.appendChild(leftGridContainer);
 
-    const leftFingerGrid = document.createElement("key-grid");
+    const leftFingerGrid = document.createElement("key-grid") as KeyGrid;
     leftFingerGrid.setAttribute("name", "ergodox-left-finger");
     leftFingerGrid.setAttribute("cols", "15");
     leftFingerGrid.setAttribute("rows", "10");
-    const leftHandKeyIds = keys.leftHandKeys.map((key) => key.id);
+    const leftHandKeyIds = keys.leftHandKeys.map((key: any) => key.id); // TODO: typing
     leftFingerGrid.createKeys(leftHandKeyIds);
     leftGridContainer.appendChild(leftFingerGrid);
 
-    const leftThumbGrid = document.createElement("key-grid");
+    const leftThumbGrid = document.createElement("key-grid") as KeyGrid;
     leftThumbGrid.setAttribute("name", "ergodox-left-thumb");
     leftThumbGrid.setAttribute("cols", "6");
     leftThumbGrid.setAttribute("rows", "6");
-    const leftThumbKeyIds = keys.leftThumbKeys.map((key) => key.id);
+    const leftThumbKeyIds = keys.leftThumbKeys.map((key: any) => key.id); // TODO: typing
     leftThumbGrid.createKeys(leftThumbKeyIds);
     leftGridContainer.appendChild(leftThumbGrid);
 
@@ -75,19 +70,19 @@ export class KeyBoardErgodox extends KeyBoard {
     rightGridContainer.className = "keygrid-container";
     rightSubBoard.appendChild(rightGridContainer);
 
-    const rightFingerGrid = document.createElement("key-grid");
+    const rightFingerGrid = document.createElement("key-grid") as KeyGrid;
     rightFingerGrid.setAttribute("name", "ergodox-right-finger");
     rightFingerGrid.setAttribute("cols", "15");
     rightFingerGrid.setAttribute("rows", "10");
-    const rightHandKeyIds = keys.rightHandKeys.map((key) => key.id);
+    const rightHandKeyIds = keys.rightHandKeys.map((key: any) => key.id); // TODO typing
     rightFingerGrid.createKeys(rightHandKeyIds);
     rightGridContainer.appendChild(rightFingerGrid);
 
-    const rightThumbGrid = document.createElement("key-grid");
+    const rightThumbGrid = document.createElement("key-grid") as KeyGrid;
     rightThumbGrid.setAttribute("name", "ergodox-right-thumb");
     rightThumbGrid.setAttribute("cols", "6");
     rightThumbGrid.setAttribute("rows", "6");
-    const rightThumbKeyIds = keys.rightThumbKeys.map((key) => key.id);
+    const rightThumbKeyIds = keys.rightThumbKeys.map((key: any) => key.id); // TODO typing
     rightThumbGrid.createKeys(rightThumbKeyIds);
     rightGridContainer.appendChild(rightThumbGrid);
   }

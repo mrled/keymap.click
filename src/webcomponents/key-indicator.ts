@@ -18,7 +18,7 @@ export class KeyIndicator extends HTMLElement {
     this.updateComponent();
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     this.updateComponent();
   }
 
