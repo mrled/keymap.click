@@ -6,7 +6,8 @@ import UnicodeLegends from "./keyLegends/unicodeLegends";
 import DebugLayout from "./keyMaps/debugLayout";
 import MrlMainLayer from "./keyMaps/mrlMainLayer";
 
-export const keyMaps = {
+// TODO: typing
+export const keyMaps: { [key: string]: any } = {
   DebugLayout: DebugLayout,
   MrlMainLayer: MrlMainLayer,
 };
@@ -33,7 +34,8 @@ Object.keys(keyMaps).forEach((keyMapName) => {
     keyMap.rightThumbKeys
   );
   keyMap.allKeysById = {};
-  keyMap.allKeys.forEach((keyData, keyIdx) => {
+  // TODO: typing
+  keyMap.allKeys.forEach((keyData: any, keyIdx: number) => {
     const side = keyData.board[0] == "right" ? "r" : "l";
     const cluster = keyData.board[1] == "finger" ? "f" : "t";
     const keyId = `${side}-${cluster}-${keyData.startPos[0]}-${keyData.startPos[1]}`;
@@ -44,7 +46,8 @@ Object.keys(keyMaps).forEach((keyMapName) => {
   });
 });
 
-export const legendMaps = {
+// TODO: typing
+export const legendMaps: { [key: string]: any } = {
   MrlLegends: MrlLegends,
   NoLegends: NoLegends,
   TextLegends: TextLegends,

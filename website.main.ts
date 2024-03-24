@@ -29,7 +29,15 @@ import { keyMaps, legendMaps } from "./src/lib/keys";
  *
  * The keymap will indicate which board type its for.
  */
-function navigate({ keyMapName, guideStep, keyId }) {
+function navigate({
+  keyMapName,
+  guideStep,
+  keyId,
+}: {
+  keyMapName: string;
+  guideStep: string;
+  keyId: string;
+}) {
   console.log("navigate()", keyId);
   const keyMap = keyMaps[keyMapName];
   const key = keyMap[keyId];
@@ -39,9 +47,10 @@ function navigate({ keyMapName, guideStep, keyId }) {
   window.history.pushState({}, newUrl, newUrl);
 }
 
-window.selectedKey = null;
-
 const app = document.querySelector("#app");
+if (!app) {
+  throw new Error("No app element found");
+}
 
 const title = document.createElement("h1");
 const titleLink = document.createElement("a");

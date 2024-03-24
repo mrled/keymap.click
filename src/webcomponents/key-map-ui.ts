@@ -259,7 +259,7 @@ export class KeyMapUI extends HTMLElement {
     });
 
     drawDiagram(
-      this.trackedElements["diagram"],
+      this.trackedElements["diagram"] as HTMLCanvasElement,
       connectionPairs.map((c) => c.connection),
       this.trackedElements["centerPanel"].getBoundingClientRect(),
       this.trackedElements["diamargLeft"].getBoundingClientRect(),
