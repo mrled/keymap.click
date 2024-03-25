@@ -1,6 +1,5 @@
 import { KeyMapKey } from "~/lib/keyMap";
 import { KeyBoard } from "./key-board";
-import { Key } from "react";
 import { KeyboardKey } from "./keyboard-key";
 
 /* KeyGrid: An HTML grid template for keyboard keys.
@@ -96,10 +95,6 @@ export class KeyGrid extends HTMLElement {
     let legendText = key.textLegend || key.name;
     let legendImage = "";
 
-    // console.log(
-    //   `KeyGrid.#createKey(${keyBoard.name}, ${key.id}): legend is ${legendText}`
-    // );
-
     const keyElement = document.createElement("button", { is: "keyboard-key" });
 
     const physicalKey = keyBoard.getPhysicalKey(key.id);
@@ -123,7 +118,6 @@ export class KeyGrid extends HTMLElement {
     keyElement.setAttribute("key-handle-top", physicalKey.handleTop.toString());
 
     keyElement.onclick = () => {
-      // console.log(`KeyGrid: Key ${keyData.id} clicked`);
       keyElement.dispatchEvent(
         new CustomEvent("key-selected", {
           bubbles: true,

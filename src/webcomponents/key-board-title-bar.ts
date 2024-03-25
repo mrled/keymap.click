@@ -63,10 +63,6 @@ export class KeyBoardTitleBar extends KeyBoard {
     keyBoard: KeyBoard,
     selectedKeyId: string
   ): KeyMapKey {
-    // console.log(
-    //   `KeyBoardTitleBar.updateSelectedKey(${keyMap.name}, ${keyBoard.name}, ${selectedKeyId})`
-    // );
-
     this.keyMap = keyMap;
 
     if (!selectedKeyId) {

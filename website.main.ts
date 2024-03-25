@@ -19,35 +19,8 @@ import "./src/styles/siteChrome.css";
 import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
 registerAllKeymapClickWebComponents();
 
-import { keyMaps } from "./src/lib/keys";
 import { KeyMapUI } from "~/webcomponents/key-map-ui";
 import { MicahErgodoxLayout } from "~/lib/keyMaps/micahErgodox";
-
-/* Navigate to page-specific URLs
- *
- * Possible URL patterns:
- * /keymap-name/key:key-id
- * /keymap-name/guide:guide-step
- *
- * The keymap will indicate which board type its for.
- */
-function navigate({
-  keyMapName,
-  guideStep,
-  keyId,
-}: {
-  keyMapName: string;
-  guideStep: string;
-  keyId: string;
-}) {
-  console.log("navigate()", keyId);
-  const keyMap = keyMaps[keyMapName];
-  const key = keyMap[keyId];
-  const urlAnchor = `/${keyMapName}/key:${keyId}`;
-  const urlBase = window.location.href.split("#")[0];
-  const newUrl = `${urlBase}#${urlAnchor}`;
-  window.history.pushState({}, newUrl, newUrl);
-}
 
 const app = document.querySelector("#app");
 if (!app) {

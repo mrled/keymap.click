@@ -201,8 +201,6 @@ export class KeyMapUI extends HTMLElement {
     return this._keyMap;
   }
   set keyMap(value: KeyMap) {
-    // console.log(`KeyMapUI: Setting key map ${value.name}`);
-    // console.log(value);
     this.keyMap.validateKeys(this.keyboard);
     this.keyboard.createChildren(Array.from(value.keys.values()));
     this.keyInfoNavBar.referenceKeyboard = this.keyboard;
@@ -339,13 +337,6 @@ export class KeyMapUI extends HTMLElement {
   /* Resize the canvas to the size of the kidContainer.
    */
   #resizeCanvas = () => {
-    // console.log(
-    //   `resizeCanvas() ${diagram.width}x${diagram.height} => ${kidContainer.offsetWidth}x${kidContainer.offsetHeight}`
-    // );
-    // if (!diagram || !kidContainer) {
-    //   // These elements must not have been created yet
-    //   return;
-    // }
     this.diagram.width = this.kidContainer.offsetWidth;
     this.diagram.height = this.kidContainer.offsetHeight;
   };
@@ -397,12 +388,10 @@ export class KeyMapUI extends HTMLElement {
 
       const keyHandle = key.querySelector("key-handle");
       if (!keyHandle) {
-        // console.log(`KeyMapUI: Key has no handle: ${keyId}`);
         return;
       }
       if (active && navBarHandle) {
         // Make the connection from the navbar key to this key
-        // console.log(`KeyMapUI: Found active key: ${keyId}`)
         connectionPairs.push(
           new ConnectionPair(
             navBarHandle,
@@ -412,7 +401,6 @@ export class KeyMapUI extends HTMLElement {
         );
       } else if (indicatorTarget) {
         // Store the key handle for making a connection later
-        // console.log(`KeyMapUI: Storing key handle for ${keyId}`);
         indicatedElementsById[keyId] = keyHandle as KeyHandle;
       }
     });

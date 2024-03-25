@@ -1,4 +1,3 @@
-import { PhysicalKey } from "src/lib/physicalKey";
 import { KeyBoard } from "~/webcomponents/key-board";
 
 /* A key in a keymap.
@@ -53,21 +52,6 @@ export class KeyMapKey {
     this.imageAttribution = imageAttribution;
     this.unset = unset || false;
   }
-
-  // /* Make a deep copy of the key, so that changes to the copy don't affect the original.
-  //  */
-  // deepCopy() {
-  //   return new KeyMapKey({
-  //     name: this.name,
-  //     id: this.id,
-  //     info: this.info.map((s) => s),
-  //     selection: this.selection ? this.selection.map((s) => s) : undefined,
-  //     textLegend: this.textLegend,
-  //     imagePath: this.imagePath,
-  //     imageAttribution: this.imageAttribution,
-  //     unset: this.unset,
-  //   });
-  // }
 }
 
 /* A single step in a guided tour of a layout.
@@ -187,11 +171,6 @@ export class KeyMap {
       if (keyboard.physicalKeyMap[key.id] === undefined) {
         throw new Error(`Invalid key ID: ${key.id}`);
       }
-      // console.log(
-      //   `Found physical key for key ID ${key.id}`,
-      //   keyboard.physicalKeyMap[key.id]
-      // );
     }
-    // console.log("All keys are valid for the keyboard.");
   }
 }
