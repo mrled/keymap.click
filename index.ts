@@ -1,20 +1,6 @@
-/* The Vite entrypoint for the website
- */
+// JS for the index
 
-// Styles specific to the website - not part of the webcomponents
-import "./website.style.css";
-
-// Ordered styles
-import "./src/styles/vars.css";
-import "./src/styles/index.css";
-// Alphabetical styles
-import "./src/styles/controls.css";
-import "./src/styles/debug.css";
-import "./src/styles/diagram.css";
-import "./src/styles/fonts.css";
-import "./src/styles/keygrid.css";
-import "./src/styles/keyInfoPanel.css";
-import "./src/styles/siteChrome.css";
+import "./website.shared.js";
 
 import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
 registerAllKeymapClickWebComponents();
@@ -32,7 +18,13 @@ const titleLink = document.createElement("a");
 titleLink.href = "/";
 titleLink.textContent = "keymap.click";
 title.appendChild(titleLink);
+
 app.appendChild(title);
+
+const aboutLink = document.createElement("a");
+aboutLink.href = "/about.html";
+aboutLink.textContent = "About";
+app.appendChild(aboutLink);
 
 const keyMapUI = document.createElement("key-map-ui") as KeyMapUI;
 keyMapUI.setAttribute("keyboard-element", "key-board-ergodox");

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/command.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>keymap.click</title>
+  </head>
+  <body class="page">
+    <p>TODO: fix internal links</p>
+    <p><a href="/">Go back to the main page</a></p>
+    <h1>What is this?</h1>
+    <p>This site is a visual explanation of my keyboard layout.</p>
+    <p>
+      The keyboard, an <a href="/ergodox">ErgoDox-EZ</a>, has been a huge part
+      of <a href="/story">my strategy for dealing with RSI</a>
+      . Maybe it can help you too.
+    </p>
+
+    <h2>How did it help?</h2>
+    <p>
+      The ErgoDox keyboard I have is an important aspect of managing pain from
+      long periods of typing. It keeps my shoulders square, and it has a slight
+      &ldquo;tenting&rdquo;, which keeps my hands in a more natural orientation
+      with my thumbs slightly higher than my pinkies. Most importantly, it has
+      allowed me to reduce the intense strain on my pinkies by moving commonly
+      used keys out from under weak pinkies to under much stronger thumbs.
+    </p>
+    <p><a href="/?guide=mrlGuide">the guided tour</a> for specifics.</p>
+
+    <h2>Development</h2>
+    <p>This is a work in progress.</p>
+    <p>
+      I&apos;m building it
+      <a href="https://github.com/mrled/keymap.click">on GitHub</a>. Issues and
+      contributions welcome.
+    </p>
+    <p>
+      This project represents a lot of firsts for me. It is my first project
+      with a graphical UI in years, my first ever NextJS or React project, the
+      first time I had used Tailwind CSS, the first project I migrated away from
+      Tailwind CSS, and the first web project I&apos;ve built with a UI that
+      I&apos;m proud of. It&apos;s the best GUI I&apos;ve ever designed. I made
+      my first commit May 24, 2020, and I didn&apos;t know a thing about how
+      React or Next worked at that time.
+    </p>
+    <p>And I did it all on my ErgoDox.</p>
+
+    <h1>ErgoDox keyboards</h1>
+    <p>
+      ErgoDox keyboards are open source keyboards that are designed with
+      ergonomics in mind and are entirely customizable. See the homepage of the
+      open source ErgoDox project:
+      <a href="https://www.ergodox.io/">https://www.ergodox.io/</a>. They come
+      in several different varieties.
+    </p>
+    <ul>
+      <li>
+        <a href="https://ergodox-ez.com/">ErgoDox-EZ</a> pre-assembled boards.
+        This is what I have.
+      </li>
+      <li>
+        <a href="https://input.club/devices/infinity-ergodox/">
+          ErgoDox Infinity
+        </a>
+        kits which you solder together yourself.
+      </li>
+      <li>
+        <a href="https://www.ergodox.io/#parts">Assembled from raw parts</a>.
+      </li>
+    </ul>
+
+    <h2 id="qmk">Open source firmware: QMK</h2>
+    <p>
+      The various types of ErgoDox all use the fantastic open source
+      <a href="https://qmk.fm/">QMK firmware</a>. QMK is a superpower that lets
+      me remap <em>any</em> physical button press to <em>any</em> letter,
+      character, or even
+      <a
+        href="https://me.micahrl.com/blog/hack-save-qmk-firmware-source-to-keyboard/"
+      >
+        sequence of characters
+      </a>
+      .
+    </p>
+    <p>
+      Most critical for my purposes, I can move a character that a normal QWERTY
+      keyboard keeps under a pinkie &mdash; <kbd>escape</kbd>, <kbd>tab</kbd>,
+      <kbd>shift</kbd>, <kbd>ctrl</kbd>, <kbd>return</kbd>,
+      <kbd>backspace</kbd>, and more &mdash; to the cluster of keys under the
+      thumbs on my ErgoDox. This has been very helpful in
+      <a href="/story">my battle with RSI</a>. To see details on this, take
+      <a href="/?guide=mrlGuide">the guided tour</a>.
+    </p>
+
+    <h2 id="qmk-layers">Layers in QMK</h2>
+    <p>
+      One of QMK&apos;s most powerful features is its concept of
+      <a href="https://docs.qmk.fm/#/feature_layers">layers</a>, which let you
+      transform the entire board at the press of a button.
+    </p>
+    <p>
+      Most people are probably familiar with a &ldquo;function&rdquo; key, like
+      many laptops have &mdash; layers work like that. I have a similar
+      <a href="/?keyId=l-f-2-9">function layer</a> on my board. When I hold that
+      key, QMK transforms the number keys <kbd>1</kbd> through <kbd>0</kbd> to
+      function keys <kbd>F1</kbd> through <kbd>F10</kbd> , transforms other keys
+      to controls for multimedia playback or screen brightness, and more. When I
+      let go of the function layer key, the board snaps back to normal
+      instantly.
+    </p>
+    <p>
+      A more fun one is my <a href="/?keyId=l-f-8-9">arrow layer</a>. When I
+      hold that key, QMK transforms <kbd>e</kbd>, <kbd>s</kbd>, <kbd>d</kbd>,
+      <kbd>f</kbd>, and <kbd>i</kbd>, <kbd>j</kbd>, <kbd>k</kbd> ,
+      <kbd>l</kbd> into arrow keys, taking inspiration from
+      <a href="https://tonsky.me/blog/cursor-keys/">this blog post</a>.
+    </p>
+
+    <h2 id="my-keymap">My QMK keymap</h2>
+    <p>
+      I keep the source code for my keymap on GitHub; you can find it
+      <a
+        href="https://github.com/mrled/qmk_firmware/blob/master/keyboards/ergodox_ez/keymaps/mrled/keymap.c"
+      >
+        here
+      </a>
+      . (Unfortunately, it&apos;s hard to read with GitHub&apos;s stylesheets or
+      on a small screen. If you&apos;re reading this on a wide monitor, you
+      might find it easier to see it
+      <a
+        href="https://raw.githubusercontent.com/mrled/qmk_firmware/master/keyboards/ergodox_ez/keymaps/mrled/keymap.c"
+      >
+        in the raw
+      </a>
+      .)
+    </p>
+
+    <h1>Personal history</h1>
+    <p>
+      In 2019, I started to feel pain when typing. I had had typing related
+      repetitive stress injury (RSI) pain almost a decade before, and became
+      pain-free with the help of a registered occupational therapist (OTR).
+      However, this time, the stretches and ice regimen she had given me were
+      not effective, and I sought out other treatments.
+    </p>
+    <p>
+      RSI can instigate brutal feelings of depression and hopelessness,
+      especially if your career depends on your ability to type for many hours
+      as mine does. If this is you, I&apos;m so sorry. I built this site to show
+      one aspect of my strategy for managing pain from repetitive stress.
+    </p>
+    <p>
+      Do note that this is just <em>one aspect</em>. I hope to talk more about
+      the other aspects in the future.
+    </p>
+
+    <h2>How an ErgoDox helped</h2>
+    <p>
+      I would have tried anything to help with the pain. My research suggested
+      that trying a split keyboard could help by keeping my shoulders square
+      and, along with a desk at the proper height, keeping my elbows at right
+      angles. I&apos;d found several options and ultimately decided I wanted to
+      try an <a href="/ergodox">ErgoDox keyboard</a>.
+    </p>
+    <p>
+      My brother had an
+      <a href="https://input.club/devices/infinity-ergodox/">
+        ErgoDox Infinity
+      </a>
+      that he had bought as a kit and put together himself, and attempted to
+      convince me to get one of my own. Rather than build a kit myself, though,
+      I opted for a preassembled
+      <a href="https://ergodox-ez.com/">ErgoDox-EZ</a>.
+    </p>
+    <p>
+      It turned out that while it was true that my shoulders were more square
+      when I used it, I had not anticipated a much more significant benefit. I
+      could remap every painful key under my pinkies to keys under my thumbs.
+      For instance, I moved <a href="/?keyId=l-t-1-3">the shift key</a> to an
+      easy location under my left thumb.
+    </p>
+    <p>
+      Before this, pinkies on both hands hurt. A lot. They would alternate, some
+      days the right hand, some days the left hand, some both, some neither. The
+      finger would naturally curl into what felt like a useless claw, and
+      stretching my hand flat would be painful. Hitting any key with that finger
+      would cause pain, sometimes sharp pain, and chording (e.g. holding shift
+      with a pinky while reaching for a letter) was impossible. The tendon on
+      the outer side of my forearm that runs from the pinky to the elbow would
+      be swollen and rock hard. Grip was difficult. Some days I didn&apos;t
+      trust my ability to hold a full pint glass with one hand.
+    </p>
+    <p>
+      But when I moved the commonly used keys like shift under my thumb, the
+      difference was night and day. Once I got used to the placement, I could
+      type longer without hurting. I never had grip problems and had pain there
+      much less often. It didn&apos;t solve RSI for me, and I&apos;ve been
+      working to manage it ever since, with some success but not total victory.
+      But just the key relocation really did mean the difference between a week
+      of full productive days and a week of misery, coming in late and leaving
+      early and trying to find anything to do besides type.
+    </p>
+
+    <h2>About me</h2>
+    <p>I&apos;m <a href="https://me.micahrl.com">Micah</a>. Hi 👋</p>
+    <p>
+      Please,
+      <a href="https://me.micahrl.com/standing-invitation">email me</a>.
+    </p>
+
+    <h1>Colophon</h1>
+    <p>Many thanks to those listed here.</p>
+    <ul>
+      <li>
+        Josh: I would still be trying to build this from scratch without a
+        framework if it weren&apos;t for your kind help. THANK YOU so much.
+      </li>
+      <li>
+        The community that built the
+        <a href="https://www.ergodox.io">original ErgoDox</a>. I&apos;m not sure
+        I would have been able to work for some weeks of 2019 without this
+        keyboard. It&apos;s made a big difference. Thanks for making it.
+      </li>
+      <li>
+        ZSA Technology Labs, makers of the
+        <a href="https://ergodox-ez.com">ErgoDox EZ</a>. I doubt I would have
+        tried to build one on my own. Thank you for making it easier to get.
+      </li>
+      <li>
+        Wikimedia Commons for the
+        <a
+          href="https://commons.wikimedia.org/wiki/File:Looped_square_on_white_background.svg"
+        >
+          Looped square on white background SVG
+        </a>
+        , released into the public domain
+      </li>
+      <li>
+        Terence Eden for making me aware of
+        <a
+          href="https://shkspr.mobi/blog/2020/05/better-keyboard-buttons-in-html/"
+        >
+          The &lt;kbd&gt; element
+        </a>
+      </li>
+      <li>
+        Xah Lee&apos;s useful
+        <a href="http://xahlee.info/comp/unicode_computing_symbols.html">
+          list of unicode computing symbols
+        </a>
+      </li>
+      <li>
+        @Robin on the Tailwind Discord server, who helped me solve
+        <a href="docs/issues/bad-first-render-in-production/index.md">
+          a layout bug on initial load
+        </a>
+      </li>
+      <li>
+        Google for
+        <a href="https://fonts.google.com/specimen/Roboto+Mono">
+          Roboto Mono
+        </a>
+        , under the
+        <a href="http://www.apache.org/licenses/LICENSE-2.0">
+          Apache License, Version 2.0
+        </a>
+      </li>
+      <li>
+        Google for
+        <a href="https://developers.google.com/fonts/docs/material_icons">
+          Material Icons
+        </a>
+        , under the
+        <a href="http://www.apache.org/licenses/LICENSE-2.0">
+          Apache License, Version 2.0
+        </a>
+      </li>
+      <li>
+        The GNU Project for
+        <a href="https://www.gnu.org/software/freefont/index.html">
+          FreeFont Mono
+        </a>
+        , under the
+        <a href="http://www.gnu.org/licenses/gpl.html">
+          version 3 of the GNU General Public License
+        </a>
+      </li>
+      <li>
+        <a href="https://thenounproject.com/icon/escape-217258/">Escape</a>
+        copyright Christopher T. Howlett, under
+        <a href="https://creativecommons.org/licenses/by/3.0/legalcode">
+          Creative Commons Attribution Version 3.0 Unported
+        </a>
+        . The original work has been modified.
+      </li>
+      <li>
+        <a href="https://thenounproject.com/icon/up-key-2712617/">up key</a>{"
+        "} copyright Dika Darma, under
+        <a href="https://creativecommons.org/licenses/by/3.0/legalcode">
+          Creative Commons Attribution Version 3.0 Unported
+        </a>
+        . The original work has been modified.
+      </li>
+      <li>
+        OpenClipart on FreeSVG.com for the
+        <a href="https://freesvg.org/menu-key-icon-vector-illustration">
+          menu key icon
+        </a>
+        , released into the public domain
+      </li>
+      <li>
+        <a href="https://icomoon.io/#icons-icomoon">IcoMoon Free Version</a>{"
+        "} copyright Keyamoon.com, under
+        <a href="https://creativecommons.org/licenses/by/4.0/legalcode">
+          Creative Commons Attribution Version 4.0 International
+        </a>
+        .
+      </li>
+    </ul>
+    <script type="module" src="/about.ts"></script>
+  </body>
+</html>
