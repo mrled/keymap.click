@@ -1,9 +1,11 @@
 import { drawDiagram } from "~/lib/diagram";
 import { ConnectionPair, KeyInfoConnectType } from "~/lib/keyConnections";
-import { keyMaps, legendMaps } from "~/lib/keys";
+import { KeyMap, KeyMapKey } from "~/lib/keyMap";
 
 import { KeyHandle } from "~/webcomponents/key-handle";
 import { KeyIndicator } from "~/webcomponents/key-indicator";
+import { KeyBoard } from "./key-board";
+import { KeyInfoNavBar } from "~/webcomponents/key-info-nav-bar";
 
 /* The UI of the keymap, including a keyboard, an info panel, and the canvas diagram.
  *
@@ -15,14 +17,23 @@ import { KeyIndicator } from "~/webcomponents/key-indicator";
  *   They are narrow divs on either side of the Keyboard/InfoPanel reserved for diagram lines.
  *
  * The diagram lines are drawn from the Keyboard, to the InfoPanel, via the Diamargs.
+ *
+ * Keeping track of children:
+ * - We use private properties with getters and optionally setters to keep track of child elements.
+ *   These getters should search for the element in the DOM if it is not already stored --
+ *   this is to allow for the element to be created from HTML or from JavaScript outside of this class.
+ * - (TODO: check that this class works with child elements created from HTML.)
+ * - Handle layout in one place: layOutIdempotently().
+ *   Setters should .replaceChild() if appropriate, and always call layOutIdempotently() before returning.
+ *   Handling layout in each individual get() method was too confusing.
+ * - This means that layOutIdempotently() has to be called only in the connectedCallback() and in setters,
+ *   and attributeChangedCallback() should only set the attribute and not call layOutIdempotently().
  */
 export class KeyMapUI extends HTMLElement {
-  trackedElements: { [key: string]: HTMLElement };
   resizeObserver: ResizeObserver;
 
   constructor() {
     super();
-    this.trackedElements = {};
 
     /* Listen for changes to the size of the browser window,
      * and resize the canvas to match the size of the kidContainer.
@@ -40,66 +51,255 @@ export class KeyMapUI extends HTMLElement {
     this.addEventListener("key-selected", this.#handleKeySelected);
   }
 
+  //
+  // Getters and setters for child elements
+  //
+
+  private _keyInfoNavBar: KeyInfoNavBar | null = null;
+  get keyInfoNavBar(): KeyInfoNavBar {
+    if (!this._keyInfoNavBar) {
+      this._keyInfoNavBar = this.querySelector(
+        "key-info-nav-bar"
+      ) as KeyInfoNavBar;
+    }
+    if (!this._keyInfoNavBar) {
+      this._keyInfoNavBar = document.createElement(
+        "key-info-nav-bar"
+      ) as KeyInfoNavBar;
+    }
+    return this._keyInfoNavBar;
+  }
+
+  private _diamargLeft: HTMLElement | null = null;
+  get diamargLeft(): HTMLElement {
+    if (!this._diamargLeft) {
+      this._diamargLeft = this.querySelector(".keymap-ui-diamarg");
+    }
+    if (!this._diamargLeft) {
+      this._diamargLeft = document.createElement("div");
+      this._diamargLeft.className = "keymap-ui-diamarg";
+    }
+    return this._diamargLeft;
+  }
+
+  private _diamargRight: HTMLElement | null = null;
+  get diamargRight(): HTMLElement {
+    if (!this._diamargRight) {
+      this._diamargRight = this.querySelector(".keymap-ui-diamarg");
+    }
+    if (!this._diamargRight) {
+      this._diamargRight = document.createElement("div");
+      this._diamargRight.className = "keymap-ui-diamarg";
+    }
+    return this._diamargRight;
+  }
+
+  private _centerPanel: HTMLElement | null = null;
+  get centerPanel(): HTMLElement {
+    if (!this._centerPanel) {
+      this._centerPanel = this.querySelector(".keymap-ui-center-panel");
+    }
+    if (!this._centerPanel) {
+      this._centerPanel = document.createElement("div");
+      this._centerPanel.className = "keymap-ui-center-panel";
+    }
+    return this._centerPanel;
+  }
+
+  private _kidContainer: HTMLElement | null = null;
+  get kidContainer(): HTMLElement {
+    if (!this._kidContainer) {
+      this._kidContainer = this.querySelector(".keymap-ui-kid-container");
+    }
+    if (!this._kidContainer) {
+      this._kidContainer = document.createElement("div");
+      this._kidContainer.className = "keymap-ui-kid-container";
+    }
+    return this._kidContainer;
+  }
+
+  private _keyboard: KeyBoard | null = null;
+  get keyboard(): KeyBoard {
+    if (!this._keyboard) {
+      this._keyboard = this.querySelector("keyboard") as KeyBoard;
+    }
+    if (!this._keyboard) {
+      const keyboardName = this.getAttribute("keyboard-element") || "";
+      if (keyboardName) {
+        if (!customElements.get(keyboardName)) {
+          throw new Error(
+            `KeyMapUI: Keyboard element ${keyboardName} not found`
+          );
+        }
+        this._keyboard = document.createElement(keyboardName) as KeyBoard;
+      }
+    }
+    // TODO: have a generic default keyboard
+    if (!this._keyboard) {
+      this._keyboard = document.createElement("key-board-ergodox") as KeyBoard;
+    }
+    return this._keyboard;
+  }
+  set keyboard(value: KeyBoard) {
+    const oldKeyboard = this._keyboard;
+    this._keyboard = value;
+    this.keyInfoNavBar.setAttribute("key-id", "");
+
+    this.keyMap = this._keyboard.blankKeyMap;
+    this._keyboard.createChildren(Array.from(this.keyMap.keys.values()));
+    if (oldKeyboard) {
+      this.centerPanel.replaceChild(this._keyboard, oldKeyboard);
+    }
+    this.layOutIdempotently();
+  }
+
+  private _infoContainer: HTMLElement | null = null;
+  get infoContainer(): HTMLElement {
+    if (!this._infoContainer) {
+      this._infoContainer = this.querySelector(".keymap-ui-keyinfo-container");
+    }
+    if (!this._infoContainer) {
+      this._infoContainer = document.createElement("div");
+      this._infoContainer.className = "keymap-ui-keyinfo-container";
+    }
+    return this._infoContainer;
+  }
+
+  private _infoProse: HTMLElement | null = null;
+  get infoProse(): HTMLElement {
+    if (!this._infoProse) {
+      this._infoProse = this.querySelector(".key-info-prose");
+    }
+    if (!this._infoProse) {
+      this._infoProse = document.createElement("div");
+      this._infoProse.className = "key-info-prose";
+    }
+    return this._infoProse;
+  }
+
+  private _diagram: HTMLCanvasElement | null = null;
+  get diagram(): HTMLCanvasElement {
+    if (!this._diagram) {
+      this._diagram = this.querySelector("canvas");
+    }
+    if (!this._diagram) {
+      this._diagram = document.createElement("canvas");
+      this._diagram.className =
+        "keyboard-diagram debug-border-orange debug-trans-bg-orange";
+    }
+    return this._diagram;
+  }
+
+  private _keyMap: KeyMap | null = null;
+  get keyMap(): KeyMap {
+    if (!this._keyMap) {
+      this._keyMap = this.keyboard.blankKeyMap;
+      if (!this._keyMap) {
+        throw new Error("KeyMapUI: No key map found");
+      }
+    }
+    return this._keyMap;
+  }
+  set keyMap(value: KeyMap) {
+    // console.log(`KeyMapUI: Setting key map ${value.name}`);
+    // console.log(value);
+    this.keyMap.validateKeys(this.keyboard);
+    this.keyboard.createChildren(Array.from(value.keys.values()));
+    this.keyInfoNavBar.referenceKeyboard = this.keyboard;
+    this.keyInfoNavBar.keyMap = value;
+    this._keyMap = value;
+  }
+
+  /* Lay out all child components.
+   *
+   * Check if the child components are in the right place, and if not, move them.
+   * This might be called a lot, so it should be fast and idempotent.
+   */
+  private layOutIdempotently() {
+    // Direct children of this element
+    // Note that because the diagram is last, it is drawn on top of the other elements,
+    // which is what we want.
+    if (![this.kidContainer, this.diagram].every((c) => this.contains(c))) {
+      while (this.firstChild) {
+        this.removeChild(this.firstChild);
+      }
+      this.append(this.kidContainer, this.diagram);
+    }
+
+    // Children of the kid container
+    if (
+      ![
+        this.diamargLeft,
+        this.centerPanel,
+        this.diamargRight,
+      ].every((kcChild) => this.kidContainer.contains(kcChild))
+    ) {
+      while (this.kidContainer.firstChild) {
+        this.kidContainer.removeChild(this.kidContainer.firstChild);
+      }
+      this.kidContainer.append(
+        this.diamargLeft,
+        this.centerPanel,
+        this.diamargRight
+      );
+    }
+
+    // children of the center panel
+    if (
+      ![this.keyboard, this.infoContainer].every((cpChild) =>
+        this.centerPanel.contains(cpChild)
+      )
+    ) {
+      while (this.centerPanel.firstChild) {
+        this.centerPanel.removeChild(this.centerPanel.firstChild);
+      }
+      this.centerPanel.append(this.keyboard, this.infoContainer);
+    }
+
+    // children of the info container
+    if (
+      ![this.keyInfoNavBar, this.infoProse].every((icChild) =>
+        this.infoContainer.contains(icChild)
+      )
+    ) {
+      while (this.infoContainer.firstChild) {
+        this.infoContainer.removeChild(this.infoContainer.firstChild);
+      }
+      this.infoContainer.append(this.keyInfoNavBar, this.infoProse);
+    }
+  }
+
+  //
+  // Lifecycle methods / callbacks
+  //
+
   /* Run this code when the element is added to the DOM.
    * This might be before or after attributes are changed.
    * Run whether the element is created from HTML or from JavaScript.
    */
   connectedCallback() {
-    // TODO: ensure this is a valid keyboard element name or do something that doesn't break execution if it's not
-    const keyboardName = this.getAttribute("keyboard-element") || "";
+    this.layOutIdempotently();
+
+    if (!this.keyMap) {
+      this.keyMap = this.keyboard.blankKeyMap;
+    }
+    this.keyboard.createChildren(Array.from(this.keyMap.keys.values()));
+
     const selectedKey = this.getAttribute("selected-key") || "";
-    // @ts-ignore
-    const keyData = keyMaps.MrlMainLayer.allKeysById[selectedKey];
-
-    const kidContainer = this.#makeTrackedChild("kidContainer", "div");
-    kidContainer.className = "keymap-ui-kid-container";
-    this.appendChild(kidContainer);
-
-    const diamargLeft = this.#makeTrackedChild("diamargLeft", "div");
-    diamargLeft.className = "keymap-ui-diamarg";
-
-    const diamargRight = this.#makeTrackedChild("diamargRight", "div");
-    diamargRight.className = "keymap-ui-diamarg";
-
-    const centerPanel = this.#makeTrackedChild("centerPanel", "div");
-    centerPanel.className = "keymap-ui-center-panel";
-
-    const keyboard = this.#makeTrackedChild("keyboard", keyboardName);
-    // TODO: don't hardcode keymaps/legendmaps
-    // TODO: how can we allow the user to built their keyboard in HTML without calling createChildren?
-    // @ts-ignore
-    keyboard.createChildren({
-      keymapName: "MrlMainLayer",
-    });
-    // TODO: What used to be onClickEach is now a global variable.
-    //
-    centerPanel.appendChild(keyboard);
-
-    const keyInfoContainer = this.#makeTrackedChild("keyInfoContainer", "div");
-    keyInfoContainer.className = "keymap-ui-keyinfo-container";
-
-    const navBar = this.#makeTrackedChild("navBar", "key-info-nav-bar");
-    navBar.setAttribute("key-id", selectedKey);
-    keyInfoContainer.appendChild(navBar);
-
-    const infoProse = this.#makeTrackedChild("infoProse", "div");
-    infoProse.className = "key-info-prose";
-    this.#setKeyInfoContent(keyData);
-    keyInfoContainer.appendChild(infoProse);
-
-    centerPanel.appendChild(keyInfoContainer);
-
-    kidContainer.append(diamargLeft, centerPanel, diamargRight);
-
-    const diagram = this.#makeTrackedChild("diagram", "canvas");
-    diagram.className =
-      "keyboard-diagram debug-border-orange debug-trans-bg-orange";
-    this.appendChild(diagram);
+    this.keyInfoNavBar.setAttribute("key-id", selectedKey);
+    if (selectedKey) {
+      const keyData = this.keyMap.keys.get(selectedKey);
+      if (keyData) {
+        this.#setKeyInfoContent(keyData);
+      } else {
+        console.error(`KeyMapUI: Key ${selectedKey} not found in key map`);
+      }
+    }
 
     // Resize the canvas to the size of the kidContainer for the first time
     this.#resizeCanvas();
     // Watch for changes in the size of the kidContainer
-    this.resizeObserver.observe(kidContainer);
+    this.resizeObserver.observe(this.kidContainer);
   }
 
   /* Call attributeChangedCallback when any of these attributes are changed from JavaScript
@@ -113,13 +313,15 @@ export class KeyMapUI extends HTMLElement {
    * Does not run if an attribute is set when defined on the element in HTML.
    */
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    /* Create a new element if it doesn't exist, or return the existing one.
-     * Track the element by name so we can work with it later.
-     */
-
     switch (name) {
       case "keyboard-element":
-        this.#updateKeyboard(newValue);
+        if (!customElements.get(newValue)) {
+          throw new Error(
+            `KeyMapUI: Keyboard element ${newValue} not found - has it been defined with customElements.define(), or if using a library, imported and registered?`
+          );
+        } else {
+          this.keyboard = document.createElement(newValue) as KeyBoard;
+        }
         break;
       case "selected-key":
         this.#updateSelectedKey(newValue);
@@ -130,58 +332,41 @@ export class KeyMapUI extends HTMLElement {
     }
   }
 
+  //
+  // Private methods
+  //
+
   /* Resize the canvas to the size of the kidContainer.
    */
   #resizeCanvas = () => {
     // console.log(
     //   `resizeCanvas() ${diagram.width}x${diagram.height} => ${kidContainer.offsetWidth}x${kidContainer.offsetHeight}`
     // );
-    const diagram = this.trackedElements["diagram"];
-    const kidContainer = this.trackedElements["kidContainer"];
-    if (!diagram || !kidContainer) {
-      // These elements must not have been created yet
-      return;
-    }
-    const diagramCanvas = diagram as HTMLCanvasElement;
-    diagramCanvas.width = kidContainer.offsetWidth;
-    diagramCanvas.height = kidContainer.offsetHeight;
+    // if (!diagram || !kidContainer) {
+    //   // These elements must not have been created yet
+    //   return;
+    // }
+    this.diagram.width = this.kidContainer.offsetWidth;
+    this.diagram.height = this.kidContainer.offsetHeight;
   };
-
-  /* Handle a change to the keyboard-element attribute
-   */
-  #updateKeyboard(keyboardName: string) {
-    // TODO: look up the keyboard name in some table somewhere and show an error if there is no match
-    const newKeyboard = document.createElement(keyboardName);
-    const oldKeyboard = this.trackedElements["keyboard"];
-    this.trackedElements["keyboard"] = newKeyboard;
-    // @ts-ignore
-    newKeyboard.createChildren({
-      keymapName: "MrlMainLayer",
-      legendmapName: "MrlLegends",
-    });
-
-    // If the tracked elements don't exist, this hasn't been connected to the DOM yet.
-    // The connectedCallback() will handle creating the elements and adding the keyboard to the DOM.
-    const centerPanel = this.#makeTrackedChild("centerPanel", "div");
-    if (centerPanel && oldKeyboard)
-      centerPanel.replaceChild(newKeyboard, oldKeyboard);
-    const navBar = this.#makeTrackedChild("navBar", "key-info-nav-bar");
-    if (navBar) navBar.setAttribute("key-id", "");
-  }
 
   /* Handle an external change to the selected-key attribute
    */
   #updateSelectedKey(selectedKey: string) {
-    // @ts-ignore
-    const keyData = keyMaps.MrlMainLayer.allKeysById[selectedKey];
+    const keyData = this.keyMap.keys.get(selectedKey);
+    if (!keyData) {
+      console.error(
+        `KeyMapUI: Key ${selectedKey} not found in key map '${this.keyMap.name}'`
+      );
+      return;
+    }
 
     // Connections to draw on the diagram
     const connectionPairs: ConnectionPair[] = [];
 
     // Update the key in the key info navbar
-    const navBar = this.#makeTrackedChild("navBar", "key-info-nav-bar");
-    navBar.setAttribute("key-id", selectedKey);
-    const navBarHandle = navBar.querySelector("key-handle");
+    this.keyInfoNavBar.setAttribute("key-id", selectedKey);
+    const navBarHandle = this.keyInfoNavBar.querySelector("key-handle");
 
     // Update the key info prose including descriptions etc.
     // Get all the key IDs that are targets of <key-indicator>s.
@@ -193,16 +378,9 @@ export class KeyMapUI extends HTMLElement {
 
     // Update every key on the board
     // Make sure not to include the key in the nav bar which needs special handling
-    const keyboard = this.trackedElements["keyboard"];
 
-    // I can't seem to get JUST my custom button subclass from querySelectorAll...
-    // Neither querySelectorAll('keyboard-key') nor
-    // querySelectorAll('button', {is: 'keyboard-key'}) work.
-    const keyboardKeys = Array.from(keyboard.querySelectorAll("button")).filter(
-      (b) => b.getAttribute("is") === "keyboard-key"
-    );
+    const keyboardKeys = this.keyboard?.keyElements || [];
 
-    console.log(`KeyMapUI: Found ${keyboardKeys.length} keys`);
     keyboardKeys.forEach((key) => {
       const keyId = key.getAttribute("id");
       if (!keyId) {
@@ -210,16 +388,16 @@ export class KeyMapUI extends HTMLElement {
         return;
       }
       const active = keyId === selectedKey;
-      const inKeySelection =
-        !active && keyData.selection && keyData.selection.indexOf(keyId) > -1;
+      const keySelection = keyData.selection || [];
+      const inKeySelection = !active && keySelection.indexOf(keyId) > -1;
       const indicatorTarget = indicatedKeyIds.indexOf(keyId) > -1;
       key.setAttribute("active", active.toString());
-      key.setAttribute("related-to-active", inKeySelection);
+      key.setAttribute("related-to-active", inKeySelection.toString());
       key.setAttribute("target-of-indicator", indicatorTarget.toString());
 
       const keyHandle = key.querySelector("key-handle");
       if (!keyHandle) {
-        console.log(`KeyMapUI: Key has no handle: ${keyId}`);
+        // console.log(`KeyMapUI: Key has no handle: ${keyId}`);
         return;
       }
       if (active && navBarHandle) {
@@ -259,60 +437,37 @@ export class KeyMapUI extends HTMLElement {
     });
 
     drawDiagram(
-      this.trackedElements["diagram"] as HTMLCanvasElement,
+      this.diagram,
       connectionPairs.map((c) => c.connection),
-      this.trackedElements["centerPanel"].getBoundingClientRect(),
-      this.trackedElements["diamargLeft"].getBoundingClientRect(),
-      this.trackedElements["diamargRight"].getBoundingClientRect(),
-      this.trackedElements["infoProse"].getBoundingClientRect(),
-      5
+      this.centerPanel.getBoundingClientRect(),
+      this.diamargLeft.getBoundingClientRect(),
+      this.diamargRight.getBoundingClientRect(),
+      this.infoProse.getBoundingClientRect(),
+      5 // TODO: change this debug parameter
     );
   }
 
   /* Set the key information content for the selected key
    * Return an array of key ids that are targets of <key-indicator>s.
    */
-  #setKeyInfoContent(keyData: any) {
-    const infoProse = this.#makeTrackedChild("infoProse", "div");
-    while (infoProse.firstChild) {
-      infoProse.removeChild(infoProse.firstChild);
+  #setKeyInfoContent(key: KeyMapKey) {
+    while (this.infoProse.firstChild) {
+      this.infoProse.removeChild(this.infoProse.firstChild);
     }
     const keyIndicators: KeyIndicator[] = [];
-    if (keyData) {
-      const h3 = document.createElement("h3");
+    const h3 = document.createElement("h3");
 
-      // TODO: don't hardcode keymaps/legendmaps
-      const legendMap = legendMaps.MrlLegends;
-      const keyMap = keyMaps.MrlMainLayer;
-
-      // @ts-ignore
-      let legend = legendMap[keyData.legend];
-      if (!legend) {
-        // This can happen for keys left blank
-        // console.log(`No legend for keyData: ${keyData.legend}`);
-        legend = {};
-      }
-      let textLabel = keyData.name;
-      if (!textLabel) {
-        if (legend.text) {
-          textLabel = legend.text.value;
-        } else if (legend.glyph) {
-          textLabel = legend.glyph.value;
-        }
-      }
-
-      h3.innerHTML = `The <kbd>${textLabel}</kbd> key`;
-      infoProse.appendChild(h3);
-      keyData.info.forEach((paragraph: string) => {
-        const p = document.createElement("p");
-        p.innerHTML = paragraph;
-        const indicators = p.querySelectorAll("key-indicator");
-        Array.from(indicators).forEach((indicator) =>
-          keyIndicators.push(indicator as KeyIndicator)
-        );
-        infoProse.appendChild(p);
-      });
-    }
+    h3.innerHTML = `The <kbd>${key.name}</kbd> key`;
+    this.infoProse.appendChild(h3);
+    key.info.forEach((paragraph: string) => {
+      const p = document.createElement("p");
+      p.innerHTML = paragraph;
+      const indicators = p.querySelectorAll("key-indicator");
+      Array.from(indicators).forEach((indicator) =>
+        keyIndicators.push(indicator as KeyIndicator)
+      );
+      this.infoProse.appendChild(p);
+    });
     return keyIndicators;
   }
 
@@ -325,14 +480,5 @@ export class KeyMapUI extends HTMLElement {
     const e = event as CustomEvent; // TODO: is there something nicer I can do instead?
     const keyId = e.detail;
     this.setAttribute("selected-key", keyId);
-  }
-
-  /* Create a new element if it doesn't exist, or return the existing one.
-   */
-  #makeTrackedChild(name: string, elementName: string): HTMLElement {
-    if (!this.trackedElements[name]) {
-      this.trackedElements[name] = document.createElement(elementName);
-    }
-    return this.trackedElements[name];
   }
 }

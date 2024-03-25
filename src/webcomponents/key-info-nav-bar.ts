@@ -1,12 +1,18 @@
-import { keyMaps, legendMaps } from "~/lib/keys";
-import { KeyGrid } from "./key-grid";
+import { KeyMap } from "~/lib/keyMap";
+
+import { KeyBoardTitleBar } from "~/webcomponents/key-board-title-bar";
+import { KeyBoard } from "./key-board";
 
 /* Title bar for a key-info-panel
  *
  * TODO: Support guides
+ * TODO: allow resizing the title bar keyboard; some boards might allow larger keys than the ErgoDox does
  */
 export class KeyInfoNavBar extends HTMLElement {
   trackedElements: { [key: string]: HTMLElement };
+
+  // The full keyboard element (not the title bar mini keyboard)
+  referenceKeyboard: KeyBoard | null = null;
 
   static get observedAttributes() {
     return ["key-id"];
@@ -17,37 +23,58 @@ export class KeyInfoNavBar extends HTMLElement {
     this.trackedElements = {};
   }
 
-  /* Create a new element if it doesn't exist, or return the existing one.
-   * Track the element by name so we can work with it later.
-   */
-  #makeTrackedChild(
-    name: string,
-    element: string,
-    options?: ElementCreationOptions
-  ) {
-    if (!this.trackedElements[name]) {
-      this.trackedElements[name] = document.createElement(element, options);
+  _titleBoard: KeyBoardTitleBar | null = null;
+  get titleBoard(): KeyBoardTitleBar {
+    if (!this._titleBoard) {
+      this._titleBoard = this.querySelector(
+        "key-board-title-bar"
+      ) as KeyBoardTitleBar;
     }
-    return this.trackedElements[name];
+    if (!this._titleBoard) {
+      this._titleBoard = document.createElement(
+        "key-board-title-bar"
+      ) as KeyBoardTitleBar;
+    }
+    return this._titleBoard;
+  }
+  private titleBoardCreate() {
+    if (!this.contains(this.titleBoard)) {
+      this.appendChild(this.titleBoard);
+    }
+  }
+
+  _titleH2: HTMLElement | null = null;
+  get titleH2() {
+    if (!this._titleH2) {
+      this._titleH2 = this.querySelector("h2");
+    }
+    if (!this._titleH2) {
+      this._titleH2 = document.createElement("h2");
+    }
+    return this._titleH2;
+  }
+  private titleH2Create() {
+    if (!this.contains(this.titleH2)) {
+      this.appendChild(this.titleH2);
+    }
+  }
+
+  private _keyMap: KeyMap | null = null;
+  get keyMap() {
+    if (!this._keyMap) {
+      this._keyMap = this.titleBoard.blankKeyMap;
+    }
+    return this._keyMap;
+  }
+  set keyMap(value) {
+    this._keyMap = value;
   }
 
   connectedCallback() {
-    const keyId = this.getAttribute("key-id");
+    const keyId = this.getAttribute("key-id") || "";
+    this.titleBoardCreate();
+    this.titleH2Create();
     this.#updateKeyId(keyId);
-
-    const titleGrid = this.#makeTrackedChild("titleGrid", "key-grid");
-    titleGrid.setAttribute("name", "title-bar");
-    // Use a constant size so that elements below/right of this one
-    // don't change location when we select different keys
-    titleGrid.setAttribute("cols", "3");
-    titleGrid.setAttribute("rows", "4");
-    // TODO: don't hard code keymaps/legendmaps
-    titleGrid.setAttribute("legendmap-name", "MrlLegends");
-    titleGrid.setAttribute("keymap-name", "MrlMainLayer");
-    titleGrid.setAttribute("ignore-clicks", "true");
-
-    const titleh2 = this.#makeTrackedChild("titleh2", "h2");
-    this.append(titleGrid, titleh2);
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
@@ -61,27 +88,14 @@ export class KeyInfoNavBar extends HTMLElement {
     }
   }
 
-  #updateKeyId(keyId: string | null) {
-    // TODO: don't hard code keymaps/legendmaps
-    const key = keyId ? keyMaps.MrlMainLayer.allKeysById[keyId] : {};
-    const modifiedTitleKeyId = "title-bar-0-0";
-    const modifiedKeyData = Object.assign({}, key, {
-      startPos: [0, 0],
-      id: modifiedTitleKeyId,
-    });
-    const modifiedKeyMap = keyMaps.MrlMainLayer;
-    modifiedKeyMap.allKeysById[modifiedTitleKeyId] = modifiedKeyData;
-
-    const titleGrid = this.#makeTrackedChild(
-      "titleGrid",
-      "key-grid"
-    ) as KeyGrid;
-    titleGrid.keyMap = modifiedKeyMap;
-    titleGrid.setAttribute("selected-key", modifiedTitleKeyId); // Setting the selected key has to happen AFTER all the child keys are recreated
-    titleGrid.createKeys([modifiedTitleKeyId]);
-
-    const titleh2 = this.#makeTrackedChild("titleh2", "h2");
-    titleh2.textContent = key ? "Key information" : "Welcome";
-    this.appendChild(titleh2);
+  #updateKeyId(keyId: string) {
+    if (this.referenceKeyboard) {
+      const modifiedKey = this.titleBoard.updateSelectedKey(
+        this.keyMap,
+        this.referenceKeyboard,
+        keyId
+      );
+      this.titleH2.textContent = modifiedKey ? "Key information" : "Welcome";
+    }
   }
 }

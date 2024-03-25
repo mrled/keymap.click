@@ -19,7 +19,9 @@ import "./src/styles/siteChrome.css";
 import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
 registerAllKeymapClickWebComponents();
 
-import { keyMaps, legendMaps } from "./src/lib/keys";
+import { keyMaps } from "./src/lib/keys";
+import { KeyMapUI } from "~/webcomponents/key-map-ui";
+import { MicahErgodoxLayout } from "~/lib/keyMaps/micahErgodox";
 
 /* Navigate to page-specific URLs
  *
@@ -59,9 +61,10 @@ titleLink.textContent = "keymap.click";
 title.appendChild(titleLink);
 app.appendChild(title);
 
-const keyMapUI = document.createElement("key-map-ui");
+const keyMapUI = document.createElement("key-map-ui") as KeyMapUI;
 keyMapUI.setAttribute("keyboard-element", "key-board-ergodox");
 app.appendChild(keyMapUI);
+keyMapUI.keyMap = MicahErgodoxLayout;
 
 const footer = document.createElement("p");
 footer.textContent = "Thanks for all the clicks";
