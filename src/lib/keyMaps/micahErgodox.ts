@@ -418,7 +418,7 @@ export const MicahErgodoxLayout = new KeyMap({
     }),
     new KeyMapKey({
       unset: true,
-      name: "Unset",
+      name: "",
       id: "l-f-4-9",
       info: [
         `
@@ -429,7 +429,7 @@ export const MicahErgodoxLayout = new KeyMap({
     }),
     new KeyMapKey({
       unset: true,
-      name: "Unset",
+      name: "",
       id: "l-f-6-9",
       info: [
         `

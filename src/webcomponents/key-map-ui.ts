@@ -445,7 +445,11 @@ export class KeyMapUI extends HTMLElement {
     const keyIndicators: KeyIndicator[] = [];
     const h3 = document.createElement("h3");
 
-    h3.innerHTML = `The <kbd>${key.name}</kbd> key`;
+    if (key.unset) {
+      h3.innerHTML = `Unset key`;
+    } else {
+      h3.innerHTML = `The <kbd>${key.name}</kbd> key`;
+    }
     this.infoProse.appendChild(h3);
     key.info.forEach((paragraph: string) => {
       const p = document.createElement("p");
