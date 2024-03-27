@@ -90,7 +90,7 @@ export class KeyGrid extends HTMLElement {
 
   /* Create a single <keyboard-key> element from key data
    */
-  #createKey(keyBoard: KeyBoard, key: KeyMapKey) {
+  #createKey(keyBoard: KeyBoard, key: KeyMapKey, idx: number) {
     // TODO: handle image legends
     let legendText = key.textLegend || key.name;
     let legendImage = "";
@@ -109,9 +109,10 @@ export class KeyGrid extends HTMLElement {
     keyElement.setAttribute("legend-image", legendImage);
     keyElement.setAttribute("id", key.id);
 
-    // TODO: should we make keyHandleTop something that is owned by this method, rather than the key map?
-    // It only matters for drawing the diagram in the UI, it's not really a property of the key itself.
-    keyElement.setAttribute("key-handle-top", physicalKey.handleTop.toString());
+    // If true, place the key handle in the top half of the key.
+    //
+    const keyHandleTop = idx % 2 === 0;
+    keyElement.setAttribute("key-handle-top", keyHandleTop.toString());
 
     keyElement.onclick = () => {
       keyElement.dispatchEvent(
@@ -133,8 +134,8 @@ export class KeyGrid extends HTMLElement {
    */
   createKeys(keyBoard: KeyBoard, keys: KeyMapKey[]) {
     this.removeAllChildren();
-    keys.forEach((key) => {
-      this.#createKey(keyBoard, key);
+    keys.forEach((key: KeyMapKey, idx: number) => {
+      this.#createKey(keyBoard, key, idx);
     });
   }
 }

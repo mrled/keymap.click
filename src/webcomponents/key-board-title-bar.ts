@@ -22,8 +22,7 @@ export class KeyBoardTitleBar extends KeyBoard {
     this.titleKey = new PhysicalKey(
       "title-bar",
       new Point(0, 0),
-      new Size(2, 2),
-      false
+      new Size(2, 2)
     );
     this.physicalKeys = [this.titleKey];
   }
@@ -80,8 +79,7 @@ export class KeyBoardTitleBar extends KeyBoard {
       this.titleKey = new PhysicalKey(
         "title-bar",
         new Point(0, 0),
-        new Size(2, 2), // TODO: the default size is arbitrary, should be configurable by the keyboard?
-        false
+        new Size(2, 2) // TODO: the default size is arbitrary, should be configurable by the keyboard?
       );
     } else {
       const selectedKey = keyMap.keys.get(selectedKeyId);
