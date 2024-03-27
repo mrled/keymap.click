@@ -67,8 +67,10 @@ export class ConnectionPair {
 /* Return a new Point, representing a location for the diagram lines to connect on a source element
  */
 export const connectionPointFrom = (element: Element) => {
-  /* Could use element.getBoundingClientRect(),
-   * but if the text is split between two or more lines that'll make a rectangle larger that I want.
+  /* The sources of connections may be a <keyboard-key>, a <kbd>, or a <span>.
+   * In the case of the <span>, the text may be split across multiple lines.
+   * In that case, if we use element.getBoundingClientRect(),
+   * that'll make a rectangle larger that I want.
    * I use the first rect in the return value of .getClientRects() instead
    * to get a rectangle around _just_ the section on the top line.
    */
