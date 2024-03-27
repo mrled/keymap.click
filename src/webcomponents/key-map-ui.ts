@@ -30,7 +30,13 @@ import { KeyInfoNavBar } from "~/webcomponents/key-info-nav-bar";
  *   and attributeChangedCallback() should only set the attribute and not call layOutIdempotently().
  */
 export class KeyMapUI extends HTMLElement {
+  /* The ResizeObserver that watches for changes in the size of the kidContainer.
+   */
   resizeObserver: ResizeObserver;
+
+  /* Connections to draw on the diagram
+   */
+  connectionPairs: ConnectionPair[] = [];
 
   constructor() {
     super();
@@ -339,6 +345,7 @@ export class KeyMapUI extends HTMLElement {
   #resizeCanvas = () => {
     this.diagram.width = this.kidContainer.offsetWidth;
     this.diagram.height = this.kidContainer.offsetHeight;
+    this.#drawDiagram();
   };
 
   /* Handle an external change to the selected-key attribute
@@ -352,8 +359,8 @@ export class KeyMapUI extends HTMLElement {
       return;
     }
 
-    // Connections to draw on the diagram
-    const connectionPairs: ConnectionPair[] = [];
+    // Clear any existing connections that back the diagram lines
+    this.connectionPairs = [];
 
     // Update the key in the key info navbar
     this.keyInfoNavBar.setAttribute("key-id", selectedKey);
@@ -392,7 +399,7 @@ export class KeyMapUI extends HTMLElement {
       }
       if (active && navBarHandle) {
         // Make the connection from the navbar key to this key
-        connectionPairs.push(
+        this.connectionPairs.push(
           new ConnectionPair(
             navBarHandle,
             keyHandle,
@@ -419,19 +426,25 @@ export class KeyMapUI extends HTMLElement {
         console.error(`KeyMapUI: Key indicator has no target: ${indicatorId}`);
         return;
       }
-      connectionPairs.push(
+      this.connectionPairs.push(
         new ConnectionPair(indicator, indicated, KeyInfoConnectType.TextRef)
       );
     });
 
+    this.#drawDiagram();
+  }
+
+  /* Draw the diagram lines connecting the keys to the info panel
+   */
+  #drawDiagram() {
     drawDiagram(
       this.diagram,
-      connectionPairs.map((c) => c.connection),
+      this.connectionPairs.map((c) => c.connection),
       this.centerPanel.getBoundingClientRect(),
       this.diamargLeft.getBoundingClientRect(),
       this.diamargRight.getBoundingClientRect(),
       this.infoProse.getBoundingClientRect(),
-      5 // TODO: change this debug parameter
+      0 // TODO: set this debug parameter some better way
     );
   }
 
