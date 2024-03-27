@@ -1,4 +1,4 @@
-import { Point, absolutifyRect } from "~/lib/geometry.js";
+import { Point } from "~/lib/geometry.js";
 
 /* A key connection
  * sourceCoords:    Coordinates for a source element in the key info panel.
@@ -57,33 +57,26 @@ export class ConnectionPair {
   }
 
   get connection() {
-    const sourceCoords = connectionPointFrom(this.source);
-    const targetCoords = connectionPointTo(this.target);
+    const sourceCoords = connectionPointFromElement(this.source);
+    const targetCoords = connectionPointFromElement(this.target);
     const targetKeyId = this.target.getAttribute("id") || "";
     return new Connection(sourceCoords, targetCoords, targetKeyId, this.type);
   }
 }
 
-/* Return a new Point, representing a location for the diagram lines to connect on a source element
+/* Return a single point for drawing a connection to/from an element.
+ *
+ * The point is at the bottom of the element's top line.
+ * In the simplest case, this is just the bottom of the element's bounding rect.
+ * But if the element is a <span> with text that wraps to multiple lines,
+ * this function returns a point at the bottom of the first line.
+ * Without that, the connection line might terminate somewhere within the bounding rect
+ * but not within the <span> element itself.
  */
-export const connectionPointFrom = (element: Element) => {
-  /* The sources of connections may be a <keyboard-key>, a <kbd>, or a <span>.
-   * In the case of the <span>, the text may be split across multiple lines.
-   * In that case, if we use element.getBoundingClientRect(),
-   * that'll make a rectangle larger that I want.
-   * I use the first rect in the return value of .getClientRects() instead
-   * to get a rectangle around _just_ the section on the top line.
-   */
-  const topLineRect = absolutifyRect(element.getClientRects()[0]);
+export function connectionPointFromElement(element: Element) {
+  const topLineRect = element.getClientRects()[0];
   return new Point(topLineRect.x, topLineRect.bottom);
-};
-
-/* Return a new Point, representing a location for the diagram lines to connect on a target element
- */
-export const connectionPointTo = (element: Element) => {
-  const rect = absolutifyRect(element.getBoundingClientRect());
-  return new Point(rect.x, rect.y);
-};
+}
 
 /* An element with this class is identified as physical key indicator
  */

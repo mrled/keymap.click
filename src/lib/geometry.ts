@@ -16,15 +16,6 @@ export class Point {
  */
 export class Size extends Point {}
 
-/* Return a new rect with absolute positioning
- */
-export const absolutifyRect = (rect: DOMRect) => {
-  const abs = DOMRect.fromRect(rect);
-  abs.x += window.scrollX;
-  abs.y += window.scrollY;
-  return abs;
-};
-
 /* Return a new rect inside the input rect
  */
 export const smallerRect = (rect: DOMRect, offset: number = 5) => {
