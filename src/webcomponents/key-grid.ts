@@ -109,10 +109,6 @@ export class KeyGrid extends HTMLElement {
     keyElement.setAttribute("legend-image", legendImage);
     keyElement.setAttribute("id", key.id);
 
-    // TODO: keyHandeExtraClasses is a hack, can we remove it?
-    // const keyHandleExtraClasses = keyData.keyHandleExtraClasses || "";
-    // keyElement.setAttribute("key-handle-extra-classes", keyHandleExtraClasses);
-
     // TODO: should we make keyHandleTop something that is owned by this method, rather than the key map?
     // It only matters for drawing the diagram in the UI, it's not really a property of the key itself.
     keyElement.setAttribute("key-handle-top", physicalKey.handleTop.toString());

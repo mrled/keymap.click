@@ -18,8 +18,6 @@
  *   active:                    True if this key has been selected by the user
  *   related-to-active:         True if this key is a member of the same group as the key selected by the user
  *   target-of-indicator:       True if this key is the target of a diagram liner
- *   key-extra-classes:         Extra classes for the key (this element)
- *   key-handle-extra-classes:  Extra classes for the key handle (the child <key-handle> element)
  *   key-handle-top:            True if the key handle should be at the top of the key
  * Relevant properties of the superclass (HTMLButtonElement):
  *   onclick:                   An onClick function
@@ -39,8 +37,6 @@ export class KeyboardKey extends HTMLButtonElement {
       "active",
       "related-to-active",
       "target-of-indicator",
-      "key-extra-classes",
-      "key-handle-extra-classes",
       "key-handle-top",
     ];
   }
@@ -66,10 +62,7 @@ export class KeyboardKey extends HTMLButtonElement {
     const legendText = this.getAttribute("legend-text") || "";
     const legendImage = this.getAttribute("legend-image") || "";
     const id = this.getAttribute("id") || "";
-    const extraClasses = this.getAttribute("key-extra-classes") || "";
     const keyHandleTop = this.getAttribute("key-handle-top") === "true";
-    const keyHandleExtraClasses =
-      this.getAttribute("key-handle-extra-classes") || "";
 
     // Parse the size and location of the key in the grid
     let [xsize, ysize, xloc, yloc] = position.split(" ");
@@ -77,8 +70,6 @@ export class KeyboardKey extends HTMLButtonElement {
     ysize = ysize || "2";
     xloc = xloc || "auto";
     yloc = yloc || "auto";
-
-    this.className = extraClasses;
 
     if (standalone) {
       // The style prop if this key is being rendered as a standalone key
@@ -132,6 +123,5 @@ export class KeyboardKey extends HTMLButtonElement {
     this.keyHandleElement.setAttribute("key-id", id);
     this.keyHandleElement.setAttribute("col-start", xloc);
     this.keyHandleElement.setAttribute("handle-top", keyHandleTop.toString());
-    this.keyHandleElement.setAttribute("extra-classes", keyHandleExtraClasses);
   }
 }
