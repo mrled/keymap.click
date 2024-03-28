@@ -50,9 +50,7 @@ export abstract class KeyBoard extends HTMLElement {
    * TODO: This isn't cached, not sure if we can cache it??
    */
   get keyElements() {
-    return Array.from(this.querySelectorAll("button")).filter(
-      (b) => b.getAttribute("is") === "keyboard-key"
-    ) as KeyboardKey[];
+    return Array.from(this.querySelectorAll("keyboard-key")) as KeyboardKey[];
   }
 
   /* Subclasses should implement this method to create child elements.

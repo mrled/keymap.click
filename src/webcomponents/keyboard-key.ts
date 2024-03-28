@@ -1,4 +1,5 @@
 /* A keyboard key
+ *
  * Properties of the web component:
  *   position:                  A string containing the size and starting location of the key,
  *                              in the format "xsize ysize xloc yloc",
@@ -19,10 +20,15 @@
  *   related-to-active:         True if this key is a member of the same group as the key selected by the user
  *   target-of-indicator:       True if this key is the target of a diagram liner
  *   key-handle-top:            True if the key handle should be at the top of the key
- * Relevant properties of the superclass (HTMLButtonElement):
+ *
+ * keyboard-key is an autonomous custom element, not a customized built-in element.
+ * It would have been a customized HTMLButtonElement, but Safari doesn't support them.
+ * <https://github.com/WebKit/standards-positions/issues/97>.
+ *
+ * Relevant properties:
  *   onclick:                   An onClick function
  */
-export class KeyboardKey extends HTMLButtonElement {
+export class KeyboardKey extends HTMLElement {
   legendTextNode: Text | null;
   legendImageElement: Element | null;
   keyHandleElement: Element | null;
@@ -46,6 +52,13 @@ export class KeyboardKey extends HTMLButtonElement {
     this.legendTextNode = null;
     this.legendImageElement = null;
     this.keyHandleElement = null;
+
+    // Listen for keyboard events so that it works like a button
+    this.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        this.click();
+      }
+    });
   }
 
   connectedCallback() {
@@ -63,6 +76,11 @@ export class KeyboardKey extends HTMLButtonElement {
     const legendImage = this.getAttribute("legend-image") || "";
     const id = this.getAttribute("id") || "";
     const keyHandleTop = this.getAttribute("key-handle-top") === "true";
+
+    // Make it focusable for keyboard navigation
+    this.setAttribute("tabindex", "0");
+    // Tell screen readers that this is a button
+    this.setAttribute("role", "button");
 
     // Parse the size and location of the key in the grid
     let [xsize, ysize, xloc, yloc] = position.split(" ");

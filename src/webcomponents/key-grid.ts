@@ -66,9 +66,7 @@ export class KeyGrid extends HTMLElement {
   /* Get all the child <keyboard-key> elements
    */
   get keyElements(): KeyboardKey[] {
-    return Array.from(this.querySelectorAll("button"))
-      .filter((b) => b.getAttribute("is") === "keyboard-key")
-      .map((b) => b as KeyboardKey);
+    return Array.from(this.querySelectorAll("keyboard-key")) as KeyboardKey[];
   }
 
   /* Get a list of all the key IDs of the child <keyboard-key> elements
@@ -95,14 +93,9 @@ export class KeyGrid extends HTMLElement {
     let legendText = key.textLegend || key.name;
     let legendImage = "";
 
-    const keyElement = document.createElement("button", { is: "keyboard-key" });
+    const keyElement = document.createElement("keyboard-key");
 
     const physicalKey = keyBoard.getPhysicalKey(key.id);
-
-    // TODO: Should this really be necessary?
-    // I would have guessed that setting { is: "keyboard-key" } above would have done this,
-    // but my CSS targetting button[is="keyboard-key"] wasn't working until I added this line.
-    keyElement.setAttribute("is", "keyboard-key");
 
     keyElement.setAttribute("position", physicalKey.positionAttribute);
     keyElement.setAttribute("legend-text", legendText);

@@ -20,7 +20,6 @@ const registrations: Registration[] = [
   {
     elementName: "keyboard-key",
     elementClass: KeyboardKey,
-    defineOptions: { extends: "button" },
   },
   { elementName: "key-grid", elementClass: KeyGrid },
   // { elementName: "key-board", elementClass: KeyBoard }, // Can't define abstract classes

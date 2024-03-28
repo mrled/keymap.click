@@ -27,6 +27,10 @@
   --key-diagram-target-bg: #c6f6d5;
   --key-diagram-target-border: #48bb78;
   --key-diagram-target-hover-bg: #68d391;
+  --key-focus-bg: #e2e8f0;
+  --key-active-focus-bg: #e8a34f;
+  --key-related-active-focus-bg: #f0d7a9;
+  --key-diagram-target-focus-bg: #a9e3ba;
 
   /* Colors that apply to kbd elements
    */

@@ -83,7 +83,7 @@ key-grid {
 }
 
 /* A single key */
-button[is="keyboard-key"] {
+keyboard-key {
   padding: 0.25rem;
   display: flex;
   justify-content: center;
@@ -95,9 +95,14 @@ button[is="keyboard-key"] {
   position: relative;
   background-color: var(--key-bg);
   border: 1px solid var(--key-border);
+  cursor: pointer;
 
   &:hover {
     background-color: var(--key-hover-bg);
+  }
+
+  &:focus {
+    background-color: var(--key-focus-bg);
   }
 
   /* The order is important for the three selectors below.
@@ -119,6 +124,9 @@ button[is="keyboard-key"] {
     &:hover {
       background-color: var(--key-diagram-target-hover-bg);
     }
+    &:focus {
+      background-color: var(--key-diagram-target-focus-bg);
+    }
   }
   &[related-to-active="true"] {
     background-color: var(--key-related-active-bg);
@@ -126,12 +134,18 @@ button[is="keyboard-key"] {
     &:hover {
       background-color: var(--key-related-active-hover-bg);
     }
+    &:focus {
+      background-color: var(--key-related-active-focus-bg);
+    }
   }
   &[active="true"] {
     background-color: var(--key-active-bg);
     border: 1px solid var(--key-active-border);
     &:hover {
       background-color: var(--key-active-hover-bg);
+    }
+    &:focus {
+      background-color: var(--key-active-focus-bg);
     }
   }
 
@@ -156,7 +170,7 @@ button[is="keyboard-key"] {
 }
 
 @media (min-width: 768px) {
-  button[is="keyboard-key"] {
+  keyboard-key {
     &.legend-type-glyph {
       font-size: 1rem;
     }
