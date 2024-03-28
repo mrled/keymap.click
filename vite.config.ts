@@ -1,8 +1,17 @@
-import { defineConfig } from 'vite'
+import { resolve } from "path";
+import { defineConfig } from "vite";
 
 // Allows using jsconfig ~ paths in the website
-import tsconfigPaths from 'vite-tsconfig-paths'
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [tsconfigPaths()]
-})
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, "index.html"),
+        nested: resolve(__dirname, "about.html"),
+      },
+    },
+  },
+  plugins: [tsconfigPaths()],
+});
