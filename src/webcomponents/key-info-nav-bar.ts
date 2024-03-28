@@ -6,7 +6,6 @@ import { KeyBoard } from "./key-board";
 /* Title bar for a key-info-panel
  *
  * TODO: Support guides
- * TODO: allow resizing the title bar keyboard; some boards might allow larger keys than the ErgoDox does
  */
 export class KeyInfoNavBar extends HTMLElement {
   trackedElements: { [key: string]: HTMLElement };

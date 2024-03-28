@@ -250,6 +250,7 @@ export const MicahErgodoxLayout = new KeyMap({
   name: "Micah's ErgoDox",
   welcome: [
     `Welcome to my keymap. I wrote this guide to explain how my ErgoDox helped my RSI.`,
+    `Select a key from the board above to learn more about it.`,
   ],
   keys: [
     // left hand, number row

@@ -22,12 +22,23 @@ export class KeyBoardTitleBar extends KeyBoard {
     this.titleKey = new PhysicalKey(
       "title-bar",
       new Point(0, 0),
-      new Size(2, 2)
+      // This doesn't matter; it will be set in updateSelectedKey()
+      new Size(1, 1)
     );
     this.physicalKeys = [this.titleKey];
   }
 
   name = "TitleBar";
+
+  _referenceBoard: KeyBoard | null = null;
+  get referenceBoard(): KeyBoard | null {
+    return this._referenceBoard;
+  }
+  set referenceBoard(board: KeyBoard | null) {
+    this._referenceBoard = board;
+    if (board) {
+    }
+  }
 
   _grid: KeyGrid | null = null;
   get grid(): KeyGrid {
@@ -43,10 +54,6 @@ export class KeyBoardTitleBar extends KeyBoard {
 
   connectedCallback() {
     this.grid.setAttribute("name", "title-bar");
-    this.grid.setAttribute("ignore-clicks", "true");
-    // TODO: don't hard code cols/rows
-    this.grid.setAttribute("cols", "3");
-    this.grid.setAttribute("rows", "4");
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {}
@@ -69,6 +76,9 @@ export class KeyBoardTitleBar extends KeyBoard {
   ): KeyMapKey {
     this.keyMap = keyMap;
 
+    this.grid.setAttribute("cols", referenceKeyBoard.maxKeyWidth.toString());
+    this.grid.setAttribute("rows", referenceKeyBoard.maxKeyHeight.toString());
+
     if (!selectedKeyId) {
       this.keyMapKey = new KeyMapKey({
         name: "",
@@ -84,7 +94,7 @@ export class KeyBoardTitleBar extends KeyBoard {
       this.titleKey = new PhysicalKey(
         "title-bar",
         new Point(0, 0),
-        new Size(2, 2) // TODO: the default size is arbitrary, should be configurable by the keyboard?
+        referenceKeyBoard.defaultBlankKeySize
       );
     } else {
       const selectedKey = keyMap.keys.get(selectedKeyId);
@@ -111,6 +121,8 @@ export class KeyBoardTitleBar extends KeyBoard {
     this.grid.createKeys(this, [this.keyMapKey]);
     this.keyElement = this.grid.keyElements[0];
     this.keyElement.setAttribute("position", this.titleKey.positionAttribute);
+    this.keyElement.setAttribute("active", "true");
+    this.keyElement.onclick = () => {};
 
     return this.keyMapKey;
   }

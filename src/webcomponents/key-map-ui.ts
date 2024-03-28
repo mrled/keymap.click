@@ -223,6 +223,7 @@ export class KeyMapUI extends HTMLElement {
     this.keyInfoNavBar.referenceKeyboard = this.keyboard;
     this.keyInfoNavBar.keyMap = value;
     this._keyMap = value;
+    this.#showWelcomeMessage();
   }
 
   /* Lay out all child components.
@@ -394,6 +395,7 @@ export class KeyMapUI extends HTMLElement {
       );
     } else {
       keySelection = [];
+      this.#showWelcomeMessage();
     }
 
     // Clear any existing connections that back the diagram lines
@@ -502,6 +504,19 @@ export class KeyMapUI extends HTMLElement {
       this.infoProse.appendChild(p);
     });
     return keyIndicators;
+  }
+
+  /* Show the welcome message for the keymap
+   */
+  #showWelcomeMessage() {
+    while (this.infoProse.firstChild) {
+      this.infoProse.removeChild(this.infoProse.firstChild);
+    }
+    this.keyMap.welcome.forEach((paragraph: string) => {
+      const p = document.createElement("p");
+      p.innerHTML = paragraph;
+      this.infoProse.appendChild(p);
+    });
   }
 
   /* Handle a key being selected on the keyboard

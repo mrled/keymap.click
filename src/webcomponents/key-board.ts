@@ -6,6 +6,7 @@
 import { KeyMap, KeyMapKey } from "~/lib/keyMap";
 import { PhysicalKey } from "~/lib/physicalKey";
 import { KeyboardKey } from "./keyboard-key";
+import { Point } from "~/lib/geometry";
 
 type KeyIdToPhysicalKeyMap = { [key: string]: PhysicalKey };
 
@@ -14,7 +15,21 @@ export abstract class KeyBoard extends HTMLElement {
     super();
   }
 
+  /* The name of the keyboard.
+   */
   name: string = "Keyboard Base Class";
+
+  /* The size of the blank key to display in the title bar when no key is selected.
+   */
+  defaultBlankKeySize = new Point(2, 2);
+
+  /* The maximum height of a key on the keyboard
+   */
+  maxKeyHeight = 4;
+
+  /* The maximum width of a key on the keyboard
+   */
+  maxKeyWidth = 3;
 
   /* Subclasses should implement this method to return a list of physical key objects
    */
