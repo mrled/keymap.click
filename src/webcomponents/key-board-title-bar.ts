@@ -56,10 +56,15 @@ export class KeyBoardTitleBar extends KeyBoard {
    * Creates a new KeyMapKey object with the same data as the selected key,
    * but with changes made so it can be displayed in the title bar.
    * Returns that object.
+   *
+   * Parameters:
+   * - keyMap: the key map
+   * - referenceKeyBoard: the keyboard being displayed in the main area
+   * - selectedKeyId: the ID of the selected key
    */
   updateSelectedKey(
     keyMap: KeyMap,
-    keyBoard: KeyBoard,
+    referenceKeyBoard: KeyBoard,
     selectedKeyId: string
   ): KeyMapKey {
     this.keyMap = keyMap;
@@ -96,7 +101,7 @@ export class KeyBoardTitleBar extends KeyBoard {
         imageAttribution: selectedKey.imageAttribution,
         unset: selectedKey.unset,
       });
-      const activePhysicalKey = keyBoard.getPhysicalKey(selectedKeyId);
+      const activePhysicalKey = referenceKeyBoard.getPhysicalKey(selectedKeyId);
 
       this.titleKey.size.x = activePhysicalKey.size.x;
       this.titleKey.size.y = activePhysicalKey.size.y;

@@ -47,7 +47,6 @@ export abstract class KeyBoard extends HTMLElement {
   }
 
   /* Get all the child <keyboard-key> elements.
-   * TODO: This isn't cached, not sure if we can cache it??
    */
   get keyElements() {
     return Array.from(this.querySelectorAll("keyboard-key")) as KeyboardKey[];

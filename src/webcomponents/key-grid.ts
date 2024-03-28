@@ -61,8 +61,6 @@ export class KeyGrid extends HTMLElement {
     }
   }
 
-  // TODO: do we need to cache these getters?
-
   /* Get all the child <keyboard-key> elements
    */
   get keyElements(): KeyboardKey[] {

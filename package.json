@@ -19,8 +19,6 @@
   "devDependencies": {
     "@types/node": "^20.11.28",
     "eslint": "^7.9.0",
-    "eslint-plugin-react": "^7.20.6",
-    "eslint-plugin-react-hooks": "^4.1.2",
     "prettier": "2.1.1",
     "typescript": "^5.4.2"
   }

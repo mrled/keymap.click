@@ -229,7 +229,6 @@ export const drawDiagram = (
    * Our canvas does not cover the whole document,
    * so we have to subtract the top and left of the canvas from all coordinates.
    */
-  // TODO: is this the cleanest way to do this?
   const canvasRect = canvas.getBoundingClientRect();
   keyboardAndPanelRect.x -= canvasRect.left;
   keyboardAndPanelRect.y -= canvasRect.top;
