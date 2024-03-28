@@ -22,6 +22,7 @@
 .panel-nav-bar {
   font-size: 0.75rem;
   line-height: 1rem;
+  width: 100%;
 
   border-bottom: 1px solid var(--button-border-color);
 

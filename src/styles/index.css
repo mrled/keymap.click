@@ -5,17 +5,6 @@
   margin: 0;
 }
 
-button {
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  margin: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-}
-
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -24,36 +13,10 @@ body {
     Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 }
 
-main {
-  width: 100%;
-  height: 100%;
-  font-size: 0.875rem;
-  max-width: 1024px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 1.5rem;
-  padding: 1rem 2rem;
-}
-
-@media (min-width: 768px) {
-  main {
-    font-size: 1rem;
-  }
-}
-
 h1 {
   font-size: 1.875rem;
   font-weight: inherit;
   padding: 1rem 0;
-}
-
-h1.site-title {
-  font-size: 1.25rem;
-  padding: 0.5rem 0;
-  font-family: "Roboto Mono", monospace;
-  a {
-    text-decoration: none;
-  }
 }
 
 h2 {
@@ -87,11 +50,6 @@ a {
   cursor: pointer;
 }
 
-/* Used for NextJS <Link> components */
-Link {
-  color: var(--link-fg);
-}
-
 ul {
   padding: 1rem 0 1rem 2rem;
   list-style-type: disc;
@@ -119,29 +77,4 @@ button.guide-bar-button {
 button.guide-bar-button-enabled {
   color: var(--button-text-enabled);
   background-color: var(--button-bg-enabled);
-}
-
-/* A layout for controls, where each row is a control and its label
- */
-.controls-table-layout {
-  display: table;
-  margin: 1rem 0;
-  > div {
-    display: table-row;
-    font-size: 0.75rem;
-    > label {
-      display: table-cell;
-      margin: 0.5rem 1rem;
-    }
-    > input {
-      display: table-cell;
-      margin: 0.5rem 1rem;
-    }
-    > select {
-      display: table-cell;
-      margin: 0.5rem 1rem;
-      padding: 0.25rem;
-      border: 1px solid var(--button-border-color);
-    }
-  }
 }
