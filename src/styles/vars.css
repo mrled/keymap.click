@@ -24,5 +24,16 @@
   --key-diagram-target-border: #48bb78;
   --key-diagram-target-hover-bg: #68d391;
 
+  /* These variables are not used in CSS,
+   * but the JavaScript code that draws the diagram reads them from here and uses them.
+   * We just want to set all the colors in the same place.
+   */
+  --diagram-line-textref-color: #68d391ff; /* Opaque, because this green is pretty light */
+  --diagram-line-selected-color: #fbd38d99; /* Slightly transparent, because this orange is pretty dark */
+  --diagram-debug-center-line-color: cornflowerblue;
+  --diagram-debug-keyboard-color: khaki;
+  --diagram-debug-left-color: lawngreen;
+  --diagram-debug-right-color: red;
+
   --link-fg: rgba(49, 130, 206, 1);
 }

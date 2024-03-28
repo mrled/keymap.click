@@ -4,16 +4,26 @@ import { smallerRect, traceRect } from "~/lib/geometry";
 import { Connection, KeyInfoConnectType } from "~/lib/keyConnections";
 
 /* Colors when drawing diagram lines
- * TODO: does this belong in CSS?
  */
-const diagramLineColors: { [key: string]: string } = {
-  [KeyInfoConnectType.TextRef]: "#68d391ff", // Opaque, because this green is pretty light
-  [KeyInfoConnectType.Selected]: "#fbd38d99", // Slightly transparent, because this orange is pretty dark
-  debugCenterLine: "cornflowerblue",
-  debugKeyboard: "khaki",
-  debugLeft: "lawngreen",
-  debugRight: "red",
-};
+const diagramLineColors: { [key: string]: string } = (function () {
+  const rootStyle = getComputedStyle(document.documentElement);
+  return {
+    [KeyInfoConnectType.TextRef]: rootStyle.getPropertyValue(
+      "--diagram-line-textref-color"
+    ),
+    [KeyInfoConnectType.Selected]: rootStyle.getPropertyValue(
+      "--diagram-line-selected-color"
+    ),
+    debugCenterLine: rootStyle.getPropertyValue(
+      "--diagram-line-debug-center-color"
+    ),
+    debugKeyboard: rootStyle.getPropertyValue(
+      "--diagram-line-debug-keyboard-color"
+    ),
+    debugLeft: rootStyle.getPropertyValue("--diagram-line-debug-left-color"),
+    debugRight: rootStyle.getPropertyValue("--diagram-line-debug-right-color"),
+  };
+})();
 
 /* Draw debugging lines for visual debugging mode
  */
