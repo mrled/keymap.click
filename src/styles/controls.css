@@ -1,6 +1,5 @@
 /* The secret control panel */
 
-
 .control-panel {
   background-color: var(--panel-bg);
   border: 1px solid var(--button-border-color);

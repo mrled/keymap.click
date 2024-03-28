@@ -20,7 +20,9 @@
  * In smaller screen sizes, two halves should be shown vertically.
  * For larger screen sizes, they should be shown next to each other.
  */
-div.keyboard, key-board, key-board-ergodox {
+div.keyboard,
+key-board,
+key-board-ergodox {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,7 +30,9 @@ div.keyboard, key-board, key-board-ergodox {
   margin-top: 0;
 }
 @media (min-width: 768px) {
-  div.keyboard, key-board, key-board-ergodox {
+  div.keyboard,
+  key-board,
+  key-board-ergodox {
     flex-direction: row;
   }
 }
@@ -108,7 +112,7 @@ button[is="keyboard-key"] {
    * and mostly that won't make sense because
    * you wouldn't usually need to draw a diagram line to another key related to the active key.
    * But if it did happen that wa6, we'd probably want the related-to-active styling to apply.
-   */;
+   */
   &[target-of-indicator="true"] {
     background-color: var(--key-diagram-target-bg);
     border: 1px solid var(--key-diagram-target-border);
@@ -145,7 +149,7 @@ button[is="keyboard-key"] {
   }
 
   /* An image used as a legend for a key */
-  >img {
+  > img {
     width: 1rem;
     height: 1rem;
   }
@@ -179,13 +183,15 @@ button[is="keyboard-key"] {
 }
 
 /* Left and right thumb clusters of an ErgoDox keyboard */
-.keyboard-left-thumb-cluster, key-grid[name="ergodox-left-thumb"] {
+.keyboard-left-thumb-cluster,
+key-grid[name="ergodox-left-thumb"] {
   transform: translateX(calc(var(--keyboard-grid-unit) * -2))
     translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(25deg);
   transform-origin: 0 calc(var(--keyboard-grid-unit) * 2);
   padding-bottom: calc(var(--keyboard-grid-unit) * 9);
 }
-.keyboard-right-thumb-cluster, key-grid[name="ergodox-right-thumb"] {
+.keyboard-right-thumb-cluster,
+key-grid[name="ergodox-right-thumb"] {
   transform: translateX(calc(var(--keyboard-grid-unit) * 2))
     translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(-25deg);
   transform-origin: calc(var(--keyboard-grid-unit) * 6)
@@ -193,9 +199,9 @@ button[is="keyboard-key"] {
   padding-bottom: calc(var(--keyboard-grid-unit) * 9);
 }
 
-.key-map-ui, key-map-ui {
-
- /* key-map-ui is a custom element, which doesn't get block by default.
+.key-map-ui,
+key-map-ui {
+  /* key-map-ui is a custom element, which doesn't get block by default.
   * If we don't set it here, position:relative of this + position:absolute of the canvas
   * will not work as expected.
   */
