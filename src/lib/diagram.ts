@@ -15,13 +15,11 @@ const diagramLineColors: { [key: string]: string } = (function () {
       "--diagram-line-selected-color"
     ),
     debugCenterLine: rootStyle.getPropertyValue(
-      "--diagram-line-debug-center-color"
+      "--diagram-debug-center-line-color"
     ),
-    debugKeyboard: rootStyle.getPropertyValue(
-      "--diagram-line-debug-keyboard-color"
-    ),
-    debugLeft: rootStyle.getPropertyValue("--diagram-line-debug-left-color"),
-    debugRight: rootStyle.getPropertyValue("--diagram-line-debug-right-color"),
+    debugKeyboard: rootStyle.getPropertyValue("--diagram-debug-keyboard-color"),
+    debugLeft: rootStyle.getPropertyValue("--diagram-debug-left-color"),
+    debugRight: rootStyle.getPropertyValue("--diagram-debug-right-color"),
   };
 })();
 
@@ -204,7 +202,7 @@ const drawDiagramLineSelected = (
  * diamargLeftRect: The left diamarg DOMRect
  * diamargRightRect: The right diamarg DOMRect
  * keyInfoContainerRect: The key info panel DOMRect
- * debugLevel: The debug level
+ * debug: Draw and log extra debugging information
  */
 export const drawDiagram = (
   canvas: HTMLCanvasElement,
@@ -213,7 +211,7 @@ export const drawDiagram = (
   diamargLeftRect: DOMRect,
   diamargRightRect: DOMRect,
   keyInfoContainerRect: DOMRect,
-  debugLevel: number
+  debug: boolean
 ) => {
   const context = canvas.getContext("2d");
   if (!context) {
@@ -267,7 +265,7 @@ export const drawDiagram = (
     keyboardAndPanelRect.x +
     (keyboardAndPanelRect.right - keyboardAndPanelRect.x) / 2;
 
-  if (debugLevel > 1) {
+  if (debug) {
     drawVisualDebugInfo(
       context,
       keyboardCenter,

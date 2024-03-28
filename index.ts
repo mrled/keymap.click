@@ -27,7 +27,30 @@ titleBar.appendChild(title);
 const aboutLink = document.createElement("a");
 aboutLink.href = "/about.html";
 aboutLink.textContent = "About";
-titleBar.appendChild(aboutLink);
+const aboutListItem = document.createElement("li");
+aboutListItem.appendChild(aboutLink);
+
+const debugCheckbox = document.createElement("input");
+debugCheckbox.type = "checkbox";
+debugCheckbox.id = "debug-checkbox";
+debugCheckbox.addEventListener("change", () => {
+  const keyMapUi = document.querySelector("key-map-ui");
+  if (keyMapUi) {
+    keyMapUi.setAttribute("debug", debugCheckbox.checked.toString());
+  }
+});
+const debugLabel = document.createElement("label");
+debugLabel.htmlFor = "debug-checkbox";
+debugLabel.textContent = "Enable debugging";
+const debugListItem = document.createElement("li");
+debugListItem.appendChild(debugCheckbox);
+debugListItem.appendChild(debugLabel);
+
+const menuList = document.createElement("ul");
+menuList.className = "site-menu";
+menuList.appendChild(aboutListItem);
+menuList.appendChild(debugListItem);
+titleBar.appendChild(menuList);
 
 app.appendChild(titleBar);
 

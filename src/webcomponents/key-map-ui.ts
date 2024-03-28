@@ -1,3 +1,5 @@
+import log from "loglevel";
+
 import { drawDiagram } from "~/lib/diagram";
 import { ConnectionPair, KeyInfoConnectType } from "~/lib/keyConnections";
 import { KeyMap, KeyMapKey } from "~/lib/keyMap";
@@ -28,6 +30,11 @@ import { KeyInfoNavBar } from "~/webcomponents/key-info-nav-bar";
  *   Handling layout in each individual get() method was too confusing.
  * - This means that layOutIdempotently() has to be called only in the connectedCallback() and in setters,
  *   and attributeChangedCallback() should only set the attribute and not call layOutIdempotently().
+ *
+ * Attributes:
+ * debug               show debug information on the diagram and in the console
+ * keyboard-element    the name of the custom element to use as the keyboard
+ * selected-key        the id of the key that is selected
  */
 export class KeyMapUI extends HTMLElement {
   /* The ResizeObserver that watches for changes in the size of the kidContainer.
@@ -37,6 +44,10 @@ export class KeyMapUI extends HTMLElement {
   /* Connections to draw on the diagram
    */
   connectionPairs: ConnectionPair[] = [];
+
+  /* Enable debug mode
+   */
+  enableDebug = false;
 
   constructor() {
     super();
@@ -282,6 +293,9 @@ export class KeyMapUI extends HTMLElement {
    * Run whether the element is created from HTML or from JavaScript.
    */
   connectedCallback() {
+    const debug = this.getAttribute("debug") || "false";
+    this.attributeChangedCallback("debug", "", debug);
+
     this.layOutIdempotently();
 
     if (!this.keyMap) {
@@ -310,7 +324,7 @@ export class KeyMapUI extends HTMLElement {
    * (changes to other attributes are ignored).
    */
   static get observedAttributes() {
-    return ["keyboard-element", "selected-key"];
+    return ["debug", "keyboard-element", "selected-key"];
   }
 
   /* Run this code when an attribute is changed from JavaScript.
@@ -318,6 +332,16 @@ export class KeyMapUI extends HTMLElement {
    */
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     switch (name) {
+      case "debug":
+        if (newValue === "true") {
+          this.enableDebug = true;
+          log.setLevel(log.levels.DEBUG);
+        } else {
+          this.enableDebug = false;
+          log.setLevel(log.levels.INFO);
+        }
+        this.#drawDiagram();
+        break;
       case "keyboard-element":
         if (!customElements.get(newValue)) {
           throw new Error(
@@ -444,7 +468,7 @@ export class KeyMapUI extends HTMLElement {
       this.diamargLeft.getBoundingClientRect(),
       this.diamargRight.getBoundingClientRect(),
       this.infoProse.getBoundingClientRect(),
-      0 // TODO: set this debug parameter some better way
+      this.enableDebug
     );
   }
 
