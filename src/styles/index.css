@@ -98,21 +98,21 @@ ul {
 }
 
 kbd {
-  border: 0.1em solid #aaa;
+  border: 0.1em solid var(--kbd-border-color);
   border-radius: 0.2em;
   display: inline-block;
   padding: 0em 0.5em;
-  background: linear-gradient(180deg, #fff, #fff, #fff, #ddd);
-  color: #000;
+  background: var(--kbd-background);
+  color: var(--kbd-fg);
   font-weight: bold;
 }
 
 button.guide-bar-button {
-  padding: 0.25rem; /* p-1 */
-  margin: 0.25rem; /* m-1 */
+  padding: 0.25rem;
+  margin: 0.25rem;
   border: 1px solid var(--button-border-color);
-  width: 3rem; /* w-12 */
-  font-size: 0.75rem; /* text-xs */
+  width: 3rem;
+  font-size: 0.75rem;
   color: var(--button-text-disabled);
 }
 

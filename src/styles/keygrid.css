@@ -173,13 +173,13 @@ button[is="keyboard-key"] {
 
 /* A key handle, which is an invisible element inside a key that can be used as an anchor point in a diagram */
 .key-handle {
-  height: 0.25rem; /* h-1 */
-  width: 0.25rem; /* w-1 */
-  margin: 0; /* m-0 */
-  padding: 0; /* p-0 */
-  border: none; /* border-none */
-  pointer-events: none; /* pointer-events-none */
-  position: absolute; /* absolute */
+  height: 0.25rem;
+  width: 0.25rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  pointer-events: none;
+  position: absolute;
 }
 
 /* Left and right thumb clusters of an ErgoDox keyboard */
@@ -232,8 +232,6 @@ key-map-ui {
       left: 0;
       right: 0;
       text-align: left;
-      border: 1px solid #d1d5db;
-      background-color: #f7fafc;
       border-radius: 0.375rem;
       padding: 1rem;
       margin-bottom: 1rem;

@@ -1,6 +1,5 @@
 # TODOs
 
-* Make vars out of all colors
 * Eradicate all the TODOs I've added to the code
 * Add guide back
 * Can I keep CSS specific to a web component next to the web component?

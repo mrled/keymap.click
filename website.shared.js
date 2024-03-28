@@ -13,4 +13,3 @@ import "./src/styles/diagram.css";
 import "./src/styles/fonts.css";
 import "./src/styles/keygrid.css";
 import "./src/styles/keyInfoPanel.css";
-import "./src/styles/siteChrome.css";
