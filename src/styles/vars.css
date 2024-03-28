@@ -11,6 +11,8 @@
   --button-text-enabled: black;
   --button-text-disabled: #9ca3af;
   --button-bg-enabled: #edf2f7;
+  --button-bg-hover: #e2e8f0;
+  --button-bg-actibve: #d4e4f7;
 
   /* Colors that apply to keyboard-key buttons
    */

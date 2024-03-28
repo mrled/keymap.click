@@ -305,14 +305,7 @@ export class KeyMapUI extends HTMLElement {
 
     const selectedKey = this.getAttribute("selected-key") || "";
     this.keyInfoNavBar.setAttribute("key-id", selectedKey);
-    if (selectedKey) {
-      const keyData = this.keyMap.keys.get(selectedKey);
-      if (keyData) {
-        this.#setKeyInfoContent(keyData);
-      } else {
-        console.error(`KeyMapUI: Key ${selectedKey} not found in key map`);
-      }
-    }
+    this.#updateSelectedKey(selectedKey);
 
     // Resize the canvas to the size of the kidContainer for the first time
     this.#resizeCanvas();
@@ -375,12 +368,32 @@ export class KeyMapUI extends HTMLElement {
   /* Handle an external change to the selected-key attribute
    */
   #updateSelectedKey(selectedKey: string) {
-    const keyData = this.keyMap.keys.get(selectedKey);
-    if (!keyData) {
-      console.error(
-        `KeyMapUI: Key ${selectedKey} not found in key map '${this.keyMap.name}'`
+    let keySelection: string[] = [];
+    const indicatedElementsById: { [key: string]: KeyHandle } = {};
+    let proseKeyIndicators: KeyIndicator[] = [];
+    let indicatedKeyIds: string[] = [];
+
+    if (selectedKey) {
+      const keyData = this.keyMap.keys.get(selectedKey);
+      if (!keyData) {
+        console.error(
+          `KeyMapUI: Key ${selectedKey} not found in key map '${this.keyMap.name}'`
+        );
+        return;
+      }
+      keySelection = keyData.selection || [];
+      // Update the key info prose including descriptions etc.
+      // Get all the key IDs that are targets of <key-indicator>s.
+      proseKeyIndicators = this.#setKeyInfoContent(
+        keyData.name,
+        keyData.unset || false,
+        keyData.info
       );
-      return;
+      indicatedKeyIds = proseKeyIndicators.map(
+        (indicator) => indicator.getAttribute("id") || ""
+      );
+    } else {
+      keySelection = [];
     }
 
     // Clear any existing connections that back the diagram lines
@@ -389,14 +402,6 @@ export class KeyMapUI extends HTMLElement {
     // Update the key in the key info navbar
     this.keyInfoNavBar.setAttribute("key-id", selectedKey);
     const navBarHandle = this.keyInfoNavBar.querySelector("key-handle");
-
-    // Update the key info prose including descriptions etc.
-    // Get all the key IDs that are targets of <key-indicator>s.
-    const proseKeyIndicators = this.#setKeyInfoContent(keyData);
-    const indicatedKeyIds = proseKeyIndicators.map((indicator) =>
-      indicator.getAttribute("id")
-    );
-    const indicatedElementsById: { [key: string]: KeyHandle } = {};
 
     // Update every key on the board
     // Make sure not to include the key in the nav bar which needs special handling
@@ -410,7 +415,6 @@ export class KeyMapUI extends HTMLElement {
         return;
       }
       const active = keyId === selectedKey;
-      const keySelection = keyData.selection || [];
       const inKeySelection = !active && keySelection.indexOf(keyId) > -1;
       const indicatorTarget = indicatedKeyIds.indexOf(keyId) > -1;
       key.setAttribute("active", active.toString());
@@ -475,20 +479,20 @@ export class KeyMapUI extends HTMLElement {
   /* Set the key information content for the selected key
    * Return an array of key ids that are targets of <key-indicator>s.
    */
-  #setKeyInfoContent(key: KeyMapKey) {
+  #setKeyInfoContent(name: string, unset: boolean, info: string[]) {
     while (this.infoProse.firstChild) {
       this.infoProse.removeChild(this.infoProse.firstChild);
     }
     const keyIndicators: KeyIndicator[] = [];
     const h3 = document.createElement("h3");
 
-    if (key.unset) {
+    if (unset) {
       h3.innerHTML = `Unset key`;
     } else {
-      h3.innerHTML = `The <kbd>${key.name}</kbd> key`;
+      h3.innerHTML = `The <kbd>${name}</kbd> key`;
     }
     this.infoProse.appendChild(h3);
-    key.info.forEach((paragraph: string) => {
+    info.forEach((paragraph: string) => {
       const p = document.createElement("p");
       p.innerHTML = paragraph;
       const indicators = p.querySelectorAll("key-indicator");

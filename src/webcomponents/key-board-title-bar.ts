@@ -71,7 +71,7 @@ export class KeyBoardTitleBar extends KeyBoard {
 
     if (!selectedKeyId) {
       this.keyMapKey = new KeyMapKey({
-        name: "unset",
+        name: "",
         id: "title-bar-0-0",
         info: [],
         selection: [],

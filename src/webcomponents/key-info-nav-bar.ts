@@ -43,6 +43,35 @@ export class KeyInfoNavBar extends HTMLElement {
     }
   }
 
+  _deselectKeyButton: HTMLButtonElement | null = null;
+  get deselectKeyButton(): HTMLButtonElement {
+    if (!this._deselectKeyButton) {
+      this._deselectKeyButton = this.querySelector("button.deselect-key");
+    }
+    if (!this._deselectKeyButton) {
+      this._deselectKeyButton = document.createElement("button");
+      this._deselectKeyButton.classList.add("deselect-key");
+      this._deselectKeyButton.textContent = "Deselect";
+      this._deselectKeyButton.addEventListener("click", () => {
+        if (!this._deselectKeyButton) {
+          return;
+        }
+        this._deselectKeyButton.dispatchEvent(
+          new CustomEvent("key-selected", {
+            bubbles: true,
+            detail: "",
+          })
+        );
+      });
+    }
+    return this._deselectKeyButton;
+  }
+  private deselectKeyButtonCreate() {
+    if (!this.contains(this.deselectKeyButton)) {
+      this.appendChild(this.deselectKeyButton);
+    }
+  }
+
   _titleH2: HTMLElement | null = null;
   get titleH2() {
     if (!this._titleH2) {
@@ -73,6 +102,7 @@ export class KeyInfoNavBar extends HTMLElement {
   connectedCallback() {
     const keyId = this.getAttribute("key-id") || "";
     this.titleBoardCreate();
+    this.deselectKeyButtonCreate();
     this.titleH2Create();
     this.#updateKeyId(keyId);
   }
@@ -96,6 +126,7 @@ export class KeyInfoNavBar extends HTMLElement {
         keyId
       );
       this.titleH2.textContent = modifiedKey ? "Key information" : "Welcome";
+      this.deselectKeyButton.disabled = !keyId;
     }
   }
 }
