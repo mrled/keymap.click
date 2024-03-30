@@ -84,8 +84,10 @@ export class KeyboardKey extends HTMLElement {
 
     // Parse the size and location of the key in the grid
     let [xsize, ysize, xloc, yloc] = position.split(" ");
-    xsize = xsize || "2";
-    ysize = ysize || "2";
+    // We set a default size of 1x1 here so that we know we have a valid value,
+    // but keyboards set their default key size in their class definition which the app will use.
+    xsize = xsize || "1";
+    ysize = ysize || "1";
     xloc = xloc || "auto";
     yloc = yloc || "auto";
 
