@@ -5,9 +5,6 @@ import { Point, Size } from "~/lib/geometry";
 import { KeyGrid } from "~/webcomponents/key-grid";
 
 /* An ErgoDox keyboard.
- *
- * Create child elements directly,
- * or use the createChildren() method to create them from state data.
  */
 export class KeyBoardErgodox extends KeyBoard {
   constructor() {

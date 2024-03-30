@@ -5,10 +5,9 @@ import { KeyGrid } from "~/webcomponents/key-grid";
 import { KeyboardKey } from "./keyboard-key";
 import { Point, Size } from "~/lib/geometry";
 
-/* An ErgoDox keyboard.
+/* The faux keyboard in the title bar.
  *
- * Create child elements directly,
- * or use the createChildren() method to create them from state data.
+ * It will contain just one key, which will be a copy of the selected key in the reference keyboard.
  */
 export class KeyBoardTitleBar extends KeyBoard {
   keyMap: KeyMap | null = null;
