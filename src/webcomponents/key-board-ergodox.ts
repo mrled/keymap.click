@@ -18,52 +18,44 @@ export class KeyBoardErgodox extends KeyBoard {
   private _physicalKeys: PhysicalKey[] = [];
   get physicalKeys(): PhysicalKey[] {
     if (this._physicalKeys.length === 0) {
-      // TODO: should we be zero indexed for the key positions?
-      // The original version was one indexed, but that seems like a mistake.
-      // However, I'm currently changing too many things to change that too --
-      // among other things, it would require changing all the key indicators.
-      // I'm going to define them as zero indexed and convert them inline to one indexed.
-      // Later we can change everything to zero indexing in one step.
-      const pointOneIndexed = (x: number, y: number) => new Point(x + 1, y + 1);
-
       this._physicalKeys = [
         // Left fingers, number row
-        new PhysicalKey("l-f", pointOneIndexed(0, 0), new Size(3, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(3, 0), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(5, 0), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(7, 0), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(9, 0), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(11, 0), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(13, 0), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(1, 1), new Size(3, 2)),
+        new PhysicalKey("l-f", new Point(4, 1), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(6, 1), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(8, 1), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(10, 1), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(12, 1), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(14, 1), new Size(2, 2)),
         // Left fingers, qwerty row
-        new PhysicalKey("l-f", pointOneIndexed(0, 2), new Size(3, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(3, 2), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(5, 2), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(7, 2), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(9, 2), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(11, 2), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(13, 2), new Size(2, 3)),
+        new PhysicalKey("l-f", new Point(1, 3), new Size(3, 2)),
+        new PhysicalKey("l-f", new Point(4, 3), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(6, 3), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(8, 3), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(10, 3), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(12, 3), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(14, 3), new Size(2, 3)),
         // Left fingers, asdf row
-        new PhysicalKey("l-f", pointOneIndexed(0, 4), new Size(3, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(3, 4), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(5, 4), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(7, 4), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(9, 4), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(11, 4), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(13, 5), new Size(2, 3)),
+        new PhysicalKey("l-f", new Point(1, 5), new Size(3, 2)),
+        new PhysicalKey("l-f", new Point(4, 5), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(6, 5), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(8, 5), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(10, 5), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(12, 5), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(14, 6), new Size(2, 3)),
         // Left fingers, zxcv row
-        new PhysicalKey("l-f", pointOneIndexed(0, 6), new Size(3, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(3, 6), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(5, 6), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(7, 6), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(9, 6), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(11, 6), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(1, 7), new Size(3, 2)),
+        new PhysicalKey("l-f", new Point(4, 7), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(6, 7), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(8, 7), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(10, 7), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(12, 7), new Size(2, 2)),
         // Left fingers, bottom row
-        new PhysicalKey("l-f", pointOneIndexed(1, 8), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(3, 8), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(5, 8), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(7, 8), new Size(2, 2)),
-        new PhysicalKey("l-f", pointOneIndexed(9, 8), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(2, 9), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(4, 9), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(6, 9), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(8, 9), new Size(2, 2)),
+        new PhysicalKey("l-f", new Point(10, 9), new Size(2, 2)),
         /* Left thumb
          *
          *       0 2 4
@@ -72,49 +64,49 @@ export class KeyBoardErgodox extends KeyBoard {
          *   2 | C D E
          *   4 | C D F
          */
-        new PhysicalKey("l-t", pointOneIndexed(2, 0), new Size(2, 2)), // A
-        new PhysicalKey("l-t", pointOneIndexed(4, 0), new Size(2, 2)), // B
-        new PhysicalKey("l-t", pointOneIndexed(0, 2), new Size(2, 4)), // C
-        new PhysicalKey("l-t", pointOneIndexed(2, 2), new Size(2, 4)), // D
-        new PhysicalKey("l-t", pointOneIndexed(4, 2), new Size(2, 2)), // E
-        new PhysicalKey("l-t", pointOneIndexed(4, 4), new Size(2, 2)), // F
+        new PhysicalKey("l-t", new Point(3, 1), new Size(2, 2)), // A
+        new PhysicalKey("l-t", new Point(5, 1), new Size(2, 2)), // B
+        new PhysicalKey("l-t", new Point(1, 3), new Size(2, 4)), // C
+        new PhysicalKey("l-t", new Point(3, 3), new Size(2, 4)), // D
+        new PhysicalKey("l-t", new Point(5, 3), new Size(2, 2)), // E
+        new PhysicalKey("l-t", new Point(5, 5), new Size(2, 2)), // F
         // Right fingers, number row
-        new PhysicalKey("r-f", pointOneIndexed(0, 0), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(2, 0), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(4, 0), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(6, 0), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(8, 0), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(10, 0), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(12, 0), new Size(3, 2)),
+        new PhysicalKey("r-f", new Point(1, 1), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(3, 1), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(5, 1), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(7, 1), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(9, 1), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(11, 1), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(13, 1), new Size(3, 2)),
         // Right fingers, qwerty row
-        new PhysicalKey("r-f", pointOneIndexed(0, 2), new Size(2, 3)),
-        new PhysicalKey("r-f", pointOneIndexed(2, 2), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(4, 2), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(6, 2), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(8, 2), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(10, 2), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(12, 2), new Size(3, 2)),
+        new PhysicalKey("r-f", new Point(1, 3), new Size(2, 3)),
+        new PhysicalKey("r-f", new Point(3, 3), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(5, 3), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(7, 3), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(9, 3), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(11, 3), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(13, 3), new Size(3, 2)),
         // Right fingers, asdf row
-        new PhysicalKey("r-f", pointOneIndexed(0, 5), new Size(2, 3)),
-        new PhysicalKey("r-f", pointOneIndexed(2, 4), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(4, 4), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(6, 4), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(8, 4), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(10, 4), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(12, 4), new Size(3, 2)),
+        new PhysicalKey("r-f", new Point(1, 6), new Size(2, 3)),
+        new PhysicalKey("r-f", new Point(3, 5), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(5, 5), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(7, 5), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(9, 5), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(11, 5), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(13, 5), new Size(3, 2)),
         // Right fingers, zxcv row
-        new PhysicalKey("r-f", pointOneIndexed(2, 6), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(4, 6), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(6, 6), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(8, 6), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(10, 6), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(12, 6), new Size(3, 2)),
+        new PhysicalKey("r-f", new Point(3, 7), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(5, 7), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(7, 7), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(9, 7), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(11, 7), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(13, 7), new Size(3, 2)),
         // Right fingers, bottom row
-        new PhysicalKey("r-f", pointOneIndexed(4, 8), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(6, 8), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(8, 8), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(10, 8), new Size(2, 2)),
-        new PhysicalKey("r-f", pointOneIndexed(12, 8), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(5, 9), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(7, 9), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(9, 9), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(11, 9), new Size(2, 2)),
+        new PhysicalKey("r-f", new Point(13, 9), new Size(2, 2)),
         /* Right thumb
          *
          *       0 2 4
@@ -123,13 +115,12 @@ export class KeyBoardErgodox extends KeyBoard {
          *   2 | C D E
          *   4 | F D E
          */
-
-        new PhysicalKey("r-t", pointOneIndexed(0, 0), new Size(2, 2)), // A
-        new PhysicalKey("r-t", pointOneIndexed(2, 0), new Size(2, 2)), // B
-        new PhysicalKey("r-t", pointOneIndexed(0, 2), new Size(2, 2)), // C
-        new PhysicalKey("r-t", pointOneIndexed(2, 2), new Size(2, 4)), // D
-        new PhysicalKey("r-t", pointOneIndexed(4, 2), new Size(2, 4)), // E
-        new PhysicalKey("r-t", pointOneIndexed(0, 4), new Size(2, 2)), // F
+        new PhysicalKey("r-t", new Point(1, 1), new Size(2, 2)), // A
+        new PhysicalKey("r-t", new Point(3, 1), new Size(2, 2)), // B
+        new PhysicalKey("r-t", new Point(1, 3), new Size(2, 2)), // C
+        new PhysicalKey("r-t", new Point(3, 3), new Size(2, 4)), // D
+        new PhysicalKey("r-t", new Point(5, 3), new Size(2, 4)), // E
+        new PhysicalKey("r-t", new Point(1, 5), new Size(2, 2)), // F
       ];
     }
     return this._physicalKeys;
