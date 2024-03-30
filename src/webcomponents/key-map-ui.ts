@@ -32,9 +32,29 @@ import { KeyInfoNavBar } from "~/webcomponents/key-info-nav-bar";
  *   and attributeChangedCallback() should only set the attribute and not call layOutIdempotently().
  *
  * Attributes:
- * debug               show debug information on the diagram and in the console
- * keyboard-element    the name of the custom element to use as the keyboard
- * selected-key        the id of the key that is selected
+ * debug                Show debug information on the diagram and in the console.
+ * keyboard-element     The name of the custom element to use as the keyboard.
+ * selected-key         The id of the key that is selected.
+ * query-prefix         A prefix for query parameters.
+ *                      If set, the KeyMapUI will look for parameters in the URL query string with this prefix.
+ *                      This attribute is not set by default,
+ *                      so the KeyMapUI will not read from or write to the query string by default.
+ *
+ * Query string parameters:
+ * board            The name of the custom element to use as the keyboard. (TODO: not implemented)
+ * map              The name of one of the passed-in keymaps to use. (TODO: not implemented)
+ * layer            The layer number to use. (TODO: not implemented)
+ * id               The id of the key to select.
+ *
+ * Query string example:
+ * 1. The KeyMapUI element is declared in the DOM as:
+ *    <key-map-ui keyboard-element="key-board-ergodox" selected-key="l-f-1-1" query-prefix="kmui"></key-map-ui>
+ * 2. The user loads the URL <https://example.com/>
+ *    The query string is empty, so the KeyMapUI loads with the key-board-ergodox keyboard and the l-f-1-1 key selected.
+ * 3. The user loads the URL <https://example.com/?kmui-board=example-board&kmui-map=mymap&kmui-layer=2&kmui-key=r-t-2-2>
+ *    The KeyMapUI loads with the example-board keyboard, the mymap keymap, the layer number 2, and the r-t-2-2 key selected,
+ *    overriding the keyboard-element and selected-key attributes set on the element in the DOM.
+ * 4. When the user selects a key, or changes the board/map, the URL is updated with the new query parameters.
  */
 export class KeyMapUI extends HTMLElement {
   /* The ResizeObserver that watches for changes in the size of the kidContainer.
@@ -140,16 +160,15 @@ export class KeyMapUI extends HTMLElement {
     if (!this._keyboard) {
       this._keyboard = this.querySelector("keyboard") as KeyBoard;
     }
-    if (!this._keyboard) {
-      const keyboardName = this.getAttribute("keyboard-element") || "";
-      if (keyboardName) {
-        if (!customElements.get(keyboardName)) {
-          throw new Error(
-            `KeyMapUI: Keyboard element ${keyboardName} not found`
-          );
-        }
-        this._keyboard = document.createElement(keyboardName) as KeyBoard;
+    if (!this._keyboard && this.keyboardElementName) {
+      if (!customElements.get(this.keyboardElementName)) {
+        throw new Error(
+          `KeyMapUI: Keyboard element ${this.keyboardElementName} not found`
+        );
       }
+      this._keyboard = document.createElement(
+        this.keyboardElementName
+      ) as KeyBoard;
     }
     // TODO: have a generic default keyboard
     if (!this._keyboard) {
@@ -162,12 +181,14 @@ export class KeyMapUI extends HTMLElement {
     this._keyboard = value;
     this.keyInfoNavBar.setAttribute("key-id", "");
 
-    this.keyMap = this._keyboard.blankKeyMap;
+    this.availableKeyMaps = [];
+
     this._keyboard.createChildren(Array.from(this.keyMap.keys.values()));
-    if (oldKeyboard) {
+    if (oldKeyboard && this.centerPanel.contains(oldKeyboard)) {
       this.centerPanel.replaceChild(this._keyboard, oldKeyboard);
     }
     this.layOutIdempotently();
+    this.#setQueryStringFromState();
   }
 
   private _infoContainer: HTMLElement | null = null;
@@ -206,26 +227,6 @@ export class KeyMapUI extends HTMLElement {
     }
     return this._diagram;
   }
-
-  private _keyMap: KeyMap | null = null;
-  get keyMap(): KeyMap {
-    if (!this._keyMap) {
-      this._keyMap = this.keyboard.blankKeyMap;
-      if (!this._keyMap) {
-        throw new Error("KeyMapUI: No key map found");
-      }
-    }
-    return this._keyMap;
-  }
-  set keyMap(value: KeyMap) {
-    this.keyMap.validateKeys(this.keyboard);
-    this.keyboard.createChildren(Array.from(value.keys.values()));
-    this.keyInfoNavBar.referenceKeyboard = this.keyboard;
-    this.keyInfoNavBar.keyMap = value;
-    this._keyMap = value;
-    this.#showWelcomeMessage();
-  }
-
   /* Lay out all child components.
    *
    * Check if the child components are in the right place, and if not, move them.
@@ -286,99 +287,109 @@ export class KeyMapUI extends HTMLElement {
   }
 
   //
-  // Lifecycle methods / callbacks
+  // Other properties
   //
 
-  /* Run this code when the element is added to the DOM.
-   * This might be before or after attributes are changed.
-   * Run whether the element is created from HTML or from JavaScript.
-   */
-  connectedCallback() {
-    const debug = this.getAttribute("debug") || "false";
-    this.attributeChangedCallback("debug", "", debug);
-
-    this.layOutIdempotently();
-
-    if (!this.keyMap) {
-      this.keyMap = this.keyboard.blankKeyMap;
+  private _keyboardElementName: string = "";
+  get keyboardElementName(): string {
+    return this._keyboardElementName;
+  }
+  set keyboardElementName(value: string) {
+    if (!customElements.get(value)) {
+      throw new Error(
+        `KeyMapUI: Keyboard element "${value}" not found - has it been defined with customElements.define(), or if using a library, imported and registered?`
+      );
     }
+    if (this._keyboardElementName === value) {
+      return;
+    }
+    this._keyboardElementName = value;
+    this.keyboard = document.createElement(
+      this._keyboardElementName
+    ) as KeyBoard;
+  }
+
+  private _keyMap: KeyMap | null = null;
+  get keyMap(): KeyMap {
+    if (!this._keyMap) {
+      this._keyMap = this.keyboard.blankKeyMap;
+      if (!this._keyMap) {
+        throw new Error("KeyMapUI: No key map found");
+      }
+    }
+    return this._keyMap;
+  }
+
+  private _keyMapName: string = "";
+  get keyMapName(): string {
+    return this._keyMapName;
+  }
+  set keyMapName(value: string) {
+    const newMap = this.availableKeyMapsById.get(value);
+    if (!newMap) {
+      console.error(
+        `KeyMapUI: Key map "${value}" not found in available key maps`
+      );
+      return;
+    }
+    newMap.validateKeys(this.keyboard);
+    if (this._keyMapName === value) {
+      return;
+    }
+    this._keyMap = newMap;
+    this._keyMapName = value;
     this.keyboard.createChildren(Array.from(this.keyMap.keys.values()));
-
-    const selectedKey = this.getAttribute("selected-key") || "";
-    this.keyInfoNavBar.setAttribute("key-id", selectedKey);
-    this.#updateSelectedKey(selectedKey);
-
-    // Resize the canvas to the size of the kidContainer for the first time
-    this.#resizeCanvas();
-    // Watch for changes in the size of the kidContainer
-    this.resizeObserver.observe(this.kidContainer);
+    this.keyInfoNavBar.referenceKeyboard = this.keyboard;
+    this.keyInfoNavBar.keyMap = this.keyMap;
+    this.#showWelcomeMessage();
+    this.#setQueryStringFromState();
   }
 
-  /* Call attributeChangedCallback when any of these attributes are changed from JavaScript
-   * (changes to other attributes are ignored).
-   */
-  static get observedAttributes() {
-    return ["debug", "keyboard-element", "selected-key"];
+  private _availableKeyMaps: KeyMap[] = [];
+  get availableKeyMaps(): KeyMap[] {
+    return this._availableKeyMaps;
   }
-
-  /* Run this code when an attribute is changed from JavaScript.
-   * Does not run if an attribute is set when defined on the element in HTML.
-   */
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    switch (name) {
-      case "debug":
-        if (newValue === "true") {
-          this.enableDebug = true;
-          log.setLevel(log.levels.DEBUG);
-        } else {
-          this.enableDebug = false;
-          log.setLevel(log.levels.INFO);
-        }
-        this.#drawDiagram();
-        break;
-      case "keyboard-element":
-        if (!customElements.get(newValue)) {
-          throw new Error(
-            `KeyMapUI: Keyboard element ${newValue} not found - has it been defined with customElements.define(), or if using a library, imported and registered?`
-          );
-        } else {
-          this.keyboard = document.createElement(newValue) as KeyBoard;
-        }
-        break;
-      case "selected-key":
-        this.#updateSelectedKey(newValue);
-        break;
-      default:
-        console.error(`KeyMapUI: Unhandled attribute: ${name}`);
-        break;
+  set availableKeyMaps(value: KeyMap[]) {
+    this._availableKeyMaps = value;
+    if (!this._availableKeyMaps.includes(this.keyboard.blankKeyMap)) {
+      this._availableKeyMaps.push(this.keyboard.blankKeyMap);
+    }
+    this._availableKeyMaps.forEach((keyMap) => {
+      this._availableKeyMapsById.set(keyMap.uniqueId, keyMap);
+    });
+    if (!this.keyMapName || !this.availableKeyMapsById.has(this.keyMapName)) {
+      this.keyMapName = this._availableKeyMaps[0].uniqueId;
     }
   }
+  private _availableKeyMapsById: Map<string, KeyMap> = new Map();
+  get availableKeyMapsById(): Map<string, KeyMap> {
+    return this._availableKeyMapsById;
+  }
 
-  //
-  // Private methods
-  //
+  private _layer: number = 0;
+  get layer(): number {
+    return this._layer;
+  }
+  set layer(value: number) {
+    this._layer = value;
+    this.#setQueryStringFromState();
+  }
 
-  /* Resize the canvas to the size of the kidContainer.
-   */
-  #resizeCanvas = () => {
-    this.diagram.width = this.kidContainer.offsetWidth;
-    this.diagram.height = this.kidContainer.offsetHeight;
-    this.#drawDiagram();
-  };
-
-  /* Handle an external change to the selected-key attribute
-   */
-  #updateSelectedKey(selectedKey: string) {
+  private _selectedKey: string = "";
+  get selectedKey(): string {
+    return this._selectedKey;
+  }
+  set selectedKey(value: string) {
     let keySelection: string[] = [];
     const indicatedElementsById: { [key: string]: KeyHandle } = {};
     let proseKeyIndicators: KeyIndicator[] = [];
     let indicatedKeyIds: string[] = [];
 
-    if (selectedKey) {
-      const keyData = this.keyMap.keys.get(selectedKey);
+    if (value) {
+      const keyData = this.keyMap.keys.get(value);
       if (!keyData) {
         console.error(
-          `KeyMapUI: Key ${selectedKey} not found in key map '${this.keyMap.name}'`
+          `KeyMapUI: Key ${value} not found in key map '${this.keyMap.uniqueId}'`
         );
         return;
       }
@@ -398,11 +409,13 @@ export class KeyMapUI extends HTMLElement {
       this.#showWelcomeMessage();
     }
 
+    this._selectedKey = value;
+
     // Clear any existing connections that back the diagram lines
     this.connectionPairs = [];
 
     // Update the key in the key info navbar
-    this.keyInfoNavBar.setAttribute("key-id", selectedKey);
+    this.keyInfoNavBar.setAttribute("key-id", value);
     const navBarHandle = this.keyInfoNavBar.querySelector("key-handle");
 
     // Update every key on the board
@@ -416,7 +429,7 @@ export class KeyMapUI extends HTMLElement {
         console.error(`KeyMapUI: Keyboard child key has no id: ${key}`);
         return;
       }
-      const active = keyId === selectedKey;
+      const active = keyId === value;
       const inKeySelection = !active && keySelection.indexOf(keyId) > -1;
       const indicatorTarget = indicatedKeyIds.indexOf(keyId) > -1;
       key.setAttribute("active", active.toString());
@@ -461,7 +474,268 @@ export class KeyMapUI extends HTMLElement {
       );
     });
 
+    this.#setQueryStringFromState();
     this.#drawDiagram();
+  }
+
+  private queryPrefix = "";
+
+  //
+  // Lifecycle methods / callbacks
+  //
+
+  /* Run this code when the element is added to the DOM.
+   * This might be before or after attributes are changed.
+   * Run whether the element is created from HTML or from JavaScript.
+   */
+  connectedCallback() {
+    this.#logCurrentStateAndQueryString("connectedCallback(): Top");
+    // Set debugging stuff first, which does not rely on query parameters
+    const debug = this.getAttribute("debug") || "false";
+    this.attributeChangedCallback("debug", "", debug);
+
+    // Then read the keyboard, keymap, layer, and selected key.
+    // Unless overridden by the query parameters, these will be set to the attributes on the element.
+    const keyboardElement = this.getAttribute("keyboard-element") || "";
+    this.attributeChangedCallback("keyboard-element", "", keyboardElement);
+    this.#logCurrentStateAndQueryString(
+      "connectedCallback(): Just set keyboard element"
+    );
+
+    const keyMapName = this.getAttribute("keymap-id") || "";
+    this.attributeChangedCallback("keymap-id", "", keyMapName);
+    this.#logCurrentStateAndQueryString(
+      "connectedCallback(): Just set keymap id"
+    );
+
+    const layer = this.getAttribute("layer") || "";
+    this.attributeChangedCallback("layer", "", layer);
+    this.#logCurrentStateAndQueryString("connectedCallback(): Just set layer");
+
+    const selectedKey = this.getAttribute("selected-key") || "";
+    this.attributeChangedCallback("selected-key", "", selectedKey);
+    this.#logCurrentStateAndQueryString(
+      "connectedCallback(): Just set selected key"
+    );
+
+    // Then set the query prefix, which determines which query parameters we read.
+    // Its attributeChangedCallback will read the query string and update the state.
+    const queryPrefix = this.getAttribute("query-prefix") || "";
+    this.attributeChangedCallback("query-prefix", "", queryPrefix);
+    this.#logCurrentStateAndQueryString(
+      "connectedCallback(): Just set query prefix"
+    );
+
+    this.#setStateFromQueryString();
+    this.layOutIdempotently();
+
+    // Resize the canvas to the size of the kidContainer for the first time
+    this.#resizeCanvas();
+    // Watch for changes in the size of the kidContainer
+    this.resizeObserver.observe(this.kidContainer);
+  }
+
+  /* Call attributeChangedCallback when any of these attributes are changed from JavaScript
+   * (changes to other attributes are ignored).
+   */
+  static get observedAttributes() {
+    return [
+      "debug",
+      "keyboard-element",
+      "keymap-id",
+      "layer",
+      "query-prefix",
+      "selected-key",
+    ];
+  }
+
+  /* Run this code when an attribute is changed from JavaScript.
+   * Does not run if an attribute is set when defined on the element in HTML.
+   */
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    // Don't do anything if we're not connected to the DOM.
+    // This function is called by connectedCallback() for each attribute anyway,
+    // and that function uses a specific order to set the internal properties correctly.
+    if (!this.isConnected) {
+      return;
+    }
+
+    switch (name) {
+      case "debug":
+        if (newValue === "true") {
+          this.enableDebug = true;
+          log.setLevel(log.levels.DEBUG);
+        } else {
+          this.enableDebug = false;
+          log.setLevel(log.levels.INFO);
+        }
+        this.#drawDiagram();
+        break;
+      case "keyboard-element":
+        this.keyboardElementName = newValue;
+        break;
+      case "keymap-id":
+        this.keyMapName = newValue;
+        break;
+      case "layer":
+        this.layer = parseInt(newValue, 10);
+        break;
+      case "query-prefix":
+        this.#updateQueryPrefix(oldValue, newValue);
+        break;
+      case "selected-key":
+        this.selectedKey = newValue;
+        break;
+      default:
+        console.error(`KeyMapUI: Unhandled attribute: ${name}`);
+        break;
+    }
+  }
+
+  //
+  // Private methods
+  //
+
+  /* Resize the canvas to the size of the kidContainer.
+   */
+  #resizeCanvas = () => {
+    this.diagram.width = this.kidContainer.offsetWidth;
+    this.diagram.height = this.kidContainer.offsetHeight;
+    this.#drawDiagram();
+  };
+
+  /* Read the query string and update the state of the KeyMapUI.
+   */
+  #setStateFromQueryString() {
+    if (!this.queryPrefix) {
+      return;
+    }
+    const currentParams = new URLSearchParams(window.location.search);
+
+    const qBoard = currentParams.get(`${this.queryPrefix}-board`);
+    const qMap = currentParams.get(`${this.queryPrefix}-map`);
+    const qLayer = currentParams.get(`${this.queryPrefix}-layer`);
+    const qKey = currentParams.get(`${this.queryPrefix}-key`);
+
+    if (qBoard) {
+      this.keyboardElementName = qBoard;
+      // TODO: when we set it this way, and the map is also set in the query string, do we need to wait for the attributeChangedCallback to run before we can continue? How?
+    }
+
+    if (qMap) {
+      const selectedMap = this.availableKeyMapsById.get(qMap);
+      if (selectedMap) {
+        this.keyMapName = qMap;
+      } else {
+        console.error(
+          `KeyMapUI: Key map ${qMap} not found in available key maps`
+        );
+      }
+    }
+
+    if (qLayer) {
+      this.layer = parseInt(qLayer, 10);
+    }
+
+    if (qKey) {
+      this.selectedKey = qKey;
+    }
+  }
+
+  /* Update the query prefix and any query parameters that use it.
+   */
+  #updateQueryPrefix(oldValue: string, newValue: string) {
+    this.#logCurrentStateAndQueryString(`#updateQueryPrefix() Top`);
+    this.queryPrefix = newValue;
+    this.#logCurrentStateAndQueryString(
+      `#updateQueryPrefix() One Down From Top`
+    );
+    if (oldValue) {
+      // Remove all old query parameters with the old prefix
+      const [params, newQs] = KeyMapUIOptions.parseQueryString(
+        oldValue,
+        window.location.search
+      );
+      const newUrl = params.any
+        ? `${window.location.pathname}?${newQs.toString()}`
+        : `${window.location.pathname}`;
+      window.history.replaceState({}, "", newUrl);
+      this.#logCurrentStateAndQueryString(
+        `#updateQueryPrefix() After modifying the old parameters`
+      );
+    } else {
+      this.#logCurrentStateAndQueryString(
+        `#updateQueryPrefix() No old query prefix`
+      );
+    }
+    // Re-sync the query parameters with the new prefix
+    // this.#setQueryStringFromState();
+  }
+
+  /* Set the query string based on the current state.
+   *
+   * This is called whenever one of the queryable attributes changes.
+   * It does not affect any query parameters other than those with the query prefix.
+   *
+   * If any of the query parameters match the attributes on the element in the DOM,
+   * they are removed from the query string.
+   * This means the query string overrides the attributes on the element,
+   * and the URL isn't cluttered with unnecessary query parameters.
+   *
+   * This function doesn't handle changes to the query prefix itself;
+   * that is handled by #updateQueryPrefix().
+   */
+  #setQueryStringFromState() {
+    if (!this.queryPrefix) {
+      return;
+    }
+    if (!this.isConnected) {
+      return;
+    }
+    const newParams = new URLSearchParams(window.location.search);
+
+    const tBoardElement = this.keyboardElementName;
+    const tMap = this.keyMapName;
+    const tLayer = this.layer;
+    const tKey = this.selectedKey;
+
+    const aBoardElement = this.getAttribute("keyboard-element") || "";
+    const aMap = this.getAttribute("keymap-id") || "";
+    const aLayer = parseInt(this.getAttribute("layer") || "0", 10);
+    const aKey = this.getAttribute("selected-key") || "";
+
+    if (tBoardElement && aBoardElement !== tBoardElement) {
+      newParams.set(`${this.queryPrefix}-board`, tBoardElement);
+    } else {
+      newParams.delete(`${this.queryPrefix}-board`);
+    }
+
+    if (tMap && aMap !== tMap) {
+      newParams.set(`${this.queryPrefix}-map`, tMap);
+    } else {
+      newParams.delete(`${this.queryPrefix}-map`);
+    }
+
+    if (tLayer && aLayer !== tLayer) {
+      newParams.set(`${this.queryPrefix}-layer`, tLayer.toString());
+    } else {
+      newParams.delete(`${this.queryPrefix}-layer`);
+    }
+
+    if (tKey && aKey !== tKey) {
+      newParams.set(`${this.queryPrefix}-key`, tKey);
+    } else {
+      newParams.delete(`${this.queryPrefix}-key`);
+    }
+
+    const newUrl =
+      newParams.toString() !== ""
+        ? `${window.location.pathname}?${newParams.toString()}`
+        : `${window.location.pathname}`;
+
+    if (window.location.search !== `?${newUrl}`) {
+      window.history.replaceState({}, "", newUrl);
+    }
   }
 
   /* Draw the diagram lines connecting the keys to the info panel
@@ -524,9 +798,140 @@ export class KeyMapUI extends HTMLElement {
    * This is a custom event that is fired by <keyboard-key> elements.
    */
   #handleKeySelected(event: Event) {
-    // console.log(`KeyMapUI.#handleKeySelected(${event.detail})`);
     const e = event as CustomEvent; // TODO: is there something nicer I can do instead?
     const keyId = e.detail;
-    this.setAttribute("selected-key", keyId);
+    this.selectedKey = keyId;
+  }
+
+  /* A helper function to show the current state and query string
+   */
+  #logCurrentStateAndQueryString(logPrefix: string) {
+    if (!this.enableDebug) {
+      return;
+    }
+
+    const currentParams = new URLSearchParams(window.location.search);
+    const qBoard = currentParams.get(`${this.queryPrefix}-board`);
+    const qMap = currentParams.get(`${this.queryPrefix}-map`);
+    const qLayer = currentParams.get(`${this.queryPrefix}-layer`);
+    const qKey = currentParams.get(`${this.queryPrefix}-key`);
+
+    const tPrefix = this.queryPrefix;
+    const tBoardElement = this.keyboardElementName;
+    const tMap = this.keyMapName;
+    const tLayer = this.layer;
+    const tKey = this.selectedKey;
+
+    const aPrefix = this.getAttribute("query-prefix") || "";
+    const aBoardElement = this.getAttribute("keyboard-element") || "";
+    const aMap = this.getAttribute("keymap-id") || "";
+    const aLayer = parseInt(this.getAttribute("layer") || "0", 10);
+    const aKey = this.getAttribute("selected-key") || "";
+
+    const logTable = {
+      state: {
+        prefix: tPrefix,
+        board: tBoardElement,
+        map: tMap,
+        layer: tLayer,
+        key: tKey,
+      },
+      attribute: {
+        prefix: aPrefix,
+        board: aBoardElement,
+        map: aMap,
+        layer: aLayer,
+        key: aKey,
+      },
+      queryString: {
+        prefix: "N/A",
+        board: qBoard,
+        map: qMap,
+        layer: qLayer,
+        key: qKey,
+      },
+    };
+
+    console.log(
+      `${logPrefix}: current raw query string: ${window.location.search}, current state:`
+    );
+    console.table(logTable);
+  }
+}
+
+/* The options that can be passed in the query string.
+ */
+class KeyMapUIOptions {
+  prefix: string;
+  board: string;
+  map: string;
+  layer: string;
+  id: string;
+
+  constructor({
+    prefix,
+    board,
+    map,
+    layer,
+    id,
+  }: {
+    prefix: string;
+    board?: string;
+    map?: string;
+    layer?: string;
+    id?: string;
+  }) {
+    this.prefix = prefix;
+    this.board = board || "";
+    this.map = map || "";
+    this.layer = layer || "";
+    this.id = id || "";
+  }
+
+  /* Parse a query string and return a QueryStringParams object.
+   *
+   * Can be passed the current window query string with window.location.search.
+   *
+   * Returns a QueryStringParams object and the input queryString with any parsed parameters removed.
+   */
+  static parseQueryString(
+    prefix: string,
+    queryString: string
+  ): [KeyMapUIOptions, URLSearchParams] {
+    const params = new URLSearchParams(queryString);
+    const newParams = new URLSearchParams();
+    const result = new KeyMapUIOptions({ prefix });
+    params.forEach((value, key) => {
+      switch (key) {
+        case `${prefix}-board`:
+          result.board = value;
+          break;
+        case `${prefix}-map`:
+          result.map = value;
+          break;
+        case `${prefix}-layer`:
+          result.layer = value;
+          break;
+        case `${prefix}-id`:
+          result.id = value;
+          break;
+        default:
+          newParams.set(key, value);
+          break;
+      }
+    });
+    return [result, newParams];
+  }
+
+  /* True if any of the parameters are set.
+   */
+  get any(): boolean {
+    return !!this.board || !!this.map || !!this.layer || !!this.id;
+  }
+
+  /* Show a nice string
+   */
+  toString(): string {
+    return `KeyMapUIOptions: prefix: ${this.prefix}, board: ${this.board}, map: ${this.map}, layer: ${this.layer}, id: ${this.id}`;
   }
 }

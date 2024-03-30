@@ -120,14 +120,16 @@ export class KeyMapGuide {
  * TODO: Implement multiple layers.
  */
 export class KeyMap {
-  name: string;
+  displayName: string;
+  uniqueId: string;
   welcome: string[];
   guides: KeyMapGuide[];
   keys: Map<string, KeyMapKey>;
   private _duplicateKeys: KeyMapKey[] = [];
 
   constructor({
-    name,
+    displayName,
+    uniqueId,
     welcome,
     keys,
     guides,
@@ -139,13 +141,15 @@ export class KeyMap {
       ],
     }),
   }: {
-    name: string;
+    displayName: string;
+    uniqueId: string;
     welcome: string[];
     keys: KeyMapKey[];
     guides?: KeyMapGuide[];
     unusedKey?: KeyMapKey;
   }) {
-    this.name = name;
+    this.displayName = displayName;
+    this.uniqueId = uniqueId;
     this.welcome = welcome;
     this.keys = keys.reduce((map, key) => {
       if (map.has(key.id)) {

@@ -83,7 +83,7 @@ export abstract class KeyBoard extends HTMLElement {
    */
   get blankKeyMapKeys(): KeyMapKey[] {
     return this.physicalKeys.map(
-      (key) => new KeyMapKey({ name: "unset", id: key.id, info: ["Unset"] })
+      (key) => new KeyMapKey({ name: "", id: key.id, info: [""], unset: true })
     );
   }
 
@@ -91,7 +91,8 @@ export abstract class KeyBoard extends HTMLElement {
    */
   get blankKeyMap(): KeyMap {
     return new KeyMap({
-      name: "blank",
+      displayName: "Blank keymap",
+      uniqueId: "blank",
       welcome: ["This is a blank key map"],
       keys: this.blankKeyMapKeys,
       guides: [],

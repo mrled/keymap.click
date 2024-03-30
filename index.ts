@@ -46,18 +46,37 @@ const debugListItem = document.createElement("li");
 debugListItem.appendChild(debugCheckbox);
 debugListItem.appendChild(debugLabel);
 
+const clearQueryStringButton = document.createElement("button");
+clearQueryStringButton.textContent = "Clear query string";
+clearQueryStringButton.addEventListener("click", () => {
+  window.history.pushState({}, document.title, window.location.pathname);
+  window.location.reload();
+});
+const clearQueryStringListItem = document.createElement("li");
+clearQueryStringListItem.appendChild(clearQueryStringButton);
+
+const testLink = document.createElement("a");
+testLink.href = "http://localhost:5173/?kmui-key=l-f-10-9&kmui-map=blank";
+testLink.textContent = "Hit test URL";
+const testListItem = document.createElement("li");
+testListItem.appendChild(testLink);
+
 const menuList = document.createElement("ul");
 menuList.className = "site-menu";
 menuList.appendChild(aboutListItem);
 menuList.appendChild(debugListItem);
+menuList.appendChild(clearQueryStringListItem);
+menuList.appendChild(testListItem);
 titleBar.appendChild(menuList);
 
 app.appendChild(titleBar);
 
 const keyMapUI = document.createElement("key-map-ui") as KeyMapUI;
 keyMapUI.setAttribute("keyboard-element", "key-board-ergodox");
+keyMapUI.availableKeyMaps = [MicahErgodoxLayout];
+keyMapUI.setAttribute("keymap-id", "micah-ergodox");
+keyMapUI.setAttribute("query-prefix", "kmui");
 app.appendChild(keyMapUI);
-keyMapUI.keyMap = MicahErgodoxLayout;
 
 const footer = document.createElement("p");
 footer.className = "site-footer";

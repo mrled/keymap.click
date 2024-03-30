@@ -247,7 +247,8 @@ function newQwertyKey(
 }
 
 export const MicahErgodoxLayout = new KeyMap({
-  name: "Micah's ErgoDox",
+  displayName: "Micah's ErgoDox",
+  uniqueId: "micah-ergodox",
   welcome: [
     `Welcome to my keymap. I wrote this guide to explain how my ErgoDox helped my RSI.`,
     `Select a key from the board above to learn more about it.`,
