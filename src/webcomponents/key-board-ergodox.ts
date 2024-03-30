@@ -127,13 +127,6 @@ export class KeyBoardErgodox extends KeyBoard {
   }
 
   /* Create key-grid and keyboard-key elements from key data for this board.
-   *
-   * Use this method when defining this element programmatically.
-   * (Not necessary if you want to just list all the child elements in HTML.
-   *
-   * Arguments:
-   *   keymapName:    Name of the keymap to use, define in lib/keys.js
-   *   legendmapName: Name of the legend map to use, defined in lib/keys.js
    */
   createChildren(keys: KeyMapKey[]) {
     this.removeAllChildren();
