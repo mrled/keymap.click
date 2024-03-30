@@ -3,25 +3,20 @@ import { Point } from "~/lib/geometry.js";
 /* A key connection
  * sourceCoords:    Coordinates for a source element in the key info panel.
  * targetCoords:    Coordinates for a target key in the keyboard.
- * targetKeyId:     ID for the target key.
  * type:            A KeyInfoConnectType value.
- * TODO: do we need targetKeyId at all?
  */
 export class Connection {
   sourceCoords: Point;
   targetCoords: Point;
-  targetKeyId: string;
   connectionType: KeyInfoConnectType;
 
   constructor(
     sourceCoords: Point,
     targetCoords: Point,
-    targetKeyId: string,
     connectionType: KeyInfoConnectType
   ) {
     this.sourceCoords = sourceCoords;
     this.targetCoords = targetCoords;
-    this.targetKeyId = targetKeyId;
     this.connectionType = connectionType;
   }
 
@@ -59,8 +54,7 @@ export class ConnectionPair {
   get connection() {
     const sourceCoords = connectionPointFromElement(this.source);
     const targetCoords = connectionPointFromElement(this.target);
-    const targetKeyId = this.target.getAttribute("id") || "";
-    return new Connection(sourceCoords, targetCoords, targetKeyId, this.type);
+    return new Connection(sourceCoords, targetCoords, this.type);
   }
 }
 
