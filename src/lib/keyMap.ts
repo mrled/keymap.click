@@ -133,20 +133,12 @@ export class KeyMap {
     welcome,
     keys,
     guides,
-    unusedKey = new KeyMapKey({
-      name: "unset",
-      id: "unset",
-      info: [
-        "This key is physically present on the board but not defined in the keymap.",
-      ],
-    }),
   }: {
     displayName: string;
     uniqueId: string;
     welcome: string[];
     keys: KeyMapKey[];
     guides?: KeyMapGuide[];
-    unusedKey?: KeyMapKey;
   }) {
     this.displayName = displayName;
     this.uniqueId = uniqueId;
