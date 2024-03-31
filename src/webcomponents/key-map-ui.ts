@@ -341,24 +341,6 @@ export class KeyMapUI
   // Other properties
   //
 
-  private _keyboards: string[] = [];
-  get keyboards(): string[] {
-    return this._keyboards;
-  }
-  set keyboards(value: string[]) {
-    this._keyboards = [];
-    // For each keyboard element name we have just set,
-    // add its blank keymap to our keymaps property.
-    value.forEach((kbName) => {
-      const kbElement = customElements.get(kbName);
-      if (!kbElement) {
-        return;
-      }
-      this._keyboards.push(kbName);
-      this.#idempotentlyAddBlankKeyMap(kbName);
-    });
-  }
-
   get keyMap(): KeyMap {
     const keyMapId = this.state.getState("keymapId");
     const keyboard = this.state.getState("keyboardElementName");
@@ -379,10 +361,8 @@ export class KeyMapUI
   }
   set keymaps(value: Map<string, Map<string, KeyMap>>) {
     this._keymaps = value;
-
-    this.keyboards.forEach((kbName) =>
-      this.#idempotentlyAddBlankKeyMap(kbName)
-    );
+    const keyboard = this.state.getState("keyboardElementName");
+    this.#idempotentlyAddBlankKeyMap(keyboard);
   }
 
   /* Given a list of KeyMap instances, set the keymaps property.
@@ -518,10 +498,6 @@ export class KeyMapUI
     if (!customElements.get(value)) {
       throw new Error(
         `KeyMapUI: Keyboard element "${value}" not found - has it been defined with customElements.define(), or if using a library, imported and registered?`
-      );
-    } else if (!this._keyboards.includes(value)) {
-      throw new Error(
-        `KeyMapUI: Keyboard element "${value}" not found in the list of available keyboards (${this._keyboards.join()})`
       );
     }
     const oldKeyboard = this._keyboard;

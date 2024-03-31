@@ -83,8 +83,6 @@ const kmuiTitle = document.createElement("key-map-ui") as KeyMapUI;
 kmuiTitle.setAttribute("id", "kmui-title");
 // kmuiTitle.setAttribute("debug", "true");
 kmuiTitle.setKeymaps(availableKeymaps);
-// TODO: it's confusing to set both .keyboards property and the keyboard-element attribute, improve this.
-kmuiTitle.keyboards = ["key-board-ergodox", "key-board-title-screen"];
 kmuiTitle.setAttribute("keyboard-element", "key-board-title-screen");
 kmuiTitle.setAttribute("keymap-id", "title-screen-map");
 app.appendChild(kmuiTitle);
@@ -97,7 +95,6 @@ app.appendChild(ergodoxDesc);
 const kmuiErgoDox = document.createElement("key-map-ui") as KeyMapUI;
 kmuiErgoDox.setAttribute("id", "kmui-ergodox");
 kmuiErgoDox.setKeymaps(availableKeymaps);
-kmuiErgoDox.keyboards = ["key-board-ergodox", "key-board-title-screen"];
 kmuiErgoDox.setAttribute("keyboard-element", "key-board-ergodox");
 kmuiErgoDox.setAttribute("keymap-id", "micah-ergodox");
 kmuiErgoDox.setAttribute("query-prefix", "kmui");
