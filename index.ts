@@ -35,7 +35,7 @@ const debugCheckbox = document.createElement("input");
 debugCheckbox.type = "checkbox";
 debugCheckbox.id = "debug-checkbox";
 debugCheckbox.addEventListener("change", () => {
-  const keyMapUi = document.querySelector("key-map-ui");
+  const keyMapUi = document.querySelector("key-map-ui#kmui-ergodox");
   if (keyMapUi) {
     keyMapUi.setAttribute("debug", debugCheckbox.checked.toString());
   }
