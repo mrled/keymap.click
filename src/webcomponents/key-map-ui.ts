@@ -222,9 +222,6 @@ export class KeyMapUI
           );
         }
         newElementName = keyboardElementName;
-      } else if (this.keyboards.length > 0) {
-        // If that fails, try the first keyboard in the list of keyboard element names
-        newElementName = this.keyboards[0];
       } else {
         // Finally, fall back to the default keyboard element name
         newElementName = "key-board-title-screen";
