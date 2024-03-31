@@ -95,26 +95,28 @@ export interface IStateObserver<T> {
   update(key: keyof T, oldValue: T[keyof T], newValue: T[keyof T]): void;
 }
 
+type KeyMapUIStateValue = KeyMapUIState[keyof KeyMapUIState];
+
 /* A state provider class
  *
  * The state provider is responsible for managing state observers and notifying them of changes.
  */
-export class StateProvider<T> implements IStateProvider<T> {
-  private observers: IStateObserver<T>[] = [];
-  private state: T;
+export class KeyMapUIStateProvider implements IStateProvider<KeyMapUIState> {
+  private observers: IStateObserver<KeyMapUIState>[] = [];
+  private state: KeyMapUIState;
 
-  constructor(initialState: T) {
+  constructor(initialState: KeyMapUIState = new KeyMapUIState()) {
     this.state = initialState;
   }
 
-  attach(observer: IStateObserver<T>): void {
+  attach(observer: IStateObserver<KeyMapUIState>): void {
     const isExist = this.observers.includes(observer);
     if (!isExist) {
       this.observers.push(observer);
     }
   }
 
-  detach(observer: IStateObserver<T>): void {
+  detach(observer: IStateObserver<KeyMapUIState>): void {
     const observerIndex = this.observers.indexOf(observer);
     if (observerIndex !== -1) {
       this.observers.splice(observerIndex, 1);
@@ -122,16 +124,19 @@ export class StateProvider<T> implements IStateProvider<T> {
   }
 
   notify(
-    changedKey: keyof T,
-    oldValue: T[keyof T],
-    newValue: T[keyof T]
+    changedKey: keyof KeyMapUIState,
+    oldValue: KeyMapUIStateValue,
+    newValue: KeyMapUIStateValue
   ): void {
     for (const observer of this.observers) {
       observer.update(changedKey, oldValue, newValue);
     }
   }
 
-  setState<K extends keyof T>(key: K, newValue: T[K]): void {
+  setState<K extends keyof KeyMapUIState>(
+    key: K,
+    newValue: KeyMapUIState[K]
+  ): void {
     if (this.state[key] === newValue) {
       // Don't notify observers if the value hasn't changed;
       // this is faster but more importantly avoids infinite loops.
@@ -142,7 +147,95 @@ export class StateProvider<T> implements IStateProvider<T> {
     this.notify(key, oldValue, newValue);
   }
 
-  getState<K extends keyof T>(key: K): T[K] {
+  getState<K extends keyof KeyMapUIState>(key: K): KeyMapUIState[K] {
     return this.state[key];
+  }
+
+  /* Read the query string and update the state of the KeyMapUI.
+   */
+  setStateFromQueryString() {
+    const queryPrefix = this.getState("queryPrefix");
+
+    if (!queryPrefix) {
+      return;
+    }
+    const currentParams = new URLSearchParams(window.location.search);
+
+    const qBoard = currentParams.get(`${queryPrefix}-board`);
+    const qMap = currentParams.get(`${queryPrefix}-map`);
+    const qLayer = currentParams.get(`${queryPrefix}-layer`);
+    const qKey = currentParams.get(`${queryPrefix}-key`);
+
+    if (qBoard) this.setState("keyboardElementName", qBoard);
+    if (qMap) this.setState("keymapId", qMap);
+    if (qLayer) this.setState("layer", parseInt(qLayer, 10));
+    if (qKey) this.setState("selectedKey", qKey);
+  }
+
+  /* Set the query string based on the current state.
+   *
+   * This is called whenever one of the queryable attributes changes.
+   * It does not affect any query parameters other than those with the query prefix.
+   *
+   * If any of the query parameters match the attributes on the element in the DOM,
+   * they are removed from the query string.
+   * This means the query string overrides the attributes on the element,
+   * and the URL isn't cluttered with unnecessary query parameters.
+   *
+   * This function doesn't handle changes to the query prefix itself;
+   * that is handled by #updateQueryPrefix().
+   *
+   * Requires the element to be passed in so we can get the current attribute values.
+   */
+  setQueryStringFromState(element: HTMLElement) {
+    const queryPrefix = this.getState("queryPrefix");
+
+    if (!queryPrefix) {
+      return;
+    }
+    const newParams = new URLSearchParams(window.location.search);
+
+    const tBoardElement = this.getState("keyboardElementName");
+    const tMap = this.getState("keymapId");
+    const tLayer = this.getState("layer");
+    const tKey = this.getState("selectedKey");
+
+    const aBoardElement = element.getAttribute("keyboard-element") || "";
+    const aMap = element.getAttribute("keymap-id") || "";
+    const aLayer = parseInt(element.getAttribute("layer") || "0", 10);
+    const aKey = element.getAttribute("selected-key") || "";
+
+    if (tBoardElement && aBoardElement !== tBoardElement) {
+      newParams.set(`${queryPrefix}-board`, tBoardElement);
+    } else {
+      newParams.delete(`${queryPrefix}-board`);
+    }
+
+    if (tMap && aMap !== tMap) {
+      newParams.set(`${queryPrefix}-map`, tMap);
+    } else {
+      newParams.delete(`${queryPrefix}-map`);
+    }
+
+    if (tLayer && aLayer !== tLayer) {
+      newParams.set(`${queryPrefix}-layer`, tLayer.toString());
+    } else {
+      newParams.delete(`${queryPrefix}-layer`);
+    }
+
+    if (tKey && aKey !== tKey) {
+      newParams.set(`${queryPrefix}-key`, tKey);
+    } else {
+      newParams.delete(`${queryPrefix}-key`);
+    }
+
+    const newUrl =
+      newParams.toString() !== ""
+        ? `${window.location.pathname}?${newParams.toString()}`
+        : `${window.location.pathname}`;
+
+    if (window.location.search !== `?${newUrl}`) {
+      window.history.replaceState({}, "", newUrl);
+    }
   }
 }

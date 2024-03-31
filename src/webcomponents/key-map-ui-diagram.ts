@@ -3,7 +3,7 @@
 import {
   IStateObserver,
   KeyMapUIState,
-  StateProvider,
+  KeyMapUIStateProvider,
 } from "~/lib/KeyMapUIState";
 import { drawDiagram } from "~/lib/diagram";
 
@@ -16,10 +16,8 @@ export class KeyMapUIDiagram
   diamargRight: HTMLElement | null = null;
   infoProse: HTMLElement | null = null;
 
-  private _state: StateProvider<KeyMapUIState> = new StateProvider(
-    new KeyMapUIState()
-  );
-  set state(state: StateProvider<KeyMapUIState>) {
+  private _state: KeyMapUIStateProvider = new KeyMapUIStateProvider();
+  set state(state: KeyMapUIStateProvider) {
     this._state = state;
     this.draw();
   }

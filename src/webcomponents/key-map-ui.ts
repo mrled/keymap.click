@@ -12,7 +12,7 @@ import { KeyMapUIDiagram } from "./key-map-ui-diagram";
 import {
   IStateObserver,
   KeyMapUIState,
-  StateProvider,
+  KeyMapUIStateProvider,
 } from "~/lib/KeyMapUIState";
 
 /* The UI of the keymap, including a keyboard, an info panel, and the canvas diagram.
@@ -76,14 +76,14 @@ export class KeyMapUI
    * This should not be set outside of the constructor
    * (but state.setState() can be used to set individual properties outside of the constructor).
    */
-  private state: StateProvider<KeyMapUIState>;
+  private state: KeyMapUIStateProvider;
 
   constructor() {
     super();
 
     /* Set the state object that will be passed to all children.
      */
-    this.state = new StateProvider(new KeyMapUIState());
+    this.state = new KeyMapUIStateProvider();
     this.state.setState("initialized", true);
     this.state.attach(this);
 
@@ -464,7 +464,7 @@ export class KeyMapUI
       "connectedCallback(): Just set query prefix"
     );
 
-    this.#setStateFromQueryString();
+    this.state.setStateFromQueryString();
     this.layOutIdempotently();
 
     // Resize the canvas to the size of the kidContainer for the first time
@@ -569,7 +569,7 @@ export class KeyMapUI
     }
 
     this.layOutIdempotently();
-    this.#setQueryStringFromState();
+    this.state.setQueryStringFromState(this);
   }
 
   /* Update the keymap ID
@@ -587,13 +587,13 @@ export class KeyMapUI
     this.keyInfoNavBar.referenceKeyboard = this.keyboard;
     this.keyInfoNavBar.keyMap = this.keyMap;
     this.#showWelcomeMessage();
-    this.#setQueryStringFromState();
+    this.state.setQueryStringFromState(this);
   }
 
   /* Update the layer
    */
   #updateLayer(value: number) {
-    this.#setQueryStringFromState();
+    this.state.setQueryStringFromState(this);
   }
 
   /* Update the selected key
@@ -693,7 +693,7 @@ export class KeyMapUI
 
     this.state.setState("connectionPairs", connectionPairs);
 
-    this.#setQueryStringFromState();
+    this.state.setQueryStringFromState(this);
     this.diagram.draw();
   }
 
@@ -752,114 +752,6 @@ export class KeyMapUI
       this.kidContainer.offsetWidth,
       this.kidContainer.offsetHeight
     );
-
-  /* Read the query string and update the state of the KeyMapUI.
-   */
-  #setStateFromQueryString() {
-    const queryPrefix = this.state.getState("queryPrefix");
-
-    if (!queryPrefix) {
-      return;
-    }
-    const currentParams = new URLSearchParams(window.location.search);
-
-    const qBoard = currentParams.get(`${queryPrefix}-board`);
-    const qMap = currentParams.get(`${queryPrefix}-map`);
-    const qLayer = currentParams.get(`${queryPrefix}-layer`);
-    const qKey = currentParams.get(`${queryPrefix}-key`);
-
-    if (qBoard) {
-      this.state.setState("keyboardElementName", qBoard);
-      // TODO: when we set it this way, and the map is also set in the query string, do we need to wait for the attributeChangedCallback to run before we can continue? How?
-    }
-
-    if (qMap) {
-      const selectedMap = this.keymapsById.get(qMap);
-      if (selectedMap) {
-        this.state.setState("keymapId", qMap);
-      } else {
-        console.error(
-          `KeyMapUI: Key map ${qMap} not found in available key maps`
-        );
-      }
-    }
-
-    if (qLayer) {
-      this.state.setState("layer", parseInt(qLayer, 10));
-    }
-
-    if (qKey) {
-      this.state.setState("selectedKey", qKey);
-    }
-  }
-
-  /* Set the query string based on the current state.
-   *
-   * This is called whenever one of the queryable attributes changes.
-   * It does not affect any query parameters other than those with the query prefix.
-   *
-   * If any of the query parameters match the attributes on the element in the DOM,
-   * they are removed from the query string.
-   * This means the query string overrides the attributes on the element,
-   * and the URL isn't cluttered with unnecessary query parameters.
-   *
-   * This function doesn't handle changes to the query prefix itself;
-   * that is handled by #updateQueryPrefix().
-   */
-  #setQueryStringFromState() {
-    const queryPrefix = this.state.getState("queryPrefix");
-
-    if (!queryPrefix) {
-      return;
-    }
-    if (!this.isConnected) {
-      return;
-    }
-    const newParams = new URLSearchParams(window.location.search);
-
-    const tBoardElement = this.state.getState("keyboardElementName");
-    const tMap = this.state.getState("keymapId");
-    const tLayer = this.state.getState("layer");
-    const tKey = this.state.getState("selectedKey");
-
-    const aBoardElement = this.getAttribute("keyboard-element") || "";
-    const aMap = this.getAttribute("keymap-id") || "";
-    const aLayer = parseInt(this.getAttribute("layer") || "0", 10);
-    const aKey = this.getAttribute("selected-key") || "";
-
-    if (tBoardElement && aBoardElement !== tBoardElement) {
-      newParams.set(`${queryPrefix}-board`, tBoardElement);
-    } else {
-      newParams.delete(`${queryPrefix}-board`);
-    }
-
-    if (tMap && aMap !== tMap) {
-      newParams.set(`${queryPrefix}-map`, tMap);
-    } else {
-      newParams.delete(`${queryPrefix}-map`);
-    }
-
-    if (tLayer && aLayer !== tLayer) {
-      newParams.set(`${queryPrefix}-layer`, tLayer.toString());
-    } else {
-      newParams.delete(`${queryPrefix}-layer`);
-    }
-
-    if (tKey && aKey !== tKey) {
-      newParams.set(`${queryPrefix}-key`, tKey);
-    } else {
-      newParams.delete(`${queryPrefix}-key`);
-    }
-
-    const newUrl =
-      newParams.toString() !== ""
-        ? `${window.location.pathname}?${newParams.toString()}`
-        : `${window.location.pathname}`;
-
-    if (window.location.search !== `?${newUrl}`) {
-      window.history.replaceState({}, "", newUrl);
-    }
-  }
 
   /* Set the key information content for the selected key
    * Return an array of key ids that are targets of <key-indicator>s.
