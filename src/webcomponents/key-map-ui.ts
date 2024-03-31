@@ -364,7 +364,10 @@ export class KeyMapUI
 
   get keyMap(): KeyMap {
     const keyMapId = this.state.getState("keymapId");
-    return this.keymapsById.get(keyMapId) || this.keyboard.blankKeyMap;
+    const keyboard = this.state.getState("keyboardElementName");
+    return (
+      this.keymaps.get(keyboard)?.get(keyMapId) || this.keyboard.blankKeyMap
+    );
   }
 
   /* A map of keymaps by their keyboard element name and unique ID.
@@ -383,20 +386,6 @@ export class KeyMapUI
     this.keyboards.forEach((kbName) =>
       this.#idempotentlyAddBlankKeyMap(kbName)
     );
-  }
-
-  /* A map of keymaps by their unique ID.
-   * TODO: can we avoid this? Keymaps may not be unique across keyboards,
-   * though they should be, and this will break if they are not.
-   */
-  get keymapsById(): Map<string, KeyMap> {
-    const keyMaps = new Map<string, KeyMap>();
-    this.keymaps.forEach((map) => {
-      map.forEach((keyMap) => {
-        keyMaps.set(keyMap.uniqueId, keyMap);
-      });
-    });
-    return keyMaps;
   }
 
   /* Given a list of KeyMap instances, set the keymaps property.
@@ -575,7 +564,8 @@ export class KeyMapUI
   /* Update the keymap ID
    */
   #updateKeyMapId(value: string) {
-    const newMap = this.keymapsById.get(value);
+    const keyboard = this.state.getState("keyboardElementName");
+    const newMap = this.keymaps.get(keyboard)?.get(value);
     if (!newMap) {
       console.error(
         `KeyMapUI: Key map "${value}" not found in available key maps`
