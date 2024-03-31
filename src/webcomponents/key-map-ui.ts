@@ -681,7 +681,6 @@ export class KeyMapUI extends HTMLElement {
       this.keymaps.set(kbName, new Map());
     }
     const boardKeyMaps = this.keymaps.get(kbName)!;
-    console.log(`#idempotentlyAddBlankKeyMap(${kbName})`);
     const blankKeyMap = tmpInstance.blankKeyMap;
     boardKeyMaps.set(blankKeyMap.uniqueId, blankKeyMap);
   }
