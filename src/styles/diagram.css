@@ -1,7 +1,8 @@
 /* Diagramming styles
  */
 
-/* The diagram canvas element */
+/* The diagram web component and its child canvas element */
+key-map-ui-diagram,
 canvas.keyboard-diagram {
   position: absolute;
   top: 0;

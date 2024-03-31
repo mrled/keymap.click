@@ -1,7 +1,6 @@
 import log from "loglevel";
 
 import { KeyMapUIOptions } from "~/lib/KeyMapUIOptions";
-import { drawDiagram } from "~/lib/diagram";
 import { ConnectionPair, KeyInfoConnectType } from "~/lib/keyConnections";
 import { KeyMap } from "~/lib/keyMap";
 
@@ -9,6 +8,12 @@ import { KeyHandle } from "~/webcomponents/key-handle";
 import { KeyIndicator } from "~/webcomponents/key-indicator";
 import { KeyBoard } from "./key-board";
 import { KeyInfoNavBar } from "~/webcomponents/key-info-nav-bar";
+import { KeyMapUIDiagram } from "./key-map-ui-diagram";
+import {
+  IStateObserver,
+  KeyMapUIState,
+  StateProvider,
+} from "~/lib/KeyMapUIState";
 
 /* The UI of the keymap, including a keyboard, an info panel, and the canvas diagram.
  *
@@ -57,21 +62,28 @@ import { KeyInfoNavBar } from "~/webcomponents/key-info-nav-bar";
  *    overriding the keyboard-element and selected-key attributes set on the element in the DOM.
  * 4. When the user selects a key, or changes the board/map, the URL is updated with the new query parameters.
  */
-export class KeyMapUI extends HTMLElement {
+
+export class KeyMapUI
+  extends HTMLElement
+  implements IStateObserver<KeyMapUIState> {
+  //
+
   /* The ResizeObserver that watches for changes in the size of the kidContainer.
    */
   resizeObserver: ResizeObserver;
 
-  /* Connections to draw on the diagram
+  /* The state
    */
-  connectionPairs: ConnectionPair[] = [];
-
-  /* Enable debug mode
-   */
-  enableDebug = false;
+  state: StateProvider<KeyMapUIState>;
 
   constructor() {
     super();
+
+    /* Set the state object that will be passed to all children.
+     */
+    this.state = new StateProvider(new KeyMapUIState());
+    this.state.setState("initialized", true);
+    this.state.attach(this);
 
     /* Listen for changes to the size of the browser window,
      * and resize the canvas to match the size of the kidContainer.
@@ -87,6 +99,22 @@ export class KeyMapUI extends HTMLElement {
      * (Make sure the child element emits it with bubbles: true so that we can catch it from any depth.)
      */
     this.addEventListener("key-selected", this.#handleKeySelected);
+  }
+
+  update<KeyMapUIState>(
+    key: keyof KeyMapUIState,
+    value: KeyMapUIState[keyof KeyMapUIState]
+  ) {
+    switch (key) {
+      case "debug":
+        if ((value as number) > 0) {
+          log.setLevel(log.levels.DEBUG);
+        } else {
+          log.setLevel(log.levels.INFO);
+        }
+        this.diagram.draw();
+        break;
+    }
   }
 
   //
@@ -208,18 +236,29 @@ export class KeyMapUI extends HTMLElement {
     return this._infoProse;
   }
 
-  private _diagram: HTMLCanvasElement | null = null;
-  get diagram(): HTMLCanvasElement {
+  private _diagram: KeyMapUIDiagram | null = null;
+  get diagram(): KeyMapUIDiagram {
     if (!this._diagram) {
-      this._diagram = this.querySelector("canvas");
+      this._diagram = this.querySelector("key-map-ui-diagram");
     }
     if (!this._diagram) {
-      this._diagram = document.createElement("canvas");
-      this._diagram.className =
-        "keyboard-diagram debug-border-orange debug-trans-bg-orange";
+      this._diagram = document.createElement(
+        "key-map-ui-diagram"
+      ) as KeyMapUIDiagram;
+    }
+    if (!this._diagram.readyToDraw) {
+      this._diagram.centerPanel = this.centerPanel;
+      this._diagram.diamargLeft = this.diamargLeft;
+      this._diagram.diamargRight = this.diamargRight;
+      this._diagram.infoProse = this.infoProse;
+    }
+    if (!this._diagram.state.getState("initialized")) {
+      this._diagram.state = this.state;
+      this._diagram.state.attach(this._diagram);
     }
     return this._diagram;
   }
+
   /* Lay out all child components.
    *
    * Check if the child components are in the right place, and if not, move them.
@@ -482,7 +521,7 @@ export class KeyMapUI extends HTMLElement {
     this._selectedKey = value;
 
     // Clear any existing connections that back the diagram lines
-    this.connectionPairs = [];
+    const connectionPairs: ConnectionPair[] = [];
 
     // Update the key in the key info navbar
     this.keyInfoNavBar.setAttribute("key-id", value);
@@ -512,7 +551,7 @@ export class KeyMapUI extends HTMLElement {
       }
       if (active && navBarHandle) {
         // Make the connection from the navbar key to this key
-        this.connectionPairs.push(
+        connectionPairs.push(
           new ConnectionPair(
             navBarHandle,
             keyHandle,
@@ -539,13 +578,15 @@ export class KeyMapUI extends HTMLElement {
         console.error(`KeyMapUI: Key indicator has no target: ${indicatorId}`);
         return;
       }
-      this.connectionPairs.push(
+      connectionPairs.push(
         new ConnectionPair(indicator, indicated, KeyInfoConnectType.TextRef)
       );
     });
 
+    this.state.setState("connectionPairs", connectionPairs);
+
     this.#setQueryStringFromState();
-    this.#drawDiagram();
+    this.diagram.draw();
   }
 
   /* The prefix for query parameters.
@@ -634,14 +675,7 @@ export class KeyMapUI extends HTMLElement {
 
     switch (name) {
       case "debug":
-        if (newValue === "true") {
-          this.enableDebug = true;
-          log.setLevel(log.levels.DEBUG);
-        } else {
-          this.enableDebug = false;
-          log.setLevel(log.levels.INFO);
-        }
-        this.#drawDiagram();
+        this.state.setState("debug", newValue === "true" ? 1 : 0);
         break;
       case "keyboard-element":
         this.keyboardElementName = newValue;
@@ -687,11 +721,11 @@ export class KeyMapUI extends HTMLElement {
 
   /* Resize the canvas to the size of the kidContainer.
    */
-  #resizeCanvas = () => {
-    this.diagram.width = this.kidContainer.offsetWidth;
-    this.diagram.height = this.kidContainer.offsetHeight;
-    this.#drawDiagram();
-  };
+  #resizeCanvas = () =>
+    this.diagram.resize(
+      this.kidContainer.offsetWidth,
+      this.kidContainer.offsetHeight
+    );
 
   /* Read the query string and update the state of the KeyMapUI.
    */
@@ -827,20 +861,6 @@ export class KeyMapUI extends HTMLElement {
     }
   }
 
-  /* Draw the diagram lines connecting the keys to the info panel
-   */
-  #drawDiagram() {
-    drawDiagram(
-      this.diagram,
-      this.connectionPairs.map((c) => c.connection),
-      this.centerPanel.getBoundingClientRect(),
-      this.diamargLeft.getBoundingClientRect(),
-      this.diamargRight.getBoundingClientRect(),
-      this.infoProse.getBoundingClientRect(),
-      this.enableDebug
-    );
-  }
-
   /* Set the key information content for the selected key
    * Return an array of key ids that are targets of <key-indicator>s.
    */
@@ -898,7 +918,7 @@ export class KeyMapUI extends HTMLElement {
    * which can help to identify which element is logging.
    */
   #logCurrentStateAndQueryString(logPrefix: string) {
-    if (!this.enableDebug) {
+    if (!this.state.getState("debug")) {
       return;
     }
 
