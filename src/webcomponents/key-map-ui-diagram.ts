@@ -11,17 +11,31 @@ export class KeyMapUIDiagram
   extends HTMLElement
   implements IStateObserver<KeyMapUIState> {
   //
-  state: StateProvider<KeyMapUIState> = new StateProvider(new KeyMapUIState());
   centerPanel: HTMLElement | null = null;
   diamargLeft: HTMLElement | null = null;
   diamargRight: HTMLElement | null = null;
   infoProse: HTMLElement | null = null;
 
+  private _state: StateProvider<KeyMapUIState> = new StateProvider(
+    new KeyMapUIState()
+  );
+  set state(state: StateProvider<KeyMapUIState>) {
+    this._state = state;
+    this.draw();
+  }
+  get state() {
+    return this._state;
+  }
+
   constructor() {
     super();
   }
 
-  update<T extends keyof KeyMapUIState>(key: T, value: KeyMapUIState[T]) {
+  update<T extends keyof KeyMapUIState>(
+    key: T,
+    oldValue: KeyMapUIState[T],
+    newValue: KeyMapUIState[T]
+  ) {
     switch (key) {
       case "connectionPairs":
       case "debug":

@@ -14,7 +14,7 @@
  *    this.state.attach(this);
  *
  * The root application componen should also implement the IStateObserver interface:
- *  update<T extends keyof KeyMapUIState>(key: T, value: KeyMapUIState[T]) {
+ *  update<T extends keyof KeyMapUIState>(key: T, oldValue: KeyMapUIState[T], newValue: KeyMapUIState[T]) {
  *    switch (key) {
  *      doWhateverNeedsDoing();
  *      // ...
@@ -58,7 +58,22 @@ export class KeyMapUIState {
     public debug: number = 0,
 
     // Connections to draw on the diagram
-    public connectionPairs: ConnectionPair[] = []
+    public connectionPairs: ConnectionPair[] = [],
+
+    // The name of the keyboard
+    public keyboardElementName: string = "key-board-title-screen",
+
+    // The ID of the keymap
+    public keymapId: string = "blank",
+
+    // The ID of the layer
+    public layer: number = 0,
+
+    // The ID of the selected key
+    public selectedKey: string = "",
+
+    // If nonempty, any query parameters prefixed with this string will be used to set state
+    public queryPrefix: string = ""
   ) {}
 }
 
@@ -69,7 +84,7 @@ export class KeyMapUIState {
 export interface IStateProvider<T> {
   attach(observer: IStateObserver<T>): void;
   detach(observer: IStateObserver<T>): void;
-  notify(changedKey: keyof T, newValue: T[keyof T]): void;
+  notify(changedKey: keyof T, oldValue: T[keyof T], newValue: T[keyof T]): void;
 }
 
 /* A state observer interface
@@ -77,7 +92,7 @@ export interface IStateProvider<T> {
  * The state observer is responsible for updating its view when the state changes.
  */
 export interface IStateObserver<T> {
-  update(key: keyof T, value: T[keyof T]): void;
+  update(key: keyof T, oldValue: T[keyof T], newValue: T[keyof T]): void;
 }
 
 /* A state provider class
@@ -106,15 +121,26 @@ export class StateProvider<T> implements IStateProvider<T> {
     }
   }
 
-  notify(changedKey: keyof T, newValue: T[keyof T]): void {
+  notify(
+    changedKey: keyof T,
+    oldValue: T[keyof T],
+    newValue: T[keyof T]
+  ): void {
     for (const observer of this.observers) {
-      observer.update(changedKey, newValue);
+      observer.update(changedKey, oldValue, newValue);
     }
   }
 
-  setState<K extends keyof T>(key: K, value: T[K]): void {
-    this.state[key] = value;
-    this.notify(key, value);
+  setState<K extends keyof T>(key: K, newValue: T[K]): void {
+    console.log(`Setting state ${String(key)} to ${newValue}`);
+    if (this.state[key] === newValue) {
+      // Don't notify observers if the value hasn't changed;
+      // this is faster but more importantly avoids infinite loops.
+      return;
+    }
+    const oldValue = this.state[key];
+    this.state[key] = newValue;
+    this.notify(key, oldValue, newValue);
   }
 
   getState<K extends keyof T>(key: K): T[K] {

@@ -103,16 +103,35 @@ export class KeyMapUI
 
   update<KeyMapUIState>(
     key: keyof KeyMapUIState,
-    value: KeyMapUIState[keyof KeyMapUIState]
+    oldValue: KeyMapUIState[keyof KeyMapUIState],
+    newValue: KeyMapUIState[keyof KeyMapUIState]
   ) {
+    if (!this.isConnected) {
+      return;
+    }
     switch (key) {
       case "debug":
-        if ((value as number) > 0) {
+        if ((newValue as number) > 0) {
           log.setLevel(log.levels.DEBUG);
         } else {
           log.setLevel(log.levels.INFO);
         }
         this.diagram.draw();
+        break;
+      case "keyboardElementName":
+        this.#updateKeyboardElementName(newValue as string);
+        break;
+      case "keymapId":
+        this.#updateKeyMapId(newValue as string);
+        break;
+      case "layer":
+        this.#updateLayer(newValue as number);
+        break;
+      case "selectedKey":
+        this.#updateSelectedKey(newValue as string);
+        break;
+      case "queryPrefix":
+        this.#updateQueryPrefix(oldValue as string, newValue as string);
         break;
     }
   }
@@ -191,15 +210,16 @@ export class KeyMapUI
       this._keyboard = this.querySelector("keyboard") as KeyBoard;
     }
     if (!this._keyboard) {
+      const keyboardElementName = this.state.getState("keyboardElementName");
       let newElementName: string;
-      if (this.keyboardElementName) {
+      if (keyboardElementName) {
         // Next, look for the keyboard element by name if it was set
-        if (!customElements.get(this.keyboardElementName)) {
+        if (!customElements.get(keyboardElementName)) {
           throw new Error(
-            `KeyMapUI: Keyboard element ${this.keyboardElementName} not found`
+            `KeyMapUI: Keyboard element ${keyboardElementName} not found`
           );
         }
-        newElementName = this.keyboardElementName;
+        newElementName = keyboardElementName;
       } else if (this.keyboards.length > 0) {
         // If that fails, try the first keyboard in the list of keyboard element names
         newElementName = this.keyboards[0];
@@ -322,62 +342,6 @@ export class KeyMapUI
   // Other properties
   //
 
-  private _keyboardElementName: string = "";
-  get keyboardElementName(): string {
-    return this._keyboardElementName;
-  }
-  set keyboardElementName(value: string) {
-    if (this._keyboardElementName === value) {
-      // Don't take any action if the value hasn't changed;
-      // this is faster but more importantly avoids infinite loops.
-      return;
-    } else if (!customElements.get(value)) {
-      throw new Error(
-        `KeyMapUI: Keyboard element "${value}" not found - has it been defined with customElements.define(), or if using a library, imported and registered?`
-      );
-    } else if (!this._keyboards.includes(value)) {
-      throw new Error(
-        `KeyMapUI: Keyboard element "${value}" not found in the list of available keyboards (${this._keyboards.join()})`
-      );
-    }
-
-    this._keyboardElementName = value;
-    const oldKeyboard = this._keyboard;
-    this._keyboard = document.createElement(
-      this._keyboardElementName
-    ) as KeyBoard;
-    this.keyInfoNavBar.setAttribute("key-id", "");
-
-    // Add the keyboard's blank map to our list of known keymaps
-    if (!this.keymaps.has(this.keyboardElementName)) {
-      this.keymaps.set(this.keyboardElementName, new Map());
-    }
-    const boardKeyMaps = this.keymaps.get(this.keyboardElementName)!;
-    boardKeyMaps.set(
-      this.keyboard.blankKeyMap.uniqueId,
-      this.keyboard.blankKeyMap
-    );
-
-    // If the keymap-id attribute is set and is valid for the new keyboard, use it.
-    // Otherwise, use the blank keymap for the new keyboard.
-    const attribKeyMap = this.getAttribute("keymap-id") || "";
-    if (attribKeyMap && boardKeyMaps.get(attribKeyMap)) {
-      this.keyMapId = attribKeyMap;
-      this._keyboard.createChildren(Array.from(this.keyMap.keys.values()));
-    } else {
-      this.keyMapId = this.keyboard.blankKeyMap.uniqueId;
-      this._keyboard.createChildren(this.keyboard.blankKeyMapKeys);
-    }
-
-    // Replace the old keyboard with the new one in the DOM
-    if (oldKeyboard && this.centerPanel.contains(oldKeyboard)) {
-      this.centerPanel.replaceChild(this._keyboard, oldKeyboard);
-    }
-
-    this.layOutIdempotently();
-    this.#setQueryStringFromState();
-  }
-
   private _keyboards: string[] = [];
   get keyboards(): string[] {
     return this._keyboards;
@@ -397,31 +361,8 @@ export class KeyMapUI
   }
 
   get keyMap(): KeyMap {
-    return this.keymapsById.get(this.keyMapId) || this.keyboard.blankKeyMap;
-  }
-
-  private _keyMapId: string = "";
-  get keyMapId(): string {
-    return this._keyMapId;
-  }
-  set keyMapId(value: string) {
-    const newMap = this.keymapsById.get(value);
-    if (!newMap) {
-      console.error(
-        `KeyMapUI: Key map "${value}" not found in available key maps`
-      );
-      return;
-    }
-    newMap.validateKeys();
-    if (this._keyMapId === value) {
-      return;
-    }
-    this._keyMapId = value;
-    this.keyboard.createChildren(Array.from(this.keyMap.keys.values()));
-    this.keyInfoNavBar.referenceKeyboard = this.keyboard;
-    this.keyInfoNavBar.keyMap = this.keyMap;
-    this.#showWelcomeMessage();
-    this.#setQueryStringFromState();
+    const keyMapId = this.state.getState("keymapId");
+    return this.keymapsById.get(keyMapId) || this.keyboard.blankKeyMap;
   }
 
   /* A map of keymaps by their keyboard element name and unique ID.
@@ -475,124 +416,6 @@ export class KeyMapUI
     this.keymaps = newKeyMaps;
   }
 
-  private _layer: number = 0;
-  get layer(): number {
-    return this._layer;
-  }
-  set layer(value: number) {
-    this._layer = value;
-    this.#setQueryStringFromState();
-  }
-
-  private _selectedKey: string = "";
-  get selectedKey(): string {
-    return this._selectedKey;
-  }
-  set selectedKey(value: string) {
-    let keySelection: string[] = [];
-    const indicatedElementsById: { [key: string]: KeyHandle } = {};
-    let proseKeyIndicators: KeyIndicator[] = [];
-    let indicatedKeyIds: string[] = [];
-
-    if (value) {
-      const keyData = this.keyMap.keys.get(value);
-      if (!keyData) {
-        console.error(
-          `KeyMapUI: Key ${value} not found in key map '${this.keyMap.uniqueId}'`
-        );
-        return;
-      }
-      keySelection = keyData.selection || [];
-      // Update the key info prose including descriptions etc.
-      // Get all the key IDs that are targets of <key-indicator>s.
-      proseKeyIndicators = this.#setKeyInfoContent(
-        keyData.name,
-        keyData.unset || false,
-        keyData.info
-      );
-      indicatedKeyIds = proseKeyIndicators.map(
-        (indicator) => indicator.getAttribute("id") || ""
-      );
-    } else {
-      keySelection = [];
-      this.#showWelcomeMessage();
-    }
-
-    this._selectedKey = value;
-
-    // Clear any existing connections that back the diagram lines
-    const connectionPairs: ConnectionPair[] = [];
-
-    // Update the key in the key info navbar
-    this.keyInfoNavBar.setAttribute("key-id", value);
-    const navBarHandle = this.keyInfoNavBar.querySelector("key-handle");
-
-    // Update every key on the board
-    // Make sure not to include the key in the nav bar which needs special handling
-
-    const keyboardKeys = this.keyboard?.keyElements || [];
-
-    keyboardKeys.forEach((key) => {
-      const keyId = key.getAttribute("id");
-      if (!keyId) {
-        console.error(`KeyMapUI: Keyboard child key has no id: ${key}`);
-        return;
-      }
-      const active = keyId === value;
-      const inKeySelection = !active && keySelection.indexOf(keyId) > -1;
-      const indicatorTarget = indicatedKeyIds.indexOf(keyId) > -1;
-      key.setAttribute("active", active.toString());
-      key.setAttribute("related-to-active", inKeySelection.toString());
-      key.setAttribute("target-of-indicator", indicatorTarget.toString());
-
-      const keyHandle = key.querySelector("key-handle");
-      if (!keyHandle) {
-        return;
-      }
-      if (active && navBarHandle) {
-        // Make the connection from the navbar key to this key
-        connectionPairs.push(
-          new ConnectionPair(
-            navBarHandle,
-            keyHandle,
-            KeyInfoConnectType.Selected
-          )
-        );
-      } else if (indicatorTarget) {
-        // Store the key handle for making a connection later
-        indicatedElementsById[keyId] = keyHandle as KeyHandle;
-      }
-    });
-
-    // Make connections from prose indicators to the keys they indicate.
-    // Doing this here lets us ensure we are correct even in weird cases
-    // like if a key is indicated by multiple indicators (untested).
-    proseKeyIndicators.forEach((indicator) => {
-      const indicatorId = indicator.getAttribute("id");
-      if (!indicatorId) {
-        console.error(`KeyMapUI: Key indicator has no id: ${indicator}`);
-        return;
-      }
-      const indicated = indicatedElementsById[indicatorId];
-      if (!indicated) {
-        console.error(`KeyMapUI: Key indicator has no target: ${indicatorId}`);
-        return;
-      }
-      connectionPairs.push(
-        new ConnectionPair(indicator, indicated, KeyInfoConnectType.TextRef)
-      );
-    });
-
-    this.state.setState("connectionPairs", connectionPairs);
-
-    this.#setQueryStringFromState();
-    this.diagram.draw();
-  }
-
-  /* The prefix for query parameters.
-   */
-  private queryPrefix = "";
-
   //
   // Lifecycle methods / callbacks
   //
@@ -602,6 +425,9 @@ export class KeyMapUI
    * Run whether the element is created from HTML or from JavaScript.
    */
   connectedCallback() {
+    console.log("KeyMapUI: connectedCallback()");
+    console.log(this.state);
+
     this.#logCurrentStateAndQueryString("connectedCallback(): Top");
     // Set debugging stuff first, which does not rely on query parameters
     const debug = this.getAttribute("debug") || "false";
@@ -673,24 +499,25 @@ export class KeyMapUI
       return;
     }
 
+    // TODO: sync the state names with the element names for a better time
     switch (name) {
       case "debug":
         this.state.setState("debug", newValue === "true" ? 1 : 0);
         break;
       case "keyboard-element":
-        this.keyboardElementName = newValue;
+        this.state.setState("keyboardElementName", newValue);
         break;
       case "keymap-id":
-        this.keyMapId = newValue;
+        this.state.setState("keymapId", newValue);
         break;
       case "layer":
-        this.layer = parseInt(newValue, 10);
-        break;
-      case "query-prefix":
-        this.#updateQueryPrefix(oldValue, newValue);
+        this.state.setState("layer", parseInt(newValue, 10));
         break;
       case "selected-key":
-        this.selectedKey = newValue;
+        this.state.setState("selectedKey", newValue);
+        break;
+      case "query-prefix":
+        this.state.setState("queryPrefix", newValue);
         break;
       default:
         console.error(`KeyMapUI: Unhandled attribute: ${name}`);
@@ -699,7 +526,213 @@ export class KeyMapUI
   }
 
   //
-  // Private methods
+  // Handle state changes
+  //
+
+  #updateKeyboardElementName(value: string) {
+    if (!customElements.get(value)) {
+      throw new Error(
+        `KeyMapUI: Keyboard element "${value}" not found - has it been defined with customElements.define(), or if using a library, imported and registered?`
+      );
+    } else if (!this._keyboards.includes(value)) {
+      throw new Error(
+        `KeyMapUI: Keyboard element "${value}" not found in the list of available keyboards (${this._keyboards.join()})`
+      );
+    }
+    const oldKeyboard = this._keyboard;
+    console.log(
+      `KeyMapUI.#updateKeyboardElementName: Keyboard element name changed to ${value}`
+    );
+    this._keyboard = document.createElement(value) as KeyBoard;
+    this.keyInfoNavBar.setAttribute("key-id", "");
+
+    // Add the keyboard's blank map to our list of known keymaps
+    if (!this.keymaps.has(value)) {
+      this.keymaps.set(value, new Map());
+    }
+    const boardKeyMaps = this.keymaps.get(value)!;
+    boardKeyMaps.set(
+      this.keyboard.blankKeyMap.uniqueId,
+      this.keyboard.blankKeyMap
+    );
+
+    // If the keymap-id attribute is set and is valid for the new keyboard, use it.
+    // Otherwise, use the blank keymap for the new keyboard.
+    const attribKeyMap = this.getAttribute("keymap-id") || "";
+    if (attribKeyMap && boardKeyMaps.get(attribKeyMap)) {
+      this.state.setState("keymapId", attribKeyMap);
+      this._keyboard.createChildren(Array.from(this.keyMap.keys.values()));
+    } else {
+      this.state.setState("keymapId", this.keyboard.blankKeyMap.uniqueId);
+      this._keyboard.createChildren(this.keyboard.blankKeyMapKeys);
+    }
+
+    // Replace the old keyboard with the new one in the DOM
+    if (oldKeyboard && this.centerPanel.contains(oldKeyboard)) {
+      this.centerPanel.replaceChild(this._keyboard, oldKeyboard);
+    }
+
+    this.layOutIdempotently();
+    this.#setQueryStringFromState();
+  }
+
+  /* Update the keymap ID
+   */
+  #updateKeyMapId(value: string) {
+    const newMap = this.keymapsById.get(value);
+    if (!newMap) {
+      console.error(
+        `KeyMapUI: Key map "${value}" not found in available key maps`
+      );
+      return;
+    }
+    newMap.validateKeys();
+    console.log(`KeyMapUI: Key map "${value}" settings...`);
+    console.log(this.keyboard);
+    console.log(this.keyMap);
+    this.keyboard.createChildren(Array.from(this.keyMap.keys.values()));
+    this.keyInfoNavBar.referenceKeyboard = this.keyboard;
+    this.keyInfoNavBar.keyMap = this.keyMap;
+    this.#showWelcomeMessage();
+    this.#setQueryStringFromState();
+  }
+
+  /* Update the layer
+   */
+  #updateLayer(value: number) {
+    this.#setQueryStringFromState();
+  }
+
+  /* Update the selected key
+   */
+  #updateSelectedKey(value: string) {
+    let keySelection: string[] = [];
+    const indicatedElementsById: { [key: string]: KeyHandle } = {};
+    let proseKeyIndicators: KeyIndicator[] = [];
+    let indicatedKeyIds: string[] = [];
+
+    if (value) {
+      const keyData = this.keyMap.keys.get(value);
+      if (!keyData) {
+        console.error(
+          `KeyMapUI: Key ${value} not found in key map '${this.keyMap.uniqueId}'`
+        );
+        return;
+      }
+      keySelection = keyData.selection || [];
+      // Update the key info prose including descriptions etc.
+      // Get all the key IDs that are targets of <key-indicator>s.
+      proseKeyIndicators = this.#setKeyInfoContent(
+        keyData.name,
+        keyData.unset || false,
+        keyData.info
+      );
+      indicatedKeyIds = proseKeyIndicators.map(
+        (indicator) => indicator.getAttribute("id") || ""
+      );
+    } else {
+      keySelection = [];
+      this.#showWelcomeMessage();
+    }
+
+    // Clear any existing connections that back the diagram lines
+    const connectionPairs: ConnectionPair[] = [];
+
+    // Update the key in the key info navbar
+    this.keyInfoNavBar.setAttribute("key-id", value);
+    const navBarHandle = this.keyInfoNavBar.querySelector("key-handle");
+
+    // Update every key on the board
+    // Make sure not to include the key in the nav bar which needs special handling
+
+    const keyboardKeys = this.keyboard?.keyElements || [];
+
+    keyboardKeys.forEach((key) => {
+      const keyId = key.getAttribute("id");
+      if (!keyId) {
+        console.error(`KeyMapUI: Keyboard child key has no id: ${key}`);
+        return;
+      }
+      const active = keyId === value;
+      const inKeySelection = !active && keySelection.indexOf(keyId) > -1;
+      const indicatorTarget = indicatedKeyIds.indexOf(keyId) > -1;
+      key.setAttribute("active", active.toString());
+      key.setAttribute("related-to-active", inKeySelection.toString());
+      key.setAttribute("target-of-indicator", indicatorTarget.toString());
+
+      const keyHandle = key.querySelector("key-handle");
+      if (!keyHandle) {
+        return;
+      }
+      if (active && navBarHandle) {
+        // Make the connection from the navbar key to this key
+        connectionPairs.push(
+          new ConnectionPair(
+            navBarHandle,
+            keyHandle,
+            KeyInfoConnectType.Selected
+          )
+        );
+      } else if (indicatorTarget) {
+        // Store the key handle for making a connection later
+        indicatedElementsById[keyId] = keyHandle as KeyHandle;
+      }
+    });
+
+    // Make connections from prose indicators to the keys they indicate.
+    // Doing this here lets us ensure we are correct even in weird cases
+    // like if a key is indicated by multiple indicators (untested).
+    proseKeyIndicators.forEach((indicator) => {
+      const indicatorId = indicator.getAttribute("id");
+      if (!indicatorId) {
+        console.error(`KeyMapUI: Key indicator has no id: ${indicator}`);
+        return;
+      }
+      const indicated = indicatedElementsById[indicatorId];
+      if (!indicated) {
+        console.error(`KeyMapUI: Key indicator has no target: ${indicatorId}`);
+        return;
+      }
+      connectionPairs.push(
+        new ConnectionPair(indicator, indicated, KeyInfoConnectType.TextRef)
+      );
+    });
+
+    this.state.setState("connectionPairs", connectionPairs);
+
+    this.#setQueryStringFromState();
+    this.diagram.draw();
+  }
+
+  /* Update the query prefix and any query parameters that use it.
+   */
+  #updateQueryPrefix(oldValue: string, newValue: string) {
+    this.#logCurrentStateAndQueryString(`#updateQueryPrefix() Top`);
+    this.#logCurrentStateAndQueryString(
+      `#updateQueryPrefix() One Down From Top`
+    );
+    if (oldValue) {
+      // Remove all old query parameters with the old prefix
+      const [params, newQs] = KeyMapUIOptions.parseQueryString(
+        oldValue,
+        window.location.search
+      );
+      const newUrl = params.any
+        ? `${window.location.pathname}?${newQs.toString()}`
+        : `${window.location.pathname}`;
+      window.history.replaceState({}, "", newUrl);
+      this.#logCurrentStateAndQueryString(
+        `#updateQueryPrefix() After modifying the old parameters`
+      );
+    } else {
+      this.#logCurrentStateAndQueryString(
+        `#updateQueryPrefix() No old query prefix`
+      );
+    }
+  }
+
+  //
+  // Other private methods
   //
 
   /* Idempotently add a blank keymap to our set of known keymaps
@@ -730,25 +763,27 @@ export class KeyMapUI
   /* Read the query string and update the state of the KeyMapUI.
    */
   #setStateFromQueryString() {
-    if (!this.queryPrefix) {
+    const queryPrefix = this.state.getState("queryPrefix");
+
+    if (!queryPrefix) {
       return;
     }
     const currentParams = new URLSearchParams(window.location.search);
 
-    const qBoard = currentParams.get(`${this.queryPrefix}-board`);
-    const qMap = currentParams.get(`${this.queryPrefix}-map`);
-    const qLayer = currentParams.get(`${this.queryPrefix}-layer`);
-    const qKey = currentParams.get(`${this.queryPrefix}-key`);
+    const qBoard = currentParams.get(`${queryPrefix}-board`);
+    const qMap = currentParams.get(`${queryPrefix}-map`);
+    const qLayer = currentParams.get(`${queryPrefix}-layer`);
+    const qKey = currentParams.get(`${queryPrefix}-key`);
 
     if (qBoard) {
-      this.keyboardElementName = qBoard;
+      this.state.setState("keyboardElementName", qBoard);
       // TODO: when we set it this way, and the map is also set in the query string, do we need to wait for the attributeChangedCallback to run before we can continue? How?
     }
 
     if (qMap) {
       const selectedMap = this.keymapsById.get(qMap);
       if (selectedMap) {
-        this.keyMapId = qMap;
+        this.state.setState("keymapId", qMap);
       } else {
         console.error(
           `KeyMapUI: Key map ${qMap} not found in available key maps`
@@ -757,42 +792,12 @@ export class KeyMapUI
     }
 
     if (qLayer) {
-      this.layer = parseInt(qLayer, 10);
+      this.state.setState("layer", parseInt(qLayer, 10));
     }
 
     if (qKey) {
-      this.selectedKey = qKey;
+      this.state.setState("selectedKey", qKey);
     }
-  }
-
-  /* Update the query prefix and any query parameters that use it.
-   */
-  #updateQueryPrefix(oldValue: string, newValue: string) {
-    this.#logCurrentStateAndQueryString(`#updateQueryPrefix() Top`);
-    this.queryPrefix = newValue;
-    this.#logCurrentStateAndQueryString(
-      `#updateQueryPrefix() One Down From Top`
-    );
-    if (oldValue) {
-      // Remove all old query parameters with the old prefix
-      const [params, newQs] = KeyMapUIOptions.parseQueryString(
-        oldValue,
-        window.location.search
-      );
-      const newUrl = params.any
-        ? `${window.location.pathname}?${newQs.toString()}`
-        : `${window.location.pathname}`;
-      window.history.replaceState({}, "", newUrl);
-      this.#logCurrentStateAndQueryString(
-        `#updateQueryPrefix() After modifying the old parameters`
-      );
-    } else {
-      this.#logCurrentStateAndQueryString(
-        `#updateQueryPrefix() No old query prefix`
-      );
-    }
-    // Re-sync the query parameters with the new prefix
-    // this.#setQueryStringFromState();
   }
 
   /* Set the query string based on the current state.
@@ -809,7 +814,9 @@ export class KeyMapUI
    * that is handled by #updateQueryPrefix().
    */
   #setQueryStringFromState() {
-    if (!this.queryPrefix) {
+    const queryPrefix = this.state.getState("queryPrefix");
+
+    if (!queryPrefix) {
       return;
     }
     if (!this.isConnected) {
@@ -817,10 +824,10 @@ export class KeyMapUI
     }
     const newParams = new URLSearchParams(window.location.search);
 
-    const tBoardElement = this.keyboardElementName;
-    const tMap = this.keyMapId;
-    const tLayer = this.layer;
-    const tKey = this.selectedKey;
+    const tBoardElement = this.state.getState("keyboardElementName");
+    const tMap = this.state.getState("keymapId");
+    const tLayer = this.state.getState("layer");
+    const tKey = this.state.getState("selectedKey");
 
     const aBoardElement = this.getAttribute("keyboard-element") || "";
     const aMap = this.getAttribute("keymap-id") || "";
@@ -828,27 +835,27 @@ export class KeyMapUI
     const aKey = this.getAttribute("selected-key") || "";
 
     if (tBoardElement && aBoardElement !== tBoardElement) {
-      newParams.set(`${this.queryPrefix}-board`, tBoardElement);
+      newParams.set(`${queryPrefix}-board`, tBoardElement);
     } else {
-      newParams.delete(`${this.queryPrefix}-board`);
+      newParams.delete(`${queryPrefix}-board`);
     }
 
     if (tMap && aMap !== tMap) {
-      newParams.set(`${this.queryPrefix}-map`, tMap);
+      newParams.set(`${queryPrefix}-map`, tMap);
     } else {
-      newParams.delete(`${this.queryPrefix}-map`);
+      newParams.delete(`${queryPrefix}-map`);
     }
 
     if (tLayer && aLayer !== tLayer) {
-      newParams.set(`${this.queryPrefix}-layer`, tLayer.toString());
+      newParams.set(`${queryPrefix}-layer`, tLayer.toString());
     } else {
-      newParams.delete(`${this.queryPrefix}-layer`);
+      newParams.delete(`${queryPrefix}-layer`);
     }
 
     if (tKey && aKey !== tKey) {
-      newParams.set(`${this.queryPrefix}-key`, tKey);
+      newParams.set(`${queryPrefix}-key`, tKey);
     } else {
-      newParams.delete(`${this.queryPrefix}-key`);
+      newParams.delete(`${queryPrefix}-key`);
     }
 
     const newUrl =
@@ -909,7 +916,8 @@ export class KeyMapUI
   #handleKeySelected(event: Event) {
     const e = event as CustomEvent; // TODO: is there something nicer I can do instead?
     const keyId = e.detail;
-    this.selectedKey = keyId;
+    // TODO: should we have the key set the state directly instead of doing it here?
+    this.state.setState("selectedKey", keyId);
   }
 
   /* A helper function to show the current state and query string
@@ -918,21 +926,21 @@ export class KeyMapUI
    * which can help to identify which element is logging.
    */
   #logCurrentStateAndQueryString(logPrefix: string) {
+    const queryPrefix = this.state.getState("queryPrefix");
     if (!this.state.getState("debug")) {
       return;
     }
 
     const currentParams = new URLSearchParams(window.location.search);
-    const qBoard = currentParams.get(`${this.queryPrefix}-board`);
-    const qMap = currentParams.get(`${this.queryPrefix}-map`);
-    const qLayer = currentParams.get(`${this.queryPrefix}-layer`);
-    const qKey = currentParams.get(`${this.queryPrefix}-key`);
+    const qBoard = queryPrefix ? currentParams.get(`${queryPrefix}-board`) : "";
+    const qMap = queryPrefix ? currentParams.get(`${queryPrefix}-map`) : "";
+    const qLayer = queryPrefix ? currentParams.get(`${queryPrefix}-layer`) : "";
+    const qKey = queryPrefix ? currentParams.get(`${queryPrefix}-key`) : "";
 
-    const tPrefix = this.queryPrefix;
-    const tBoardElement = this.keyboardElementName;
-    const tMap = this.keyMapId;
-    const tLayer = this.layer;
-    const tKey = this.selectedKey;
+    const tBoardElement = this.state.getState("keyboardElementName");
+    const tMap = this.state.getState("keymapId");
+    const tLayer = this.state.getState("layer");
+    const tKey = this.state.getState("selectedKey");
 
     const aPrefix = this.getAttribute("query-prefix") || "";
     const aBoardElement = this.getAttribute("keyboard-element") || "";
@@ -942,7 +950,7 @@ export class KeyMapUI
 
     const logTable = {
       state: {
-        prefix: tPrefix,
+        prefix: queryPrefix,
         board: tBoardElement,
         map: tMap,
         layer: tLayer,
