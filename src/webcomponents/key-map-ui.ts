@@ -341,6 +341,8 @@ export class KeyMapUI
   // Other properties
   //
 
+  /* The selected keymap, among the known keymaps
+   */
   get keyMap(): KeyMap {
     const keyMapId = this.state.getState("keymapId");
     const keyboard = this.state.getState("keyboardElementName");
@@ -356,10 +358,10 @@ export class KeyMapUI
    * - Each Map (JS object) has key:value pairs.
    */
   private _keymaps: Map<string, Map<string, KeyMap>> = new Map();
-  get keymaps(): Map<string, Map<string, KeyMap>> {
+  private get keymaps(): Map<string, Map<string, KeyMap>> {
     return this._keymaps;
   }
-  set keymaps(value: Map<string, Map<string, KeyMap>>) {
+  private set keymaps(value: Map<string, Map<string, KeyMap>>) {
     this._keymaps = value;
     const keyboard = this.state.getState("keyboardElementName");
     this.#idempotentlyAddBlankKeyMap(keyboard);
