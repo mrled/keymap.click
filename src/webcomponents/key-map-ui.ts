@@ -72,9 +72,11 @@ export class KeyMapUI
    */
   resizeObserver: ResizeObserver;
 
-  /* The state
+  /* The state.
+   * This should not be set outside of the constructor
+   * (but state.setState() can be used to set individual properties outside of the constructor).
    */
-  state: StateProvider<KeyMapUIState>;
+  private state: StateProvider<KeyMapUIState>;
 
   constructor() {
     super();
@@ -425,9 +427,6 @@ export class KeyMapUI
    * Run whether the element is created from HTML or from JavaScript.
    */
   connectedCallback() {
-    console.log("KeyMapUI: connectedCallback()");
-    console.log(this.state);
-
     this.#logCurrentStateAndQueryString("connectedCallback(): Top");
     // Set debugging stuff first, which does not rely on query parameters
     const debug = this.getAttribute("debug") || "false";
@@ -540,9 +539,6 @@ export class KeyMapUI
       );
     }
     const oldKeyboard = this._keyboard;
-    console.log(
-      `KeyMapUI.#updateKeyboardElementName: Keyboard element name changed to ${value}`
-    );
     this._keyboard = document.createElement(value) as KeyBoard;
     this.keyInfoNavBar.setAttribute("key-id", "");
 
@@ -587,9 +583,6 @@ export class KeyMapUI
       return;
     }
     newMap.validateKeys();
-    console.log(`KeyMapUI: Key map "${value}" settings...`);
-    console.log(this.keyboard);
-    console.log(this.keyMap);
     this.keyboard.createChildren(Array.from(this.keyMap.keys.values()));
     this.keyInfoNavBar.referenceKeyboard = this.keyboard;
     this.keyInfoNavBar.keyMap = this.keyMap;

@@ -132,7 +132,6 @@ export class StateProvider<T> implements IStateProvider<T> {
   }
 
   setState<K extends keyof T>(key: K, newValue: T[K]): void {
-    console.log(`Setting state ${String(key)} to ${newValue}`);
     if (this.state[key] === newValue) {
       // Don't notify observers if the value hasn't changed;
       // this is faster but more importantly avoids infinite loops.
