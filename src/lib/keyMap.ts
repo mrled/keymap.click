@@ -122,6 +122,7 @@ export class KeyMapGuide {
 export class KeyMap {
   displayName: string;
   uniqueId: string;
+  keyboardElementName: string;
   welcome: string[];
   guides: KeyMapGuide[];
   keys: Map<string, KeyMapKey>;
@@ -130,18 +131,21 @@ export class KeyMap {
   constructor({
     displayName,
     uniqueId,
+    keyboardElementName,
     welcome,
     keys,
     guides,
   }: {
     displayName: string;
     uniqueId: string;
+    keyboardElementName: string;
     welcome: string[];
     keys: KeyMapKey[];
     guides?: KeyMapGuide[];
   }) {
     this.displayName = displayName;
     this.uniqueId = uniqueId;
+    this.keyboardElementName = keyboardElementName;
     this.welcome = welcome;
     this.keys = keys.reduce((map, key) => {
       if (map.has(key.id)) {
@@ -155,7 +159,7 @@ export class KeyMap {
 
   /* Check that all keys are valid IDs for the keyboard.
    */
-  validateKeys(keyboard: KeyBoard) {
+  validateKeys() {
     if (this._duplicateKeys.length > 0) {
       throw new Error(
         `Duplicate key IDs in key map: ${this._duplicateKeys
@@ -163,6 +167,9 @@ export class KeyMap {
           .join(", ")}`
       );
     }
+    const keyboard = document.createElement(
+      this.keyboardElementName
+    ) as KeyBoard;
     for (const key of this.keys.values()) {
       if (keyboard.physicalKeyMap[key.id] === undefined) {
         throw new Error(`Invalid key ID: ${key.id}`);

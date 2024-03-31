@@ -13,7 +13,7 @@ export class KeyBoardTitleBar extends KeyBoard {
   keyMap: KeyMap | null = null;
   keyMapKey: KeyMapKey | null = null;
   keyElement: KeyboardKey | null = null;
-  physicalKeys: PhysicalKey[] = [];
+  private _physicalKeys: PhysicalKey[] = [];
   titleKey: PhysicalKey;
 
   constructor() {
@@ -24,10 +24,39 @@ export class KeyBoardTitleBar extends KeyBoard {
       // This doesn't matter; it will be set in updateSelectedKey()
       new Size(1, 1)
     );
-    this.physicalKeys = [this.titleKey];
+    this._physicalKeys = [this.titleKey];
   }
 
   name = "TitleBar";
+
+  get elementName(): string {
+    return "key-board-title-bar";
+  }
+
+  /* The size of the blank key to display in the title bar when no key is selected.
+   */
+  private _defaultBlankKeySize: Point = new Point(2, 2);
+  get defaultBlankKeySize(): Point {
+    return this._defaultBlankKeySize;
+  }
+
+  /* The maximum height of a key on the keyboard
+   */
+  private _maxKeyHeight: number = 2;
+  get maxKeyHeight() {
+    return this._maxKeyHeight;
+  }
+
+  /* The maximum width of a key on the keyboard
+   */
+  private _maxKeyWidth: number = 2;
+  get maxKeyWidth() {
+    return this._maxKeyWidth;
+  }
+
+  get physicalKeys(): PhysicalKey[] {
+    return this._physicalKeys;
+  }
 
   _referenceBoard: KeyBoard | null = null;
   get referenceBoard(): KeyBoard | null {
@@ -36,6 +65,9 @@ export class KeyBoardTitleBar extends KeyBoard {
   set referenceBoard(board: KeyBoard | null) {
     this._referenceBoard = board;
     if (board) {
+      this._defaultBlankKeySize = board.defaultBlankKeySize;
+      this._maxKeyHeight = board.maxKeyHeight;
+      this._maxKeyWidth = board.maxKeyWidth;
     }
   }
 
@@ -75,8 +107,8 @@ export class KeyBoardTitleBar extends KeyBoard {
   ): KeyMapKey {
     this.keyMap = keyMap;
 
-    this.grid.setAttribute("cols", referenceKeyBoard.maxKeyWidth.toString());
-    this.grid.setAttribute("rows", referenceKeyBoard.maxKeyHeight.toString());
+    this.grid.setAttribute("cols", this.maxKeyWidth.toString());
+    this.grid.setAttribute("rows", this.maxKeyHeight.toString());
 
     if (!selectedKeyId) {
       this.keyMapKey = new KeyMapKey({
@@ -93,7 +125,7 @@ export class KeyBoardTitleBar extends KeyBoard {
       this.titleKey = new PhysicalKey(
         "title-bar",
         new Point(0, 0),
-        referenceKeyBoard.defaultBlankKeySize
+        this.defaultBlankKeySize
       );
     } else {
       const selectedKey = keyMap.keys.get(selectedKeyId);

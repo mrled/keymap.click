@@ -6,6 +6,7 @@ import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall
 registerAllKeymapClickWebComponents();
 
 import { KeyMapUI } from "~/webcomponents/key-map-ui";
+import { KeyMapTitleScreen } from "~/lib/keyMaps/KeyMapTitleScreen";
 import { MicahErgodoxLayout } from "~/lib/keyMaps/micahErgodox";
 
 const app = document.querySelector("#app");
@@ -56,7 +57,7 @@ const clearQueryStringListItem = document.createElement("li");
 clearQueryStringListItem.appendChild(clearQueryStringButton);
 
 const testLink = document.createElement("a");
-testLink.href = "http://localhost:5173/?kmui-key=l-f-10-9&kmui-map=blank";
+testLink.href = "/?kmui-key=l-f-10-9&kmui-map=blank";
 testLink.textContent = "Hit test URL";
 const testListItem = document.createElement("li");
 testListItem.appendChild(testLink);
@@ -71,12 +72,36 @@ titleBar.appendChild(menuList);
 
 app.appendChild(titleBar);
 
-const keyMapUI = document.createElement("key-map-ui") as KeyMapUI;
-keyMapUI.setAttribute("keyboard-element", "key-board-ergodox");
-keyMapUI.availableKeyMaps = [MicahErgodoxLayout];
-keyMapUI.setAttribute("keymap-id", "micah-ergodox");
-keyMapUI.setAttribute("query-prefix", "kmui");
-app.appendChild(keyMapUI);
+const availableKeymaps = [KeyMapTitleScreen, MicahErgodoxLayout];
+
+const titleDesc = document.createElement("p");
+titleDesc.textContent =
+  "Here's the title screen. It's useful at least for testing.";
+app.appendChild(titleDesc);
+
+const kmuiTitle = document.createElement("key-map-ui") as KeyMapUI;
+kmuiTitle.setAttribute("id", "kmui-title");
+// kmuiTitle.setAttribute("debug", "true");
+kmuiTitle.setKeymaps(availableKeymaps);
+// TODO: it's confusing to set both .keyboards property and the keyboard-element attribute, improve this.
+kmuiTitle.keyboards = ["key-board-ergodox", "key-board-title-screen"];
+kmuiTitle.setAttribute("keyboard-element", "key-board-title-screen");
+kmuiTitle.setAttribute("keymap-id", "title-screen-map");
+app.appendChild(kmuiTitle);
+
+const ergodoxDesc = document.createElement("p");
+ergodoxDesc.textContent =
+  "Here's the ErgoDox layout I use. This keymap syncs its state with the query string - try clicking around and then reloading the page or opening in another tab.";
+app.appendChild(ergodoxDesc);
+
+const kmuiErgoDox = document.createElement("key-map-ui") as KeyMapUI;
+kmuiErgoDox.setAttribute("id", "kmui-ergodox");
+kmuiErgoDox.setKeymaps(availableKeymaps);
+kmuiErgoDox.keyboards = ["key-board-ergodox", "key-board-title-screen"];
+kmuiErgoDox.setAttribute("keyboard-element", "key-board-ergodox");
+kmuiErgoDox.setAttribute("keymap-id", "micah-ergodox");
+kmuiErgoDox.setAttribute("query-prefix", "kmui");
+app.appendChild(kmuiErgoDox);
 
 const footer = document.createElement("p");
 footer.className = "site-footer";

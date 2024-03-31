@@ -13,6 +13,28 @@ export class KeyBoardErgodox extends KeyBoard {
 
   name = "ErgoDox";
 
+  get elementName(): string {
+    return "key-board-ergodox";
+  }
+
+  /* The size of the blank key to display in the title bar when no key is selected.
+   */
+  get defaultBlankKeySize(): Point {
+    return new Point(2, 2);
+  }
+
+  /* The maximum height of a key on the keyboard
+   */
+  get maxKeyHeight() {
+    return 4;
+  }
+
+  /* The maximum width of a key on the keyboard
+   */
+  get maxKeyWidth() {
+    return 3;
+  }
+
   /* The physical keys on the ErgoDox.
    */
   private _physicalKeys: PhysicalKey[] = [];

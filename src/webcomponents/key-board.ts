@@ -16,24 +16,43 @@ export abstract class KeyBoard extends HTMLElement {
   }
 
   /* The name of the keyboard.
+   * Subclasses should override this to some meaningful name,
+   * and instances can override it to something more specific.
    */
-  name: string = "Keyboard Base Class";
+  name: string = "Keyboard Instance";
+
+  /* The element name of the keyboard.
+   * This name should be passed to customElements.define() when registering the keyboard.
+   *
+   * Subclasses must implement this getter.
+   */
+  get elementName(): string {
+    throw new Error("Subclasses must implement this getter.");
+  }
 
   /* The size of the blank key to display in the title bar when no key is selected.
    */
-  defaultBlankKeySize = new Point(2, 2);
+  get defaultBlankKeySize(): Point {
+    return new Point(2, 2);
+  }
 
   /* The maximum height of a key on the keyboard
    */
-  maxKeyHeight = 4;
+  get maxKeyHeight() {
+    return 4;
+  }
 
   /* The maximum width of a key on the keyboard
    */
-  maxKeyWidth = 3;
+  get maxKeyWidth() {
+    return 3;
+  }
 
   /* Subclasses should implement this method to return a list of physical key objects
    */
-  abstract get physicalKeys(): PhysicalKey[];
+  get physicalKeys(): PhysicalKey[] {
+    return [];
+  }
 
   /* A map of string key IDs to PhysicalKey objects.
    */
@@ -93,6 +112,7 @@ export abstract class KeyBoard extends HTMLElement {
     return new KeyMap({
       displayName: "Blank keymap",
       uniqueId: "blank",
+      keyboardElementName: this.elementName,
       welcome: ["This is a blank key map"],
       keys: this.blankKeyMapKeys,
       guides: [],
