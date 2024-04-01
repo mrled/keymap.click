@@ -30,8 +30,7 @@ export class KeyBoardTitleBar extends KeyBoard {
     this._model = new KeyBoardModel(
       "key-board-title-bar",
       new Point(2, 2),
-      2,
-      2,
+      new Size(2, 2),
       this._physicalKeys
     );
   }
@@ -52,8 +51,7 @@ export class KeyBoardTitleBar extends KeyBoard {
       this._model = new KeyBoardModel(
         this.elementName,
         model.defaultBlankKeySize,
-        model.maxKeyHeight,
-        model.maxKeyWidth,
+        model.maxKeySize,
         this._physicalKeys
       );
     }
@@ -95,8 +93,8 @@ export class KeyBoardTitleBar extends KeyBoard {
   ): KeyMapKey {
     this.keyMap = keyMap;
 
-    this.grid.setAttribute("cols", this.model.maxKeyWidth.toString());
-    this.grid.setAttribute("rows", this.model.maxKeyHeight.toString());
+    this.grid.setAttribute("cols", this.model.maxKeySize.x.toString());
+    this.grid.setAttribute("rows", this.model.maxKeySize.y.toString());
 
     if (!selectedKeyId) {
       this.keyMapKey = new KeyMapKey({

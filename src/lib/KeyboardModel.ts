@@ -4,7 +4,7 @@
  */
 
 import { PhysicalKey } from "~/lib/physicalKey";
-import { Point } from "~/lib/geometry";
+import { Point, Size } from "~/lib/geometry";
 
 type KeyIdToPhysicalKeyMap = { [key: string]: PhysicalKey };
 
@@ -16,11 +16,8 @@ export class KeyBoardModel {
     // The size of the blank key to display in the title bar when no key is selected.
     public readonly defaultBlankKeySize: Point = new Point(2, 2),
 
-    // The maximum height of any key on the keyboard
-    public readonly maxKeyHeight: number = 4,
-
-    // The maximum width of any key on the keyboard
-    public readonly maxKeyWidth: number = 4,
+    // The maximum dimensions of any key on the keyboard.
+    public readonly maxKeySize: Size = new Size(4, 4),
 
     // A list of physical key objects on the board
     public readonly physicalKeys: PhysicalKey[] = []

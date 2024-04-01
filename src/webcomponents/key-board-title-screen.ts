@@ -8,8 +8,7 @@ import { KeyBoardModel } from "~/lib/KeyboardModel";
 export const KeyboardModelTitleScreen = new KeyBoardModel(
   "key-board-title-screen",
   new Point(2, 2),
-  2,
-  2,
+  new Size(2, 2),
   [
     new PhysicalKey("title-screen", new Point(1, 1), new Size(2, 2)), // K
     new PhysicalKey("title-screen", new Point(3, 1), new Size(2, 2)), // E

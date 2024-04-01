@@ -8,8 +8,7 @@ import { KeyBoardModel } from "~/lib/KeyboardModel";
 export const KeyboardModelErgodox = new KeyBoardModel(
   "key-board-ergodox",
   new Point(2, 2),
-  4,
-  3,
+  new Size(4, 3),
   [
     // Left fingers, number row
     new PhysicalKey("l-f", new Point(1, 1), new Size(3, 2)),
