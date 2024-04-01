@@ -93,7 +93,7 @@ export class KeyGrid extends HTMLElement {
 
     const keyElement = document.createElement("keyboard-key");
 
-    const physicalKey = keyBoard.getPhysicalKey(key.id);
+    const physicalKey = keyBoard.model.getPhysicalKey(key.id);
 
     keyElement.setAttribute("position", physicalKey.positionAttribute);
     keyElement.setAttribute("legend-text", legendText);

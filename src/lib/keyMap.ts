@@ -1,4 +1,5 @@
 import { KeyBoard } from "~/webcomponents/key-board";
+import { KeyBoardModel } from "./KeyboardModel";
 
 /* A key in a keymap.
  *
@@ -122,7 +123,7 @@ export class KeyMapGuide {
 export class KeyMap {
   displayName: string;
   uniqueId: string;
-  keyboardElementName: string;
+  model: KeyBoardModel;
   welcome: string[];
   guides: KeyMapGuide[];
   keys: Map<string, KeyMapKey>;
@@ -131,21 +132,21 @@ export class KeyMap {
   constructor({
     displayName,
     uniqueId,
-    keyboardElementName,
+    model,
     welcome,
     keys,
     guides,
   }: {
     displayName: string;
     uniqueId: string;
-    keyboardElementName: string;
+    model: KeyBoardModel;
     welcome: string[];
     keys: KeyMapKey[];
     guides?: KeyMapGuide[];
   }) {
     this.displayName = displayName;
     this.uniqueId = uniqueId;
-    this.keyboardElementName = keyboardElementName;
+    this.model = model;
     this.welcome = welcome;
     this.keys = keys.reduce((map, key) => {
       if (map.has(key.id)) {
@@ -167,11 +168,8 @@ export class KeyMap {
           .join(", ")}`
       );
     }
-    const keyboard = document.createElement(
-      this.keyboardElementName
-    ) as KeyBoard;
     for (const key of this.keys.values()) {
-      if (keyboard.physicalKeyMap[key.id] === undefined) {
+      if (this.model.physicalKeyMap[key.id] === undefined) {
         throw new Error(`Invalid key ID: ${key.id}`);
       }
     }

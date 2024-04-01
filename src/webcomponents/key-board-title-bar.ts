@@ -4,6 +4,7 @@ import { KeyMap, KeyMapKey } from "~/lib/keyMap";
 import { KeyGrid } from "~/webcomponents/key-grid";
 import { KeyboardKey } from "./keyboard-key";
 import { Point, Size } from "~/lib/geometry";
+import { KeyBoardModel } from "~/lib/KeyboardModel";
 
 /* The faux keyboard in the title bar.
  *
@@ -15,6 +16,7 @@ export class KeyBoardTitleBar extends KeyBoard {
   keyElement: KeyboardKey | null = null;
   private _physicalKeys: PhysicalKey[] = [];
   titleKey: PhysicalKey;
+  private _model: KeyBoardModel;
 
   constructor() {
     super();
@@ -25,49 +27,35 @@ export class KeyBoardTitleBar extends KeyBoard {
       new Size(1, 1)
     );
     this._physicalKeys = [this.titleKey];
+    this._model = new KeyBoardModel(
+      "key-board-title-bar",
+      new Point(2, 2),
+      2,
+      2,
+      this._physicalKeys
+    );
   }
 
-  name = "TitleBar";
+  readonly elementName = "key-board-title-bar";
 
-  get elementName(): string {
-    return "key-board-title-bar";
+  get model(): KeyBoardModel {
+    return this._model;
   }
 
-  /* The size of the blank key to display in the title bar when no key is selected.
-   */
-  private _defaultBlankKeySize: Point = new Point(2, 2);
-  get defaultBlankKeySize(): Point {
-    return this._defaultBlankKeySize;
+  _referenceModel: KeyBoardModel | null = null;
+  get referenceModel(): KeyBoardModel | null {
+    return this._referenceModel;
   }
-
-  /* The maximum height of a key on the keyboard
-   */
-  private _maxKeyHeight: number = 2;
-  get maxKeyHeight() {
-    return this._maxKeyHeight;
-  }
-
-  /* The maximum width of a key on the keyboard
-   */
-  private _maxKeyWidth: number = 2;
-  get maxKeyWidth() {
-    return this._maxKeyWidth;
-  }
-
-  get physicalKeys(): PhysicalKey[] {
-    return this._physicalKeys;
-  }
-
-  _referenceBoard: KeyBoard | null = null;
-  get referenceBoard(): KeyBoard | null {
-    return this._referenceBoard;
-  }
-  set referenceBoard(board: KeyBoard | null) {
-    this._referenceBoard = board;
-    if (board) {
-      this._defaultBlankKeySize = board.defaultBlankKeySize;
-      this._maxKeyHeight = board.maxKeyHeight;
-      this._maxKeyWidth = board.maxKeyWidth;
+  set referenceModel(model: KeyBoardModel | null) {
+    this._referenceModel = model;
+    if (model) {
+      this._model = new KeyBoardModel(
+        this.elementName,
+        model.defaultBlankKeySize,
+        model.maxKeyHeight,
+        model.maxKeyWidth,
+        this._physicalKeys
+      );
     }
   }
 
@@ -97,18 +85,18 @@ export class KeyBoardTitleBar extends KeyBoard {
    *
    * Parameters:
    * - keyMap: the key map
-   * - referenceKeyBoard: the keyboard being displayed in the main area
+   * - referenceModel: the model for the keyboard being displayed in the main area
    * - selectedKeyId: the ID of the selected key
    */
   updateSelectedKey(
     keyMap: KeyMap,
-    referenceKeyBoard: KeyBoard,
+    referenceModel: KeyBoardModel,
     selectedKeyId: string
   ): KeyMapKey {
     this.keyMap = keyMap;
 
-    this.grid.setAttribute("cols", this.maxKeyWidth.toString());
-    this.grid.setAttribute("rows", this.maxKeyHeight.toString());
+    this.grid.setAttribute("cols", this.model.maxKeyWidth.toString());
+    this.grid.setAttribute("rows", this.model.maxKeyHeight.toString());
 
     if (!selectedKeyId) {
       this.keyMapKey = new KeyMapKey({
@@ -125,7 +113,7 @@ export class KeyBoardTitleBar extends KeyBoard {
       this.titleKey = new PhysicalKey(
         "title-bar",
         new Point(0, 0),
-        this.defaultBlankKeySize
+        this.model.defaultBlankKeySize
       );
     } else {
       const selectedKey = keyMap.keys.get(selectedKeyId);
@@ -142,7 +130,7 @@ export class KeyBoardTitleBar extends KeyBoard {
         imageAttribution: selectedKey.imageAttribution,
         unset: selectedKey.unset,
       });
-      const activePhysicalKey = referenceKeyBoard.getPhysicalKey(selectedKeyId);
+      const activePhysicalKey = referenceModel.getPhysicalKey(selectedKeyId);
 
       this.titleKey.size.x = activePhysicalKey.size.x;
       this.titleKey.size.y = activePhysicalKey.size.y;

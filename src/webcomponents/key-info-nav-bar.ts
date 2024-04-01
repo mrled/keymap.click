@@ -1,7 +1,7 @@
 import { KeyMap } from "~/lib/keyMap";
 
 import { KeyBoardTitleBar } from "~/webcomponents/key-board-title-bar";
-import { KeyBoard } from "./key-board";
+import { KeyBoardModel } from "~/lib/KeyboardModel";
 
 /* Title bar for a key-info-panel
  *
@@ -11,7 +11,7 @@ export class KeyInfoNavBar extends HTMLElement {
   trackedElements: { [key: string]: HTMLElement };
 
   // The full keyboard element (not the title bar mini keyboard)
-  referenceKeyboard: KeyBoard | null = null;
+  referenceModel: KeyBoardModel | null = null;
 
   static get observedAttributes() {
     return ["key-id"];
@@ -118,10 +118,10 @@ export class KeyInfoNavBar extends HTMLElement {
   }
 
   #updateKeyId(keyId: string) {
-    if (this.referenceKeyboard) {
+    if (this.referenceModel) {
       const modifiedKey = this.titleBoard.updateSelectedKey(
         this.keyMap,
-        this.referenceKeyboard,
+        this.referenceModel,
         keyId
       );
       this.titleH2.textContent = modifiedKey ? "Key information" : "Welcome";

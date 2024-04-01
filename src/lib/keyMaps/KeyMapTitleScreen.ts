@@ -1,3 +1,4 @@
+import { KeyboardModelTitleScreen } from "~/webcomponents/key-board-title-screen";
 import { KeyMap, KeyMapKey } from "../keyMap";
 
 const keyInfo = ["K E Y M A P . C L I C K"];
@@ -5,7 +6,7 @@ const keyInfo = ["K E Y M A P . C L I C K"];
 export const KeyMapTitleScreen = new KeyMap({
   displayName: "Title Screen Map",
   uniqueId: "title-screen-map",
-  keyboardElementName: "key-board-title-screen",
+  model: KeyboardModelTitleScreen,
   welcome: [
     `Hello, and welcome to the key map viewer!`,
     `If you&apos;re seeing this, it means you don&apos;t have a key map selected.`,

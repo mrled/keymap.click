@@ -374,7 +374,7 @@ export class KeyMapUI
   setKeymaps(value: KeyMap[]) {
     const newKeyMaps = new Map<string, Map<string, KeyMap>>();
     value.forEach((keyMap) => {
-      const kbName = keyMap.keyboardElementName;
+      const kbName = keyMap.model.keyboardElementName;
       if (!newKeyMaps.has(kbName)) {
         newKeyMaps.set(kbName, new Map());
       }
@@ -549,7 +549,7 @@ export class KeyMapUI
     }
     newMap.validateKeys();
     this.keyboard.createChildren(Array.from(this.keyMap.keys.values()));
-    this.keyInfoNavBar.referenceKeyboard = this.keyboard;
+    this.keyInfoNavBar.referenceModel = this.keyboard.model;
     this.keyInfoNavBar.keyMap = this.keyMap;
     this.#showWelcomeMessage();
     this.state.setQueryStringFromState(this);

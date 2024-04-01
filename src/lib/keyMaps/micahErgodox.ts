@@ -1,5 +1,8 @@
 import { KeyMap, KeyMapGuide, KeyMapKey, GuideStep } from "src/lib/keyMap";
-import { KeyBoardErgodox } from "~/webcomponents/key-board-ergodox";
+import {
+  KeyBoardErgodox,
+  KeyboardModelErgodox,
+} from "~/webcomponents/key-board-ergodox";
 
 const normalLayoutInfo = [`Unchanged from normal QWERTY keyboard layout`];
 
@@ -249,7 +252,7 @@ function newQwertyKey(
 export const MicahErgodoxLayout = new KeyMap({
   displayName: "Micah's ErgoDox",
   uniqueId: "micah-ergodox",
-  keyboardElementName: "key-board-ergodox",
+  model: KeyboardModelErgodox,
   welcome: [
     `Welcome to my keymap. I wrote this guide to explain how my ErgoDox helped my RSI.`,
     `Select a key from the board above to learn more about it.`,
