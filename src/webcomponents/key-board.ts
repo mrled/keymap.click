@@ -3,7 +3,7 @@
  * Specific boards should extend this class.
  */
 
-import { KeyMap, KeyMapKey } from "~/lib/keyMap";
+import { KeyMapKey } from "~/lib/keyMap";
 import { KeyboardKey } from "./keyboard-key";
 import { KeyBoardModel } from "~/lib/KeyboardModel";
 
@@ -39,26 +39,5 @@ export abstract class KeyBoard extends HTMLElement {
     while (this.firstChild) {
       this.removeChild(this.firstChild);
     }
-  }
-
-  /* A helper that provides a blank KeyMapKey for each physical key.
-   */
-  get blankKeyMapKeys(): KeyMapKey[] {
-    return this.model.physicalKeys.map(
-      (key) => new KeyMapKey({ name: "", id: key.id, info: [""], unset: true })
-    );
-  }
-
-  /* A helper that provides a blank KeyMap for the keyboard.
-   */
-  get blankKeyMap(): KeyMap {
-    return new KeyMap({
-      displayName: "Blank keymap",
-      uniqueId: "blank",
-      model: this.model,
-      welcome: ["This is a blank key map"],
-      keys: this.blankKeyMapKeys,
-      guides: [],
-    });
   }
 }

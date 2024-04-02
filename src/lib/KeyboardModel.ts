@@ -5,6 +5,7 @@
 
 import { PhysicalKey } from "~/lib/physicalKey";
 import { Point, Size } from "~/lib/geometry";
+import { KeyMap, KeyMapKey } from "~/lib/keyMap";
 
 type KeyIdToPhysicalKeyMap = { [key: string]: PhysicalKey };
 
@@ -47,5 +48,26 @@ export class KeyBoardModel {
       throw new Error(`Physical key not found with id '${id}'`);
     }
     return key;
+  }
+
+  /* A helper that provides a blank KeyMapKey for each physical key.
+   */
+  get blankKeyMapKeys(): KeyMapKey[] {
+    return this.physicalKeys.map(
+      (key) => new KeyMapKey({ name: "", id: key.id, info: [""], unset: true })
+    );
+  }
+
+  /* A helper that provides a blank KeyMap for the keyboard.
+   */
+  get blankKeyMap(): KeyMap {
+    return new KeyMap({
+      displayName: "Blank keymap",
+      uniqueId: "blank",
+      model: this,
+      welcome: ["This is a blank key map"],
+      keys: this.blankKeyMapKeys,
+      guides: [],
+    });
   }
 }

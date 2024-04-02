@@ -347,7 +347,8 @@ export class KeyMapUI
     const keyMapId = this.state.getState("keymapId");
     const keyboard = this.state.getState("keyboardElementName");
     return (
-      this.keymaps.get(keyboard)?.get(keyMapId) || this.keyboard.blankKeyMap
+      this.keymaps.get(keyboard)?.get(keyMapId) ||
+      this.keyboard.model.blankKeyMap
     );
   }
 
@@ -512,8 +513,8 @@ export class KeyMapUI
     }
     const boardKeyMaps = this.keymaps.get(value)!;
     boardKeyMaps.set(
-      this.keyboard.blankKeyMap.uniqueId,
-      this.keyboard.blankKeyMap
+      this.keyboard.model.blankKeyMap.uniqueId,
+      this.keyboard.model.blankKeyMap
     );
 
     // If the keymap-id attribute is set and is valid for the new keyboard, use it.
@@ -523,8 +524,8 @@ export class KeyMapUI
       this.state.setState("keymapId", attribKeyMap);
       this._keyboard.createChildren(Array.from(this.keyMap.keys.values()));
     } else {
-      this.state.setState("keymapId", this.keyboard.blankKeyMap.uniqueId);
-      this._keyboard.createChildren(this.keyboard.blankKeyMapKeys);
+      this.state.setState("keymapId", this.keyboard.model.blankKeyMap.uniqueId);
+      this._keyboard.createChildren(this.keyboard.model.blankKeyMapKeys);
     }
 
     // Replace the old keyboard with the new one in the DOM
@@ -706,7 +707,7 @@ export class KeyMapUI
       this.keymaps.set(kbName, new Map());
     }
     const boardKeyMaps = this.keymaps.get(kbName)!;
-    const blankKeyMap = tmpInstance.blankKeyMap;
+    const blankKeyMap = tmpInstance.model.blankKeyMap;
     boardKeyMaps.set(blankKeyMap.uniqueId, blankKeyMap);
   }
 

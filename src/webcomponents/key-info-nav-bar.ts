@@ -90,7 +90,7 @@ export class KeyInfoNavBar extends HTMLElement {
   private _keyMap: KeyMap | null = null;
   get keyMap() {
     if (!this._keyMap) {
-      this._keyMap = this.titleBoard.blankKeyMap;
+      this._keyMap = this.titleBoard.model.blankKeyMap;
     }
     return this._keyMap;
   }
