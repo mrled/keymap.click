@@ -82,7 +82,7 @@ app.appendChild(titleDesc);
 const kmuiTitle = document.createElement("key-map-ui") as KeyMapUI;
 kmuiTitle.setAttribute("id", "kmui-title");
 // kmuiTitle.setAttribute("debug", "true");
-kmuiTitle.setKeymaps(availableKeymaps);
+kmuiTitle.addKeymaps(availableKeymaps);
 kmuiTitle.setAttribute("keyboard-element", "key-board-title-screen");
 kmuiTitle.setAttribute("keymap-id", "title-screen-map");
 app.appendChild(kmuiTitle);
@@ -94,7 +94,7 @@ app.appendChild(ergodoxDesc);
 
 const kmuiErgoDox = document.createElement("key-map-ui") as KeyMapUI;
 kmuiErgoDox.setAttribute("id", "kmui-ergodox");
-kmuiErgoDox.setKeymaps(availableKeymaps);
+kmuiErgoDox.addKeymaps(availableKeymaps);
 kmuiErgoDox.setAttribute("keyboard-element", "key-board-ergodox");
 kmuiErgoDox.setAttribute("keymap-id", "micah-ergodox");
 kmuiErgoDox.setAttribute("query-prefix", "kmui");

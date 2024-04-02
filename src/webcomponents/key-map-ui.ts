@@ -372,19 +372,15 @@ export class KeyMapUI
    *
    * Users will call this method to tell the UI what keymaps are available.
    */
-  setKeymaps(value: KeyMap[]) {
-    const newKeyMaps = new Map<string, Map<string, KeyMap>>();
+  addKeymaps(value: KeyMap[]) {
     value.forEach((keyMap) => {
       const kbName = keyMap.model.keyboardElementName;
-      if (!newKeyMaps.has(kbName)) {
-        newKeyMaps.set(kbName, new Map());
+      if (!this.keymaps.has(kbName)) {
+        this.keymaps.set(kbName, new Map());
       }
-      const boardKeyMaps = newKeyMaps.get(kbName)!;
+      const boardKeyMaps = this.keymaps.get(kbName)!;
       boardKeyMaps.set(keyMap.uniqueId, keyMap);
     });
-    // Trigger the setter to update the keymaps property
-    // so we don't have to duplicate the logic here
-    this.keymaps = newKeyMaps;
   }
 
   //
