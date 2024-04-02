@@ -129,11 +129,10 @@ export class KeyboardKey extends HTMLElement {
       }
       this.legendTextNode.textContent = legendText;
       // TODO: can CSS change font size based on length of the string? Then we could remove these classes.
-      if (legendText.length <= 2) {
-        this.className += " legend-type-glyph";
-      } else {
-        this.className += " legend-type-text";
-      }
+      const legendClassName =
+        legendText.length <= 2 ? "legend-type-glyph" : "legend-type-text";
+      if (!this.className.includes(legendClassName))
+        this.className += ` ${legendClassName}`;
     }
 
     if (!this.keyHandleElement) {
