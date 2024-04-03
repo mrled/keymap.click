@@ -341,17 +341,29 @@ export class KeyMapUI
   // Other properties
   //
 
+  /* The selected keymap, among the known keymaps
+   */
+  get keyMap(): KeyMap {
+    const keyMapId = this.state.getState("keymapId");
+    const keyboard = this.state.getState("keyboardElementName");
+    return (
+      this.keymaps.get(keyboard)?.get(keyMapId) ||
+      this.keyboard.model.blankKeyMap
+    );
+  }
+
   /* A map of keymaps by their keyboard element name and unique ID.
    *
    * Some terminology:
    * - This is a Map (JS object) of Maps (JS objects) of KeyMaps (instances of KeyMap).
    * - Each Map (JS object) has key:value pairs.
    */
+  private _keymaps: Map<string, Map<string, KeyMap>> = new Map();
   private get keymaps(): Map<string, Map<string, KeyMap>> {
-    return this.state.getState("keymaps");
+    return this._keymaps;
   }
   private set keymaps(value: Map<string, Map<string, KeyMap>>) {
-    this.state.setState("keymaps", value);
+    this._keymaps = value;
     const keyboard = this.state.getState("keyboardElementName");
     this.#idempotentlyAddBlankKeyMap(keyboard);
   }
@@ -506,8 +518,7 @@ export class KeyMapUI
     const attribKeyMap = this.getAttribute("keymap-id") || "";
     if (attribKeyMap && boardKeyMaps.get(attribKeyMap)) {
       this.state.setState("keymapId", attribKeyMap);
-      const currentKeymap = this.state.getState("keymap");
-      this._keyboard.createChildren(Array.from(currentKeymap.keys.values()));
+      this._keyboard.createChildren(Array.from(this.keyMap.keys.values()));
     } else {
       this.state.setState("keymapId", this.keyboard.model.blankKeyMap.uniqueId);
       this._keyboard.createChildren(this.keyboard.model.blankKeyMapKeys);
@@ -534,10 +545,9 @@ export class KeyMapUI
       return;
     }
     newMap.validateKeys();
-    const currentKeymap = this.state.getState("keymap");
-    this.keyboard.createChildren(Array.from(currentKeymap.keys.values()));
+    this.keyboard.createChildren(Array.from(this.keyMap.keys.values()));
     this.keyInfoNavBar.referenceModel = this.keyboard.model;
-    this.keyInfoNavBar.keyMap = currentKeymap;
+    this.keyInfoNavBar.keyMap = this.keyMap;
     this.#showWelcomeMessage();
     this.state.setQueryStringFromState(this);
   }
@@ -557,11 +567,10 @@ export class KeyMapUI
     let indicatedKeyIds: string[] = [];
 
     if (value) {
-      const currentKeymap = this.state.getState("keymap");
-      const keyData = currentKeymap.keys.get(value);
+      const keyData = this.keyMap.keys.get(value);
       if (!keyData) {
         console.error(
-          `KeyMapUI: Key ${value} not found in key map '${currentKeymap.uniqueId}'`
+          `KeyMapUI: Key ${value} not found in key map '${this.keyMap.uniqueId}'`
         );
         return;
       }
@@ -740,8 +749,7 @@ export class KeyMapUI
     while (this.infoProse.firstChild) {
       this.infoProse.removeChild(this.infoProse.firstChild);
     }
-    const currentKeymap = this.state.getState("keymap");
-    currentKeymap.welcome.forEach((paragraph: string) => {
+    this.keyMap.welcome.forEach((paragraph: string) => {
       const p = document.createElement("p");
       p.innerHTML = paragraph;
       this.infoProse.appendChild(p);
