@@ -1,0 +1,96 @@
+/* Synchronize the query string and a state object
+ */
+
+import { KeyMapUI } from "~/webcomponents/key-map-ui";
+import { KeyMapUIStateProvider } from "./KeyMapUIState";
+
+/* Read the query string and update the state of the KeyMapUI.
+ */
+export function setStateFromQueryString(provider: KeyMapUIStateProvider) {
+  const queryPrefix = provider.getState("queryPrefix");
+
+  if (!queryPrefix) {
+    return;
+  }
+  const currentParams = new URLSearchParams(window.location.search);
+
+  const qBoard = currentParams.get(`${queryPrefix}-board`);
+  const qMap = currentParams.get(`${queryPrefix}-map`);
+  const qLayer = currentParams.get(`${queryPrefix}-layer`);
+  const qKey = currentParams.get(`${queryPrefix}-key`);
+
+  if (qBoard) provider.setState("keyboardElementName", qBoard);
+  if (qMap) provider.setState("keymapId", qMap);
+  if (qLayer) provider.setState("layer", parseInt(qLayer, 10));
+  if (qKey) provider.setState("selectedKey", qKey);
+}
+
+/* Set the query string based on the current state.
+ *
+ * This is called whenever one of the queryable attributes changes.
+ * It does not affect any query parameters other than those with the query prefix.
+ *
+ * If any of the query parameters match the attributes on the element in the DOM,
+ * they are removed from the query string.
+ * This means the query string overrides the attributes on the element,
+ * and the URL isn't cluttered with unnecessary query parameters.
+ *
+ * This function doesn't handle changes to the query prefix itself;
+ * that is handled by #updateQueryPrefix().
+ *
+ * Requires the element to be passed in so we can get the current attribute values.
+ */
+export function setQueryStringFromState(
+  provider: KeyMapUIStateProvider,
+  kmui: KeyMapUI
+) {
+  const queryPrefix = provider.getState("queryPrefix");
+
+  if (!queryPrefix) {
+    return;
+  }
+  const newParams = new URLSearchParams(window.location.search);
+
+  const tBoardElement = provider.getState("keyboardElementName");
+  const tMap = provider.getState("keymapId");
+  const tLayer = provider.getState("layer");
+  const tKey = provider.getState("selectedKey");
+
+  const aBoardElement = kmui.getAttribute("keyboard-element") || "";
+  const aMap = kmui.getAttribute("keymap-id") || "";
+  const aLayer = parseInt(kmui.getAttribute("layer") || "0", 10);
+  const aKey = kmui.getAttribute("selected-key") || "";
+
+  if (tBoardElement && aBoardElement !== tBoardElement) {
+    newParams.set(`${queryPrefix}-board`, tBoardElement);
+  } else {
+    newParams.delete(`${queryPrefix}-board`);
+  }
+
+  if (tMap && aMap !== tMap) {
+    newParams.set(`${queryPrefix}-map`, tMap);
+  } else {
+    newParams.delete(`${queryPrefix}-map`);
+  }
+
+  if (tLayer && aLayer !== tLayer) {
+    newParams.set(`${queryPrefix}-layer`, tLayer.toString());
+  } else {
+    newParams.delete(`${queryPrefix}-layer`);
+  }
+
+  if (tKey && aKey !== tKey) {
+    newParams.set(`${queryPrefix}-key`, tKey);
+  } else {
+    newParams.delete(`${queryPrefix}-key`);
+  }
+
+  const newUrl =
+    newParams.toString() !== ""
+      ? `${window.location.pathname}?${newParams.toString()}`
+      : `${window.location.pathname}`;
+
+  if (window.location.search !== `?${newUrl}`) {
+    window.history.replaceState({}, "", newUrl);
+  }
+}

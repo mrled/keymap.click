@@ -14,6 +14,10 @@ import {
   KeyMapUIState,
   KeyMapUIStateProvider,
 } from "~/lib/KeyMapUIState";
+import {
+  setQueryStringFromState,
+  setStateFromQueryString,
+} from "~/lib/QueryStringState";
 
 /* The UI of the keymap, including a keyboard, an info panel, and the canvas diagram.
  *
@@ -429,7 +433,7 @@ export class KeyMapUI
       "connectedCallback(): Just set query prefix"
     );
 
-    this.state.setStateFromQueryString();
+    setStateFromQueryString(this.state);
     this.layOutIdempotently();
 
     // Resize the canvas to the size of the kidContainer for the first time
@@ -530,7 +534,7 @@ export class KeyMapUI
     }
 
     this.layOutIdempotently();
-    this.state.setQueryStringFromState(this);
+    setQueryStringFromState(this.state, this);
   }
 
   /* Update the keymap ID
@@ -549,13 +553,13 @@ export class KeyMapUI
     this.keyInfoNavBar.referenceModel = this.keyboard.model;
     this.keyInfoNavBar.keyMap = this.keyMap;
     this.#showWelcomeMessage();
-    this.state.setQueryStringFromState(this);
+    setQueryStringFromState(this.state, this);
   }
 
   /* Update the layer
    */
   #updateLayer(value: number) {
-    this.state.setQueryStringFromState(this);
+    setQueryStringFromState(this.state, this);
   }
 
   /* Update the selected key
@@ -655,7 +659,7 @@ export class KeyMapUI
 
     this.state.setState("connectionPairs", connectionPairs);
 
-    this.state.setQueryStringFromState(this);
+    setQueryStringFromState(this.state, this);
     this.diagram.draw();
   }
 
