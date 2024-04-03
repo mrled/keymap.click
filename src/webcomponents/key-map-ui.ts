@@ -104,43 +104,142 @@ export class KeyMapUI
     this.addEventListener("key-selected", this.#handleKeySelected);
   }
 
-  update<KeyMapUIState>(
-    key: keyof KeyMapUIState,
-    oldValue: KeyMapUIState[keyof KeyMapUIState],
-    newValue: KeyMapUIState[keyof KeyMapUIState]
-  ) {
+  //
+  // #region Public API methods
+  //
+
+  /* Given a list of KeyMap instances, set the keymaps property.
+   *
+   * Users will call this method to tell the UI what keymaps are available.
+   */
+  addKeymaps(value: KeyMap[]) {
+    const newKeymaps = new Map<string, Map<string, KeyMap>>();
+    this.state.keymaps.forEach((value, key) => {
+      newKeymaps.set(key, value);
+    });
+    value.forEach((keyMap) => {
+      const kbName = keyMap.model.keyboardElementName;
+      if (!newKeymaps.has(kbName)) {
+        newKeymaps.set(kbName, new Map());
+      }
+      const boardKeyMaps = newKeymaps.get(kbName)!;
+      boardKeyMaps.set(keyMap.uniqueId, keyMap);
+    });
+    this.state.keymaps = newKeymaps;
+  }
+
+  // #endregion
+
+  //
+  // #region Lifecycle methods / callbacks
+  //
+
+  /* Run this code when the element is added to the DOM.
+   * This might be before or after attributes are changed.
+   * Run whether the element is created from HTML or from JavaScript.
+   */
+  connectedCallback() {
+    this.#logCurrentStateAndQueryString("connectedCallback(): Top");
+    // Set debugging stuff first, which does not rely on query parameters
+    const debug = this.getAttribute("debug") || "false";
+    this.attributeChangedCallback("debug", "", debug);
+
+    // Then read the keyboard, keymap, layer, and selected key.
+    // Unless overridden by the query parameters, these will be set to the attributes on the element.
+    const keyboardElement = this.getAttribute("keyboard-element") || "";
+    this.attributeChangedCallback("keyboard-element", "", keyboardElement);
+    this.#logCurrentStateAndQueryString(
+      "connectedCallback(): Just set keyboard element"
+    );
+
+    const keyMapName = this.getAttribute("keymap-id") || "";
+    this.attributeChangedCallback("keymap-id", "", keyMapName);
+    this.#logCurrentStateAndQueryString(
+      "connectedCallback(): Just set keymap id"
+    );
+
+    const layer = this.getAttribute("layer") || "";
+    this.attributeChangedCallback("layer", "", layer);
+    this.#logCurrentStateAndQueryString("connectedCallback(): Just set layer");
+
+    const selectedKey = this.getAttribute("selected-key") || "";
+    this.attributeChangedCallback("selected-key", "", selectedKey);
+    this.#logCurrentStateAndQueryString(
+      "connectedCallback(): Just set selected key"
+    );
+
+    // Then set the query prefix, which determines which query parameters we read.
+    // Its attributeChangedCallback will read the query string and update the state.
+    const queryPrefix = this.getAttribute("query-prefix") || "";
+    this.attributeChangedCallback("query-prefix", "", queryPrefix);
+    this.#logCurrentStateAndQueryString(
+      "connectedCallback(): Just set query prefix"
+    );
+
+    setStateFromQueryString(this.state);
+    this.layOutIdempotently();
+
+    // Resize the canvas to the size of the kidContainer for the first time
+    this.#resizeCanvas();
+    // Watch for changes in the size of the kidContainer
+    this.resizeObserver.observe(this.kidContainer);
+  }
+
+  /* Call attributeChangedCallback when any of these attributes are changed from JavaScript
+   * (changes to other attributes are ignored).
+   */
+  static get observedAttributes() {
+    return [
+      "debug",
+      "keyboard-element",
+      "keymap-id",
+      "layer",
+      "query-prefix",
+      "selected-key",
+    ];
+  }
+
+  /* Run this code when an attribute is changed from JavaScript.
+   * Does not run if an attribute is set when defined on the element in HTML.
+   */
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    // Don't do anything if we're not connected to the DOM.
+    // This function is called by connectedCallback() for each attribute anyway,
+    // and that function uses a specific order to set the internal properties correctly.
     if (!this.isConnected) {
       return;
     }
-    switch (key) {
+
+    // TODO: sync the state names with the element names for a better time
+    switch (name) {
       case "debug":
-        if ((newValue as number) > 0) {
-          log.setLevel(log.levels.DEBUG);
-        } else {
-          log.setLevel(log.levels.INFO);
-        }
-        this.diagram.draw();
+        this.state.debug = newValue === "true" ? 1 : 0;
         break;
-      case "keyboardElementName":
-        this.#updateKeyboardElementName(newValue as string);
+      case "keyboard-element":
+        this.state.keyboardElementName = newValue;
         break;
-      case "keymapId":
-        this.#updateKeyMapId(newValue as string);
+      case "keymap-id":
+        this.state.keymapId = newValue;
         break;
       case "layer":
-        this.#updateLayer(newValue as number);
+        this.state.layer = parseInt(newValue, 10);
         break;
-      case "selectedKey":
-        this.#updateSelectedKey(newValue as string);
+      case "selected-key":
+        this.state.selectedKey = newValue;
         break;
-      case "queryPrefix":
-        this.#updateQueryPrefix(oldValue as string, newValue as string);
+      case "query-prefix":
+        this.state.queryPrefix = newValue;
+        break;
+      default:
+        console.error(`KeyMapUI: Unhandled attribute: ${name}`);
         break;
     }
   }
 
+  // #endregion
+
   //
-  // Getters and setters for child elements
+  // #region Getters and setters for child elements
   //
 
   private _keyInfoNavBar: KeyInfoNavBar | null = null;
@@ -337,139 +436,46 @@ export class KeyMapUI
     }
   }
 
-  //
-  // Other properties
-  //
-
-  /* Given a list of KeyMap instances, set the keymaps property.
-   *
-   * Users will call this method to tell the UI what keymaps are available.
-   */
-  addKeymaps(value: KeyMap[]) {
-    const newKeymaps = new Map<string, Map<string, KeyMap>>();
-    this.state.keymaps.forEach((value, key) => {
-      newKeymaps.set(key, value);
-    });
-    value.forEach((keyMap) => {
-      const kbName = keyMap.model.keyboardElementName;
-      if (!newKeymaps.has(kbName)) {
-        newKeymaps.set(kbName, new Map());
-      }
-      const boardKeyMaps = newKeymaps.get(kbName)!;
-      boardKeyMaps.set(keyMap.uniqueId, keyMap);
-    });
-    this.state.keymaps = newKeymaps;
-  }
+  // #endregion
 
   //
-  // Lifecycle methods / callbacks
+  // #region Handle state changes
   //
 
-  /* Run this code when the element is added to the DOM.
-   * This might be before or after attributes are changed.
-   * Run whether the element is created from HTML or from JavaScript.
-   */
-  connectedCallback() {
-    this.#logCurrentStateAndQueryString("connectedCallback(): Top");
-    // Set debugging stuff first, which does not rely on query parameters
-    const debug = this.getAttribute("debug") || "false";
-    this.attributeChangedCallback("debug", "", debug);
-
-    // Then read the keyboard, keymap, layer, and selected key.
-    // Unless overridden by the query parameters, these will be set to the attributes on the element.
-    const keyboardElement = this.getAttribute("keyboard-element") || "";
-    this.attributeChangedCallback("keyboard-element", "", keyboardElement);
-    this.#logCurrentStateAndQueryString(
-      "connectedCallback(): Just set keyboard element"
-    );
-
-    const keyMapName = this.getAttribute("keymap-id") || "";
-    this.attributeChangedCallback("keymap-id", "", keyMapName);
-    this.#logCurrentStateAndQueryString(
-      "connectedCallback(): Just set keymap id"
-    );
-
-    const layer = this.getAttribute("layer") || "";
-    this.attributeChangedCallback("layer", "", layer);
-    this.#logCurrentStateAndQueryString("connectedCallback(): Just set layer");
-
-    const selectedKey = this.getAttribute("selected-key") || "";
-    this.attributeChangedCallback("selected-key", "", selectedKey);
-    this.#logCurrentStateAndQueryString(
-      "connectedCallback(): Just set selected key"
-    );
-
-    // Then set the query prefix, which determines which query parameters we read.
-    // Its attributeChangedCallback will read the query string and update the state.
-    const queryPrefix = this.getAttribute("query-prefix") || "";
-    this.attributeChangedCallback("query-prefix", "", queryPrefix);
-    this.#logCurrentStateAndQueryString(
-      "connectedCallback(): Just set query prefix"
-    );
-
-    setStateFromQueryString(this.state);
-    this.layOutIdempotently();
-
-    // Resize the canvas to the size of the kidContainer for the first time
-    this.#resizeCanvas();
-    // Watch for changes in the size of the kidContainer
-    this.resizeObserver.observe(this.kidContainer);
-  }
-
-  /* Call attributeChangedCallback when any of these attributes are changed from JavaScript
-   * (changes to other attributes are ignored).
-   */
-  static get observedAttributes() {
-    return [
-      "debug",
-      "keyboard-element",
-      "keymap-id",
-      "layer",
-      "query-prefix",
-      "selected-key",
-    ];
-  }
-
-  /* Run this code when an attribute is changed from JavaScript.
-   * Does not run if an attribute is set when defined on the element in HTML.
-   */
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    // Don't do anything if we're not connected to the DOM.
-    // This function is called by connectedCallback() for each attribute anyway,
-    // and that function uses a specific order to set the internal properties correctly.
+  update<KeyMapUIState>(
+    key: keyof KeyMapUIState,
+    oldValue: KeyMapUIState[keyof KeyMapUIState],
+    newValue: KeyMapUIState[keyof KeyMapUIState]
+  ) {
     if (!this.isConnected) {
       return;
     }
-
-    // TODO: sync the state names with the element names for a better time
-    switch (name) {
+    switch (key) {
       case "debug":
-        this.state.debug = newValue === "true" ? 1 : 0;
+        if ((newValue as number) > 0) {
+          log.setLevel(log.levels.DEBUG);
+        } else {
+          log.setLevel(log.levels.INFO);
+        }
+        this.diagram.draw();
         break;
-      case "keyboard-element":
-        this.state.keyboardElementName = newValue;
+      case "keyboardElementName":
+        this.#updateKeyboardElementName(newValue as string);
         break;
-      case "keymap-id":
-        this.state.keymapId = newValue;
+      case "keymapId":
+        this.#updateKeyMapId(newValue as string);
         break;
       case "layer":
-        this.state.layer = parseInt(newValue, 10);
+        this.#updateLayer(newValue as number);
         break;
-      case "selected-key":
-        this.state.selectedKey = newValue;
+      case "selectedKey":
+        this.#updateSelectedKey(newValue as string);
         break;
-      case "query-prefix":
-        this.state.queryPrefix = newValue;
-        break;
-      default:
-        console.error(`KeyMapUI: Unhandled attribute: ${name}`);
+      case "queryPrefix":
+        this.#updateQueryPrefix(oldValue as string, newValue as string);
         break;
     }
   }
-
-  //
-  // Handle state changes
-  //
 
   #updateKeyboardElementName(value: string) {
     if (!customElements.get(value)) {
@@ -670,8 +676,10 @@ export class KeyMapUI
     }
   }
 
+  // #endregion
+
   //
-  // Other private methods
+  // #region Other private methods
   //
 
   /* Resize the canvas to the size of the kidContainer.
@@ -778,4 +786,6 @@ export class KeyMapUI
     );
     console.table(logTable);
   }
+
+  // #endregion
 }
