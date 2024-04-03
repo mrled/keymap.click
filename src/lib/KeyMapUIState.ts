@@ -3,14 +3,14 @@
  * A single source of truth for the UI state of the keymap.
  * Use the observer pattern to notify relevant components when the state changes.
  *
- * We expect the root application componeent - KeyMapUI, in this case -
+ * We expect the root application component - KeyMapUI, in this case -
  * to create an instance of this class and pass it to all children.
  *
  * The root application component should do something like:
  *  constructor() {
  *    // ...
- *    this.state = new StateProvider(new KeyMapUIState());
- *    this.state.setState("initialized", true);
+ *    this.state = new KeyMapUIState()
+ *    this.state.initialized = true;
  *    this.state.attach(this);
  *
  * The root application componen should also implement the IStateObserver interface:
@@ -28,7 +28,7 @@
  *      this._child = document.createElement("child-element");
  *      this.appendChild(this._child);
  *    }
- *    if (!this._child.state.getState("initialized")) {
+ *    if (!this._child.state.initialized) {
  *      this._child.state = this.state;
  *      this._child.state.attach(this._child);
  *    }
@@ -42,73 +42,34 @@
  * This keeps each child from having to check if its state object is null and makes typing simpler.)
  */
 
+import { IStateObserver } from "./State";
 import { ConnectionPair } from "./keyConnections";
 
 /* An object representing the state of the entire KeyMapUI.
+ *
+ * A single source of truth for the UI state of the keymap.
+ *
+ * Each mutable state property must implement a setter which calls notify().
+ * This manual requirement is a bit cumbersome,
+ * but it makes state that affects other state much easier to implement
+ * (as well as explicit and easy to find).
+ *
+ * Observers will be notified of all changes to the state object;
+ * they should filter based on the keys they're interested in.
  */
 export class KeyMapUIState {
-  constructor(
-    // Only the key-map-ui component should ever set this.
-    // It allows us to define state objects on every component that needs one,
-    // and the key-map-ui will know that any with initialized=false
-    // have not been set to the global state object yet.
-    public initialized: boolean = false,
+  constructor() {}
 
-    // Debug level
-    public debug: number = 0,
+  //
+  // State observation
+  //
 
-    // Connections to draw on the diagram
-    public connectionPairs: ConnectionPair[] = [],
-
-    // The name of the keyboard
-    public keyboardElementName: string = "key-board-title-screen",
-
-    // The ID of the keymap
-    public keymapId: string = "blank",
-
-    // The ID of the layer
-    public layer: number = 0,
-
-    // The ID of the selected key
-    public selectedKey: string = "",
-
-    // If nonempty, any query parameters prefixed with this string will be used to set state
-    public queryPrefix: string = ""
-  ) {}
-}
-
-/* A state provider interface
- *
- * The state provider is responsible for managing state observers and notifying them of changes.
- */
-export interface IStateProvider<T> {
-  attach(observer: IStateObserver<T>): void;
-  detach(observer: IStateObserver<T>): void;
-  notify(changedKey: keyof T, oldValue: T[keyof T], newValue: T[keyof T]): void;
-}
-
-/* A state observer interface
- *
- * The state observer is responsible for updating its view when the state changes.
- */
-export interface IStateObserver<T> {
-  update(key: keyof T, oldValue: T[keyof T], newValue: T[keyof T]): void;
-}
-
-type KeyMapUIStateValue = KeyMapUIState[keyof KeyMapUIState];
-
-/* A state provider class
- *
- * The state provider is responsible for managing state observers and notifying them of changes.
- */
-export class KeyMapUIStateProvider implements IStateProvider<KeyMapUIState> {
+  /* A list of observers
+   */
   private observers: IStateObserver<KeyMapUIState>[] = [];
-  private state: KeyMapUIState;
 
-  constructor(initialState: KeyMapUIState = new KeyMapUIState()) {
-    this.state = initialState;
-  }
-
+  /* Attach an observer
+   */
   attach(observer: IStateObserver<KeyMapUIState>): void {
     const isExist = this.observers.includes(observer);
     if (!isExist) {
@@ -116,6 +77,8 @@ export class KeyMapUIStateProvider implements IStateProvider<KeyMapUIState> {
     }
   }
 
+  /* Detach an observer
+   */
   detach(observer: IStateObserver<KeyMapUIState>): void {
     const observerIndex = this.observers.indexOf(observer);
     if (observerIndex !== -1) {
@@ -123,6 +86,8 @@ export class KeyMapUIStateProvider implements IStateProvider<KeyMapUIState> {
     }
   }
 
+  /* Notify all observers of a change
+   */
   notify(
     changedKey: keyof KeyMapUIState,
     oldValue: KeyMapUIStateValue,
@@ -133,21 +98,93 @@ export class KeyMapUIStateProvider implements IStateProvider<KeyMapUIState> {
     }
   }
 
-  setState<K extends keyof KeyMapUIState>(
-    key: K,
-    newValue: KeyMapUIState[K]
-  ): void {
-    if (this.state[key] === newValue) {
-      // Don't notify observers if the value hasn't changed;
-      // this is faster but more importantly avoids infinite loops.
-      return;
-    }
-    const oldValue = this.state[key];
-    this.state[key] = newValue;
-    this.notify(key, oldValue, newValue);
+  //
+  // State data
+  //
+
+  /* Only the key-map-ui component should ever set this.
+   * It allows us to define state objects on every component that needs one,
+   * and the key-map-ui will know that any with initialized=false
+   * have not been set to the global state object yet.
+   */
+  public initialized: boolean = false;
+
+  /* Debug level
+   */
+  private _debug: number = 0;
+  public get debug(): number {
+    return this._debug;
+  }
+  public set debug(value: number) {
+    this._debug = value;
+    this.notify("debug", this._debug, value);
   }
 
-  getState<K extends keyof KeyMapUIState>(key: K): KeyMapUIState[K] {
-    return this.state[key];
+  /* Connections to draw on the diagram
+   */
+  private _connectionPairs: ConnectionPair[] = [];
+  public get connectionPairs(): ConnectionPair[] {
+    return this._connectionPairs;
+  }
+  public set connectionPairs(value: ConnectionPair[]) {
+    this._connectionPairs = value;
+    this.notify("connectionPairs", this._connectionPairs, value);
+  }
+
+  /* The registered name for the keyboard element
+   */
+  private _keyboardElementName: string = "key-board-title-screen";
+  public get keyboardElementName(): string {
+    return this._keyboardElementName;
+  }
+  public set keyboardElementName(value: string) {
+    this._keyboardElementName = value;
+    this.notify("keyboardElementName", this._keyboardElementName, value);
+  }
+
+  /* The ID of the keymap
+   */
+  private _keymapId: string = "blank";
+  public get keymapId(): string {
+    return this._keymapId;
+  }
+  public set keymapId(value: string) {
+    this._keymapId = value;
+    this.notify("keymapId", this._keymapId, value);
+  }
+
+  /* The ID of the layer
+   */
+  private _layer: number = 0;
+  public get layer(): number {
+    return this._layer;
+  }
+  public set layer(value: number) {
+    this._layer = value;
+    this.notify("layer", this._layer, value);
+  }
+
+  /* The ID of the selected key
+   */
+  private _selectedKey: string = "";
+  public get selectedKey(): string {
+    return this._selectedKey;
+  }
+  public set selectedKey(value: string) {
+    this._selectedKey = value;
+    this.notify("selectedKey", this._selectedKey, value);
+  }
+
+  /* If nonempty, any query parameters prefixed with this string will be used to set state
+   */
+  private _queryPrefix: string = "";
+  public get queryPrefix(): string {
+    return this._queryPrefix;
+  }
+  public set queryPrefix(value: string) {
+    this._queryPrefix = value;
+    this.notify("queryPrefix", this._queryPrefix, value);
   }
 }
+
+type KeyMapUIStateValue = KeyMapUIState[keyof KeyMapUIState];

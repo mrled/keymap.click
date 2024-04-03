@@ -2,12 +2,12 @@
  */
 
 import { KeyMapUI } from "~/webcomponents/key-map-ui";
-import { KeyMapUIStateProvider } from "./KeyMapUIState";
+import { KeyMapUIState } from "./KeyMapUIState";
 
 /* Read the query string and update the state of the KeyMapUI.
  */
-export function setStateFromQueryString(provider: KeyMapUIStateProvider) {
-  const queryPrefix = provider.getState("queryPrefix");
+export function setStateFromQueryString(state: KeyMapUIState) {
+  const queryPrefix = state.queryPrefix;
 
   if (!queryPrefix) {
     return;
@@ -19,10 +19,10 @@ export function setStateFromQueryString(provider: KeyMapUIStateProvider) {
   const qLayer = currentParams.get(`${queryPrefix}-layer`);
   const qKey = currentParams.get(`${queryPrefix}-key`);
 
-  if (qBoard) provider.setState("keyboardElementName", qBoard);
-  if (qMap) provider.setState("keymapId", qMap);
-  if (qLayer) provider.setState("layer", parseInt(qLayer, 10));
-  if (qKey) provider.setState("selectedKey", qKey);
+  if (qBoard) state.keyboardElementName = qBoard;
+  if (qMap) state.keymapId = qMap;
+  if (qLayer) state.layer = parseInt(qLayer, 10);
+  if (qKey) state.selectedKey = qKey;
 }
 
 /* Set the query string based on the current state.
@@ -41,20 +41,20 @@ export function setStateFromQueryString(provider: KeyMapUIStateProvider) {
  * Requires the element to be passed in so we can get the current attribute values.
  */
 export function setQueryStringFromState(
-  provider: KeyMapUIStateProvider,
+  provider: KeyMapUIState,
   kmui: KeyMapUI
 ) {
-  const queryPrefix = provider.getState("queryPrefix");
+  const queryPrefix = provider.queryPrefix;
 
   if (!queryPrefix) {
     return;
   }
   const newParams = new URLSearchParams(window.location.search);
 
-  const tBoardElement = provider.getState("keyboardElementName");
-  const tMap = provider.getState("keymapId");
-  const tLayer = provider.getState("layer");
-  const tKey = provider.getState("selectedKey");
+  const tBoardElement = provider.keyboardElementName;
+  const tMap = provider.keymapId;
+  const tLayer = provider.layer;
+  const tKey = provider.selectedKey;
 
   const aBoardElement = kmui.getAttribute("keyboard-element") || "";
   const aMap = kmui.getAttribute("keymap-id") || "";

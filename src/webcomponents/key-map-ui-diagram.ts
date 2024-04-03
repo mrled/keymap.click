@@ -1,10 +1,7 @@
 /* The diagram is the canvas where we draw lines to keys on the keyboard to draw user attention.
  */
-import {
-  IStateObserver,
-  KeyMapUIState,
-  KeyMapUIStateProvider,
-} from "~/lib/KeyMapUIState";
+import { KeyMapUIState } from "~/lib/KeyMapUIState";
+import { IStateObserver } from "~/lib/State";
 import { drawDiagram } from "~/lib/diagram";
 
 export class KeyMapUIDiagram
@@ -16,8 +13,8 @@ export class KeyMapUIDiagram
   diamargRight: HTMLElement | null = null;
   infoProse: HTMLElement | null = null;
 
-  private _state: KeyMapUIStateProvider = new KeyMapUIStateProvider();
-  set state(state: KeyMapUIStateProvider) {
+  private _state: KeyMapUIState = new KeyMapUIState();
+  set state(state: KeyMapUIState) {
     this._state = state;
     this.draw();
   }
@@ -70,14 +67,13 @@ export class KeyMapUIDiagram
   /* Draw the diagram lines connecting the keys to the info panel
    */
   draw() {
-    if (!this.state.getState("initialized") || !this.readyToDraw) {
+    if (!this.state.initialized || !this.readyToDraw) {
       return;
     }
-    const connectionPairs = this.state.getState("connectionPairs");
-    const debug = this.state.getState("debug");
+    const debug = this.state.debug;
     drawDiagram(
       this.canvas,
-      connectionPairs.map((c) => c.connection),
+      this.state.connectionPairs.map((c) => c.connection),
       // We know these are not null because we checked readyToDraw
       this.centerPanel!.getBoundingClientRect(),
       this.diamargLeft!.getBoundingClientRect(),
