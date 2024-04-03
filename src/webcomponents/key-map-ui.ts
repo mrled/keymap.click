@@ -123,8 +123,8 @@ export class KeyMapUI
       case "keyboardElementName":
         this.#updateKeyboardElementName(newValue as string);
         break;
-      case "keymap":
-        this.#updateKeymap(newValue as KeyMap);
+      case "keymapId":
+        this.#updateKeyMapId(newValue as string);
         break;
       case "layer":
         this.#updateLayer(newValue as number);
@@ -341,23 +341,46 @@ export class KeyMapUI
   // Other properties
   //
 
+  /* The selected keymap, among the known keymaps
+   */
+  get keyMap(): KeyMap {
+    const keyMapId = this.state.getState("keymapId");
+    const keyboard = this.state.getState("keyboardElementName");
+    return (
+      this.keymaps.get(keyboard)?.get(keyMapId) ||
+      this.keyboard.model.blankKeyMap
+    );
+  }
+
+  /* A map of keymaps by their keyboard element name and unique ID.
+   *
+   * Some terminology:
+   * - This is a Map (JS object) of Maps (JS objects) of KeyMaps (instances of KeyMap).
+   * - Each Map (JS object) has key:value pairs.
+   */
+  private _keymaps: Map<string, Map<string, KeyMap>> = new Map();
+  private get keymaps(): Map<string, Map<string, KeyMap>> {
+    return this._keymaps;
+  }
+  private set keymaps(value: Map<string, Map<string, KeyMap>>) {
+    this._keymaps = value;
+    const keyboard = this.state.getState("keyboardElementName");
+    this.#idempotentlyAddBlankKeyMap(keyboard);
+  }
+
   /* Given a list of KeyMap instances, set the keymaps property.
    *
    * Users will call this method to tell the UI what keymaps are available.
    */
   addKeymaps(value: KeyMap[]) {
-    const keymapsState = this.state.getState("keymaps");
     value.forEach((keyMap) => {
       const kbName = keyMap.model.keyboardElementName;
-      if (!keymapsState.has(kbName)) {
-        keymapsState.set(kbName, new Map());
+      if (!this.keymaps.has(kbName)) {
+        this.keymaps.set(kbName, new Map());
       }
-      const boardKeyMaps = keymapsState.get(kbName)!;
+      const boardKeyMaps = this.keymaps.get(kbName)!;
       boardKeyMaps.set(keyMap.uniqueId, keyMap);
     });
-    // TODO: Can we avoid this odd call to setState()?
-    // I believe it is necessary because keymaps is a Map which is a reference type.
-    this.state.setState("keymaps", keymapsState);
   }
 
   //
@@ -478,10 +501,28 @@ export class KeyMapUI
     }
     const oldKeyboard = this._keyboard;
     this._keyboard = document.createElement(value) as KeyBoard;
-    const newKeymap = this.state.getState("keymaps").get(value)?.get("blank");
-    // TODO: this is just not working correctly, some state ordering thing
-    this._keyboard.createChildren(Array.from(newKeymap?.keys.values() || []));
     this.keyInfoNavBar.setAttribute("key-id", "");
+
+    // Add the keyboard's blank map to our list of known keymaps
+    if (!this.keymaps.has(value)) {
+      this.keymaps.set(value, new Map());
+    }
+    const boardKeyMaps = this.keymaps.get(value)!;
+    boardKeyMaps.set(
+      this.keyboard.model.blankKeyMap.uniqueId,
+      this.keyboard.model.blankKeyMap
+    );
+
+    // If the keymap-id attribute is set and is valid for the new keyboard, use it.
+    // Otherwise, use the blank keymap for the new keyboard.
+    const attribKeyMap = this.getAttribute("keymap-id") || "";
+    if (attribKeyMap && boardKeyMaps.get(attribKeyMap)) {
+      this.state.setState("keymapId", attribKeyMap);
+      this._keyboard.createChildren(Array.from(this.keyMap.keys.values()));
+    } else {
+      this.state.setState("keymapId", this.keyboard.model.blankKeyMap.uniqueId);
+      this._keyboard.createChildren(this.keyboard.model.blankKeyMapKeys);
+    }
 
     // Replace the old keyboard with the new one in the DOM
     if (oldKeyboard && this.centerPanel.contains(oldKeyboard)) {
@@ -492,12 +533,21 @@ export class KeyMapUI
     this.state.setQueryStringFromState(this);
   }
 
-  /* Update the UI after the keymap changes
+  /* Update the keymap ID
    */
-  #updateKeymap(value: KeyMap) {
-    this.keyboard.createChildren(Array.from(value.keys.values()));
+  #updateKeyMapId(value: string) {
+    const keyboard = this.state.getState("keyboardElementName");
+    const newMap = this.keymaps.get(keyboard)?.get(value);
+    if (!newMap) {
+      console.error(
+        `KeyMapUI: Key map "${value}" not found in available key maps`
+      );
+      return;
+    }
+    newMap.validateKeys();
+    this.keyboard.createChildren(Array.from(this.keyMap.keys.values()));
     this.keyInfoNavBar.referenceModel = this.keyboard.model;
-    this.keyInfoNavBar.keyMap = value;
+    this.keyInfoNavBar.keyMap = this.keyMap;
     this.#showWelcomeMessage();
     this.state.setQueryStringFromState(this);
   }
@@ -515,13 +565,12 @@ export class KeyMapUI
     const indicatedElementsById: { [key: string]: KeyHandle } = {};
     let proseKeyIndicators: KeyIndicator[] = [];
     let indicatedKeyIds: string[] = [];
-    const keymap = this.state.getState("keymap");
 
     if (value) {
-      const keyData = keymap.keys.get(value);
+      const keyData = this.keyMap.keys.get(value);
       if (!keyData) {
         console.error(
-          `KeyMapUI: Key ${value} not found in key map '${keymap.uniqueId}'`
+          `KeyMapUI: Key ${value} not found in key map '${this.keyMap.uniqueId}'`
         );
         return;
       }
@@ -641,6 +690,23 @@ export class KeyMapUI
   // Other private methods
   //
 
+  /* Idempotently add a blank keymap to our set of known keymaps
+   */
+  #idempotentlyAddBlankKeyMap(kbName: string) {
+    const kbElemConstructor = customElements.get(kbName);
+    if (!kbElemConstructor) {
+      return;
+    }
+    // TODO: this is a hack to get to instance properties, can I do something else?
+    const tmpInstance = new kbElemConstructor() as KeyBoard;
+    if (!this.keymaps.has(kbName)) {
+      this.keymaps.set(kbName, new Map());
+    }
+    const boardKeyMaps = this.keymaps.get(kbName)!;
+    const blankKeyMap = tmpInstance.model.blankKeyMap;
+    boardKeyMaps.set(blankKeyMap.uniqueId, blankKeyMap);
+  }
+
   /* Resize the canvas to the size of the kidContainer.
    */
   #resizeCanvas = () =>
@@ -683,8 +749,7 @@ export class KeyMapUI
     while (this.infoProse.firstChild) {
       this.infoProse.removeChild(this.infoProse.firstChild);
     }
-    const keymap = this.state.getState("keymap");
-    keymap.welcome.forEach((paragraph: string) => {
+    this.keyMap.welcome.forEach((paragraph: string) => {
       const p = document.createElement("p");
       p.innerHTML = paragraph;
       this.infoProse.appendChild(p);
