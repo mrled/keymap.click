@@ -42,39 +42,146 @@
  * This keeps each child from having to check if its state object is null and makes typing simpler.)
  */
 
+import { KeyboardModelTitleScreen } from "~/webcomponents/key-board-title-screen";
+import { KeyBoardModel } from "./KeyboardModel";
 import { ConnectionPair } from "./keyConnections";
+import { KeyMap } from "./keyMap";
 
 /* An object representing the state of the entire KeyMapUI.
+ *
+ * Setters are responsible for notifying the provider of changes to any dependents of the state,
+ * meaning for instance if the selectedX property changes based on the xName property,
+ * the xName setter should call this.provider.notify("selectedX", oldX, newX).
  */
 export class KeyMapUIState {
-  constructor(
-    // Only the key-map-ui component should ever set this.
-    // It allows us to define state objects on every component that needs one,
-    // and the key-map-ui will know that any with initialized=false
-    // have not been set to the global state object yet.
-    public initialized: boolean = false,
+  constructor(public provider: KeyMapUIStateProvider) {}
 
-    // Debug level
-    public debug: number = 0,
+  // Only the key-map-ui component should ever set this.
+  // It allows us to define state objects on every component that needs one,
+  // and the key-map-ui will know that any with initialized=false
+  // have not been set to the global state object yet.
+  public initialized: boolean = false;
 
-    // Connections to draw on the diagram
-    public connectionPairs: ConnectionPair[] = [],
+  // Debug level
+  public debug: number = 0;
 
-    // The name of the keyboard
-    public keyboardElementName: string = "key-board-title-screen",
+  // Connections to draw on the diagram
+  public connectionPairs: ConnectionPair[] = [];
 
-    // The ID of the keymap
-    public keymapId: string = "blank",
+  // The name of the keyboard
+  private _keyboardElementName: string = "key-board-title-screen";
+  public get keyboardElementName(): string {
+    return this._keyboardElementName;
+  }
+  public set keyboardElementName(value: string) {
+    if (!customElements.get(value)) {
+      throw new Error(
+        `KeyMapUI: Keyboard element "${value}" not found - has it been defined with customElements.define(), or if using a library, imported and registered?`
+      );
+    }
 
-    // The ID of the layer
-    public layer: number = 0,
+    const foundKeyboard = this.keyboardModels.find(
+      (model) => model.keyboardElementName === this.keyboardElementName
+    );
+    if (!foundKeyboard) {
+      throw new Error(`Unknown keyboard element name: ${value}`);
+    }
 
-    // The ID of the selected key
-    public selectedKey: string = "",
+    // Add the keyboard's blank map to our keymaps if it's not already there
+    let updateKeymaps = false;
+    if (!this.keymaps.has(value)) {
+      updateKeymaps = true;
+      this.keymaps.set(value, new Map());
+    }
+    const blankMap = foundKeyboard.blankKeyMap;
+    if (!this.keymaps.get(value)?.has(blankMap.uniqueId)) {
+      this.keymaps.get(value)?.set(blankMap.uniqueId, blankMap);
+    }
 
-    // If nonempty, any query parameters prefixed with this string will be used to set state
-    public queryPrefix: string = ""
-  ) {}
+    // TODO: use attribute if possible?
+    // When state was handled by KeyMapUI,
+    // we tracked whether the keymap-id attribute was valid for the new keyboard,
+    // and if so, used that.
+    // That is nice for the user --
+    // changing keyboard from the default to something else then back to the default
+    // would load the default keyboard's default keymap.
+    // After moving state to a separate class, we don't have direct access to the element's attributes.
+    // Is there something we can do instead?
+
+    const oldKeyboardModel = this.keyboardModel;
+    this._keyboardElementName = value;
+    this.notify("keyboardModel", oldKeyboardModel, this.keyboardModel);
+    if (updateKeymaps) {
+      // TODO: this doesn't send the old value, need to deep copy the old value
+      this.notify("keymaps", this.keymaps, this.keymaps);
+    }
+  }
+
+  // The ID of the keymap
+  public keymapId: string = "blank";
+
+  // The ID of the layer
+  public layer: number = 0;
+
+  // The ID of the selected key
+  public selectedKey: string = "";
+
+  // If nonempty, any query parameters prefixed with this string will be used to set state
+  public queryPrefix: string = "";
+
+  // The keyboard models available to the KeyMapUI
+  public keyboardModels: KeyBoardModel[] = [KeyboardModelTitleScreen];
+  public get keyboardModel(): KeyBoardModel {
+    return (
+      this.keyboardModels.find(
+        (model) => model.keyboardElementName === this.keyboardElementName
+      ) || KeyboardModelTitleScreen
+    );
+  }
+
+  // The keymaps available to the KeyMapUI
+  private _keymaps: Map<string, Map<string, KeyMap>> = new Map([
+    [
+      KeyboardModelTitleScreen.keyboardElementName,
+      new Map<string, KeyMap>([
+        [
+          KeyboardModelTitleScreen.blankKeyMap.uniqueId,
+          KeyboardModelTitleScreen.blankKeyMap,
+        ],
+      ]),
+    ],
+  ]);
+  public get keymaps(): Map<string, Map<string, KeyMap>> {
+    return this._keymaps;
+  }
+  public set keymaps(value: Map<string, Map<string, KeyMap>>) {
+    this._keymaps = value;
+  }
+
+  // The currently selected keymap
+  public get keymap(): KeyMap {
+    const keymapsForCurrentKeyboard = this.keymaps.get(
+      this.keyboardElementName
+    );
+    if (!keymapsForCurrentKeyboard) {
+      this._keyboardElementName = KeyboardModelTitleScreen.keyboardElementName;
+      return KeyboardModelTitleScreen.blankKeyMap;
+    }
+    return (
+      keymapsForCurrentKeyboard.get(this.keymapId) ||
+      KeyboardModelTitleScreen.blankKeyMap
+    );
+  }
+
+  /* Notify the provider of a change to the state.
+   */
+  private notify<K extends keyof KeyMapUIState>(
+    key: K,
+    oldValue: KeyMapUIState[K],
+    newValue: KeyMapUIState[K]
+  ) {
+    this.provider.notify(key, oldValue, newValue);
+  }
 }
 
 /* A state provider interface
@@ -105,8 +212,13 @@ export class KeyMapUIStateProvider implements IStateProvider<KeyMapUIState> {
   private observers: IStateObserver<KeyMapUIState>[] = [];
   private state: KeyMapUIState;
 
-  constructor(initialState: KeyMapUIState = new KeyMapUIState()) {
-    this.state = initialState;
+  constructor(initialState?: KeyMapUIState | null) {
+    if (!initialState) {
+      this.state = new KeyMapUIState(this);
+    } else {
+      this.state = initialState;
+      this.state.provider = this;
+    }
   }
 
   attach(observer: IStateObserver<KeyMapUIState>): void {
