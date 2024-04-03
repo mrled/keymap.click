@@ -3,6 +3,9 @@
  * A single source of truth for the UI state of the keymap.
  * Use the observer pattern to notify relevant components when the state changes.
  *
+ * We expect that state is immutable.
+ * When a component needs to change state, it should create a new object.
+ *
  * We expect the root application component - KeyMapUI, in this case -
  * to create an instance of this class and pass it to all children.
  *
@@ -42,17 +45,25 @@
  * This keeps each child from having to check if its state object is null and makes typing simpler.)
  */
 
+import { KeyBoard } from "~/webcomponents/key-board";
+import { KeyBoardModel } from "./KeyboardModel";
 import { IStateObserver } from "./State";
 import { ConnectionPair } from "./keyConnections";
+import { KeyMap } from "./keyMap";
 
 /* An object representing the state of the entire KeyMapUI.
  *
  * A single source of truth for the UI state of the keymap.
  *
- * Each mutable state property must implement a setter which calls notify().
- * This manual requirement is a bit cumbersome,
- * but it makes state that affects other state much easier to implement
- * (as well as explicit and easy to find).
+ * State properties must be implemented as getters and setters,
+ * and there are some special requirements for setters.
+ * 1. They must check if the value is actually changed before running --
+ *    especially before calling notify() -- to avoid infinite loops.
+ *    This means that state properties must be immutable,
+ *    as modifying a property in place will not trigger observers.
+ * 2. They must call notify() with the key that changed.
+ *    This is so that observers can filter on the keys they're interested in.
+ *    This is a bit cumbersome, but it makes state that affects other state much easier to implement.
  *
  * Observers will be notified of all changes to the state object;
  * they should filter based on the keys they're interested in.
@@ -116,8 +127,10 @@ export class KeyMapUIState {
     return this._debug;
   }
   public set debug(value: number) {
+    if (this._debug === value) return;
+    const oldValue = this._debug;
     this._debug = value;
-    this.notify("debug", this._debug, value);
+    this.notify("debug", oldValue, value);
   }
 
   /* Connections to draw on the diagram
@@ -127,8 +140,10 @@ export class KeyMapUIState {
     return this._connectionPairs;
   }
   public set connectionPairs(value: ConnectionPair[]) {
+    if (this._connectionPairs === value) return;
+    const oldValue = this._connectionPairs;
     this._connectionPairs = value;
-    this.notify("connectionPairs", this._connectionPairs, value);
+    this.notify("connectionPairs", oldValue, value);
   }
 
   /* The registered name for the keyboard element
@@ -138,8 +153,32 @@ export class KeyMapUIState {
     return this._keyboardElementName;
   }
   public set keyboardElementName(value: string) {
+    if (this._keyboardElementName === value) return;
+    if (!customElements.get(value)) {
+      console.error(`KeyMapUI: Keyboard element "${value}" not found - has it been defined with customElements.define(), or if using a library, imported
+      and registered?`);
+      return;
+      // } else if (!this._keyboards.includes(value)) {
+      //   console.error(
+      //     `KeyMapUI: Keyboard element "${value}" not found in the list of available keyboards (${this._keyboards.join()})`
+      //   );
+      //   return;
+    }
+    const oldValue = this._keyboardElementName;
     this._keyboardElementName = value;
-    this.notify("keyboardElementName", this._keyboardElementName, value);
+
+    // TODO: use attribute if possible?
+    // When state was handled by KeyMapUI,
+    // we tracked whether the keymap-id attribute was valid for the new keyboard,
+    // and if so, used that.
+    // That is nice for the user --
+    // changing keyboard from the default to something else then back to the default
+    // would load the default keyboard's default keymap.
+    // After moving state to a separate class, we don't have direct access to the element's attributes.
+    // Is there something we can do instead?
+    this.keymapId = "blank";
+
+    this.notify("keyboardElementName", oldValue, value);
   }
 
   /* The ID of the keymap
@@ -149,8 +188,10 @@ export class KeyMapUIState {
     return this._keymapId;
   }
   public set keymapId(value: string) {
+    if (this._keymapId === value) return;
+    const oldValue = this._keymapId;
     this._keymapId = value;
-    this.notify("keymapId", this._keymapId, value);
+    this.notify("keymapId", oldValue, value);
   }
 
   /* The ID of the layer
@@ -160,8 +201,10 @@ export class KeyMapUIState {
     return this._layer;
   }
   public set layer(value: number) {
+    if (this._layer === value) return;
+    const oldValue = this._layer;
     this._layer = value;
-    this.notify("layer", this._layer, value);
+    this.notify("layer", oldValue, value);
   }
 
   /* The ID of the selected key
@@ -171,8 +214,10 @@ export class KeyMapUIState {
     return this._selectedKey;
   }
   public set selectedKey(value: string) {
+    if (this._selectedKey === value) return;
+    const oldValue = this._selectedKey;
     this._selectedKey = value;
-    this.notify("selectedKey", this._selectedKey, value);
+    this.notify("selectedKey", oldValue, value);
   }
 
   /* If nonempty, any query parameters prefixed with this string will be used to set state
@@ -182,8 +227,64 @@ export class KeyMapUIState {
     return this._queryPrefix;
   }
   public set queryPrefix(value: string) {
+    if (this._queryPrefix === value) return;
+    const oldValue = this._queryPrefix;
     this._queryPrefix = value;
-    this.notify("queryPrefix", this._queryPrefix, value);
+    this.notify("queryPrefix", oldValue, value);
+  }
+
+  /* The current keyboard model
+   */
+  private _kbModel: KeyBoardModel = new KeyBoardModel(this.keyboardElementName);
+  public get kbModel(): KeyBoardModel {
+    return this._kbModel;
+  }
+  public set kbModel(value: KeyBoardModel) {
+    if (this._kbModel === value) return;
+    const oldValue = this._kbModel;
+    this._kbModel = value;
+    this.notify("kbModel", oldValue, value);
+  }
+
+  /* All keymaps that we know about
+   */
+  private _keymaps: Map<string, Map<string, KeyMap>> = new Map();
+  public get keymaps(): Map<string, Map<string, KeyMap>> {
+    return this._keymaps;
+  }
+  public set keymaps(value: Map<string, Map<string, KeyMap>>) {
+    this._keymaps = value;
+    this.#idempotentlyAddBlankKeyMap(this.keyboardElementName);
+  }
+
+  /* The selected keymap, among the known keymaps
+   */
+  get keyMap(): KeyMap {
+    return (
+      this.keymaps.get(this.keyboardElementName)?.get(this.keymapId) ||
+      this.kbModel.blankKeyMap
+    );
+  }
+
+  //
+  // Other private methods
+  //
+
+  /* Idempotently add a blank keymap to our set of known keymaps
+   */
+  #idempotentlyAddBlankKeyMap(kbName: string) {
+    const kbElemConstructor = customElements.get(kbName);
+    if (!kbElemConstructor) {
+      return;
+    }
+    // TODO: this is a hack to get to instance properties, can I do something else?
+    const tmpInstance = new kbElemConstructor() as KeyBoard;
+    if (!this.keymaps.has(kbName)) {
+      this.keymaps.set(kbName, new Map());
+    }
+    const boardKeyMaps = this.keymaps.get(kbName)!;
+    const blankKeyMap = tmpInstance.model.blankKeyMap;
+    boardKeyMaps.set(blankKeyMap.uniqueId, blankKeyMap);
   }
 }
 

@@ -341,45 +341,24 @@ export class KeyMapUI
   // Other properties
   //
 
-  /* The selected keymap, among the known keymaps
-   */
-  get keyMap(): KeyMap {
-    this.state.keymapId;
-    return (
-      this.keymaps
-        .get(this.state.keyboardElementName)
-        ?.get(this.state.keymapId) || this.keyboard.model.blankKeyMap
-    );
-  }
-
-  /* A map of keymaps by their keyboard element name and unique ID.
-   *
-   * Some terminology:
-   * - This is a Map (JS object) of Maps (JS objects) of KeyMaps (instances of KeyMap).
-   * - Each Map (JS object) has key:value pairs.
-   */
-  private _keymaps: Map<string, Map<string, KeyMap>> = new Map();
-  private get keymaps(): Map<string, Map<string, KeyMap>> {
-    return this._keymaps;
-  }
-  private set keymaps(value: Map<string, Map<string, KeyMap>>) {
-    this._keymaps = value;
-    this.#idempotentlyAddBlankKeyMap(this.state.keyboardElementName);
-  }
-
   /* Given a list of KeyMap instances, set the keymaps property.
    *
    * Users will call this method to tell the UI what keymaps are available.
    */
   addKeymaps(value: KeyMap[]) {
+    const newKeymaps = new Map<string, Map<string, KeyMap>>();
+    this.state.keymaps.forEach((value, key) => {
+      newKeymaps.set(key, value);
+    });
     value.forEach((keyMap) => {
       const kbName = keyMap.model.keyboardElementName;
-      if (!this.keymaps.has(kbName)) {
-        this.keymaps.set(kbName, new Map());
+      if (!newKeymaps.has(kbName)) {
+        newKeymaps.set(kbName, new Map());
       }
-      const boardKeyMaps = this.keymaps.get(kbName)!;
+      const boardKeyMaps = newKeymaps.get(kbName)!;
       boardKeyMaps.set(keyMap.uniqueId, keyMap);
     });
+    this.state.keymaps = newKeymaps;
   }
 
   //
@@ -503,10 +482,10 @@ export class KeyMapUI
     this.keyInfoNavBar.setAttribute("key-id", "");
 
     // Add the keyboard's blank map to our list of known keymaps
-    if (!this.keymaps.has(value)) {
-      this.keymaps.set(value, new Map());
+    if (!this.state.keymaps.has(value)) {
+      this.state.keymaps.set(value, new Map());
     }
-    const boardKeyMaps = this.keymaps.get(value)!;
+    const boardKeyMaps = this.state.keymaps.get(value)!;
     boardKeyMaps.set(
       this.keyboard.model.blankKeyMap.uniqueId,
       this.keyboard.model.blankKeyMap
@@ -517,7 +496,9 @@ export class KeyMapUI
     const attribKeyMap = this.getAttribute("keymap-id") || "";
     if (attribKeyMap && boardKeyMaps.get(attribKeyMap)) {
       this.state.keymapId = attribKeyMap;
-      this._keyboard.createChildren(Array.from(this.keyMap.keys.values()));
+      this._keyboard.createChildren(
+        Array.from(this.state.keyMap.keys.values())
+      );
     } else {
       this.state.keymapId = this.keyboard.model.blankKeyMap.uniqueId;
       this._keyboard.createChildren(this.keyboard.model.blankKeyMapKeys);
@@ -528,6 +509,9 @@ export class KeyMapUI
       this.centerPanel.replaceChild(this._keyboard, oldKeyboard);
     }
 
+    // Update the key info navbar
+    this.keyInfoNavBar.referenceModel = this.keyboard.model;
+
     this.layOutIdempotently();
     setQueryStringFromState(this.state, this);
   }
@@ -535,17 +519,19 @@ export class KeyMapUI
   /* Update the keymap ID
    */
   #updateKeyMapId(value: string) {
-    const newMap = this.keymaps.get(this.state.keyboardElementName)?.get(value);
+    const newMap = this.state.keymaps
+      .get(this.state.keyboardElementName)
+      ?.get(value);
     if (!newMap) {
       console.error(
-        `KeyMapUI: Key map "${value}" not found in available key maps`
+        `KeyMapUI: Key map "${value}" for board "${this.state.keyboardElementName} not found in available key maps`
       );
       return;
     }
     newMap.validateKeys();
-    this.keyboard.createChildren(Array.from(this.keyMap.keys.values()));
-    this.keyInfoNavBar.referenceModel = this.keyboard.model;
-    this.keyInfoNavBar.keyMap = this.keyMap;
+    this.keyboard.createChildren(Array.from(this.state.keyMap.keys.values()));
+    this.keyInfoNavBar.referenceModel = this.state.kbModel;
+    this.keyInfoNavBar.keyMap = this.state.keyMap;
     this.#showWelcomeMessage();
     setQueryStringFromState(this.state, this);
   }
@@ -565,10 +551,10 @@ export class KeyMapUI
     let indicatedKeyIds: string[] = [];
 
     if (value) {
-      const keyData = this.keyMap.keys.get(value);
+      const keyData = this.state.keyMap.keys.get(value);
       if (!keyData) {
         console.error(
-          `KeyMapUI: Key ${value} not found in key map '${this.keyMap.uniqueId}'`
+          `KeyMapUI: Key ${value} not found in key map '${this.state.keyMap.uniqueId}'`
         );
         return;
       }
@@ -688,23 +674,6 @@ export class KeyMapUI
   // Other private methods
   //
 
-  /* Idempotently add a blank keymap to our set of known keymaps
-   */
-  #idempotentlyAddBlankKeyMap(kbName: string) {
-    const kbElemConstructor = customElements.get(kbName);
-    if (!kbElemConstructor) {
-      return;
-    }
-    // TODO: this is a hack to get to instance properties, can I do something else?
-    const tmpInstance = new kbElemConstructor() as KeyBoard;
-    if (!this.keymaps.has(kbName)) {
-      this.keymaps.set(kbName, new Map());
-    }
-    const boardKeyMaps = this.keymaps.get(kbName)!;
-    const blankKeyMap = tmpInstance.model.blankKeyMap;
-    boardKeyMaps.set(blankKeyMap.uniqueId, blankKeyMap);
-  }
-
   /* Resize the canvas to the size of the kidContainer.
    */
   #resizeCanvas = () =>
@@ -747,7 +716,7 @@ export class KeyMapUI
     while (this.infoProse.firstChild) {
       this.infoProse.removeChild(this.infoProse.firstChild);
     }
-    this.keyMap.welcome.forEach((paragraph: string) => {
+    this.state.keyMap.welcome.forEach((paragraph: string) => {
       const p = document.createElement("p");
       p.innerHTML = paragraph;
       this.infoProse.appendChild(p);
