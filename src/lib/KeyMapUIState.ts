@@ -42,39 +42,86 @@
  * This keeps each child from having to check if its state object is null and makes typing simpler.)
  */
 
+import { KeyBoardModel } from "./KeyboardModel";
 import { ConnectionPair } from "./keyConnections";
+import { KeyMap } from "./keyMap";
+
+/* A PostSetDefinition is a way to define a PostSetter for a key in the state object.
+ */
+class PostSet<T> {
+  constructor(
+    public readonly postSetter: (oldValue: T, newValue: T) => void,
+    public readonly dependencies: string[]
+  ) {}
+}
 
 /* An object representing the state of the entire KeyMapUI.
+ *
+ * Any property may have a companion property with the same name and "PostSet" appended
+ * that is a PostSet object.
+ * This allows us to define a function to run after a property is set,
+ * and to specify which other properties it depends on.
  */
 export class KeyMapUIState {
-  constructor(
-    // Only the key-map-ui component should ever set this.
-    // It allows us to define state objects on every component that needs one,
-    // and the key-map-ui will know that any with initialized=false
-    // have not been set to the global state object yet.
-    public initialized: boolean = false,
+  // Only the key-map-ui component should ever set this.
+  // It allows us to define state objects on every component that needs one,
+  // and the key-map-ui will know that any with initialized=false
+  // have not been set to the global state object yet.
+  public initialized: boolean = false;
 
-    // Debug level
-    public debug: number = 0,
+  // Debug level
+  public debug: number = 0;
 
-    // Connections to draw on the diagram
-    public connectionPairs: ConnectionPair[] = [],
+  // Connections to draw on the diagram
+  public connectionPairs: ConnectionPair[] = [];
 
-    // The name of the keyboard
-    public keyboardElementName: string = "key-board-title-screen",
+  // The name of the keyboard
+  public keyboardElementName: string = "key-board-title-screen";
 
-    // The ID of the keymap
-    public keymapId: string = "blank",
+  // The ID of the keymap
+  public keymapId: string = "blank";
 
-    // The ID of the layer
-    public layer: number = 0,
+  // The ID of the layer
+  public layer: number = 0;
 
-    // The ID of the selected key
-    public selectedKey: string = "",
+  // The ID of the selected key
+  public selectedKey: string = "";
 
-    // If nonempty, any query parameters prefixed with this string will be used to set state
-    public queryPrefix: string = ""
-  ) {}
+  // If nonempty, any query parameters prefixed with this string will be used to set state
+  public queryPrefix: string = "";
+
+  public keyboardModels: Map<string, KeyBoardModel> = new Map();
+  public keyboardModelsPostSet = new PostSet<Map<string, KeyBoardModel>>(
+    (oldValue, newValue) => {
+      newValue.forEach((model) => {
+        if (!this.keymaps.has(model.keyboardElementName)) {
+          this.keymaps.set(model.keyboardElementName, new Map());
+        }
+        this.keymaps
+          .get(model.keyboardElementName)!
+          .set(model.blankKeyMap.uniqueId, model.blankKeyMap);
+      });
+    },
+    ["keymaps"]
+  );
+
+  public get keyboardModel(): KeyBoardModel {
+    return (
+      this.keyboardModels.get(this.keyboardElementName) ||
+      new KeyBoardModel("unset-keyboard-model")
+    );
+  }
+
+  public keymaps: Map<string, Map<string, KeyMap>> = new Map();
+
+  public get keymap(): KeyMap {
+    return (
+      this.keymaps.get(this.keyboardElementName)?.get(this.keymapId) ||
+      this.keyboardModel.blankKeyMap
+    );
+  }
+
+  constructor() {}
 }
 
 /* A state provider interface
@@ -137,14 +184,51 @@ export class KeyMapUIStateProvider implements IStateProvider<KeyMapUIState> {
     key: K,
     newValue: KeyMapUIState[K]
   ): void {
-    if (this.state[key] === newValue) {
-      // Don't notify observers if the value hasn't changed;
-      // this is faster but more importantly avoids infinite loops.
+    // Do not allow setting readonly properties
+    // Apparently this is not perfect, but probably good enough for our purposes.
+    // <https://stackoverflow.com/questions/54724875/can-we-check-whether-property-is-readonly-in-typescript>
+    if (!Object.getOwnPropertyDescriptor(this.state, key)?.writable) {
+      console.error(`Cannot set readonly property ${key}`);
       return;
     }
+
+    // Don't notify observers if the value hasn't changed;
+    // this is faster but more importantly avoids infinite loops.
+    if (this.state[key] === newValue) {
+      return;
+    }
+
+    // Determine if the key has a post-setter.
+    // If so, make note of the old values of each of its dependencies.
+    const postSetterKey = `${key}PostSet` as keyof KeyMapUIState;
+    const postSet = this.state[postSetterKey] as PostSet<KeyMapUIStateValue>;
+    // Make a map of dependency names to their old values.
+    // This will let us notify observers of the dependencies with the old value as well as the new one.
+    const dependencyOldValues = postSet?.dependencies
+      .filter((dep) => {
+        // Make sure the dependency is a valid key in the state
+        const valid = dep in this.state;
+        if (!valid) console.error(`Dependency ${dep} not found in state`);
+        return valid;
+      })
+      .reduce((acc, dep) => {
+        // Build the map
+        this.state[dep as keyof KeyMapUIState];
+        return acc;
+      }, {} as { [key: string]: KeyMapUIStateValue });
+
+    // Set the state for the key we are changing, and notify observers.
     const oldValue = this.state[key];
     this.state[key] = newValue;
     this.notify(key, oldValue, newValue);
+
+    // If the key has a post-setter, notify observers its dependencies.
+    if (postSet) {
+      Object.entries(dependencyOldValues).forEach(([depKeyStr, oldValue]) => {
+        const depKey = depKeyStr as keyof KeyMapUIState;
+        this.notify(depKey, oldValue, this.state[depKey]);
+      });
+    }
   }
 
   getState<K extends keyof KeyMapUIState>(key: K): KeyMapUIState[K] {
