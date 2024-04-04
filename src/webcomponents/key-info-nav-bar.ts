@@ -93,7 +93,12 @@ export class KeyInfoNavBar extends HTMLElement {
       referenceModel,
       selectedKeyId
     );
-    this.titleH2.textContent = modifiedKey ? "Key information" : "Welcome";
-    this.deselectKeyButton.disabled = modifiedKey.unset || false;
+    if (modifiedKey.unset) {
+      this.titleH2.textContent = "Welcome";
+      this.deselectKeyButton.disabled = true;
+    } else {
+      this.titleH2.textContent = "Key information";
+      this.deselectKeyButton.disabled = false;
+    }
   }
 }
