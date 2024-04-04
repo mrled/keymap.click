@@ -19,6 +19,7 @@ export class KeyMapUIControls
   private _state: KeyMapUIState = new KeyMapUIState();
   set state(value: KeyMapUIState) {
     this._state = value;
+    this._state.attach(this);
     this.updateAll();
   }
   get state(): KeyMapUIState {
@@ -51,7 +52,7 @@ export class KeyMapUIControls
         this.updateKbModelsSelector();
         break;
       case "keymaps":
-      case "keymapId":
+      case "keymap":
         this.updateKeymapsSelector();
         break;
       case "layer":
@@ -82,7 +83,7 @@ export class KeyMapUIControls
 
   private updateKeymapsSelector() {
     const boardKeymaps: Map<string, KeyMap> =
-      this.state.keymaps.get(this.state.keyboardElementName) || new Map();
+      this.state.keymaps.get(this.state.keymap.uniqueId) || new Map();
     const options = Array.from(boardKeymaps).map(([keymapId, keymap]) => {
       const option = document.createElement("option") as HTMLOptionElement;
       option.value = keymapId;

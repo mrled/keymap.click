@@ -33,12 +33,25 @@
  *    }
  *    if (!this._child.state.initialized) {
  *      this._child.state = this.state;
- *      this._child.state.attach(this._child);
  *    }
  *    return this._child;
  *  }
  *
- * Finally, the children that need to observe state should also implement IStateObserver.
+ * Finally, the children that need to observe state should implement a setter for their state object
+ * that attaches to the state automatically when set,
+ * and also the IStateObserver interface.
+ *  class WhateverElement
+ *    extends HTMLElement
+ *    implements IStateObserver<KeyMapUIState>
+ *  {
+ *    private _state = new KeyMapUIState();
+ *    get state() { return this._state; }
+ *    set state(value: KeyMapUIState) {
+ *      this._state = value;
+ *      this._state.attach(this);
+ *      this.someChildElement.state = value; // Can also set state for children here, if applicable
+ *      this.updateEverything(); // or whatever
+ *    }
  *
  * (Children can define a default state object with initialized=false,
  * and the KeyMapUI will know to set the global state object on them.
@@ -125,9 +138,7 @@ export class KeyMapUIState {
     }
   }
 
-  //
-  // State data
-  //
+  // #region State data
 
   /* Only the key-map-ui component should ever set this.
    * It allows us to define state objects on every component that needs one,
@@ -177,8 +188,11 @@ export class KeyMapUIState {
 
   /* The current keyboard model
    */
-  private _kbModel: KeyBoardModel = new KeyBoardModel(this.keyboardElementName);
+  private _kbModel: KeyBoardModel | null = null;
   public get kbModel(): KeyBoardModel {
+    if (this._kbModel === null) {
+      this._kbModel = new KeyBoardModel("key-board-title-screen");
+    }
     return this._kbModel;
   }
   public set kbModel(value: KeyBoardModel) {
@@ -189,44 +203,6 @@ export class KeyMapUIState {
       this.kbModels.push(value);
     }
     this.notify("kbModel", oldValue, value);
-  }
-
-  /* The registered element name for the keyboard element
-   */
-  private _keyboardElementName: string | null = null;
-  public get keyboardElementName(): string {
-    if (!this._keyboardElementName) {
-      this._keyboardElementName = "key-board-title-screen";
-    }
-    return this._keyboardElementName;
-  }
-  public set keyboardElementName(value: string) {
-    if (this._keyboardElementName === value) return;
-    if (!customElements.get(value)) {
-      console.error(`KeyMapUI: Keyboard element "${value}" not found - has it been defined with customElements.define(), or if using a library, imported
-      and registered?`);
-      return;
-      // } else if (!this._keyboards.includes(value)) {
-      //   console.error(
-      //     `KeyMapUI: Keyboard element "${value}" not found in the list of available keyboards (${this._keyboards.join()})`
-      //   );
-      //   return;
-    }
-    const oldValue = this._keyboardElementName;
-    this._keyboardElementName = value;
-
-    // TODO: use attribute if possible?
-    // When state was handled by KeyMapUI,
-    // we tracked whether the keymap-id attribute was valid for the new keyboard,
-    // and if so, used that.
-    // That is nice for the user --
-    // changing keyboard from the default to something else then back to the default
-    // would load the default keyboard's default keymap.
-    // After moving state to a separate class, we don't have direct access to the element's attributes.
-    // Is there something we can do instead?
-    this.keymapId = "blank";
-
-    this.notify("keyboardElementName", oldValue, value);
   }
 
   /* All keymaps that we know about
@@ -248,33 +224,24 @@ export class KeyMapUIState {
       });
     });
     // Add a blank keymap for each model
-    this.#idempotentlyAddBlankKeyMap(this.keyboardElementName);
+    this.#idempotentlyAddBlankKeyMap(this.kbModel.keyboardElementName);
     this.notify("keymaps", oldValue, value);
-  }
-
-  /* The ID of the selected keymap
-   */
-  private _keymapId: string | null = null;
-  public get keymapId(): string {
-    if (this._keymapId === null) {
-      this._keymapId = this.kbModel.blankKeyMap.uniqueId;
-    }
-    return this._keymapId;
-  }
-  public set keymapId(value: string) {
-    if (this._keymapId === value) return;
-    const oldValue = this._keymapId;
-    this._keymapId = value;
-    this.notify("keymapId", oldValue, value);
   }
 
   /* The selected keymap, among the known keymaps
    */
+  private _keymap: KeyMap | null = null;
   get keymap(): KeyMap {
-    return (
-      this.keymaps.get(this.keyboardElementName)?.get(this.keymapId) ||
-      this.kbModel.blankKeyMap
-    );
+    if (this._keymap === null) {
+      this._keymap = this.kbModel.blankKeyMap;
+    }
+    return this._keymap;
+  }
+  set keymap(value: KeyMap) {
+    if (this._keymap === value) return;
+    const oldValue = this._keymap;
+    this._keymap = value;
+    this.notify("keymap", oldValue, value);
   }
 
   /* The ID of the current layer

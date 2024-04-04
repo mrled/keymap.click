@@ -224,10 +224,10 @@ export class KeyMapUI
         this.state.debug = newValue === "true" ? 1 : 0;
         break;
       case "keyboard-element":
-        this.state.keyboardElementName = newValue;
+        this.#updateKeyboardElementName(newValue);
         break;
       case "keymap-id":
-        this.state.keymapId = newValue;
+        this.#updateKeyMapId(newValue);
         break;
       case "layer":
         this.state.layer = parseInt(newValue, 10);
@@ -261,6 +261,11 @@ export class KeyMapUI
       this._keyInfoNavBar = document.createElement(
         "key-info-nav-bar"
       ) as KeyInfoNavBar;
+      this._keyInfoNavBar.updateTitleKey(
+        this.state.keymap,
+        this.state.kbModel,
+        this.state.selectedKey
+      );
     }
     return this._keyInfoNavBar;
   }
@@ -327,7 +332,6 @@ export class KeyMapUI
     }
     if (!this._controls.state.initialized) {
       this._controls.state = this.state;
-      this._controls.state.attach(this._controls);
     }
     return this._controls;
   }
@@ -340,14 +344,14 @@ export class KeyMapUI
     }
     if (!this._keyboard) {
       let newElementName: string;
-      if (this.state.keyboardElementName) {
+      if (this.state.kbModel.keyboardElementName) {
         // Next, look for the keyboard element by name if it was set
-        if (!customElements.get(this.state.keyboardElementName)) {
+        if (!customElements.get(this.state.kbModel.keyboardElementName)) {
           throw new Error(
-            `KeyMapUI: Keyboard element ${this.state.keyboardElementName} not found`
+            `KeyMapUI: Keyboard element ${this.state.kbModel.keyboardElementName} not found`
           );
         }
-        newElementName = this.state.keyboardElementName;
+        newElementName = this.state.kbModel.keyboardElementName;
       } else {
         // Finally, fall back to the default keyboard element name
         newElementName = "key-board-title-screen";
@@ -399,7 +403,6 @@ export class KeyMapUI
     }
     if (!this._diagram.state.initialized) {
       this._diagram.state = this.state;
-      this._diagram.state.attach(this._diagram);
     }
     return this._diagram;
   }
@@ -449,6 +452,43 @@ export class KeyMapUI
 
   // #endregion
 
+  // #region Handle attribute changes
+
+  #updateKeyboardElementName(value: string) {
+    if (!customElements.get(value)) {
+      throw new Error(
+        `KeyMapUI: Keyboard element "${value}" not found - has it been defined with customElements.define(), or if using a library, imported and registered?`
+      );
+    }
+    const newModel = this.state.kbModels.find(
+      (model) => model.keyboardElementName === value
+    );
+    if (!newModel) {
+      throw new Error(
+        `KeyMapUI: Keyboard model "${value}" not found in available models`
+      );
+    }
+    this.state.kbModel = newModel;
+    setQueryStringFromState(this.state, this);
+  }
+
+  /* Update the keymap ID
+   */
+  #updateKeyMapId(value: string) {
+    const newMap = this.state.keymaps
+      .get(this.state.kbModel.keyboardElementName)
+      ?.get(value);
+    if (!newMap) {
+      console.error(
+        `KeyMapUI: Key map "${value}" for board "${this.state.kbModel.keyboardElementName} not found in available key maps`
+      );
+      return;
+    }
+    this.state.keymap = newMap;
+  }
+
+  // #endregion
+
   //
   // #region Handle state changes
   //
@@ -470,11 +510,11 @@ export class KeyMapUI
         }
         this.diagram.draw();
         break;
-      case "keyboardElementName":
-        this.#updateKeyboardElementName(newValue as string);
+      case "kbModel":
+        this.#updateKbModel(newValue as KeyBoardModel);
         break;
       case "keymapId":
-        this.#updateKeyMapId(newValue as string);
+        this.#updateKeyMap(newValue as KeyMap);
         break;
       case "layer":
         this.#updateLayer(newValue as number);
@@ -488,21 +528,18 @@ export class KeyMapUI
     }
   }
 
-  #updateKeyboardElementName(value: string) {
-    if (!customElements.get(value)) {
-      throw new Error(
-        `KeyMapUI: Keyboard element "${value}" not found - has it been defined with customElements.define(), or if using a library, imported and registered?`
-      );
-    }
+  #updateKbModel(value: KeyBoardModel) {
     const oldKeyboard = this._keyboard;
-    this._keyboard = document.createElement(value) as KeyBoard;
+    this._keyboard = document.createElement(
+      value.keyboardElementName
+    ) as KeyBoard;
     this.keyInfoNavBar.setAttribute("key-id", "");
 
     // Add the keyboard's blank map to our list of known keymaps
-    if (!this.state.keymaps.has(value)) {
-      this.state.keymaps.set(value, new Map());
+    if (!this.state.keymaps.has(value.keyboardElementName)) {
+      this.state.keymaps.set(value.keyboardElementName, new Map());
     }
-    const boardKeyMaps = this.state.keymaps.get(value)!;
+    const boardKeyMaps = this.state.keymaps.get(value.keyboardElementName)!;
     boardKeyMaps.set(
       this.keyboard.model.blankKeyMap.uniqueId,
       this.keyboard.model.blankKeyMap
@@ -512,12 +549,12 @@ export class KeyMapUI
     // Otherwise, use the blank keymap for the new keyboard.
     const attribKeyMap = this.getAttribute("keymap-id") || "";
     if (attribKeyMap && boardKeyMaps.get(attribKeyMap)) {
-      this.state.keymapId = attribKeyMap;
+      this.state.keymap = boardKeyMaps.get(attribKeyMap)!;
       this._keyboard.createChildren(
         Array.from(this.state.keymap.keys.values())
       );
     } else {
-      this.state.keymapId = this.keyboard.model.blankKeyMap.uniqueId;
+      this.state.keymap = this.keyboard.model.blankKeyMap;
       this._keyboard.createChildren(this.keyboard.model.blankKeyMapKeys);
     }
 
@@ -526,31 +563,17 @@ export class KeyMapUI
       this.centerPanel.replaceChild(this._keyboard, oldKeyboard);
     }
 
-    // Update the key info navbar
-    this.keyInfoNavBar.referenceModel = this.keyboard.model;
-
     this.layOutIdempotently();
-    setQueryStringFromState(this.state, this);
+    // setQueryStringFromState(this.state, this);
   }
 
   /* Update the keymap ID
    */
-  #updateKeyMapId(value: string) {
-    const newMap = this.state.keymaps
-      .get(this.state.keyboardElementName)
-      ?.get(value);
-    if (!newMap) {
-      console.error(
-        `KeyMapUI: Key map "${value}" for board "${this.state.keyboardElementName} not found in available key maps`
-      );
-      return;
-    }
-    newMap.validateKeys();
-    this.keyboard.createChildren(Array.from(this.state.keymap.keys.values()));
-    this.keyInfoNavBar.referenceModel = this.state.kbModel;
-    this.keyInfoNavBar.keyMap = this.state.keymap;
+  #updateKeyMap(value: KeyMap) {
+    value.validateKeys();
+    this.keyboard.createChildren(Array.from(value.keys.values()));
     this.#showWelcomeMessage();
-    setQueryStringFromState(this.state, this);
+    // setQueryStringFromState(this.state, this);
   }
 
   /* Update the layer
@@ -595,7 +618,11 @@ export class KeyMapUI
     const connectionPairs: ConnectionPair[] = [];
 
     // Update the key in the key info navbar
-    this.keyInfoNavBar.setAttribute("key-id", value);
+    this.keyInfoNavBar.updateTitleKey(
+      this.state.keymap,
+      this.state.kbModel,
+      value
+    );
     const navBarHandle = this.keyInfoNavBar.querySelector("key-handle");
 
     // Update every key on the board
@@ -617,9 +644,8 @@ export class KeyMapUI
       key.setAttribute("target-of-indicator", indicatorTarget.toString());
 
       const keyHandle = key.querySelector("key-handle");
-      if (!keyHandle) {
-        return;
-      }
+      if (!keyHandle) return;
+
       if (active && navBarHandle) {
         // Make the connection from the navbar key to this key
         connectionPairs.push(
@@ -654,10 +680,10 @@ export class KeyMapUI
       );
     });
 
+    // This causes the diagram to redraw
     this.state.connectionPairs = connectionPairs;
 
     setQueryStringFromState(this.state, this);
-    this.diagram.draw();
   }
 
   /* Update the query prefix and any query parameters that use it.
@@ -769,8 +795,8 @@ export class KeyMapUI
     const logTable = {
       state: {
         prefix: qPfx,
-        board: this.state.keyboardElementName,
-        map: this.state.keymapId,
+        board: this.state.kbModel.keyboardElementName,
+        map: this.state.keymap.uniqueId,
         layer: this.state.layer,
         key: this.state.selectedKey,
       },

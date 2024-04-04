@@ -16,6 +16,7 @@ export class KeyMapUIDiagram
   private _state: KeyMapUIState = new KeyMapUIState();
   set state(state: KeyMapUIState) {
     this._state = state;
+    this._state.attach(this);
     this.draw();
   }
   get state() {

@@ -1,4 +1,4 @@
-import { KeyMap } from "~/lib/keyMap";
+import { KeyMap, KeyMapKey } from "~/lib/keyMap";
 
 import { KeyBoardTitleBar } from "~/webcomponents/key-board-title-bar";
 import { KeyBoardModel } from "~/lib/KeyboardModel";
@@ -8,18 +8,8 @@ import { KeyBoardModel } from "~/lib/KeyboardModel";
  * TODO: Support guides
  */
 export class KeyInfoNavBar extends HTMLElement {
-  trackedElements: { [key: string]: HTMLElement };
-
-  // The full keyboard element (not the title bar mini keyboard)
-  referenceModel: KeyBoardModel | null = null;
-
-  static get observedAttributes() {
-    return ["key-id"];
-  }
-
   constructor() {
     super();
-    this.trackedElements = {};
   }
 
   _titleBoard: KeyBoardTitleBar | null = null;
@@ -87,45 +77,23 @@ export class KeyInfoNavBar extends HTMLElement {
     }
   }
 
-  private _keyMap: KeyMap | null = null;
-  get keyMap() {
-    if (!this._keyMap) {
-      this._keyMap = this.titleBoard.model.blankKeyMap;
-    }
-    return this._keyMap;
-  }
-  set keyMap(value) {
-    this._keyMap = value;
-  }
-
   connectedCallback() {
-    const keyId = this.getAttribute("key-id") || "";
     this.titleBoardCreate();
     this.deselectKeyButtonCreate();
     this.titleH2Create();
-    this.#updateKeyId(keyId);
   }
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    switch (name) {
-      case "key-id":
-        this.#updateKeyId(newValue);
-        break;
-      default:
-        console.error(`KeyInfoNavBar: Unhandled attribute: ${name}`);
-        break;
-    }
-  }
-
-  #updateKeyId(keyId: string) {
-    if (this.referenceModel) {
-      const modifiedKey = this.titleBoard.updateSelectedKey(
-        this.keyMap,
-        this.referenceModel,
-        keyId
-      );
-      this.titleH2.textContent = modifiedKey ? "Key information" : "Welcome";
-      this.deselectKeyButton.disabled = !keyId;
-    }
+  updateTitleKey(
+    keyMap: KeyMap,
+    referenceModel: KeyBoardModel,
+    selectedKeyId: string
+  ) {
+    const modifiedKey = this.titleBoard.updateSelectedKey(
+      keyMap,
+      referenceModel,
+      selectedKeyId
+    );
+    this.titleH2.textContent = modifiedKey ? "Key information" : "Welcome";
+    this.deselectKeyButton.disabled = modifiedKey.unset || false;
   }
 }

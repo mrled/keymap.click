@@ -65,13 +65,12 @@ export class KeyBoardTitleBar extends KeyBoard {
     if (!this._grid) {
       this._grid = document.createElement("key-grid") as KeyGrid;
       this.appendChild(this._grid);
+      this.grid.setAttribute("name", "title-bar");
     }
     return this._grid;
   }
 
-  connectedCallback() {
-    this.grid.setAttribute("name", "title-bar");
-  }
+  connectedCallback() {}
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {}
 
