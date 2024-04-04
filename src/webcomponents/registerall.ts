@@ -9,6 +9,7 @@ import { KeyInfoNavBar } from "~/webcomponents/key-info-nav-bar";
 import { KeyMapUI } from "~/webcomponents/key-map-ui";
 import { KeyMapUIDiagram } from "~/webcomponents/key-map-ui-diagram";
 import { KeyboardKey } from "~/webcomponents/keyboard-key";
+import { KeyMapUIControls } from "~/webcomponents/key-map-ui-controls";
 
 interface Registration {
   elementName: string;
@@ -33,6 +34,7 @@ const registrations: Registration[] = [
   { elementName: "key-board-title-bar", elementClass: KeyBoardTitleBar },
   { elementName: "key-info-nav-bar", elementClass: KeyInfoNavBar },
   { elementName: "key-map-ui", elementClass: KeyMapUI },
+  { elementName: "key-map-ui-controls", elementClass: KeyMapUIControls },
   { elementName: "key-map-ui-diagram", elementClass: KeyMapUIDiagram },
 ];
 

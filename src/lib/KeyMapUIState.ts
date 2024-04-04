@@ -67,6 +67,22 @@ import { KeyMap } from "./keyMap";
  *
  * Observers will be notified of all changes to the state object;
  * they should filter based on the keys they're interested in.
+ *
+ * Some things to worry about:
+ *  - If a private store for a state property has a default value,
+ *    then setting it explicitly to the default value will not trigger an update.
+ *    For example:
+ *      private _xyz: number = 0;
+ *    To work around this, set the private store to null and check for null in the getter.
+ *    For example:
+ *      private _xyz: number | null = null;
+ *      public get xyz(): number {
+ *        return this._xyz ?? 0;
+ *      }
+ *    This will only cause a problem for properties that should trigger an update when set to the default value.
+ *    For instance, we have a default keyboard model/map that are kind of placeholders,
+ *    but if they are set explicitly then we still need to trigger an update to the KeyMapUI
+ *    so that it knows its keyboard model/map have ever been set.
  */
 export class KeyMapUIState {
   constructor() {}
@@ -101,7 +117,7 @@ export class KeyMapUIState {
    */
   notify(
     changedKey: keyof KeyMapUIState,
-    oldValue: KeyMapUIStateValue,
+    oldValue: KeyMapUIStateValue | null,
     newValue: KeyMapUIStateValue
   ): void {
     for (const observer of this.observers) {
@@ -133,23 +149,55 @@ export class KeyMapUIState {
     this.notify("debug", oldValue, value);
   }
 
-  /* Connections to draw on the diagram
+  /* If nonempty, any query parameters prefixed with this string will be used to set state
    */
-  private _connectionPairs: ConnectionPair[] = [];
-  public get connectionPairs(): ConnectionPair[] {
-    return this._connectionPairs;
+  private _queryPrefix: string = "";
+  public get queryPrefix(): string {
+    return this._queryPrefix;
   }
-  public set connectionPairs(value: ConnectionPair[]) {
-    if (this._connectionPairs === value) return;
-    const oldValue = this._connectionPairs;
-    this._connectionPairs = value;
-    this.notify("connectionPairs", oldValue, value);
+  public set queryPrefix(value: string) {
+    if (this._queryPrefix === value) return;
+    const oldValue = this._queryPrefix;
+    this._queryPrefix = value;
+    this.notify("queryPrefix", oldValue, value);
   }
 
-  /* The registered name for the keyboard element
+  /* All the keyboard models we know about
    */
-  private _keyboardElementName: string = "key-board-title-screen";
+  private _kbModels: KeyBoardModel[] = [];
+  public get kbModels(): KeyBoardModel[] {
+    return this._kbModels;
+  }
+  public set kbModels(value: KeyBoardModel[]) {
+    if (this._kbModels === value) return;
+    const oldValue = this._kbModels;
+    this._kbModels = value;
+    this.notify("kbModels", oldValue, value);
+  }
+
+  /* The current keyboard model
+   */
+  private _kbModel: KeyBoardModel = new KeyBoardModel(this.keyboardElementName);
+  public get kbModel(): KeyBoardModel {
+    return this._kbModel;
+  }
+  public set kbModel(value: KeyBoardModel) {
+    if (this._kbModel === value) return;
+    const oldValue = this._kbModel;
+    this._kbModel = value;
+    if (!this.kbModels.includes(value)) {
+      this.kbModels.push(value);
+    }
+    this.notify("kbModel", oldValue, value);
+  }
+
+  /* The registered element name for the keyboard element
+   */
+  private _keyboardElementName: string | null = null;
   public get keyboardElementName(): string {
+    if (!this._keyboardElementName) {
+      this._keyboardElementName = "key-board-title-screen";
+    }
     return this._keyboardElementName;
   }
   public set keyboardElementName(value: string) {
@@ -181,10 +229,36 @@ export class KeyMapUIState {
     this.notify("keyboardElementName", oldValue, value);
   }
 
-  /* The ID of the keymap
+  /* All keymaps that we know about
    */
-  private _keymapId: string = "blank";
+  private _keymaps: Map<string, Map<string, KeyMap>> = new Map();
+  public get keymaps(): Map<string, Map<string, KeyMap>> {
+    return this._keymaps;
+  }
+  public set keymaps(value: Map<string, Map<string, KeyMap>>) {
+    if (this._keymaps === value) return;
+    const oldValue = this._keymaps;
+    this._keymaps = value;
+    // Add each model
+    value.forEach((keymaps, kbName) => {
+      keymaps.forEach((keymap, keymapId) => {
+        if (!this.kbModels.includes(keymap.model)) {
+          this.kbModels.push(keymap.model);
+        }
+      });
+    });
+    // Add a blank keymap for each model
+    this.#idempotentlyAddBlankKeyMap(this.keyboardElementName);
+    this.notify("keymaps", oldValue, value);
+  }
+
+  /* The ID of the selected keymap
+   */
+  private _keymapId: string | null = null;
   public get keymapId(): string {
+    if (this._keymapId === null) {
+      this._keymapId = this.kbModel.blankKeyMap.uniqueId;
+    }
     return this._keymapId;
   }
   public set keymapId(value: string) {
@@ -194,7 +268,16 @@ export class KeyMapUIState {
     this.notify("keymapId", oldValue, value);
   }
 
-  /* The ID of the layer
+  /* The selected keymap, among the known keymaps
+   */
+  get keymap(): KeyMap {
+    return (
+      this.keymaps.get(this.keyboardElementName)?.get(this.keymapId) ||
+      this.kbModel.blankKeyMap
+    );
+  }
+
+  /* The ID of the current layer
    */
   private _layer: number = 0;
   public get layer(): number {
@@ -205,6 +288,19 @@ export class KeyMapUIState {
     const oldValue = this._layer;
     this._layer = value;
     this.notify("layer", oldValue, value);
+  }
+
+  /* The ID of the current guide, if any
+   */
+  private _guide: string = "";
+  public get guide(): string {
+    return this._guide;
+  }
+  public set guide(value: string) {
+    if (this._guide === value) return;
+    const oldValue = this._guide;
+    this._guide = value;
+    this.notify("guide", oldValue, value);
   }
 
   /* The ID of the selected key
@@ -220,50 +316,17 @@ export class KeyMapUIState {
     this.notify("selectedKey", oldValue, value);
   }
 
-  /* If nonempty, any query parameters prefixed with this string will be used to set state
+  /* Connections to draw on the diagram
    */
-  private _queryPrefix: string = "";
-  public get queryPrefix(): string {
-    return this._queryPrefix;
+  private _connectionPairs: ConnectionPair[] = [];
+  public get connectionPairs(): ConnectionPair[] {
+    return this._connectionPairs;
   }
-  public set queryPrefix(value: string) {
-    if (this._queryPrefix === value) return;
-    const oldValue = this._queryPrefix;
-    this._queryPrefix = value;
-    this.notify("queryPrefix", oldValue, value);
-  }
-
-  /* The current keyboard model
-   */
-  private _kbModel: KeyBoardModel = new KeyBoardModel(this.keyboardElementName);
-  public get kbModel(): KeyBoardModel {
-    return this._kbModel;
-  }
-  public set kbModel(value: KeyBoardModel) {
-    if (this._kbModel === value) return;
-    const oldValue = this._kbModel;
-    this._kbModel = value;
-    this.notify("kbModel", oldValue, value);
-  }
-
-  /* All keymaps that we know about
-   */
-  private _keymaps: Map<string, Map<string, KeyMap>> = new Map();
-  public get keymaps(): Map<string, Map<string, KeyMap>> {
-    return this._keymaps;
-  }
-  public set keymaps(value: Map<string, Map<string, KeyMap>>) {
-    this._keymaps = value;
-    this.#idempotentlyAddBlankKeyMap(this.keyboardElementName);
-  }
-
-  /* The selected keymap, among the known keymaps
-   */
-  get keyMap(): KeyMap {
-    return (
-      this.keymaps.get(this.keyboardElementName)?.get(this.keymapId) ||
-      this.kbModel.blankKeyMap
-    );
+  public set connectionPairs(value: ConnectionPair[]) {
+    if (this._connectionPairs === value) return;
+    const oldValue = this._connectionPairs;
+    this._connectionPairs = value;
+    this.notify("connectionPairs", oldValue, value);
   }
 
   //

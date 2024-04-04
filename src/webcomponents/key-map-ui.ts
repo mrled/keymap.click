@@ -15,6 +15,8 @@ import {
   setQueryStringFromState,
   setStateFromQueryString,
 } from "~/lib/QueryStringState";
+import { KeyBoardModel } from "~/lib/KeyboardModel";
+import { KeyMapUIControls } from "./key-map-ui-controls";
 
 /* The UI of the keymap, including a keyboard, an info panel, and the canvas diagram.
  *
@@ -108,7 +110,7 @@ export class KeyMapUI
   // #region Public API methods
   //
 
-  /* Given a list of KeyMap instances, set the keymaps property.
+  /* Given a list of KeyMap instances, set the keymaps state property.
    *
    * Users will call this method to tell the UI what keymaps are available.
    */
@@ -126,6 +128,12 @@ export class KeyMapUI
       boardKeyMaps.set(keyMap.uniqueId, keyMap);
     });
     this.state.keymaps = newKeymaps;
+  }
+
+  /* Set the kbModels state property.
+   */
+  addKbModels(value: KeyBoardModel[]) {
+    this.state.kbModels = [...this.state.kbModels, ...value];
   }
 
   // #endregion
@@ -305,6 +313,25 @@ export class KeyMapUI
     return this._kidContainer;
   }
 
+  private _controls: KeyMapUIControls | null = null;
+  get controls(): KeyMapUIControls {
+    if (!this._controls) {
+      this._controls = this.querySelector(
+        "key-map-ui-controls"
+      ) as KeyMapUIControls;
+    }
+    if (!this._controls) {
+      this._controls = document.createElement(
+        "key-map-ui-controls"
+      ) as KeyMapUIControls;
+    }
+    if (!this._controls.state.initialized) {
+      this._controls.state = this.state;
+      this._controls.state.attach(this._controls);
+    }
+    return this._controls;
+  }
+
   private _keyboard: KeyBoard | null = null;
   get keyboard(): KeyBoard {
     if (!this._keyboard) {
@@ -377,6 +404,23 @@ export class KeyMapUI
     return this._diagram;
   }
 
+  /* Set an element's children
+   *
+   * If any child element is not a child of the parent,
+   * remove all children and add the new children.
+   */
+  private setChildrenIdempotently(
+    parent: HTMLElement,
+    children: HTMLElement[]
+  ) {
+    if (!children.every((c) => parent.contains(c))) {
+      while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+      }
+      parent.append(...children);
+    }
+  }
+
   /* Lay out all child components.
    *
    * Check if the child components are in the right place, and if not, move them.
@@ -386,54 +430,21 @@ export class KeyMapUI
     // Direct children of this element
     // Note that because the diagram is last, it is drawn on top of the other elements,
     // which is what we want.
-    if (![this.kidContainer, this.diagram].every((c) => this.contains(c))) {
-      while (this.firstChild) {
-        this.removeChild(this.firstChild);
-      }
-      this.append(this.kidContainer, this.diagram);
-    }
-
-    // Children of the kid container
-    if (
-      ![
-        this.diamargLeft,
-        this.centerPanel,
-        this.diamargRight,
-      ].every((kcChild) => this.kidContainer.contains(kcChild))
-    ) {
-      while (this.kidContainer.firstChild) {
-        this.kidContainer.removeChild(this.kidContainer.firstChild);
-      }
-      this.kidContainer.append(
-        this.diamargLeft,
-        this.centerPanel,
-        this.diamargRight
-      );
-    }
-
-    // children of the center panel
-    if (
-      ![this.keyboard, this.infoContainer].every((cpChild) =>
-        this.centerPanel.contains(cpChild)
-      )
-    ) {
-      while (this.centerPanel.firstChild) {
-        this.centerPanel.removeChild(this.centerPanel.firstChild);
-      }
-      this.centerPanel.append(this.keyboard, this.infoContainer);
-    }
-
-    // children of the info container
-    if (
-      ![this.keyInfoNavBar, this.infoProse].every((icChild) =>
-        this.infoContainer.contains(icChild)
-      )
-    ) {
-      while (this.infoContainer.firstChild) {
-        this.infoContainer.removeChild(this.infoContainer.firstChild);
-      }
-      this.infoContainer.append(this.keyInfoNavBar, this.infoProse);
-    }
+    this.setChildrenIdempotently(this, [this.kidContainer, this.diagram]);
+    this.setChildrenIdempotently(this.kidContainer, [
+      this.diamargLeft,
+      this.centerPanel,
+      this.diamargRight,
+    ]);
+    this.setChildrenIdempotently(this.centerPanel, [
+      this.controls,
+      this.keyboard,
+      this.infoContainer,
+    ]);
+    this.setChildrenIdempotently(this.infoContainer, [
+      this.keyInfoNavBar,
+      this.infoProse,
+    ]);
   }
 
   // #endregion
@@ -503,7 +514,7 @@ export class KeyMapUI
     if (attribKeyMap && boardKeyMaps.get(attribKeyMap)) {
       this.state.keymapId = attribKeyMap;
       this._keyboard.createChildren(
-        Array.from(this.state.keyMap.keys.values())
+        Array.from(this.state.keymap.keys.values())
       );
     } else {
       this.state.keymapId = this.keyboard.model.blankKeyMap.uniqueId;
@@ -535,9 +546,9 @@ export class KeyMapUI
       return;
     }
     newMap.validateKeys();
-    this.keyboard.createChildren(Array.from(this.state.keyMap.keys.values()));
+    this.keyboard.createChildren(Array.from(this.state.keymap.keys.values()));
     this.keyInfoNavBar.referenceModel = this.state.kbModel;
-    this.keyInfoNavBar.keyMap = this.state.keyMap;
+    this.keyInfoNavBar.keyMap = this.state.keymap;
     this.#showWelcomeMessage();
     setQueryStringFromState(this.state, this);
   }
@@ -557,10 +568,10 @@ export class KeyMapUI
     let indicatedKeyIds: string[] = [];
 
     if (value) {
-      const keyData = this.state.keyMap.keys.get(value);
+      const keyData = this.state.keymap.keys.get(value);
       if (!keyData) {
         console.error(
-          `KeyMapUI: Key ${value} not found in key map '${this.state.keyMap.uniqueId}'`
+          `KeyMapUI: Key ${value} not found in key map '${this.state.keymap.uniqueId}'`
         );
         return;
       }
@@ -724,7 +735,7 @@ export class KeyMapUI
     while (this.infoProse.firstChild) {
       this.infoProse.removeChild(this.infoProse.firstChild);
     }
-    this.state.keyMap.welcome.forEach((paragraph: string) => {
+    this.state.keymap.welcome.forEach((paragraph: string) => {
       const p = document.createElement("p");
       p.innerHTML = paragraph;
       this.infoProse.appendChild(p);

@@ -127,6 +127,7 @@ export class KeyMap {
   welcome: string[];
   guides: KeyMapGuide[];
   keys: Map<string, KeyMapKey>;
+  layers: KeyMapKey[][] = [];
   private _duplicateKeys: KeyMapKey[] = [];
 
   constructor({
@@ -135,6 +136,7 @@ export class KeyMap {
     model,
     welcome,
     keys,
+    layers,
     guides,
   }: {
     displayName: string;
@@ -142,7 +144,8 @@ export class KeyMap {
     model: KeyBoardModel;
     welcome: string[];
     keys: KeyMapKey[];
-    guides?: KeyMapGuide[];
+    layers?: KeyMapKey[][]; // TODO: implement
+    guides?: KeyMapGuide[]; // TODO: implement
   }) {
     this.displayName = displayName;
     this.uniqueId = uniqueId;
@@ -155,6 +158,7 @@ export class KeyMap {
       map.set(key.id, key);
       return map;
     }, new Map<string, KeyMapKey>());
+    this.layers = layers || [];
     this.guides = guides || [];
   }
 
