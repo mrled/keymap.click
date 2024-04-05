@@ -149,8 +149,8 @@ export class KeyMapUI
   connectedCallback() {
     this.#logCurrentStateAndQueryString("connectedCallback(): Top");
     // Set debugging stuff first, which does not rely on query parameters
-    const debug = this.getAttribute("debug") || "false";
-    this.attributeChangedCallback("debug", "", debug);
+    const showDebug = this.getAttribute("show-debug") || "false";
+    this.attributeChangedCallback("show-debug", "", showDebug);
 
     // Then read the keyboard, keymap, layer, and selected key.
     // Unless overridden by the query parameters, these will be set to the attributes on the element.
@@ -198,7 +198,7 @@ export class KeyMapUI
    */
   static get observedAttributes() {
     return [
-      "debug",
+      "show-debug",
       "keyboard-element",
       "keymap-id",
       "layer",
@@ -220,8 +220,8 @@ export class KeyMapUI
 
     // TODO: sync the state names with the element names for a better time
     switch (name) {
-      case "debug":
-        this.state.debug = newValue === "true" ? 1 : 0;
+      case "show-debug":
+        this.controls.setAttribute("show-debug", newValue);
         break;
       case "keyboard-element":
         this.#updateKeyboardElementName(newValue);

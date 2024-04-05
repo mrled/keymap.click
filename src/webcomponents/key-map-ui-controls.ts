@@ -3,6 +3,7 @@ import { IStateObserver } from "~/lib/State";
 import { KeyMap } from "~/lib/keyMap";
 
 enum SelectId {
+  Debug = "debug",
   Keyboard = "keyboard",
   Keymap = "keymap",
   Layer = "layer",
@@ -15,6 +16,10 @@ export class KeyMapUIControls
   extends HTMLElement
   implements IStateObserver<KeyMapUIState> {
   //
+
+  static readonly observedAttributes = ["show-debug"];
+
+  private showDebug = false;
 
   private _state: KeyMapUIState = new KeyMapUIState();
   set state(value: KeyMapUIState) {
@@ -34,6 +39,18 @@ export class KeyMapUIControls
 
   connectedCallback() {
     this.layoutIdempmotently();
+  }
+
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    switch (name) {
+      case "show-debug":
+        this.showDebug = newValue === "true";
+        this.layoutIdempmotently();
+        break;
+      default:
+        console.error(`Unknown attribute ${name}`);
+        break;
+    }
   }
 
   //
@@ -137,6 +154,24 @@ export class KeyMapUIControls
     return result;
   }
 
+  /* Debug checkbox
+   */
+  get debugPair(): HTMLSpanElement {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = SelectId.Debug;
+    checkbox.addEventListener("change", () => {
+      this.state.debug = checkbox.checked ? 1 : 0;
+    });
+    const label = document.createElement("label");
+    label.htmlFor = SelectId.Debug;
+    label.textContent = "Enable debugging";
+
+    const span = document.createElement("span");
+    span.append(checkbox, label);
+    return span;
+  }
+
   /* Update the options in a select element.
    */
   private updateSelector(
@@ -210,8 +245,11 @@ export class KeyMapUIControls
     while (this.shadow.firstChild) {
       this.shadow.removeChild(this.shadow.firstChild);
     }
+    this.shadow.appendChild(this.styleElement);
+    if (this.showDebug) {
+      this.shadow.appendChild(this.debugPair);
+    }
     this.shadow.append(
-      this.styleElement,
       this.getPair(SelectId.Keyboard, "Keyboard"),
       this.getPair(SelectId.Keymap, "Keymap"),
       this.getPair(SelectId.Layer, "Layer"),

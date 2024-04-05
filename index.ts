@@ -31,22 +31,6 @@ aboutLink.textContent = "About";
 const aboutListItem = document.createElement("li");
 aboutListItem.appendChild(aboutLink);
 
-const debugCheckbox = document.createElement("input");
-debugCheckbox.type = "checkbox";
-debugCheckbox.id = "debug-checkbox";
-debugCheckbox.addEventListener("change", () => {
-  const keyMapUi = document.querySelector("key-map-ui#kmui-ergodox");
-  if (keyMapUi) {
-    keyMapUi.setAttribute("debug", debugCheckbox.checked.toString());
-  }
-});
-const debugLabel = document.createElement("label");
-debugLabel.htmlFor = "debug-checkbox";
-debugLabel.textContent = "Enable debugging";
-const debugListItem = document.createElement("li");
-debugListItem.appendChild(debugCheckbox);
-debugListItem.appendChild(debugLabel);
-
 const clearQueryStringButton = document.createElement("button");
 clearQueryStringButton.textContent = "Clear query string";
 clearQueryStringButton.addEventListener("click", () => {
@@ -65,7 +49,6 @@ testListItem.appendChild(testLink);
 const menuList = document.createElement("ul");
 menuList.className = "site-menu";
 menuList.appendChild(aboutListItem);
-menuList.appendChild(debugListItem);
 menuList.appendChild(clearQueryStringListItem);
 menuList.appendChild(testListItem);
 titleBar.appendChild(menuList);
@@ -81,7 +64,7 @@ app.appendChild(titleDesc);
 
 const kmuiTitle = document.createElement("key-map-ui") as KeyMapUI;
 kmuiTitle.setAttribute("id", "kmui-title");
-// kmuiTitle.setAttribute("debug", "true");
+kmuiTitle.setAttribute("show-debug", "true");
 kmuiTitle.addKeymaps(availableKeymaps);
 kmuiTitle.setAttribute("keyboard-element", "key-board-title-screen");
 kmuiTitle.setAttribute("keymap-id", "title-screen-map");
@@ -94,6 +77,7 @@ app.appendChild(ergodoxDesc);
 
 const kmuiErgoDox = document.createElement("key-map-ui") as KeyMapUI;
 kmuiErgoDox.setAttribute("id", "kmui-ergodox");
+kmuiErgoDox.setAttribute("show-debug", "true");
 kmuiErgoDox.addKeymaps(availableKeymaps);
 kmuiErgoDox.setAttribute("keyboard-element", "key-board-ergodox");
 kmuiErgoDox.setAttribute("keymap-id", "micah-ergodox");
