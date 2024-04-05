@@ -10,6 +10,12 @@ enum SelectId {
   Guide = "guide",
 }
 
+type ChangeListenerFunction = (
+  e: Event,
+  selectId: SelectId,
+  selectElement: HTMLSelectElement
+) => void;
+
 /* Controls for key-map-ui
  */
 export class KeyMapUIControls
@@ -88,46 +94,99 @@ export class KeyMapUIControls
     this.updateGuidesSelector();
   }
 
+  private chooseKbModel: ChangeListenerFunction = (e, id, result) => {
+    console.log(`Selected ${id}: ${result.value}`);
+    const newModel = this.state.kbModels.find(
+      (model) => model.keyboardElementName === result.value
+    );
+    if (newModel) {
+      this.state.kbModel = newModel;
+    }
+  };
+
+  private chooseKeymap: ChangeListenerFunction = (e, id, result) => {
+    console.log(`Selected ${id}: ${result.value}`);
+    const newKeymap = this.state.keymaps
+      .get(this.state.kbModel.keyboardElementName)
+      ?.get(result.value);
+    if (newKeymap) {
+      this.state.keymap = newKeymap;
+    }
+  };
+
+  private chooseLayer: ChangeListenerFunction = (e, id, result) => {
+    console.log(`Selected ${id}: ${result.value}`);
+    this.state.layer = parseInt(result.value);
+  };
+
+  private chooseGuide: ChangeListenerFunction = (e, id, result) => {
+    console.log(`Selected ${id}: ${result.value}`);
+    this.state.guide = result.value;
+  };
+
   private updateKbModelsSelector() {
     const options = this.state.kbModels.map((model) => {
       const option = document.createElement("option") as HTMLOptionElement;
       option.value = model.keyboardElementName;
+      option.selected = model === this.state.kbModel;
       option.textContent = model.keyboardElementName;
       return option;
     }, [] as HTMLOptionElement[]);
-    this.updateSelector(SelectId.Keyboard, options, "No keyboards available");
+    this.updateSelector(
+      SelectId.Keyboard,
+      options,
+      "No keyboards available",
+      this.chooseKbModel
+    );
   }
 
   private updateKeymapsSelector() {
-    const boardKeymaps: Map<string, KeyMap> =
-      this.state.keymaps.get(this.state.keymap.uniqueId) || new Map();
-    const options = Array.from(boardKeymaps).map(([keymapId, keymap]) => {
+    const boardMaps = this.state.boardMaps;
+    const options = Array.from(boardMaps).map(([keymapId, keymap]) => {
       const option = document.createElement("option") as HTMLOptionElement;
       option.value = keymapId;
+      option.selected = keymap === this.state.keymap;
       option.textContent = keymap.displayName;
       return option;
     }, [] as HTMLOptionElement[]);
-    this.updateSelector(SelectId.Keymap, options, "No keymaps available");
+    this.updateSelector(
+      SelectId.Keymap,
+      options,
+      "No keymaps available",
+      this.chooseKeymap
+    );
   }
 
   private updateLayersSelector() {
     const options = this.state.keymap.layers.map((layer, idx) => {
       const option = document.createElement("option") as HTMLOptionElement;
       option.value = idx.toString();
+      option.selected = idx === this.state.layer;
       option.textContent = `Layer ${idx}`;
       return option;
     }, [] as HTMLOptionElement[]);
-    this.updateSelector(SelectId.Layer, options, "No layers available");
+    this.updateSelector(
+      SelectId.Layer,
+      options,
+      "No layers available",
+      this.chooseLayer
+    );
   }
 
   private updateGuidesSelector() {
     const options = this.state.keymap.guides.map((guide, idx) => {
       const option = document.createElement("option") as HTMLOptionElement;
       option.value = idx.toString();
+      option.selected = guide.title === this.state.guide;
       option.textContent = `Placeholder guide ${idx}`;
       return option;
     }, [] as HTMLOptionElement[]);
-    this.updateSelector(SelectId.Guide, options, "No guides available");
+    this.updateSelector(
+      SelectId.Guide,
+      options,
+      "No guides available",
+      this.chooseGuide
+    );
   }
 
   // #endregion
@@ -177,9 +236,10 @@ export class KeyMapUIControls
   private updateSelector(
     selectId: SelectId,
     options: HTMLOptionElement[],
-    noOptionsText: string
+    noOptionsText: string,
+    changeListener: ChangeListenerFunction
   ) {
-    const select = this.getSelect(selectId);
+    const select = this.getSelect(selectId, changeListener);
     while (select.firstChild) {
       select.removeChild(select.firstChild);
     }
@@ -213,13 +273,17 @@ export class KeyMapUIControls
   /* Get a select element by its ID.
    * If it doesn't exist, create it.
    */
-  private getSelect(id: SelectId): HTMLSelectElement {
-    let created = false;
+  private getSelect(
+    id: SelectId,
+    changeListener: ChangeListenerFunction
+  ): HTMLSelectElement {
     let result = this.shadow.querySelector(`#${id}`) as HTMLSelectElement;
     if (!result) {
-      created = true;
       result = document.createElement("select");
       result.id = id;
+      result.addEventListener("change", (e: Event) =>
+        changeListener(e, id, result)
+      );
     }
     return result;
   }
@@ -227,7 +291,11 @@ export class KeyMapUIControls
   /* Get a span element containing a label and a select element.
    * Use the select element's ID to make the span's ID.
    */
-  private getPair(selectId: SelectId, labelText: string): HTMLSpanElement {
+  private getPair(
+    selectId: SelectId,
+    labelText: string,
+    changeListener: ChangeListenerFunction
+  ): HTMLSpanElement {
     const spanId = `${selectId}-pair`;
     let result = this.shadow.querySelector(`span#${spanId}`) as HTMLSpanElement;
     if (!result) {
@@ -235,7 +303,7 @@ export class KeyMapUIControls
       result.id = spanId;
       result.append(
         this.getLabel(selectId, labelText),
-        this.getSelect(selectId)
+        this.getSelect(selectId, changeListener)
       );
     }
     return result;
@@ -250,10 +318,10 @@ export class KeyMapUIControls
       this.shadow.appendChild(this.debugPair);
     }
     this.shadow.append(
-      this.getPair(SelectId.Keyboard, "Keyboard"),
-      this.getPair(SelectId.Keymap, "Keymap"),
-      this.getPair(SelectId.Layer, "Layer"),
-      this.getPair(SelectId.Guide, "Guide")
+      this.getPair(SelectId.Keyboard, "Keyboard", this.chooseKbModel),
+      this.getPair(SelectId.Keymap, "Keymap", this.chooseKeymap),
+      this.getPair(SelectId.Layer, "Layer", this.chooseLayer),
+      this.getPair(SelectId.Guide, "Guide", this.chooseGuide)
     );
     this.updateAll();
   }

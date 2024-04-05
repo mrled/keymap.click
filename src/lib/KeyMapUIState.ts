@@ -228,6 +228,16 @@ export class KeyMapUIState {
     this.notify("keymaps", oldValue, value);
   }
 
+  /* Just the keymaps for the current keyboard model
+   *
+   * Note that this is NOT observable state, but a simple convenience getter;
+   * observers should listen for changes to the keymaps property instead.
+   */
+  public get boardMaps(): Map<string, KeyMap> {
+    if (!this.kbModel.keyboardElementName) return new Map();
+    return this.keymaps.get(this.kbModel.keyboardElementName) || new Map();
+  }
+
   /* The selected keymap, among the known keymaps
    */
   private _keymap: KeyMap | null = null;
