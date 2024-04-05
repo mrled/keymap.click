@@ -512,8 +512,9 @@ export class KeyMapUI
         break;
       case "kbModel":
         this.#updateKbModel(newValue as KeyBoardModel);
+        this.#updateKeyMap(this.state.keymap);
         break;
-      case "keymapId":
+      case "keymap":
         this.#updateKeyMap(newValue as KeyMap);
         break;
       case "layer":
@@ -564,7 +565,7 @@ export class KeyMapUI
     }
 
     this.layOutIdempotently();
-    // setQueryStringFromState(this.state, this);
+    setQueryStringFromState(this.state, this);
   }
 
   /* Update the keymap ID
@@ -573,7 +574,7 @@ export class KeyMapUI
     value.validateKeys();
     this.keyboard.createChildren(Array.from(value.keys.values()));
     this.#showWelcomeMessage();
-    // setQueryStringFromState(this.state, this);
+    setQueryStringFromState(this.state, this);
   }
 
   /* Update the layer
