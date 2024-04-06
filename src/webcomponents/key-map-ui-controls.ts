@@ -1,4 +1,5 @@
-import { KeyMapUIState } from "~/lib/KeyMapUIState";
+import { KeyMapUIState, KeyboardKeymapMapMap } from "~/lib/KeyMapUIState";
+import { KeyBoardModel } from "~/lib/KeyboardModel";
 import { IStateObserver } from "~/lib/State";
 import { KeyMap } from "~/lib/keyMap";
 
@@ -138,6 +139,7 @@ export class KeyMapUIControls
       "No keyboards available",
       this.chooseKbModel
     );
+    this.updateKeymapsSelector();
   }
 
   private updateKeymapsSelector() {
@@ -145,7 +147,7 @@ export class KeyMapUIControls
     const options = Array.from(boardMaps).map(([keymapId, keymap]) => {
       const option = document.createElement("option") as HTMLOptionElement;
       option.value = keymapId;
-      option.selected = keymap === this.state.keymap;
+      option.selected = keymap.uniqueId === this.state.keymap.uniqueId;
       option.textContent = keymap.displayName;
       return option;
     }, [] as HTMLOptionElement[]);
@@ -249,6 +251,8 @@ export class KeyMapUIControls
       option.value = "none";
       option.textContent = noOptionsText;
       options.push(option);
+    } else if (options.length === 1) {
+      select.disabled = true;
     } else {
       select.disabled = false;
     }

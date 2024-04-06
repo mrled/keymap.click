@@ -93,12 +93,14 @@ export class KeyMapUI
     /* Listen for changes to the size of the browser window,
      * and resize the canvas to match the size of the kidContainer.
      */
-    this.addEventListener("resize", this.#resizeCanvas);
+    this.addEventListener("resize", () => this.#resizeCanvas);
 
     /* Create a ResizeObserver that we will use later
      * to watch for changes in the size of the element that the canvas should completely cover
      */
-    this.resizeObserver = new ResizeObserver(this.#resizeCanvas);
+    this.resizeObserver = new ResizeObserver(() =>
+      this.#resizeCanvas(this.state)
+    );
 
     /* Listen for this event emitted by any child element.
      * (Make sure the child element emits it with bubbles: true so that we can catch it from any depth.)
@@ -188,7 +190,7 @@ export class KeyMapUI
     this.layOutIdempotently();
 
     // Resize the canvas to the size of the kidContainer for the first time
-    this.#resizeCanvas();
+    this.#resizeCanvas(this.state);
     // Watch for changes in the size of the kidContainer
     this.resizeObserver.observe(this.kidContainer);
   }
@@ -503,16 +505,11 @@ export class KeyMapUI
     }
     switch (key) {
       case "debug":
-        if ((newValue as number) > 0) {
-          log.setLevel(log.levels.DEBUG);
-        } else {
-          log.setLevel(log.levels.INFO);
-        }
-        this.diagram.draw();
+        const debug = newValue as number;
+        log.setLevel(debug ? log.levels.DEBUG : log.levels.INFO);
         break;
       case "kbModel":
-        this.#updateKbModel(newValue as KeyBoardModel);
-        this.#updateKeyMap(this.state.keymap);
+        this.#updateKbModelAndKeymap(newValue as KeyBoardModel);
         break;
       case "keymap":
         this.#updateKeyMap(newValue as KeyMap);
@@ -529,7 +526,7 @@ export class KeyMapUI
     }
   }
 
-  #updateKbModel(value: KeyBoardModel) {
+  #updateKbModelAndKeymap(value: KeyBoardModel) {
     const oldKeyboard = this._keyboard;
     this._keyboard = document.createElement(
       value.keyboardElementName
@@ -547,16 +544,14 @@ export class KeyMapUI
     );
 
     // If the keymap-id attribute is set and is valid for the new keyboard, use it.
-    // Otherwise, use the blank keymap for the new keyboard.
+    // Otherwise, just use whatever keymap the KeyMapUIState has found.
+    // TODO: I don't think th is logic is working, need to debug with a board with multiple keymaps
     const attribKeyMap = this.getAttribute("keymap-id") || "";
     if (attribKeyMap && boardKeyMaps.get(attribKeyMap)) {
       this.state.keymap = boardKeyMaps.get(attribKeyMap)!;
       this._keyboard.createChildren(
         Array.from(this.state.keymap.keys.values())
       );
-    } else {
-      this.state.keymap = this.keyboard.model.blankKeyMap;
-      this._keyboard.createChildren(this.keyboard.model.blankKeyMapKeys);
     }
 
     // Replace the old keyboard with the new one in the DOM
@@ -565,6 +560,8 @@ export class KeyMapUI
     }
 
     this.layOutIdempotently();
+    this.#updateKeyMap(this.state.keymap);
+    console.log(`KeyMapUI.#updateKbModelAndKeymap(): Did call #updateKeyMap()`);
     setQueryStringFromState(this.state, this);
   }
 
@@ -573,6 +570,11 @@ export class KeyMapUI
   #updateKeyMap(value: KeyMap) {
     value.validateKeys();
     this.keyboard.createChildren(Array.from(value.keys.values()));
+    this.keyInfoNavBar.updateTitleKey(
+      value,
+      this.state.kbModel,
+      this.state.selectedKey
+    );
     this.#showWelcomeMessage();
     setQueryStringFromState(this.state, this);
   }
@@ -721,12 +723,21 @@ export class KeyMapUI
   //
 
   /* Resize the canvas to the size of the kidContainer.
+   *
+   * Pass state to it because it's a callback for a ResizeObserver --
+   * 'this' will refer to the ResizeObserver, when called by it,
+   * so 'this.state' from the KeyMapUI instance will not be available.
    */
-  #resizeCanvas = () =>
+  #resizeCanvas(state: KeyMapUIState) {
+    // console.log(
+    //   `Calling resizeCanvas, kbModel is ${state.kbModel.keyboardElementName}, keymap is ${state.keymap.uniqueId}`,
+    //   state
+    // );
     this.diagram.resize(
       this.kidContainer.offsetWidth,
       this.kidContainer.offsetHeight
     );
+  }
 
   /* Set the key information content for the selected key
    * Return an array of key ids that are targets of <key-indicator>s.
