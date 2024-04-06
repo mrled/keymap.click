@@ -5,7 +5,7 @@
 
 import { PhysicalKey } from "~/lib/physicalKey";
 import { Point, Size } from "~/lib/geometry";
-import { KeyMap, KeyMapKey } from "~/lib/keyMap";
+import { KeyMap, KeyMapKey, KeyMapLayer } from "~/lib/keyMap";
 
 type KeyIdToPhysicalKeyMap = { [key: string]: PhysicalKey };
 
@@ -65,8 +65,13 @@ export class KeyBoardModel {
       displayName: "Blank keymap",
       uniqueId: "blank",
       model: this,
-      welcome: ["This is a blank key map"],
-      keys: this.blankKeyMapKeys,
+      layers: [
+        KeyMapLayer.fromKeyList({
+          displayName: "Blank layer",
+          welcome: ["No keymap selected"],
+          keys: this.blankKeyMapKeys,
+        }),
+      ],
       guides: [],
     });
   }

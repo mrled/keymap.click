@@ -5,10 +5,7 @@ import {
   GuideStep,
   KeyMapLayer,
 } from "src/lib/keyMap";
-import {
-  KeyBoardErgodox,
-  KeyboardModelErgodox,
-} from "~/webcomponents/key-board-ergodox";
+import { KeyboardModelErgodox } from "~/webcomponents/key-board-ergodox";
 
 const normalLayoutInfo = [`Unchanged from normal QWERTY keyboard layout`];
 

@@ -796,7 +796,7 @@ export class KeyMapUI
    * This is a custom event that is fired by <keyboard-key> elements.
    */
   #handleKeySelected(event: Event) {
-    const e = event as CustomEvent; // TODO: is there something nicer I can do instead?
+    const e = event as CustomEvent;
     const keyId = e.detail;
     // TODO: should we have the key set the state directly instead of doing it here?
     this.state.selectedKey = keyId;

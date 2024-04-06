@@ -168,8 +168,6 @@ export class KeyMapLayer {
  *
  * Any keys passed in to the keys parameter will be checked for valid IDs,
  * and an error will be thrown if any are invalid for the keyboard or not unique.
- *
- * TODO: Implement multiple layers.
  */
 export class KeyMap {
   displayName: string;
@@ -189,7 +187,7 @@ export class KeyMap {
     displayName: string;
     uniqueId: string;
     model: KeyBoardModel;
-    layers: KeyMapLayer[]; // TODO: implement
+    layers: KeyMapLayer[];
     guides?: KeyMapGuide[]; // TODO: implement
   }) {
     this.displayName = displayName;
