@@ -578,7 +578,6 @@ export class KeyMapUI
   /* Update the keymap ID
    */
   #updateKeyMap(value: KeyMap) {
-    value.validateKeys();
     this.#updateLayer(this.state.layer);
     setQueryStringFromState(this.state, this);
   }

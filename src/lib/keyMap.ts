@@ -109,14 +109,17 @@ export class KeyMapGuide {
 /* A single layer is a map of physical key IDs to KeyMapKey objects.
  */
 export class KeyMapLayer {
-  private _duplicateKeys: KeyMapKey[] = [];
-
   constructor(
     public readonly displayName: string,
     public readonly welcome: string[],
     public readonly keys: Map<string, KeyMapKey>
   ) {}
 
+  /* Create a new layer from a list of keys.
+   *
+   * It's nicer to define keys in a list, rather than in a map which must contain the ID twice.
+   * This method will check for duplicate keys and throw an error if any are found.
+   */
   static fromKeyList({
     displayName,
     welcome,
@@ -128,32 +131,22 @@ export class KeyMapLayer {
   }) {
     const duplicateKeys: KeyMapKey[] = [];
     const keysById = keys.reduce((map, key) => {
-      if (map.has(key.id)) {
-        duplicateKeys.push(key);
-      }
+      if (map.has(key.id)) duplicateKeys.push(key);
       map.set(key.id, key);
       return map;
     }, new Map<string, KeyMapKey>());
-    const newLayer = new KeyMapLayer(displayName, welcome, keysById);
-    newLayer._duplicateKeys = duplicateKeys;
-    return newLayer;
-  }
 
-  /* Check that all keys are valid IDs for the keyboard.
-   */
-  validateKeys(model: KeyBoardModel) {
-    if (this._duplicateKeys.length > 0) {
+    // Make sure we haven't passed any keys with duplicate IDs
+    if (duplicateKeys.length > 0) {
       throw new Error(
-        `Duplicate key IDs in key map: ${this._duplicateKeys
+        `Duplicate key IDs in key map: ${duplicateKeys
           .map((key) => key.id)
           .join(", ")}`
       );
     }
-    for (const key of this.keys.values()) {
-      if (model.physicalKeyMap[key.id] === undefined) {
-        throw new Error(`Invalid key ID: ${key.id}`);
-      }
-    }
+
+    const newLayer = new KeyMapLayer(displayName, welcome, keysById);
+    return newLayer;
   }
 }
 
@@ -168,6 +161,8 @@ export class KeyMapLayer {
  *
  * Any keys passed in to the keys parameter will be checked for valid IDs,
  * and an error will be thrown if any are invalid for the keyboard or not unique.
+ *
+ * Any layer passed in which does not contain all the keys on the keyboard will have unset keys added.
  */
 export class KeyMap {
   displayName: string;
@@ -175,7 +170,6 @@ export class KeyMap {
   model: KeyBoardModel;
   guides: KeyMapGuide[];
   layers: KeyMapLayer[] = [];
-  private _duplicateKeys: KeyMapKey[] = [];
 
   constructor({
     displayName,
@@ -195,11 +189,33 @@ export class KeyMap {
     this.model = model;
     this.layers = layers || [];
     this.guides = guides || [];
-  }
 
-  /* Check that all keys are valid IDs for the keyboard.
-   */
-  validateKeys() {
-    this.layers.forEach((layer) => layer.validateKeys(this.model));
+    this.layers.forEach((layer, layerIdx) => {
+      // Add any unset keys to the layer
+      model.physicalKeys.forEach((key) => {
+        if (!layer.keys.has(key.id)) {
+          layer.keys.set(
+            key.id,
+            new KeyMapKey({
+              name: "",
+              id: key.id,
+              info: [],
+              unset: true,
+            })
+          );
+        }
+      });
+
+      // Check for any keys in the layer that are not on the keyboard
+      const invalidKeys = Array.from(layer.keys.values()).filter(
+        (key) => !model.physicalKeyMap[key.id]
+      );
+      if (invalidKeys.length > 0) {
+        const invalidKeysListStr = invalidKeys.map((key) => key.id).join(", ");
+        throw new Error(
+          `Invalid key IDs in key map ${this.displayName} on layer ${layerIdx}: ${invalidKeysListStr}`
+        );
+      }
+    });
   }
 }
