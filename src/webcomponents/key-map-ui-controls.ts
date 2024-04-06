@@ -118,7 +118,7 @@ export class KeyMapUIControls
   };
 
   private chooseGuide: ChangeListenerFunction = (e, id, result) => {
-    this.state.guide = result.value;
+    this.state.setGuideById(result.value);
   };
 
   private updateKbModelsSelector() {
@@ -173,13 +173,19 @@ export class KeyMapUIControls
   }
 
   private updateGuidesSelector() {
-    const options = this.state.keymap.guides.map((guide, idx) => {
+    const noGuideSelectedOption = document.createElement("option");
+    noGuideSelectedOption.value = "";
+    noGuideSelectedOption.textContent = "No guide selected";
+    noGuideSelectedOption.selected = this.state.guide === null;
+
+    const guideOptions = this.state.keymap.guides.map((guide, idx) => {
       const option = document.createElement("option") as HTMLOptionElement;
-      option.value = idx.toString();
-      option.selected = guide.title === this.state.guide;
-      option.textContent = `Placeholder guide ${idx}`;
+      option.value = guide.id;
+      option.selected = guide.title === this.state.guide?.title;
+      option.textContent = guide.title;
       return option;
     }, [] as HTMLOptionElement[]);
+    const options = [noGuideSelectedOption, ...guideOptions];
     this.updateSelector(
       SelectId.Guide,
       options,

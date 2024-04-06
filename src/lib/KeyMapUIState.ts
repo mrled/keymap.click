@@ -62,7 +62,7 @@ import { KeyBoard } from "~/webcomponents/key-board";
 import { KeyBoardModel } from "./KeyboardModel";
 import { IStateObserver } from "./State";
 import { ConnectionPair } from "./keyConnections";
-import { KeyMap, KeyMapLayer } from "./keyMap";
+import { KeyMap, KeyMapGuide, KeyMapLayer } from "./keyMap";
 import { Key } from "readline";
 
 /* A map of uniqueID strings to KeyMap objects
@@ -324,11 +324,11 @@ export class KeyMapUIState {
 
   /* The ID of the current guide, if any
    */
-  private _guide: string = "";
-  public get guide(): string {
+  private _guide: KeyMapGuide | null = null;
+  public get guide(): KeyMapGuide | null {
     return this._guide;
   }
-  public set guide(value: string) {
+  public set guide(value: KeyMapGuide | null) {
     if (this._guide === value) return;
     const oldValue = this._guide;
     const oldSelectedKey = this._selectedKey;
@@ -403,6 +403,22 @@ export class KeyMapUIState {
     }
     const layer = this.keymap.layers[index];
     this.layer = layer;
+  }
+
+  /* Set the guide by its id
+   */
+  setGuideById(id: string) {
+    if (!id) {
+      this.guide = null;
+      return;
+    } else {
+      const guide = this.keymap.guides.find((g) => g.id === id);
+      if (!guide) {
+        console.error(`No guide found for id: ${id}`);
+        return;
+      }
+      this.guide = guide;
+    }
   }
 
   // #endregion

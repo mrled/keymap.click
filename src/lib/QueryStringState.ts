@@ -4,6 +4,8 @@
 import { KeyMapUI } from "~/webcomponents/key-map-ui";
 import { KeyMapUIState } from "./KeyMapUIState";
 
+// TODO: support guide and guide step parameters
+
 /* Read the query string and update the state of the KeyMapUI.
  */
 export function setStateFromQueryString(state: KeyMapUIState) {

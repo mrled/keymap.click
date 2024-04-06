@@ -103,7 +103,22 @@ export class GuideStep {
 /* A guide to the layout of a key map
  */
 export class KeyMapGuide {
-  constructor(readonly title: string, readonly steps: GuideStep[]) {}
+  readonly title: string;
+  readonly id: string;
+  readonly steps: GuideStep[];
+  constructor({
+    title,
+    id,
+    steps,
+  }: {
+    title: string;
+    id: string;
+    steps: GuideStep[];
+  }) {
+    this.title = title;
+    this.id = id;
+    this.steps = steps;
+  }
 }
 
 /* A single layer is a map of physical key IDs to KeyMapKey objects.

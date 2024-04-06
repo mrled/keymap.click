@@ -847,22 +847,25 @@ export const MicahErgodoxLayout = new KeyMap({
     }),
   ],
   guides: [
-    new KeyMapGuide("Guide to Micah's ErgoDox layout", [
-      new GuideStep({
-        title: "Welcome to the guide to my main keyboard layout",
-        text: [
-          `
+    new KeyMapGuide({
+      title: "Guide to Micah's ErgoDox layout",
+      id: "mrlguide",
+      steps: [
+        new GuideStep({
+          title: "Welcome to the guide to my main keyboard layout",
+          text: [
+            `
               Keys highlighted in orange have been moved from their
               traditional QWERTY location to relieve pain.
             `,
-          `
+            `
               You&apos;ll note that all of them are moved inward, such that
               they are within reach of either the index finger or the thumb.
               <strong>
                 This is the biggest benefit of the ErgoDox for me.
               </strong>
             `,
-          `
+            `
               I remapped all of these keys in order to relieve what became
               intense, painful strain on the pinky fingers of both hands. At
               its worst, the tendon on the outside of each forearm from
@@ -870,7 +873,7 @@ export const MicahErgodoxLayout = new KeyMap({
               and painful to touch. Touching any keys with my pinkies would
               feel like tiny stabs of pain. It was miserable.
             `,
-          `
+            `
               I am not the first to notice that these keys &mdash;
               <kbd>esc</kbd>, <kbd>tab</kbd>, <kbd>shift</kbd>,
               <kbd>backspace</kbd>, <kbd>ctrl</kbd>, and <kbd>return</kbd>
@@ -880,113 +883,114 @@ export const MicahErgodoxLayout = new KeyMap({
               massive difference in my day to day life on a keyboard, and it
               was easy to learn.
             `,
-          `Once I changed these keys, my pain decreased drastically.`,
-        ],
-        selection: pinkyReliefSelection,
-      }),
-      new GuideStep({
-        title: "QWERTY keys",
-        text: [
-          `
+            `Once I changed these keys, my pain decreased drastically.`,
+          ],
+          selection: pinkyReliefSelection,
+        }),
+        new GuideStep({
+          title: "QWERTY keys",
+          text: [
+            `
               While the most significant benefit of the ErgoDox is the ability
               to remap keys, see how many keys remain in their default QWERTY
               position. The benefits I got were cheap. I could keep most of
               what I knew from regular keyboards.
             `,
-          `
+            `
               Even for these QWERTY keys, though, there is something special
               about the ErgoDox layout. The keys are <em>ortholinear</em>,
               which means that they are arrayed in neat columns rather than
               offset like a traditional QWERTY keyboard. This way, my fingers
               extend straight out, or curl straight in, to hit any key.
             `,
-          `
+            `
               Towards the center and tilted at an angle, you will notice the
               <em>thumb clusters</em>. This design lets you use the powerful
               muscles in your thumbs to strike the most commonly used keys.
             `,
-          `
+            `
               Additionally, you can see that the keyboard is actually two
               independent boards. They are connected by a flexible cable, and
               can be positioned straight in front of your arms. This helps
               keep correct posture and relaxed shoulders.
             `,
-        ],
-        selection: qwertySelection,
-      }),
-      new GuideStep({
-        title: "Changing key locations to relieve my pinky",
-        text: [
-          `
+          ],
+          selection: qwertySelection,
+        }),
+        new GuideStep({
+          title: "Changing key locations to relieve my pinky",
+          text: [
+            `
               Here are the most important keys I moved again. This is just the
               same group of keys as on step one.
             `,
-          `In the following steps, we will examine them individually.`,
-        ],
-        selection: pinkyReliefSelection,
-      }),
-      new GuideStep({ keyId: "l-f-14-1" }),
-      new GuideStep({ keyId: "l-f-14-3" }),
-      new GuideStep({ keyId: "l-t-1-3" }),
-      new GuideStep({ keyId: "l-t-3-3" }),
-      new GuideStep({
-        keyId: "l-t-5-5",
-        selection: ctrlKeySelection,
-      }),
-      new GuideStep({ keyId: "r-t-3-3" }),
-      new GuideStep({
-        title: "Other remapped keys",
-        text: [
-          `
+            `In the following steps, we will examine them individually.`,
+          ],
+          selection: pinkyReliefSelection,
+        }),
+        new GuideStep({ keyId: "l-f-14-1" }),
+        new GuideStep({ keyId: "l-f-14-3" }),
+        new GuideStep({ keyId: "l-t-1-3" }),
+        new GuideStep({ keyId: "l-t-3-3" }),
+        new GuideStep({
+          keyId: "l-t-5-5",
+          selection: ctrlKeySelection,
+        }),
+        new GuideStep({ keyId: "r-t-3-3" }),
+        new GuideStep({
+          title: "Other remapped keys",
+          text: [
+            `
               Due to the layout of the ErgoDox, some keys had to be moved from
               their normal QWERTY positions.
             `,
-          `
+            `
               Changing the location of these keys did not impact my RSI, but
               some of the new locations might be surprising, so it&apos;s
               worth examining what has changed and why.
             `,
-        ],
-        selection: movedQwertyNonReliefSelection,
-      }),
-      new GuideStep({ keyId: "l-f-1-1" }),
-      new GuideStep({ keyId: "l-f-1-3" }),
-      new GuideStep({
-        keyId: "r-f-13-7",
-        selection: bracketKeySelection,
-      }),
-      new GuideStep({
-        keyId: "r-f-1-6",
-        selection: guiKeySelection,
-      }),
-      new GuideStep({
-        keyId: "r-f-5-9",
-        selection: optKeySelection,
-      }),
-      new GuideStep({
-        title: "Layers and extra features",
-        text: [
-          `
+          ],
+          selection: movedQwertyNonReliefSelection,
+        }),
+        new GuideStep({ keyId: "l-f-1-1" }),
+        new GuideStep({ keyId: "l-f-1-3" }),
+        new GuideStep({
+          keyId: "r-f-13-7",
+          selection: bracketKeySelection,
+        }),
+        new GuideStep({
+          keyId: "r-f-1-6",
+          selection: guiKeySelection,
+        }),
+        new GuideStep({
+          keyId: "r-f-5-9",
+          selection: optKeySelection,
+        }),
+        new GuideStep({
+          title: "Layers and extra features",
+          text: [
+            `
               Since the board is powered by
               <a href="https://qmk.fm/">QMK</a>, I can also get extra
               features besides just moving keys around. See the next few steps
               of the guide for special keys and cool tricks.
             `,
-        ],
-        selection: extraFeaturesSelection,
-      }),
-      new GuideStep({ keyId: "l-f-2-9" }),
-      new GuideStep({ keyId: "r-f-7-9" }),
-      new GuideStep({ keyId: "r-f-1-1" }),
-      new GuideStep({ keyId: "r-f-1-3" }),
-      new GuideStep({
-        keyId: "r-f-11-9",
-        selection: volKeySelection,
-      }),
-      new GuideStep({
-        title: "The end",
-        text: [`Thanks for all the clicks.`],
-      }),
-    ]),
+          ],
+          selection: extraFeaturesSelection,
+        }),
+        new GuideStep({ keyId: "l-f-2-9" }),
+        new GuideStep({ keyId: "r-f-7-9" }),
+        new GuideStep({ keyId: "r-f-1-1" }),
+        new GuideStep({ keyId: "r-f-1-3" }),
+        new GuideStep({
+          keyId: "r-f-11-9",
+          selection: volKeySelection,
+        }),
+        new GuideStep({
+          title: "The end",
+          text: [`Thanks for all the clicks.`],
+        }),
+      ],
+    }),
   ],
 });
