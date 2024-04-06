@@ -21,7 +21,7 @@ export function setStateFromQueryString(state: KeyMapUIState) {
 
   if (qBoard) state.setModelByElementName(qBoard);
   if (qMap) state.setKeyMapById(qMap);
-  if (qLayer) state.setLayerByIndex(parseInt(qLayer, 10));
+  if (qLayer) state.setLayerByIndex(parseInt(qLayer, 10) || 0);
   if (qKey) state.selectedKey = qKey;
 }
 
