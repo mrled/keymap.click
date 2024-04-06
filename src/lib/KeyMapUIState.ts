@@ -62,7 +62,7 @@ import { KeyBoard } from "~/webcomponents/key-board";
 import { KeyBoardModel } from "./KeyboardModel";
 import { IStateObserver } from "./State";
 import { ConnectionPair } from "./keyConnections";
-import { KeyMap } from "./keyMap";
+import { KeyMap, KeyMapLayer } from "./keyMap";
 import { Key } from "readline";
 
 /* A map of uniqueID strings to KeyMap objects
@@ -231,7 +231,6 @@ export class KeyMapUIState {
         this.keymaps.get(value.keyboardElementName)?.values() || []
       ).filter((km) => km !== value.blankKeyMap)[0];
       this._keymap = nonBlankKeymap ? nonBlankKeymap : value.blankKeyMap;
-      console.log(`Just set new keymap to: ${this._keymap.uniqueId}`);
     }
 
     // Notify observers of the model change first.
@@ -304,18 +303,21 @@ export class KeyMapUIState {
 
   /* The ID of the current layer
    */
-  private _layer: number = 0;
-  public get layer(): number {
+  private _layer: KeyMapLayer | null = null;
+  public get layer(): KeyMapLayer {
+    if (this._layer === null) {
+      this._layer = this.keymap.layers[0];
+    }
     return this._layer;
   }
-  public set layer(value: number) {
+  public set layer(value: KeyMapLayer) {
     if (this._layer === value) return;
     const oldValue = this._layer;
     const oldSelectedKey = this._selectedKey;
     this._layer = value;
     if (oldSelectedKey) {
-      this.selectedKey = "";
-      this.notify("selectedKey", oldSelectedKey, this.selectedKey);
+      this._selectedKey = "";
+      this.notify("selectedKey", oldSelectedKey, "");
     }
     this.notify("layer", oldValue, value);
   }
@@ -364,9 +366,48 @@ export class KeyMapUIState {
     this.notify("connectionPairs", oldValue, value);
   }
 
-  //
-  // Other private methods
-  //
+  // #region Public helpers
+
+  /* Set keyboard model by element name
+   */
+  setModelByElementName(elementName: string) {
+    const model = this.kbModels.find(
+      (m) => m.keyboardElementName === elementName
+    );
+    if (!model) {
+      console.error(`No model found for element name: ${elementName}`);
+      return;
+    }
+    this.kbModel = model!;
+  }
+
+  /* Set keymap by its unique ID
+   */
+  setKeyMapById(uniqueId: string) {
+    const keymap = Array.from(this.boardMaps.values()).find(
+      (km) => km.uniqueId === uniqueId
+    );
+    if (!keymap) {
+      console.error(`No keymap found for unique ID: ${uniqueId}`);
+      return;
+    }
+    this.keymap = keymap;
+  }
+
+  /* Set keyboard layer by its index
+   */
+  setLayerByIndex(index: number) {
+    if (index < 0 || index >= this.keymap.layers.length) {
+      console.error(`Invalid layer index: ${index}`);
+      return;
+    }
+    const layer = this.keymap.layers[index];
+    this.layer = layer;
+  }
+
+  // #endregion
+
+  // #region Private helpers
 
   /* Idempotently add a blank keymap to our set of known keymaps
    */
@@ -384,6 +425,8 @@ export class KeyMapUIState {
     const blankKeyMap = tmpInstance.model.blankKeyMap;
     boardKeyMaps.set(blankKeyMap.uniqueId, blankKeyMap);
   }
+
+  // #endregion
 }
 
 type KeyMapUIStateValue = KeyMapUIState[keyof KeyMapUIState];

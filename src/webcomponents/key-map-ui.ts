@@ -2,7 +2,7 @@ import log from "loglevel";
 
 import { KeyMapUIOptions } from "~/lib/KeyMapUIOptions";
 import { ConnectionPair, KeyInfoConnectType } from "~/lib/keyConnections";
-import { KeyMap } from "~/lib/keyMap";
+import { KeyMap, KeyMapLayer } from "~/lib/keyMap";
 
 import { KeyHandle } from "~/webcomponents/key-handle";
 import { KeyIndicator } from "~/webcomponents/key-indicator";
@@ -168,7 +168,7 @@ export class KeyMapUI
       "connectedCallback(): Just set keymap id"
     );
 
-    const layer = this.getAttribute("layer") || "";
+    const layer = this.getAttribute("layer") || "0";
     this.attributeChangedCallback("layer", "", layer);
     this.#logCurrentStateAndQueryString("connectedCallback(): Just set layer");
 
@@ -232,7 +232,7 @@ export class KeyMapUI
         this.#updateKeyMapId(newValue);
         break;
       case "layer":
-        this.state.layer = parseInt(newValue, 10);
+        this.#updateLayerIdx(parseInt(newValue, 10) || 0);
         break;
       case "selected-key":
         this.state.selectedKey = newValue;
@@ -264,7 +264,7 @@ export class KeyMapUI
         "key-info-nav-bar"
       ) as KeyInfoNavBar;
       this._keyInfoNavBar.updateTitleKey(
-        this.state.keymap,
+        this.state.layer,
         this.state.kbModel,
         this.state.selectedKey
       );
@@ -489,6 +489,19 @@ export class KeyMapUI
     this.state.keymap = newMap;
   }
 
+  /* Update the layer index
+   */
+  #updateLayerIdx(value: number) {
+    const newLayer = this.state.keymap.layers[value];
+    if (!newLayer) {
+      console.error(
+        `KeyMapUI: Layer ${value} not found in key map '${this.state.keymap.uniqueId}'`
+      );
+      return;
+    }
+    this.state.layer = newLayer;
+  }
+
   // #endregion
 
   //
@@ -509,13 +522,13 @@ export class KeyMapUI
         log.setLevel(debug ? log.levels.DEBUG : log.levels.INFO);
         break;
       case "kbModel":
-        this.#updateKbModelAndKeymap(newValue as KeyBoardModel);
+        this.#updateKbModel(newValue as KeyBoardModel);
         break;
       case "keymap":
         this.#updateKeyMap(newValue as KeyMap);
         break;
       case "layer":
-        this.#updateLayer(newValue as number);
+        this.#updateLayer(newValue as KeyMapLayer);
         break;
       case "selectedKey":
         this.#updateSelectedKey(newValue as string);
@@ -526,7 +539,7 @@ export class KeyMapUI
     }
   }
 
-  #updateKbModelAndKeymap(value: KeyBoardModel) {
+  #updateKbModel(value: KeyBoardModel) {
     const oldKeyboard = this._keyboard;
     this._keyboard = document.createElement(
       value.keyboardElementName
@@ -549,9 +562,7 @@ export class KeyMapUI
     const attribKeyMap = this.getAttribute("keymap-id") || "";
     if (attribKeyMap && boardKeyMaps.get(attribKeyMap)) {
       this.state.keymap = boardKeyMaps.get(attribKeyMap)!;
-      this._keyboard.createChildren(
-        Array.from(this.state.keymap.keys.values())
-      );
+      this._keyboard.createChildren(Array.from(this.state.layer.keys.values()));
     }
 
     // Replace the old keyboard with the new one in the DOM
@@ -561,7 +572,6 @@ export class KeyMapUI
 
     this.layOutIdempotently();
     this.#updateKeyMap(this.state.keymap);
-    console.log(`KeyMapUI.#updateKbModelAndKeymap(): Did call #updateKeyMap()`);
     setQueryStringFromState(this.state, this);
   }
 
@@ -569,6 +579,13 @@ export class KeyMapUI
    */
   #updateKeyMap(value: KeyMap) {
     value.validateKeys();
+    this.#updateLayer(this.state.layer);
+    setQueryStringFromState(this.state, this);
+  }
+
+  /* Update the layer
+   */
+  #updateLayer(value: KeyMapLayer) {
     this.keyboard.createChildren(Array.from(value.keys.values()));
     this.keyInfoNavBar.updateTitleKey(
       value,
@@ -576,12 +593,6 @@ export class KeyMapUI
       this.state.selectedKey
     );
     this.#showWelcomeMessage();
-    setQueryStringFromState(this.state, this);
-  }
-
-  /* Update the layer
-   */
-  #updateLayer(value: number) {
     setQueryStringFromState(this.state, this);
   }
 
@@ -594,7 +605,7 @@ export class KeyMapUI
     let indicatedKeyIds: string[] = [];
 
     if (value) {
-      const keyData = this.state.keymap.keys.get(value);
+      const keyData = this.state.layer.keys.get(value);
       if (!keyData) {
         console.error(
           `KeyMapUI: Key ${value} not found in key map '${this.state.keymap.uniqueId}'`
@@ -622,7 +633,7 @@ export class KeyMapUI
 
     // Update the key in the key info navbar
     this.keyInfoNavBar.updateTitleKey(
-      this.state.keymap,
+      this.state.layer,
       this.state.kbModel,
       value
     );
@@ -773,7 +784,7 @@ export class KeyMapUI
     while (this.infoProse.firstChild) {
       this.infoProse.removeChild(this.infoProse.firstChild);
     }
-    this.state.keymap.welcome.forEach((paragraph: string) => {
+    this.state.layer.welcome.forEach((paragraph: string) => {
       const p = document.createElement("p");
       p.innerHTML = paragraph;
       this.infoProse.appendChild(p);

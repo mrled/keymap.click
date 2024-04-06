@@ -19,9 +19,9 @@ export function setStateFromQueryString(state: KeyMapUIState) {
   const qLayer = currentParams.get(`${queryPrefix}-layer`);
   const qKey = currentParams.get(`${queryPrefix}-key`);
 
-  if (qBoard) state.keyboardElementName = qBoard;
-  if (qMap) state.keymapId = qMap;
-  if (qLayer) state.layer = parseInt(qLayer, 10);
+  if (qBoard) state.setModelByElementName(qBoard);
+  if (qMap) state.setKeyMapById(qMap);
+  if (qLayer) state.setLayerByIndex(parseInt(qLayer, 10));
   if (qKey) state.selectedKey = qKey;
 }
 
@@ -40,21 +40,19 @@ export function setStateFromQueryString(state: KeyMapUIState) {
  *
  * Requires the element to be passed in so we can get the current attribute values.
  */
-export function setQueryStringFromState(
-  provider: KeyMapUIState,
-  kmui: KeyMapUI
-) {
-  const queryPrefix = provider.queryPrefix;
+export function setQueryStringFromState(state: KeyMapUIState, kmui: KeyMapUI) {
+  const queryPrefix = state.queryPrefix;
 
   if (!queryPrefix) {
     return;
   }
   const newParams = new URLSearchParams(window.location.search);
 
-  const tBoardElement = provider.keyboardElementName;
-  const tMap = provider.keymapId;
-  const tLayer = provider.layer;
-  const tKey = provider.selectedKey;
+  const tBoardElement = state.kbModel.keyboardElementName;
+  const tMap = state.keymap.uniqueId;
+  const tLayer = state.layer;
+  const tLayerIdx = state.keymap.layers.indexOf(tLayer);
+  const tKey = state.selectedKey;
 
   const aBoardElement = kmui.getAttribute("keyboard-element") || "";
   const aMap = kmui.getAttribute("keymap-id") || "";
@@ -73,7 +71,7 @@ export function setQueryStringFromState(
     newParams.delete(`${queryPrefix}-map`);
   }
 
-  if (tLayer && aLayer !== tLayer) {
+  if (tLayer && aLayer !== tLayerIdx) {
     newParams.set(`${queryPrefix}-layer`, tLayer.toString());
   } else {
     newParams.delete(`${queryPrefix}-layer`);

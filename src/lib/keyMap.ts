@@ -106,6 +106,57 @@ export class KeyMapGuide {
   constructor(readonly title: string, readonly steps: GuideStep[]) {}
 }
 
+/* A single layer is a map of physical key IDs to KeyMapKey objects.
+ */
+export class KeyMapLayer {
+  private _duplicateKeys: KeyMapKey[] = [];
+
+  constructor(
+    public readonly displayName: string,
+    public readonly welcome: string[],
+    public readonly keys: Map<string, KeyMapKey>
+  ) {}
+
+  static fromKeyList({
+    displayName,
+    welcome,
+    keys,
+  }: {
+    displayName: string;
+    welcome: string[];
+    keys: KeyMapKey[];
+  }) {
+    const duplicateKeys: KeyMapKey[] = [];
+    const keysById = keys.reduce((map, key) => {
+      if (map.has(key.id)) {
+        duplicateKeys.push(key);
+      }
+      map.set(key.id, key);
+      return map;
+    }, new Map<string, KeyMapKey>());
+    const newLayer = new KeyMapLayer(displayName, welcome, keysById);
+    newLayer._duplicateKeys = duplicateKeys;
+    return newLayer;
+  }
+
+  /* Check that all keys are valid IDs for the keyboard.
+   */
+  validateKeys(model: KeyBoardModel) {
+    if (this._duplicateKeys.length > 0) {
+      throw new Error(
+        `Duplicate key IDs in key map: ${this._duplicateKeys
+          .map((key) => key.id)
+          .join(", ")}`
+      );
+    }
+    for (const key of this.keys.values()) {
+      if (model.physicalKeyMap[key.id] === undefined) {
+        throw new Error(`Invalid key ID: ${key.id}`);
+      }
+    }
+  }
+}
+
 /* A key map for a keyboard.
  *
  * Maps IDs of physical keys to descriptive text and function of the key.
@@ -124,40 +175,26 @@ export class KeyMap {
   displayName: string;
   uniqueId: string;
   model: KeyBoardModel;
-  welcome: string[];
   guides: KeyMapGuide[];
-  keys: Map<string, KeyMapKey>;
-  layers: KeyMapKey[][] = [];
+  layers: KeyMapLayer[] = [];
   private _duplicateKeys: KeyMapKey[] = [];
 
   constructor({
     displayName,
     uniqueId,
     model,
-    welcome,
-    keys,
     layers,
     guides,
   }: {
     displayName: string;
     uniqueId: string;
     model: KeyBoardModel;
-    welcome: string[];
-    keys: KeyMapKey[];
-    layers?: KeyMapKey[][]; // TODO: implement
+    layers: KeyMapLayer[]; // TODO: implement
     guides?: KeyMapGuide[]; // TODO: implement
   }) {
     this.displayName = displayName;
     this.uniqueId = uniqueId;
     this.model = model;
-    this.welcome = welcome;
-    this.keys = keys.reduce((map, key) => {
-      if (map.has(key.id)) {
-        this._duplicateKeys.push(key);
-      }
-      map.set(key.id, key);
-      return map;
-    }, new Map<string, KeyMapKey>());
     this.layers = layers || [];
     this.guides = guides || [];
   }
@@ -165,17 +202,6 @@ export class KeyMap {
   /* Check that all keys are valid IDs for the keyboard.
    */
   validateKeys() {
-    if (this._duplicateKeys.length > 0) {
-      throw new Error(
-        `Duplicate key IDs in key map: ${this._duplicateKeys
-          .map((key) => key.id)
-          .join(", ")}`
-      );
-    }
-    for (const key of this.keys.values()) {
-      if (this.model.physicalKeyMap[key.id] === undefined) {
-        throw new Error(`Invalid key ID: ${key.id}`);
-      }
-    }
+    this.layers.forEach((layer) => layer.validateKeys(this.model));
   }
 }

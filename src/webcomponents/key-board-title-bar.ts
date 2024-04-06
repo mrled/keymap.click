@@ -1,6 +1,6 @@
 import { PhysicalKey } from "~/lib/physicalKey";
 import { KeyBoard } from "~/webcomponents/key-board";
-import { KeyMap, KeyMapKey } from "~/lib/keyMap";
+import { KeyMap, KeyMapKey, KeyMapLayer } from "~/lib/keyMap";
 import { KeyGrid } from "~/webcomponents/key-grid";
 import { KeyboardKey } from "./keyboard-key";
 import { Point, Size } from "~/lib/geometry";
@@ -11,7 +11,6 @@ import { KeyBoardModel } from "~/lib/KeyboardModel";
  * It will contain just one key, which will be a copy of the selected key in the reference keyboard.
  */
 export class KeyBoardTitleBar extends KeyBoard {
-  keyMap: KeyMap | null = null;
   keyMapKey: KeyMapKey | null = null;
   keyElement: KeyboardKey | null = null;
   private _physicalKeys: PhysicalKey[] = [];
@@ -86,12 +85,10 @@ export class KeyBoardTitleBar extends KeyBoard {
    * - selectedKeyId: the ID of the selected key
    */
   updateSelectedKey(
-    keyMap: KeyMap,
+    keymapLayer: KeyMapLayer,
     referenceModel: KeyBoardModel,
     selectedKeyId: string
   ): KeyMapKey {
-    this.keyMap = keyMap;
-
     this.grid.setAttribute("cols", this.model.maxKeySize.x.toString());
     this.grid.setAttribute("rows", this.model.maxKeySize.y.toString());
 
@@ -113,7 +110,7 @@ export class KeyBoardTitleBar extends KeyBoard {
         this.model.defaultBlankKeySize
       );
     } else {
-      const selectedKey = keyMap.keys.get(selectedKeyId);
+      const selectedKey = keymapLayer.keys.get(selectedKeyId);
       if (!selectedKey) {
         throw new Error(`Key not found: ${selectedKeyId}`);
       }

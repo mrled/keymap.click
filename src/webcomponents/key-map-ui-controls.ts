@@ -96,7 +96,6 @@ export class KeyMapUIControls
   }
 
   private chooseKbModel: ChangeListenerFunction = (e, id, result) => {
-    console.log(`Selected ${id}: ${result.value}`);
     const newModel = this.state.kbModels.find(
       (model) => model.keyboardElementName === result.value
     );
@@ -106,7 +105,6 @@ export class KeyMapUIControls
   };
 
   private chooseKeymap: ChangeListenerFunction = (e, id, result) => {
-    console.log(`Selected ${id}: ${result.value}`);
     const newKeymap = this.state.keymaps
       .get(this.state.kbModel.keyboardElementName)
       ?.get(result.value);
@@ -116,12 +114,10 @@ export class KeyMapUIControls
   };
 
   private chooseLayer: ChangeListenerFunction = (e, id, result) => {
-    console.log(`Selected ${id}: ${result.value}`);
-    this.state.layer = parseInt(result.value);
+    this.state.layer = this.state.keymap.layers[parseInt(result.value)];
   };
 
   private chooseGuide: ChangeListenerFunction = (e, id, result) => {
-    console.log(`Selected ${id}: ${result.value}`);
     this.state.guide = result.value;
   };
 
@@ -163,8 +159,9 @@ export class KeyMapUIControls
     const options = this.state.keymap.layers.map((layer, idx) => {
       const option = document.createElement("option") as HTMLOptionElement;
       option.value = idx.toString();
-      option.selected = idx === this.state.layer;
-      option.textContent = `Layer ${idx}`;
+      option.selected =
+        idx === this.state.keymap.layers.indexOf(this.state.layer);
+      option.textContent = layer.displayName;
       return option;
     }, [] as HTMLOptionElement[]);
     this.updateSelector(

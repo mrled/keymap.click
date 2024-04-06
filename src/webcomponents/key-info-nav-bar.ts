@@ -1,4 +1,4 @@
-import { KeyMap, KeyMapKey } from "~/lib/keyMap";
+import { KeyMap, KeyMapKey, KeyMapLayer } from "~/lib/keyMap";
 
 import { KeyBoardTitleBar } from "~/webcomponents/key-board-title-bar";
 import { KeyBoardModel } from "~/lib/KeyboardModel";
@@ -84,12 +84,12 @@ export class KeyInfoNavBar extends HTMLElement {
   }
 
   updateTitleKey(
-    keyMap: KeyMap,
+    keymapLayer: KeyMapLayer,
     referenceModel: KeyBoardModel,
     selectedKeyId: string
   ) {
     const modifiedKey = this.titleBoard.updateSelectedKey(
-      keyMap,
+      keymapLayer,
       referenceModel,
       selectedKeyId
     );
