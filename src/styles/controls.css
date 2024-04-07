@@ -1,9 +1,0 @@
-/* The secret control panel */
-
-.control-panel {
-  background-color: var(--panel-bg);
-  border: 1px solid var(--button-border-color);
-  border-radius: 0.375rem;
-  padding: 1.5rem;
-  margin: 1.5rem;
-}

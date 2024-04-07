@@ -7,8 +7,6 @@ import "./website.style.css";
 import "./src/styles/vars.css";
 import "./src/styles/index.css";
 // Alphabetical styles
-import "./src/styles/controls.css";
-import "./src/styles/debug.css";
 import "./src/styles/diagram.css";
 import "./src/styles/fonts.css";
 import "./src/styles/keygrid.css";

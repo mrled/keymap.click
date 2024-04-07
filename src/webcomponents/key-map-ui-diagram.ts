@@ -47,8 +47,7 @@ export class KeyMapUIDiagram
     }
     if (!this._canvas) {
       this._canvas = document.createElement("canvas");
-      this._canvas.className =
-        "keyboard-diagram debug-border-orange debug-trans-bg-orange";
+      this._canvas.className = "keyboard-diagram";
       this.appendChild(this._canvas);
     }
     return this._canvas;

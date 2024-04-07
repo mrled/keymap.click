@@ -1,10 +1,10 @@
-/* Variables used in other styles */
+/* Variables used in other styles
+ *
+ * Print a list of all variables that aren't used outside of this file:
+ *    grep -o -e "--[a-zA-Z0-9-]\+"  src/styles/vars.css | while read v; do if ! rg -g '!src/styles/vars.css' -q -- "$v" src; then echo $v; fi; done
+ */
 
 :root {
-  --page-bg: white;
-  --page-fg: black;
-  --panel-bg: #f7fafc;
-
   /* Colors that apply to all buttons except keyboard keys
    */
   --button-border-color: #d1d5db;
@@ -12,7 +12,7 @@
   --button-text-disabled: #9ca3af;
   --button-bg-enabled: #edf2f7;
   --button-bg-hover: #e2e8f0;
-  --button-bg-actibve: #d4e4f7;
+  --button-bg-active: #d4e4f7;
 
   /* Colors that apply to keyboard-key buttons
    */
@@ -51,5 +51,19 @@
   --diagram-debug-left-color: lawngreen;
   --diagram-debug-right-color: red;
 
+  /* Other colors
+   */
   --link-fg: rgba(49, 130, 206, 1);
+
+  /* Key, board, and grid styles
+ * We use a base --keyboard-grid-unit variable, which lets us scale easily
+ */
+  --keyboard-grid-unit: 1rem;
+  --kid-diamarg-width: calc(var(--keyboard-grid-unit) * 2);
+}
+
+@media (min-width: 900px) {
+  :root {
+    --keyboard-grid-unit: 1.25rem;
+  }
 }
