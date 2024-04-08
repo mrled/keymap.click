@@ -1,4 +1,4 @@
-/* Styles
+/* Root styles: should be imported before other styles
  */
 
 * {
@@ -23,10 +23,6 @@ h2 {
   font-size: 1.5rem;
   font-weight: inherit;
   padding: 1rem 0;
-}
-
-h2.keyboard-title {
-  font-size: 1.25rem;
 }
 
 h3 {
@@ -63,18 +59,4 @@ kbd {
   background: var(--kbd-background);
   color: var(--kbd-fg);
   font-weight: bold;
-}
-
-button.guide-bar-button {
-  padding: 0.25rem;
-  margin: 0.25rem;
-  border: 1px solid var(--button-border-color);
-  width: 3rem;
-  font-size: 0.75rem;
-  color: var(--button-text-disabled);
-}
-
-button.guide-bar-button-enabled {
-  color: var(--button-text-enabled);
-  background-color: var(--button-bg-enabled);
 }

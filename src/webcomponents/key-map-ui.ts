@@ -18,6 +18,14 @@ import {
 import { KeyBoardModel } from "~/lib/KeyboardModel";
 import { KeyMapUIControls } from "./key-map-ui-controls";
 
+// Import CSS files as inline strings.
+// TODO: when we switch to esbuild, we will have to change this to esbuild's synta for the same thing.
+import varsStyleStr from "~/styles/vars.css?inline";
+import rootStyleStr from "~/styles/root.css?inline";
+import diagramStyleStr from "~/styles/diagram.css?inline";
+import keygridStyleStr from "~/styles/keygrid.css?inline";
+import keyInfoPanelStyleStr from "~/styles/keyInfoPanel.css?inline";
+
 /* The UI of the keymap, including a keyboard, an info panel, and the canvas diagram.
  *
  * Some notes on naming:
@@ -70,6 +78,11 @@ export class KeyMapUI
   extends HTMLElement
   implements IStateObserver<KeyMapUIState> {
   //
+
+  /* The shadow DOM for us and all descendents.
+   */
+  shadow = this.attachShadow({ mode: "open" });
+  // shadow = this;
 
   /* The ResizeObserver that watches for changes in the size of the kidContainer.
    */
@@ -252,10 +265,36 @@ export class KeyMapUI
   // #region Getters and setters for child elements
   //
 
+  private _styling: HTMLStyleElement | null = null;
+  get styling(): HTMLStyleElement {
+    if (!this._styling) {
+      this._styling = this.shadow.querySelector("style");
+    }
+    if (!this._styling) {
+      this._styling = document.createElement("style");
+      // Concatenate all the CSS strings into one string and place it in a <style> element.
+      // This is kind of an annoying hack because bundling is awful.
+      // TODO: pack CSS separately and use a <style src="..."> element instead.
+      // That would be more efficient for web pages that use multiple KeyMapUI elements.
+      // However, that's rare so it's not a priority.
+      const styleContents = [
+        // Ordered styles
+        varsStyleStr,
+        rootStyleStr,
+        // Alphabetical styles
+        diagramStyleStr,
+        keygridStyleStr,
+        keyInfoPanelStyleStr,
+      ];
+      this._styling.textContent = styleContents.join("\n");
+    }
+    return this._styling;
+  }
+
   private _keyInfoNavBar: KeyInfoNavBar | null = null;
   get keyInfoNavBar(): KeyInfoNavBar {
     if (!this._keyInfoNavBar) {
-      this._keyInfoNavBar = this.querySelector(
+      this._keyInfoNavBar = this.shadow.querySelector(
         "key-info-nav-bar"
       ) as KeyInfoNavBar;
     }
@@ -275,7 +314,7 @@ export class KeyMapUI
   private _diamargLeft: HTMLElement | null = null;
   get diamargLeft(): HTMLElement {
     if (!this._diamargLeft) {
-      this._diamargLeft = this.querySelector(".keymap-ui-diamarg");
+      this._diamargLeft = this.shadow.querySelector(".keymap-ui-diamarg");
     }
     if (!this._diamargLeft) {
       this._diamargLeft = document.createElement("div");
@@ -287,7 +326,7 @@ export class KeyMapUI
   private _diamargRight: HTMLElement | null = null;
   get diamargRight(): HTMLElement {
     if (!this._diamargRight) {
-      this._diamargRight = this.querySelector(".keymap-ui-diamarg");
+      this._diamargRight = this.shadow.querySelector(".keymap-ui-diamarg");
     }
     if (!this._diamargRight) {
       this._diamargRight = document.createElement("div");
@@ -299,7 +338,7 @@ export class KeyMapUI
   private _centerPanel: HTMLElement | null = null;
   get centerPanel(): HTMLElement {
     if (!this._centerPanel) {
-      this._centerPanel = this.querySelector(".keymap-ui-center-panel");
+      this._centerPanel = this.shadow.querySelector(".keymap-ui-center-panel");
     }
     if (!this._centerPanel) {
       this._centerPanel = document.createElement("div");
@@ -311,7 +350,9 @@ export class KeyMapUI
   private _kidContainer: HTMLElement | null = null;
   get kidContainer(): HTMLElement {
     if (!this._kidContainer) {
-      this._kidContainer = this.querySelector(".keymap-ui-kid-container");
+      this._kidContainer = this.shadow.querySelector(
+        ".keymap-ui-kid-container"
+      );
     }
     if (!this._kidContainer) {
       this._kidContainer = document.createElement("div");
@@ -323,7 +364,7 @@ export class KeyMapUI
   private _controls: KeyMapUIControls | null = null;
   get controls(): KeyMapUIControls {
     if (!this._controls) {
-      this._controls = this.querySelector(
+      this._controls = this.shadow.querySelector(
         "key-map-ui-controls"
       ) as KeyMapUIControls;
     }
@@ -342,7 +383,7 @@ export class KeyMapUI
   get keyboard(): KeyBoard {
     if (!this._keyboard) {
       // First, try to find a keyboard in the DOM
-      this._keyboard = this.querySelector("keyboard") as KeyBoard;
+      this._keyboard = this.shadow.querySelector("keyboard") as KeyBoard;
     }
     if (!this._keyboard) {
       let newElementName: string;
@@ -366,7 +407,9 @@ export class KeyMapUI
   private _infoContainer: HTMLElement | null = null;
   get infoContainer(): HTMLElement {
     if (!this._infoContainer) {
-      this._infoContainer = this.querySelector(".keymap-ui-keyinfo-container");
+      this._infoContainer = this.shadow.querySelector(
+        ".keymap-ui-keyinfo-container"
+      );
     }
     if (!this._infoContainer) {
       this._infoContainer = document.createElement("div");
@@ -378,7 +421,7 @@ export class KeyMapUI
   private _infoProse: HTMLElement | null = null;
   get infoProse(): HTMLElement {
     if (!this._infoProse) {
-      this._infoProse = this.querySelector(".key-info-prose");
+      this._infoProse = this.shadow.querySelector(".key-info-prose");
     }
     if (!this._infoProse) {
       this._infoProse = document.createElement("div");
@@ -390,7 +433,7 @@ export class KeyMapUI
   private _diagram: KeyMapUIDiagram | null = null;
   get diagram(): KeyMapUIDiagram {
     if (!this._diagram) {
-      this._diagram = this.querySelector("key-map-ui-diagram");
+      this._diagram = this.shadow.querySelector("key-map-ui-diagram");
     }
     if (!this._diagram) {
       this._diagram = document.createElement(
@@ -415,7 +458,7 @@ export class KeyMapUI
    * remove all children and add the new children.
    */
   private setChildrenIdempotently(
-    parent: HTMLElement,
+    parent: HTMLElement | ShadowRoot,
     children: HTMLElement[]
   ) {
     if (!children.every((c) => parent.contains(c))) {
@@ -435,7 +478,11 @@ export class KeyMapUI
     // Direct children of this element
     // Note that because the diagram is last, it is drawn on top of the other elements,
     // which is what we want.
-    this.setChildrenIdempotently(this, [this.kidContainer, this.diagram]);
+    this.setChildrenIdempotently(this.shadow, [
+      this.styling,
+      this.kidContainer,
+      this.diagram,
+    ]);
     this.setChildrenIdempotently(this.kidContainer, [
       this.diamargLeft,
       this.centerPanel,

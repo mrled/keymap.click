@@ -52,6 +52,20 @@ key-info-nav-bar {
   }
 }
 
+button.guide-bar-button {
+  padding: 0.25rem;
+  margin: 0.25rem;
+  border: 1px solid var(--button-border-color);
+  width: 3rem;
+  font-size: 0.75rem;
+  color: var(--button-text-disabled);
+}
+
+button.guide-bar-button-enabled {
+  color: var(--button-text-enabled);
+  background-color: var(--button-bg-enabled);
+}
+
 button.start-guided-tour-button {
   padding: 0.25rem;
   margin: 0 0.5rem;

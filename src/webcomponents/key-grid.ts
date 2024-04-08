@@ -107,8 +107,12 @@ export class KeyGrid extends HTMLElement {
 
     keyElement.onclick = () => {
       keyElement.dispatchEvent(
+        // TODO: Is there a better way to organize our code so that we don't have to do composed:true?
+        // We allow this to pass through shadow DOM boundaries because
+        // key-map-ui is the root and its descendents are in the shadow DOM.
         new CustomEvent("key-selected", {
-          bubbles: true,
+          bubbles: true, // Allow event to bubble up to parent elements
+          composed: true, // Allow event to pass through shadow DOM boundaries
           detail: key.id,
         })
       );

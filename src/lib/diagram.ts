@@ -5,28 +5,38 @@ import { Connection, KeyInfoConnectType } from "~/lib/keyConnections";
 
 /* Colors when drawing diagram lines
  */
-const diagramLineColors: { [key: string]: string } = (function () {
-  const rootStyle = getComputedStyle(document.documentElement);
-  return {
-    [KeyInfoConnectType.TextRef]: rootStyle.getPropertyValue(
-      "--diagram-line-textref-color"
-    ),
-    [KeyInfoConnectType.Selected]: rootStyle.getPropertyValue(
-      "--diagram-line-selected-color"
-    ),
-    debugCenterLine: rootStyle.getPropertyValue(
-      "--diagram-debug-center-line-color"
-    ),
-    debugKeyboard: rootStyle.getPropertyValue("--diagram-debug-keyboard-color"),
-    debugLeft: rootStyle.getPropertyValue("--diagram-debug-left-color"),
-    debugRight: rootStyle.getPropertyValue("--diagram-debug-right-color"),
-  };
-})();
+export class DiagramLineColors {
+  constructor(
+    public textref: string,
+    public selected: string,
+    public debugCenterLine: string,
+    public debugKeyboard: string,
+    public debugLeft: string,
+    public debugRight: string
+  ) {}
+
+  /* Get the diagram line colors from CSS variables in the context root
+   *
+   * The context root can be any element.
+   */
+  static fromContextRootVars(contextRoot: Element): DiagramLineColors {
+    const rootStyle = getComputedStyle(contextRoot);
+    return new DiagramLineColors(
+      rootStyle.getPropertyValue("--diagram-line-textref-color"),
+      rootStyle.getPropertyValue("--diagram-line-selected-color"),
+      rootStyle.getPropertyValue("--diagram-debug-center-line-color"),
+      rootStyle.getPropertyValue("--diagram-debug-keyboard-color"),
+      rootStyle.getPropertyValue("--diagram-debug-left-color"),
+      rootStyle.getPropertyValue("--diagram-debug-right-color")
+    );
+  }
+}
 
 /* Draw debugging lines for visual debugging mode
  */
 const drawVisualDebugInfo = (
   context: CanvasRenderingContext2D,
+  diagramLineColors: DiagramLineColors,
   keyboardCenter: number,
   keyboardAndPanelRect: DOMRect,
   diamargLeftRect: DOMRect,
@@ -109,6 +119,7 @@ const drawVisualDebugInfo = (
 const drawDiagramLineTextref = (
   context: CanvasRenderingContext2D,
   connection: Connection,
+  diagramLineColors: DiagramLineColors,
   keyboardCenter: number,
   leftDiagramYCoordinates: number[],
   rightDiagramYCoordinates: number[],
@@ -166,7 +177,8 @@ const drawDiagramLineTextref = (
  */
 const drawDiagramLineSelected = (
   context: CanvasRenderingContext2D,
-  connection: Connection
+  connection: Connection,
+  diagramLineColors: DiagramLineColors
   // keyInfoTop,
 ) => {
   const source = connection.sourceCoords;
@@ -211,6 +223,7 @@ export const drawDiagram = (
   diamargLeftRect: DOMRect,
   diamargRightRect: DOMRect,
   keyInfoContainerRect: DOMRect,
+  diagramLineColors: DiagramLineColors,
   debug: boolean
 ) => {
   const context = canvas.getContext("2d");
@@ -267,6 +280,7 @@ export const drawDiagram = (
   if (debug) {
     drawVisualDebugInfo(
       context,
+      diagramLineColors,
       keyboardCenter,
       keyboardAndPanelRect,
       diamargLeftRect,
@@ -291,6 +305,7 @@ export const drawDiagram = (
       drawDiagramLineTextref(
         context,
         connection,
+        diagramLineColors,
         keyboardCenter,
         leftDiagramYCoordinates,
         rightDiagramYCoordinates,
@@ -300,7 +315,7 @@ export const drawDiagram = (
         marginInsetTickSize
       );
     } else if (connection.connectionType == KeyInfoConnectType.Selected) {
-      drawDiagramLineSelected(context, connection);
+      drawDiagramLineSelected(context, connection, diagramLineColors);
     }
   });
 };

@@ -3,11 +3,11 @@
 // Styles specific to the website - not part of the webcomponents
 import "./website.style.css";
 
-// Ordered styles
-import "./src/styles/vars.css";
-import "./src/styles/index.css";
-// Alphabetical styles
-import "./src/styles/diagram.css";
-import "./src/styles/fonts.css";
-import "./src/styles/keygrid.css";
-import "./src/styles/keyInfoPanel.css";
+// // Ordered styles
+// import "./src/styles/vars.css";
+// import "./src/styles/root.css";
+// // Alphabetical styles
+// import "./src/styles/diagram.css";
+// // import "./src/styles/fonts.css";
+// import "./src/styles/keygrid.css";
+// import "./src/styles/keyInfoPanel.css";

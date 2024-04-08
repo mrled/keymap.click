@@ -1,10 +1,15 @@
 /* Variables used in other styles
  *
  * Print a list of all variables that aren't used outside of this file:
- *    grep -o -e "--[a-zA-Z0-9-]\+"  src/styles/vars.css | while read v; do if ! rg -g '!src/styles/vars.css' -q -- "$v" src; then echo $v; fi; done
+ *    grep -o -e "--[a-zA-Z0-9-]\+"  src/styles/vars.css | while read v; do if ! rg -g '!path/to/this/file.css' -q -- "$v" src; then echo $v; fi; done
  */
 
-:root {
+/* The :root is the top level of the light DOM, and the :host is the top level of the shadow DOM.
+ * Specify both to ensure that the variables are available in both places.
+ * TODO: if we deprecate light DOM support in the future, remove :root.
+ */
+:root,
+:host {
   /* Colors that apply to all buttons except keyboard keys
    */
   --button-border-color: #d1d5db;
@@ -33,6 +38,7 @@
   --key-active-focus-bg: #e8a34f;
   --key-related-active-focus-bg: #f0d7a9;
   --key-diagram-target-focus-bg: #a9e3ba;
+  --key-legend-font: monospace;
 
   /* Colors that apply to kbd elements
    */

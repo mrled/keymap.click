@@ -2,7 +2,7 @@
  */
 import { KeyMapUIState } from "~/lib/KeyMapUIState";
 import { IStateObserver } from "~/lib/State";
-import { drawDiagram } from "~/lib/diagram";
+import { DiagramLineColors, drawDiagram } from "~/lib/diagram";
 
 export class KeyMapUIDiagram
   extends HTMLElement
@@ -79,6 +79,7 @@ export class KeyMapUIDiagram
       this.diamargLeft!.getBoundingClientRect(),
       this.diamargRight!.getBoundingClientRect(),
       this.infoProse!.getBoundingClientRect(),
+      DiagramLineColors.fromContextRootVars(this),
       debug > 0
     );
   }

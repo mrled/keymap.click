@@ -16,3 +16,4 @@
     * Web components require a dash in their names, this might help with standard hyphenization for single words like keyboard
     * e.g. `<my-keyboard>` or `<kdc-keyboard>` or something
 * Rename web component classes to end in `Element`
+* Remove all per-element shadow DOMs from everything except KeyMapUI
