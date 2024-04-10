@@ -18,6 +18,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "allowImportingTsExtensions": true,
     "baseUrl": ".",
     "paths": {
       "~/*": [
@@ -28,6 +29,7 @@
   "include": [
     "**/*.js",
     "**/*.ts",
+    "**/*.cjs",
   ],
   "exclude": [
     "node_modules"

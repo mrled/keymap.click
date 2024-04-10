@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/cmd2.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple keymap.click test site</title>
+    <script>
+      // Automatically reload the page when the bundle is rebuilt.
+      // TODO: If we end up building the production website this way, turn this off in production.
+      // <https://esbuild.github.io/api/#live-reload>
+      new EventSource("/esbuild").addEventListener("change", () =>
+        location.reload()
+      );
+    </script>
+    <style>
+      :root {
+        font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+        line-height: 1.5;
+        font-weight: 400;
+
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      body {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 2rem;
+        text-align: center;
+      }
+      body.page {
+        margin: 4rem;
+      }
+      h1 {
+        margin-bottom: 2rem;
+      }
+      key-map-ui {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Simple keymap.click test site</h1>
+    <p>
+      This is a very simple test site for the web component. It uses support in
+      esbuild for bundling the JavaScript and CSS files, and serving a static
+      index.html file with a simple webserver. When called with
+      <code>npm run esbuild:dev</code>, it supports automatic rebuilding if any
+      of the source JavaScript or CSS files change, but note that changes to
+      this static HTML file do not trigger a rebuild.
+    </p>
+    <hr />
+    <div id="app"></div>
+    <hr />
+    <p>keymap.click UI should appear between the two HR elements above.</p>
+    <script type="module">
+      import { KeyMapTitleScreen, MicahErgodoxLayout } from "./keymap.click.js";
+      const app = document.getElementById("app");
+      const kmuiTitle = document.createElement("key-map-ui");
+      const availableKeymaps = [KeyMapTitleScreen, MicahErgodoxLayout];
+      kmuiTitle.setAttribute("id", "kmui-title");
+      kmuiTitle.setAttribute("show-debug", "true");
+      kmuiTitle.setAttribute("query-prefix", "kmui");
+      kmuiTitle.addKeymaps(availableKeymaps);
+      kmuiTitle.setAttribute("keyboard-element", "key-board-title-screen");
+      kmuiTitle.setAttribute("keymap-id", "blank");
+      app.appendChild(kmuiTitle);
+    </script>
+  </body>
+</html>

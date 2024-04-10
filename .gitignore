@@ -31,3 +31,5 @@ yarn-error.log*
 
 # other
 .vscode
+
+dist

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/cmd2.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Separate keymap.click test site</title>
+    <style>
+      :root {
+        font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+        line-height: 1.5;
+        font-weight: 400;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      body {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 2rem;
+        text-align: center;
+      }
+      body.page {
+        margin: 4rem;
+      }
+      h1 {
+        margin-bottom: 2rem;
+      }
+      key-map-ui {
+        border: 1px solid black;
+      }
+    </style>
+    <link rel="stylesheet" href="/keymap.click/index.css" />
+    <script type="module" src="/keymap.click/index.js"></script>
+  </head>
+  <body>
+    <h1>Separate keymap.click test site</h1>
+    <p>
+      This is a basic test site for the web component. It builds the web
+      component in release mode and serves it with a simple Node webserver. If
+      it works here, it should work on <em>anything</em> that can serve HTML,
+      CSS, and JavaScript. It is the very simplest possible case, and includes
+      no automatic reloading of any kind. Changes to any source files require
+      restarting this process. Therefore, iterative development should use a
+      different test site.
+    </p>
+    <hr />
+    <div id="app" />
+    <script type="module">
+      const kmui = document.createElement("key-map-ui");
+      kmui.setAttribute("id", "kmui-title");
+      kmui.setAttribute("show-debug", "true");
+      kmui.setAttribute("keyboard-element", "key-board-title-screen");
+      kmui.setAttribute("keymap-id", "title-screen-map");
+      document.getElementById("app").appendChild(kmui);
+    </script>
+    <hr />
+    <p>keymap.click UI should appear between the two HR elements above.</p>
+  </body>
+</html>

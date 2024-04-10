@@ -19,7 +19,8 @@ import { KeyBoardModel } from "~/lib/KeyboardModel";
 import { KeyMapUIControls } from "./key-map-ui-controls";
 
 // Import CSS files as inline strings.
-// TODO: when we switch to esbuild, we will have to change this to esbuild's synta for the same thing.
+// Vite supports the ?inline query parameter to load a file as a string;
+// esbuild doesn't require that parameter but does work if it's there.
 import varsStyleStr from "~/styles/vars.css?inline";
 import rootStyleStr from "~/styles/root.css?inline";
 import diagramStyleStr from "~/styles/diagram.css?inline";

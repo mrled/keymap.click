@@ -6,9 +6,12 @@
   "scripts": {
     "lint": "eslint",
     "lintall": "eslint .",
-    "website-dev": "vite",
-    "website-build": "vite build",
-    "website-preview": "vite preview"
+    "component:build": "rm -rf dist/webcomponent && esbuild --bundle --sourcemap --format=esm --global-name=KeymapDotClick --outdir=dist/webcomponent src/index.ts",
+    "testsite:separate": "(rm -rf dist/separate || true) && mkdir -p dist/separate && npm run component:build && cp -r dist/webcomponent dist/separate/keymap.click && cp sites/separate/index.html dist/separate/ && node scripts/nodeserver.cjs dist/separate",
+    "testsite:simple": "esbuild --bundle --watch --outfile=sites/simple/keymap.click.js --format=esm --sourcemap --loader:.css=text --servedir=sites/simple/ src/index.ts",
+    "website:dev": "vite",
+    "website:build": "vite build --outDir dist/keymap.click",
+    "website:preview": "vite preview"
   },
   "dependencies": {
     "fathom-client": "^3.0.0",
@@ -18,6 +21,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.28",
+    "esbuild": "^0.20.2",
     "eslint": "^7.9.0",
     "prettier": "2.1.1",
     "typescript": "^5.4.2"

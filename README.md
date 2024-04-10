@@ -39,13 +39,26 @@ and proper layer support.
 ## How it's built
 
 - Node and NPM
-- next.js and React
 
 Development mode:
 
 ```bash
 npm install
-npm run dev
+
+# Show the main https://keymap.click website
+npm run website:dev
+
+# Build https://keymap.click for production to dist/keymap.click
+npm run website:build
+
+# Build the webcomponent alone to dist/webcomponent that uses Vite and has excellent hot reloading support
+npm run component:build
+
+# Build and run the simple esbuild-only test site that uses esbuild for limited auto reloading (with some caveats)
+npm run testsite:simple
+
+# Build and run a very basic site that uses the web component the same way any user can use it with no auto reloading at all
+npm run testsite:separate
 ```
 
 I'm using `prettier` so I don't have to have a dumb code formatting opinion.
