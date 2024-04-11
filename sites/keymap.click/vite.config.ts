@@ -14,4 +14,9 @@ export default defineConfig({
     },
   },
   plugins: [tsconfigPaths()],
+  resolve: {
+    alias: {
+      "~": resolve(__dirname, "../../src"),
+    },
+  },
 });
