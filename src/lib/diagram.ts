@@ -262,8 +262,7 @@ export const drawDiagram = (
    * Now that the canvas is the size of the entire screen,
    * we can easily just draw lines connecting the bounding rectangles of the sources/targets.
    */
-  log.debug(`The lines object is a ${typeof connections}, and it logs as:`);
-  log.debug(connections);
+  // log.debug(`The lines object is a ${typeof connections}, and it logs as:`, connections);
   if (!connections) {
     log.debug("No connections to set");
     return;
