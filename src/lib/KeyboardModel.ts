@@ -45,7 +45,9 @@ export class KeyBoardModel {
   getPhysicalKey(id: string) {
     const key = this.physicalKeyMap[id];
     if (!key) {
-      throw new Error(`Physical key not found with id '${id}'`);
+      throw new Error(
+        `Physical key not found with id '${id}' on board '${this.keyboardElementName}'`
+      );
     }
     return key;
   }
