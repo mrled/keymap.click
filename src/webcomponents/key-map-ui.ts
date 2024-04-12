@@ -54,8 +54,10 @@ import keyInfoPanelStyleStr from "~/styles/keyInfoPanel.css?inline";
  *   and attributeChangedCallback() should only set the attribute and not call layOutIdempotently().
  *
  * Attributes:
- * debug                Show debug information on the diagram and in the console.
+ * show-debug           Show checkbox to display debug information on the diagram and in the console.
  * keyboard-element     The name of the custom element to use as the keyboard.
+ * keymap-id            The name of one of the passed-in keymaps to use.
+ * layer                The layer number to use.
  * selected-key         The id of the key that is selected.
  * query-prefix         A prefix for query parameters.
  *                      If set, the KeyMapUI will look for parameters in the URL query string with this prefix.
