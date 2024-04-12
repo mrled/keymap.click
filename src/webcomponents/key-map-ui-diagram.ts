@@ -1,6 +1,8 @@
 /* The diagram is the canvas where we draw lines to keys on the keyboard to draw user attention.
  */
-import { KeyMapUIState } from "~/lib/KeyMapUIState";
+import log from "loglevel";
+
+import { KeyMapUIState, KeyMapUIStateChangeMap } from "~/lib/KeyMapUIState";
 import { IStateObserver } from "~/lib/State";
 import { DiagramLineColors, drawDiagram } from "~/lib/diagram";
 
@@ -8,6 +10,7 @@ export class KeyMapUIDiagram
   extends HTMLElement
   implements IStateObserver<KeyMapUIState> {
   //
+
   centerPanel: HTMLElement | null = null;
   diamargLeft: HTMLElement | null = null;
   diamargRight: HTMLElement | null = null;
@@ -27,16 +30,11 @@ export class KeyMapUIDiagram
     super();
   }
 
-  update<T extends keyof KeyMapUIState>(
-    key: T,
-    oldValue: KeyMapUIState[T],
-    newValue: KeyMapUIState[T]
-  ) {
-    switch (key) {
-      case "connectionPairs":
-      case "debug":
-        this.draw();
-        break;
+  readonly observerName = "KeyMapUIDiagram";
+
+  update<KeyMapUIState>(stateChanges: KeyMapUIStateChangeMap) {
+    if (stateChanges.has("connectionPairs") || stateChanges.has("debug")) {
+      this.draw();
     }
   }
 

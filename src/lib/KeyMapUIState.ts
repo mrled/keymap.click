@@ -60,10 +60,11 @@
 
 import { KeyBoard } from "~/webcomponents/key-board";
 import { KeyBoardModel } from "./KeyboardModel";
-import { IStateObserver } from "./State";
+import { IStateObserver, StateChange, StateChangeMap } from "./State";
 import { ConnectionPair } from "./keyConnections";
 import { KeyMap, KeyMapGuide, KeyMapLayer } from "./keyMap";
-import { Key } from "readline";
+import { KeyMapTitleScreen } from "./keyMaps/KeyMapTitleScreen";
+import { KeyboardModelTitleScreen } from "~/webcomponents/key-board-title-screen";
 
 /* A map of uniqueID strings to KeyMap objects
  */
@@ -72,6 +73,14 @@ export type KeymapMap = Map<string, KeyMap>;
 /* A map of keyboard element names to KeyMapMap objects
  */
 export type KeyboardKeymapMapMap = Map<string, KeymapMap>;
+
+/* A non-generic state change
+ */
+export class KeyMapUIStateChange extends StateChange<KeyMapUIState> {}
+
+/* A non-generic map of key:KeyMapUIStateChange
+ */
+export class KeyMapUIStateChangeMap extends Map<string, KeyMapUIStateChange> {}
 
 /* An object representing the state of the entire KeyMapUI.
  *
@@ -135,15 +144,14 @@ export class KeyMapUIState {
     }
   }
 
-  /* Notify all observers of a change
+  /* Notify all observers of a set of changes
    */
-  notify(
-    changedKey: keyof KeyMapUIState,
-    oldValue: KeyMapUIStateValue | null,
-    newValue: KeyMapUIStateValue
-  ): void {
+  notify(stateChanges: StateChange<KeyMapUIState>[]): void {
+    const stateChangeMap = new KeyMapUIStateChangeMap(
+      stateChanges.map((change) => [change.key, change])
+    );
     for (const observer of this.observers) {
-      observer.update(changedKey, oldValue, newValue);
+      observer.update(stateChangeMap as StateChangeMap<KeyMapUIState>);
     }
   }
 
@@ -166,7 +174,7 @@ export class KeyMapUIState {
     if (this._debug === value) return;
     const oldValue = this._debug;
     this._debug = value;
-    this.notify("debug", oldValue, value);
+    this.notify([new StateChange("debug", oldValue, value)]);
   }
 
   /* If nonempty, any query parameters prefixed with this string will be used to set state
@@ -179,13 +187,16 @@ export class KeyMapUIState {
     if (this._queryPrefix === value) return;
     const oldValue = this._queryPrefix;
     this._queryPrefix = value;
-    this.notify("queryPrefix", oldValue, value);
+    this.notify([new StateChange("queryPrefix", oldValue, value)]);
   }
 
   /* All the keyboard models we know about
    */
-  private _kbModels: KeyBoardModel[] = [];
+  private _kbModels: KeyBoardModel[] | null = null;
   public get kbModels(): KeyBoardModel[] {
+    if (this._kbModels === null) {
+      this._kbModels = [KeyboardModelTitleScreen];
+    }
     return this._kbModels;
   }
   public set kbModels(value: KeyBoardModel[]) {
@@ -194,8 +205,10 @@ export class KeyMapUIState {
     this._kbModels = value;
     const oldKeymap = this._keymap;
     this._keymap = this.kbModel.blankKeyMap;
-    this.notify("kbModels", oldValue, value);
-    this.notify("keymap", oldKeymap, this._keymap);
+    this.notify([
+      new StateChange("kbModels", oldValue, value),
+      new StateChange("keymap", oldKeymap, this._keymap),
+    ]);
   }
 
   /* The current keyboard model
@@ -203,7 +216,7 @@ export class KeyMapUIState {
   private _kbModel: KeyBoardModel | null = null;
   public get kbModel(): KeyBoardModel {
     if (this._kbModel === null) {
-      this._kbModel = new KeyBoardModel("key-board-title-screen");
+      this._kbModel = this.kbModels[0];
     }
     return this._kbModel;
   }
@@ -211,6 +224,7 @@ export class KeyMapUIState {
     if (this._kbModel === value) return;
     const oldValue = this._kbModel;
     const oldKeymap = this._keymap;
+    const oldLayer = this._layer;
     const oldSelectedKey = this._selectedKey;
     this._kbModel = value;
     if (!this.kbModels.includes(value)) {
@@ -218,56 +232,67 @@ export class KeyMapUIState {
     }
 
     // When switching models, it doesn't make sense to keep the same key selected.
-    if (oldSelectedKey) {
-      this._selectedKey = "";
-      this.notify("selectedKey", oldSelectedKey, this.selectedKey);
-    }
+    this._selectedKey = "";
 
     // If we're switching models, we need to switch keymaps too.
     // Set the private backing keymap property here without notifying observers.
     // Find a non-blank keymap if possible, or fall back to the blank one.
-    if (oldKeymap) {
-      const nonBlankKeymap = Array.from(
-        this.keymaps.get(value.keyboardElementName)?.values() || []
-      ).filter((km) => km !== value.blankKeyMap)[0];
-      this._keymap = nonBlankKeymap ? nonBlankKeymap : value.blankKeyMap;
-    }
+    const nonBlankKeymap = Array.from(
+      this.keymaps.get(value.keyboardElementName)?.values() || []
+    ).filter((km) => km !== value.blankKeyMap)[0];
+    this._keymap = nonBlankKeymap ? nonBlankKeymap : value.blankKeyMap;
 
-    // Notify observers of the model change first.
-    // Observers that need to listen for BOTH kbModel and keymap should listen just to kbmodel,
-    // and query the current keymap from the state every time,
-    // which will work here because the private backing keymap property was set above.
-    // This feels kind of hacky, but it makes sense because the keymap is dependent on the model.
-    this.notify("kbModel", oldValue, value);
+    // If we're switching models, we need to switch layers too.
+    this._layer = this.keymap.layers[0];
 
-    // Now notify observers of the keymap change.
-    // Observers that only care about the keymap change can listen only to that.
-    if (oldKeymap) {
-      this.notify("keymap", oldKeymap, this.keymap);
+    const stateChanges = [
+      new KeyMapUIStateChange("kbModel", oldValue, value),
+      new KeyMapUIStateChange("keymap", oldKeymap, this._keymap),
+      new KeyMapUIStateChange("layer", oldLayer, this._layer),
+    ];
+    if (oldSelectedKey) {
+      stateChanges.push(
+        new KeyMapUIStateChange("selectedKey", oldSelectedKey, this.selectedKey)
+      );
     }
+    this.notify(stateChanges);
   }
 
   /* All keymaps that we know about
    */
-  private _keymaps: KeyboardKeymapMapMap = new Map();
+  private _keymaps: KeyboardKeymapMapMap | null = null;
   public get keymaps(): KeyboardKeymapMapMap {
+    // Initialize with the blank keymap and the title screen keymap for the title screen kbModel.
+    if (this._keymaps === null) {
+      this._keymaps = new Map();
+      this._keymaps.set(this.kbModel.keyboardElementName, new Map());
+      const boardMaps = this._keymaps.get(this.kbModel.keyboardElementName)!;
+      boardMaps.set(
+        this.kbModel.blankKeyMap.uniqueId,
+        this.kbModel.blankKeyMap
+      );
+      boardMaps.set(KeyMapTitleScreen.uniqueId, KeyMapTitleScreen);
+    }
     return this._keymaps;
   }
   public set keymaps(value: KeyboardKeymapMapMap) {
+    // This setter doesn't ensure that the title screen keymap is present.
     if (this._keymaps === value) return;
     const oldValue = this._keymaps;
     this._keymaps = value;
     // Add each model
+    const knownBoardModels = this.kbModels.map((m) => m.keyboardElementName);
     value.forEach((keymaps, kbName) => {
       keymaps.forEach((keymap, keymapId) => {
-        if (!this.kbModels.includes(keymap.model)) {
+        if (!knownBoardModels.includes(kbName)) {
           this.kbModels.push(keymap.model);
+          knownBoardModels.push(kbName);
         }
       });
     });
     // Add a blank keymap for each model
     this.#idempotentlyAddBlankKeyMap(this.kbModel.keyboardElementName);
-    this.notify("keymaps", oldValue, value);
+    this.notify([new KeyMapUIStateChange("keymaps", oldValue, value)]);
   }
 
   /* Just the keymaps for the current keyboard model
@@ -276,7 +301,6 @@ export class KeyMapUIState {
    * observers should listen for changes to the keymaps property instead.
    */
   public get boardMaps(): KeymapMap {
-    if (!this.kbModel.keyboardElementName) return new Map();
     return this.keymaps.get(this.kbModel.keyboardElementName) || new Map();
   }
 
@@ -293,12 +317,21 @@ export class KeyMapUIState {
     if (this._keymap === value) return;
     const oldValue = this._keymap;
     const oldSelectedKey = this._selectedKey;
+    const oldLayer = this._layer;
     this._keymap = value;
+    this._selectedKey = "";
+    this._layer = value.layers[0];
+
+    const changes = [
+      new KeyMapUIStateChange("keymap", oldValue, value),
+      new KeyMapUIStateChange("layer", oldLayer, this._layer),
+    ];
     if (oldSelectedKey) {
-      this.selectedKey = "";
-      this.notify("selectedKey", oldSelectedKey, this.selectedKey);
+      changes.push(
+        new KeyMapUIStateChange("selectedKey", oldSelectedKey, this.selectedKey)
+      );
     }
-    this.notify("keymap", oldValue, value);
+    this.notify(changes);
   }
 
   /* The ID of the current layer
@@ -315,11 +348,13 @@ export class KeyMapUIState {
     const oldValue = this._layer;
     const oldSelectedKey = this._selectedKey;
     this._layer = value;
+    const changes = [new KeyMapUIStateChange("layer", oldValue, this.layer)];
     if (oldSelectedKey) {
-      this._selectedKey = "";
-      this.notify("selectedKey", oldSelectedKey, "");
+      changes.push(
+        new KeyMapUIStateChange("selectedKey", oldSelectedKey, this.selectedKey)
+      );
     }
-    this.notify("layer", oldValue, value);
+    this.notify(changes);
   }
 
   /* The ID of the current guide, if any
@@ -333,11 +368,13 @@ export class KeyMapUIState {
     const oldValue = this._guide;
     const oldSelectedKey = this._selectedKey;
     this._guide = value;
+    const changes = [new KeyMapUIStateChange("guide", oldValue, this.layer)];
     if (oldSelectedKey) {
-      this.selectedKey = "";
-      this.notify("selectedKey", oldSelectedKey, this.selectedKey);
+      changes.push(
+        new KeyMapUIStateChange("selectedKey", oldSelectedKey, this.selectedKey)
+      );
     }
-    this.notify("guide", oldValue, value);
+    this.notify(changes);
   }
 
   /* The ID of the selected key
@@ -350,7 +387,8 @@ export class KeyMapUIState {
     if (this._selectedKey === value) return;
     const oldValue = this._selectedKey;
     this._selectedKey = value;
-    this.notify("selectedKey", oldValue, value);
+    this.notify([new KeyMapUIStateChange("selectedKey", oldValue, value)]);
+    // TODO: can we handle connectionPairs here too?
   }
 
   /* Connections to draw on the diagram
@@ -363,7 +401,7 @@ export class KeyMapUIState {
     if (this._connectionPairs === value) return;
     const oldValue = this._connectionPairs;
     this._connectionPairs = value;
-    this.notify("connectionPairs", oldValue, value);
+    this.notify([new KeyMapUIStateChange("connectionPairs", oldValue, value)]);
   }
 
   // #region Public helpers
@@ -444,5 +482,3 @@ export class KeyMapUIState {
 
   // #endregion
 }
-
-type KeyMapUIStateValue = KeyMapUIState[keyof KeyMapUIState];

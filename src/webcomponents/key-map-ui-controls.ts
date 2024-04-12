@@ -1,7 +1,6 @@
-import { KeyMapUIState, KeyboardKeymapMapMap } from "~/lib/KeyMapUIState";
-import { KeyBoardModel } from "~/lib/KeyboardModel";
+import log from "loglevel";
+import { KeyMapUIState, KeyMapUIStateChangeMap } from "~/lib/KeyMapUIState";
 import { IStateObserver } from "~/lib/State";
-import { KeyMap } from "~/lib/keyMap";
 
 enum SelectId {
   Debug = "debug",
@@ -64,28 +63,11 @@ export class KeyMapUIControls
   // #region Observed state
   //
 
-  update<T extends keyof KeyMapUIState>(
-    key: T,
-    oldValue: KeyMapUIState[T],
-    newValue: KeyMapUIState[T]
-  ) {
+  readonly observerName = "KeyMapUIControls";
+
+  update<KeyMapUIState>(stateChanges: KeyMapUIStateChangeMap) {
+    // TODO: make this more targeted
     this.updateAll();
-    switch (key) {
-      case "kbModels":
-      case "kbModel":
-        this.updateKbModelsSelector();
-        break;
-      case "keymaps":
-      case "keymap":
-        this.updateKeymapsSelector();
-        break;
-      case "layer":
-        this.updateLayersSelector();
-        break;
-      case "guide":
-        this.updateGuidesSelector();
-        break;
-    }
   }
 
   private updateAll() {
