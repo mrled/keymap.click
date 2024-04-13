@@ -65,18 +65,59 @@ export class KeyMapUIControls
 
   readonly observerName = "KeyMapUIControls";
 
+  /* Update the controls when the state changes.
+   *
+   * We want to update if either the *available* keyboards/keymaps/layers/guides change,
+   * so that we can change the options in the dropdowns,
+   * or if the *selected* ones change, so that we can show the currently selected option.
+   *
+   * Each of these user input elements has a way to check for both changes.
+   * For changes to the available keyboards and keymaps,
+   * there is a dedicated property containing all available items.
+   * For changes to the layers and guides,
+   * we watch for changes to the selected keymap.
+   *
+   *  ============|===================|=================
+   *    controls  |  available items  |  selected item
+   *  ============|===================|=================
+   *   keyboards  |     kbModels      |    kbModel
+   *   keymaps    |     keymaps       |    keymap
+   *   layers     |     keymap        |    layer
+   *   guides     |     keymap        |    guide
+   *  ============|===================|=================
+   *
+   * Keep in mind which state automatically updates other state --
+   * for instance, changes to the selected keyboard will automatically
+   * update the selected keymap, which will update the selected layer and guide.
+   */
   update<KeyMapUIState>(stateChanges: KeyMapUIStateChangeMap) {
-    // TODO: make this more targeted
-    this.updateAll();
+    if (stateChanges.get("debug")) {
+      this.updateDebugSelector();
+    }
+    if (stateChanges.get("kbModels") || stateChanges.get("kbModel")) {
+      this.updateKbModelsSelector();
+    }
+    if (stateChanges.get("keymaps") || stateChanges.get("keymap")) {
+      this.updateKeymapsSelector();
+    }
+    if (stateChanges.get("keymap") || stateChanges.get("layer")) {
+      this.updateLayersSelector();
+    }
+    if (stateChanges.get("keymap") || stateChanges.get("guide")) {
+      this.updateGuidesSelector();
+    }
   }
 
   private updateAll() {
+    this.updateDebugSelector();
     this.updateKbModelsSelector();
     this.updateKeymapsSelector();
     this.updateLayersSelector();
     this.updateGuidesSelector();
   }
 
+  /* Called when the user selects a keyboard from the dropdown
+   */
   private chooseKbModel: ChangeListenerFunction = (e, id, result) => {
     const newModel = this.state.kbModels.find(
       (model) => model.keyboardElementName === result.value
@@ -86,6 +127,8 @@ export class KeyMapUIControls
     }
   };
 
+  /* Called when the user selects a keymap from the dropdown
+   */
   private chooseKeymap: ChangeListenerFunction = (e, id, result) => {
     const newKeymap = this.state.keymaps
       .get(this.state.kbModel.keyboardElementName)
@@ -95,14 +138,34 @@ export class KeyMapUIControls
     }
   };
 
+  /* Called when the user selects a layer from the dropdown
+   */
   private chooseLayer: ChangeListenerFunction = (e, id, result) => {
     this.state.layer = this.state.keymap.layers[parseInt(result.value)];
   };
 
+  /* Called when the user selects a guide from the dropdown
+   */
   private chooseGuide: ChangeListenerFunction = (e, id, result) => {
     this.state.setGuideById(result.value);
   };
 
+  /* Update the debug checkbox.
+   * Called when the debug state changes.
+   */
+  private updateDebugSelector() {
+    const debugCheckbox = this.shadow.querySelector(
+      `#${SelectId.Debug}`
+    ) as HTMLInputElement;
+    if (!debugCheckbox) {
+      return;
+    }
+    debugCheckbox.checked = this.state.debug === 1;
+  }
+
+  /* Update the keyboard selection dropdown.
+   * Called when the list of available keyboards changes or the selected board changes.
+   */
   private updateKbModelsSelector() {
     const options = this.state.kbModels.map((model) => {
       const option = document.createElement("option") as HTMLOptionElement;
@@ -120,6 +183,9 @@ export class KeyMapUIControls
     this.updateKeymapsSelector();
   }
 
+  /* Update the keymap selection dropdown.
+   * Called when the list of available keymaps changes or the selected keymap changes.
+   */
   private updateKeymapsSelector() {
     const boardMaps = this.state.boardMaps;
     const options = Array.from(boardMaps).map(([keymapId, keymap]) => {
@@ -137,6 +203,9 @@ export class KeyMapUIControls
     );
   }
 
+  /* Update the layer selection dropdown.
+   * Called when the list of available layers changes or the selected layer changes.
+   */
   private updateLayersSelector() {
     const options = this.state.keymap.layers.map((layer, idx) => {
       const option = document.createElement("option") as HTMLOptionElement;
@@ -154,6 +223,9 @@ export class KeyMapUIControls
     );
   }
 
+  /* Update the guide selection dropdown.
+   * Called when the list of available guides changes or the selected guide changes.
+   */
   private updateGuidesSelector() {
     const noGuideSelectedOption = document.createElement("option");
     noGuideSelectedOption.value = "";
@@ -182,7 +254,9 @@ export class KeyMapUIControls
   // #region Child elements and styling
   //
 
-  get styleElement() {
+  /* Style HTMLElement
+   */
+  get styleElement(): HTMLStyleElement {
     let result = this.shadow.querySelector("style");
     if (!result) {
       result = document.createElement("style");
@@ -200,7 +274,7 @@ export class KeyMapUIControls
     return result;
   }
 
-  /* Debug checkbox
+  /* Debug pair (checkbox and label)
    */
   get debugPair(): HTMLSpanElement {
     const checkbox = document.createElement("input");
@@ -298,6 +372,8 @@ export class KeyMapUIControls
     return result;
   }
 
+  /* Lay out the child elements.
+   */
   private layoutIdempmotently() {
     while (this.shadow.firstChild) {
       this.shadow.removeChild(this.shadow.firstChild);
