@@ -82,6 +82,18 @@ export class KeyMapUIStateChange extends StateChange<KeyMapUIState> {}
  */
 export class KeyMapUIStateChangeMap extends Map<string, KeyMapUIStateChange> {}
 
+/* Arguments that can be passed to setMultiStateByIdsInSingleTransaction
+ */
+export interface IKeyMapUIStateIdArgs {
+  debug?: number;
+  queryPrefix?: string;
+  keyboardElementName?: string;
+  keymapId?: string;
+  layerIdx?: number;
+  guideId?: string;
+  selectedKey?: string;
+}
+
 /* An object representing the state of the entire KeyMapUI.
  *
  * A single source of truth for the UI state of the keymap.
@@ -409,57 +421,177 @@ export class KeyMapUIState {
 
   // #region Public helpers
 
-  /* Set keyboard model by element name
+  /* Set state all at once by identifiers, perhaps from a query string.
+   *
+   * Trigger a single update for all changes.
+   * Handle any effects of one change on another.
    */
-  setModelByElementName(elementName: string) {
-    const model = this.kbModels.find(
-      (m) => m.keyboardElementName === elementName
-    );
-    if (!model) {
-      console.error(`No model found for element name: ${elementName}`);
-      return;
-    }
-    this.kbModel = model!;
-  }
+  setMultiStateByIdsInSingleTransaction({
+    debug,
+    queryPrefix,
+    keyboardElementName,
+    keymapId,
+    layerIdx,
+    guideId,
+    selectedKey,
+  }: IKeyMapUIStateIdArgs) {
+    //
 
-  /* Set keymap by its unique ID
-   */
-  setKeyMapById(uniqueId: string) {
-    const keymap = Array.from(this.boardMaps.values()).find(
-      (km) => km.uniqueId === uniqueId
-    );
-    if (!keymap) {
-      console.error(`No keymap found for unique ID: ${uniqueId}`);
-      return;
-    }
-    this.keymap = keymap;
-  }
+    // Validate the new state properties.
+    // Don't make changes to the state yet.
 
-  /* Set keyboard layer by its index
-   */
-  setLayerByIndex(index: number) {
-    if (index < 0 || index >= this.keymap.layers.length) {
-      console.error(`Invalid layer index: ${index}`);
-      return;
-    }
-    const layer = this.keymap.layers[index];
-    this.layer = layer;
-  }
-
-  /* Set the guide by its id
-   */
-  setGuideById(id: string) {
-    if (!id) {
-      this.guide = null;
-      return;
-    } else {
-      const guide = this.keymap.guides.find((g) => g.id === id);
-      if (!guide) {
-        console.error(`No guide found for id: ${id}`);
+    if (debug !== undefined) {
+      if (debug < 0 || debug > 1) {
+        console.error(`Invalid debug level: ${debug}`);
         return;
       }
-      this.guide = guide;
     }
+
+    const specifiedKbModel = keyboardElementName !== undefined;
+    const oldKbModel = this.kbModel;
+    let newKbModel: KeyBoardModel | undefined = undefined;
+    if (specifiedKbModel) {
+      newKbModel = this.kbModels.find(
+        (m) => m.keyboardElementName === keyboardElementName
+      );
+      if (!newKbModel) {
+        console.error(
+          `No model found for element name: ${keyboardElementName}`
+        );
+        return;
+      }
+    } else {
+      // If a keyboard wasn't specified, the keyboard will not change.
+      newKbModel = this.kbModel;
+    }
+    const changedKbModel = newKbModel !== oldKbModel;
+
+    const specifiedKeymap = keymapId !== undefined;
+    const oldKeymap = this.keymap;
+    let newKeymap: KeyMap | undefined = undefined;
+    if (specifiedKeymap) {
+      newKeymap = Array.from(this.boardMaps.values()).find(
+        (km) => km.uniqueId === keymapId
+      );
+      if (!newKeymap) {
+        console.error(`No keymap found for unique ID: ${keymapId}`);
+        return;
+      }
+    } else if (changedKbModel) {
+      // If we don't specify a keymap by ID, but the keyboard changed,
+      // use the best default map we can find for that keyboard.
+      newKeymap = this.#getNonBlankKeyMapIfPossible(
+        newKbModel.keyboardElementName
+      );
+    } else {
+      // If a keymap or keyboard were not specified, the keymap will not change.
+      newKeymap = this.keymap;
+    }
+    const changedKeymap = newKeymap !== oldKeymap;
+
+    const specifiedLayer = layerIdx !== undefined;
+    const oldLayer = this.layer;
+    let newLayer: KeyMapLayer | undefined = undefined;
+    if (specifiedLayer) {
+      if (layerIdx < 0 || layerIdx >= newKeymap.layers.length) {
+        console.error(`Invalid layer index: ${layerIdx}`);
+        return;
+      }
+      newLayer = newKeymap.layers[layerIdx];
+    } else if (changedKeymap) {
+      // If we don't specify a layer by index, but the keymap changed,
+      // use the first layer of the new keymap.
+      newLayer = newKeymap.layers[0];
+    } else {
+      // If a layer, keymap, or keyboard were not specified, the layer will not change.
+      newLayer = this.layer;
+    }
+    const changedLayer = newLayer !== oldLayer;
+
+    const specifiedGuide = guideId !== undefined;
+    const oldGuide = this.guide;
+    let newGuide: KeyMapGuide | undefined | null = undefined;
+    if (specifiedGuide) {
+      // A null guide is valid as-is, and means no guide is selected;
+      // a non-null guide ID must be validated.
+      if (guideId === "") {
+        newGuide = null;
+      } else {
+        newGuide = this.keymap.guides.find((g) => g.id === guideId);
+        if (!newGuide) {
+          console.error(`No guide found for id: ${guideId} on keymap `);
+          return;
+        }
+      }
+    } else if (changedKeymap) {
+      // If we don't specify a guide by ID, but the keymap changed,
+      // do not enter guide mode.
+      newGuide = null;
+    } else {
+      // If a guide, keymap, or keyboard were not specified, the guide will not change.
+      newGuide = this.guide;
+    }
+    const changedGuide = newGuide !== oldGuide;
+
+    const specifiedSelectedKey = selectedKey !== undefined;
+    const oldSelectedKey = this.selectedKey;
+    let newSelectedKeyId: string = "";
+    if (specifiedSelectedKey) {
+      newSelectedKeyId = selectedKey as string;
+    } else if (changedKeymap || changedLayer || changedGuide) {
+      // If we don't specify a key by ID,
+      // but did specify any argument that implies different key functionality,
+      // unselect the key.
+      newSelectedKeyId = "";
+    } else {
+      // Otherwise, the selected key will not change.
+      newSelectedKeyId = this.selectedKey;
+    }
+    const changedSelectedKey = newSelectedKeyId !== oldSelectedKey;
+
+    // Now that input is validated, make changes to the state
+    const changes: KeyMapUIStateChange[] = [];
+
+    if (debug !== undefined) {
+      changes.push(new KeyMapUIStateChange("debug", this.debug, debug));
+      this._debug = debug;
+    }
+
+    if (queryPrefix !== undefined) {
+      changes.push(
+        new KeyMapUIStateChange("queryPrefix", this.queryPrefix, queryPrefix)
+      );
+      this._queryPrefix = queryPrefix;
+    }
+
+    if (changedKbModel) {
+      changes.push(new KeyMapUIStateChange("kbModel", oldKbModel, newKbModel));
+      this._kbModel = newKbModel;
+    }
+
+    if (changedKeymap) {
+      changes.push(new KeyMapUIStateChange("keymap", oldKeymap, newKeymap));
+      this._keymap = newKeymap;
+    }
+
+    if (changedLayer) {
+      changes.push(new KeyMapUIStateChange("layer", oldLayer, newLayer));
+      this._layer = newLayer;
+    }
+
+    if (changedGuide) {
+      changes.push(new KeyMapUIStateChange("guide", oldGuide, newGuide));
+      this._guide = newGuide;
+    }
+
+    if (changedSelectedKey) {
+      changes.push(
+        new KeyMapUIStateChange("selectedKey", oldSelectedKey, newSelectedKeyId)
+      );
+      this._selectedKey = newSelectedKeyId;
+    }
+
+    this.notify(changes);
   }
 
   // #endregion
@@ -481,6 +613,24 @@ export class KeyMapUIState {
     const boardKeyMaps = this.keymaps.get(kbName)!;
     const blankKeyMap = tmpInstance.model.blankKeyMap;
     boardKeyMaps.set(blankKeyMap.uniqueId, blankKeyMap);
+  }
+
+  /* If there is a non-blank keymap for a keyboard model, return it.
+   * Otherwise, return the blank keymap.
+   * The keyboard model must exist in kbModels.
+   */
+  #getNonBlankKeyMapIfPossible(keyboardElementName: string): KeyMap {
+    const model = this.kbModels.find(
+      (m) => m.keyboardElementName === keyboardElementName
+    );
+    if (!model) {
+      throw new Error(`Unknown keyboard element name: ${keyboardElementName}`);
+    }
+    const boardMaps = this.keymaps.get(model.keyboardElementName)!;
+    const nonBlankKeyMap = Array.from(boardMaps.values()).find(
+      (km) => km !== model.blankKeyMap
+    );
+    return nonBlankKeyMap || model.blankKeyMap;
   }
 
   // #endregion

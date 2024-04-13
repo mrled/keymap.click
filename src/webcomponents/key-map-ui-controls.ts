@@ -119,35 +119,31 @@ export class KeyMapUIControls
   /* Called when the user selects a keyboard from the dropdown
    */
   private chooseKbModel: ChangeListenerFunction = (e, id, result) => {
-    const newModel = this.state.kbModels.find(
-      (model) => model.keyboardElementName === result.value
-    );
-    if (newModel) {
-      this.state.kbModel = newModel;
-    }
+    this.state.setMultiStateByIdsInSingleTransaction({
+      keyboardElementName: result.value,
+    });
   };
 
   /* Called when the user selects a keymap from the dropdown
    */
   private chooseKeymap: ChangeListenerFunction = (e, id, result) => {
-    const newKeymap = this.state.keymaps
-      .get(this.state.kbModel.keyboardElementName)
-      ?.get(result.value);
-    if (newKeymap) {
-      this.state.keymap = newKeymap;
-    }
+    this.state.setMultiStateByIdsInSingleTransaction({
+      keymapId: result.value,
+    });
   };
 
   /* Called when the user selects a layer from the dropdown
    */
   private chooseLayer: ChangeListenerFunction = (e, id, result) => {
-    this.state.layer = this.state.keymap.layers[parseInt(result.value)];
+    this.state.setMultiStateByIdsInSingleTransaction({
+      layerIdx: parseInt(result.value),
+    });
   };
 
   /* Called when the user selects a guide from the dropdown
    */
   private chooseGuide: ChangeListenerFunction = (e, id, result) => {
-    this.state.setGuideById(result.value);
+    this.state.setMultiStateByIdsInSingleTransaction({ guideId: result.value });
   };
 
   /* Update the debug checkbox.

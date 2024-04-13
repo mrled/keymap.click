@@ -2,7 +2,7 @@
  */
 
 import { KeyMapUI } from "~/webcomponents/key-map-ui";
-import { KeyMapUIState } from "./KeyMapUIState";
+import { IKeyMapUIStateIdArgs, KeyMapUIState } from "./KeyMapUIState";
 
 // TODO: support guide and guide step parameters
 
@@ -21,10 +21,13 @@ export function setStateFromQueryString(state: KeyMapUIState) {
   const qLayer = currentParams.get(`${queryPrefix}-layer`);
   const qKey = currentParams.get(`${queryPrefix}-key`);
 
-  if (qBoard) state.setModelByElementName(qBoard);
-  if (qMap) state.setKeyMapById(qMap);
-  if (qLayer) state.setLayerByIndex(parseInt(qLayer, 10) || 0);
-  if (qKey) state.selectedKey = qKey;
+  const newStateArgs: IKeyMapUIStateIdArgs = {};
+  if (qBoard) newStateArgs.keyboardElementName = qBoard;
+  if (qMap) newStateArgs.keymapId = qMap;
+  if (qLayer) newStateArgs.layerIdx = parseInt(qLayer, 10);
+  if (qKey) newStateArgs.selectedKey = qKey;
+
+  state.setMultiStateByIdsInSingleTransaction(newStateArgs);
 }
 
 /* Set the query string based on the current state.
