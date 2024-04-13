@@ -205,10 +205,13 @@ export class KeyMapUIState {
     this._kbModels = value;
     const oldKeymap = this._keymap;
     this._keymap = this.kbModel.blankKeyMap;
-    this.notify([
-      new StateChange("kbModels", oldValue, value),
-      new StateChange("keymap", oldKeymap, this._keymap),
-    ]);
+    const stateChanges = [new KeyMapUIStateChange("kbModels", oldValue, value)];
+    if (oldKeymap !== this._keymap) {
+      stateChanges.push(
+        new KeyMapUIStateChange("keymap", oldKeymap, this._keymap)
+      );
+    }
+    this.notify(stateChanges);
   }
 
   /* The current keyboard model
