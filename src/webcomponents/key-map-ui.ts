@@ -17,7 +17,7 @@ import {
 import { IStateObserver } from "~/lib/State";
 import {
   setQueryStringFromState,
-  setStateFromQueryString,
+  setStateFromQsAndAttrib,
 } from "~/lib/QueryStringState";
 import { KeyBoardModel } from "~/lib/KeyboardModel";
 import { KeyMapUIControls } from "./key-map-ui-controls";
@@ -169,43 +169,27 @@ export class KeyMapUI
    * Run whether the element is created from HTML or from JavaScript.
    */
   connectedCallback() {
-    setStateFromQueryString(this.state);
-    this.#logCurrentStateAndQueryString("connectedCallback(): Top");
-    // Set debugging stuff first, which does not rely on query parameters
+    this.state.logState({
+      forceLog: true,
+      kmui: this,
+      messagePrefix: "connectedCallback(): Top",
+    });
+
+    // The show-debug attribute doesn't set debug level in the state,
+    // just whether the debug checkbox is shown.
+    // It's not part of the query string stuff.
     const showDebug = this.getAttribute("show-debug") || "false";
     this.attributeChangedCallback("show-debug", "", showDebug);
 
-    // Then read the keyboard, keymap, layer, and selected key.
-    // Unless overridden by the query parameters, these will be set to the attributes on the element.
-    const keyboardElement = this.getAttribute("keyboard-element") || "";
-    this.attributeChangedCallback("keyboard-element", "", keyboardElement);
-    this.#logCurrentStateAndQueryString(
-      "connectedCallback(): Just set keyboard element"
-    );
-
-    const keyMapName = this.getAttribute("keymap-id") || "";
-    this.attributeChangedCallback("keymap-id", "", keyMapName);
-    this.#logCurrentStateAndQueryString(
-      "connectedCallback(): Just set keymap id"
-    );
-
-    const layer = this.getAttribute("layer") || "0";
-    this.attributeChangedCallback("layer", "", layer);
-    this.#logCurrentStateAndQueryString("connectedCallback(): Just set layer");
-
-    const selectedKey = this.getAttribute("selected-key") || "";
-    this.attributeChangedCallback("selected-key", "", selectedKey);
-    this.#logCurrentStateAndQueryString(
-      "connectedCallback(): Just set selected key"
-    );
-
-    // Then set the query prefix, which determines which query parameters we read.
+    // Set the query prefix, which determines which query parameters we read.
     // Its attributeChangedCallback will read the query string and update the state.
     const queryPrefix = this.getAttribute("query-prefix") || "";
     this.attributeChangedCallback("query-prefix", "", queryPrefix);
-    this.#logCurrentStateAndQueryString(
-      "connectedCallback(): Just set query prefix"
-    );
+    // Now set the state from the query string, using keys that begin with the query prefix.
+    const qsChanges = setStateFromQsAndAttrib({
+      state: this.state,
+      kmui: this,
+    });
 
     this.layOutIdempotently();
 
@@ -246,13 +230,22 @@ export class KeyMapUI
         this.controls.setAttribute("show-debug", newValue);
         break;
       case "keyboard-element":
-        this.#updateKeyboardElementName(newValue);
+        // this.#updateKeyboardElementName(newValue);
+        this.state.setMultiStateByIdsInSingleTransaction({
+          keyboardElementName: newValue,
+        });
         break;
       case "keymap-id":
-        this.#updateKeyMapId(newValue);
+        // this.#updateKeyMapId(newValue);
+        this.state.setMultiStateByIdsInSingleTransaction({
+          keymapId: newValue,
+        });
         break;
       case "layer":
-        this.#updateLayerIdx(parseInt(newValue, 10) || 0);
+        // this.#updateLayerIdx(parseInt(newValue, 10) || 0);
+        this.state.setMultiStateByIdsInSingleTransaction({
+          layerIdx: parseInt(newValue, 10) || 0,
+        });
         break;
       case "selected-key":
         this.state.selectedKey = newValue;
@@ -264,6 +257,8 @@ export class KeyMapUI
         console.error(`KeyMapUI: Unhandled attribute: ${name}`);
         break;
     }
+
+    // setQueryStringFromState(this.state, this);
   }
 
   // #endregion
@@ -503,54 +498,6 @@ export class KeyMapUI
 
   // #endregion
 
-  // #region Handle attribute changes
-
-  #updateKeyboardElementName(value: string) {
-    if (!customElements.get(value)) {
-      throw new Error(
-        `KeyMapUI: Keyboard element "${value}" not found - has it been defined with customElements.define(), or if using a library, imported and registered?`
-      );
-    }
-    const newModel = this.state.kbModels.find(
-      (model) => model.keyboardElementName === value
-    );
-    if (!newModel) {
-      throw new Error(
-        `KeyMapUI: Keyboard model "${value}" not found in available models`
-      );
-    }
-    this.state.kbModel = newModel;
-    setQueryStringFromState(this.state, this);
-  }
-
-  /* Update the keymap ID
-   */
-  #updateKeyMapId(value: string) {
-    const newMap = this.state.boardMaps.get(value);
-    if (!newMap) {
-      console.error(
-        `KeyMapUI: Key map "${value}" for board "${this.state.kbModel.keyboardElementName} not found in available key maps`
-      );
-      return;
-    }
-    this.state.keymap = newMap;
-  }
-
-  /* Update the layer index
-   */
-  #updateLayerIdx(value: number) {
-    const newLayer = this.state.keymap.layers[value];
-    if (!newLayer) {
-      console.error(
-        `KeyMapUI: Layer ${value} not found in key map '${this.state.keymap.uniqueId}'`
-      );
-      return;
-    }
-    this.state.layer = newLayer;
-  }
-
-  // #endregion
-
   //
   // #region Handle state changes
   //
@@ -561,7 +508,6 @@ export class KeyMapUI
     if (!this.isConnected) {
       return;
     }
-    setQueryStringFromState(this.state, this);
     if (stateChanges.has("debug")) {
       log.setLevel(
         stateChanges.get("debug") ? log.levels.DEBUG : log.levels.INFO
@@ -587,6 +533,8 @@ export class KeyMapUI
     if (stateChanges.has("selectedKey")) {
       this.#updateSelectedKeyState(stateChanges.get("selectedKey")!);
     }
+
+    setQueryStringFromState(this.state, this);
   }
 
   #updateKbModelState(change: KeyMapUIStateChange) {
@@ -712,17 +660,17 @@ export class KeyMapUI
 
     // This causes the diagram to redraw
     this.state.connectionPairs = connectionPairs;
-
-    setQueryStringFromState(this.state, this);
   }
 
   /* Update the query prefix and any query parameters that use it.
    */
   #updateQueryPrefix(change: KeyMapUIStateChange) {
-    this.#logCurrentStateAndQueryString(`#updateQueryPrefix() Top`);
-    this.#logCurrentStateAndQueryString(
-      `#updateQueryPrefix() One Down From Top`
-    );
+    this.state.logState({
+      forceLog: true,
+      kmui: this,
+      messagePrefix: "#updateQueryPrefix() Top",
+    });
+
     if (change.oldValue) {
       // Remove all old query parameters with the old prefix
       const [params, newQs] = KeyMapUIOptions.parseQueryString(
@@ -733,14 +681,21 @@ export class KeyMapUI
         ? `${window.location.pathname}?${newQs.toString()}`
         : `${window.location.pathname}`;
       window.history.replaceState({}, "", newUrl);
-      this.#logCurrentStateAndQueryString(
-        `#updateQueryPrefix() After modifying the old parameters`
-      );
+      this.state.logState({
+        forceLog: true,
+        kmui: this,
+        messagePrefix:
+          "#updateQueryPrefix() After modifying the old parameters",
+      });
     } else {
-      this.#logCurrentStateAndQueryString(
-        `#updateQueryPrefix() No old query prefix`
-      );
+      this.state.logState({
+        forceLog: true,
+        kmui: this,
+        messagePrefix: "#updateQueryPrefix() No old query prefix",
+      });
     }
+
+    setStateFromQsAndAttrib({ state: this.state });
   }
 
   // #endregion
@@ -816,51 +771,6 @@ export class KeyMapUI
     const keyId = e.detail;
     // TODO: should we have the key set the state directly instead of doing it here?
     this.state.selectedKey = keyId;
-  }
-
-  /* A helper function to show the current state and query string
-   *
-   * Reads the id attribute and prefixes its output with it, if it exists,
-   * which can help to identify which element is logging.
-   */
-  #logCurrentStateAndQueryString(logPrefix: string) {
-    if (this.state.debug === 0) {
-      return;
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    const qPfx = this.state.queryPrefix;
-
-    const logTable = {
-      state: {
-        prefix: qPfx,
-        board: this.state.kbModel.keyboardElementName,
-        map: this.state.keymap.uniqueId,
-        layer: this.state.layer,
-        key: this.state.selectedKey,
-      },
-      attribute: {
-        prefix: this.getAttribute("query-prefix") || "",
-        board: this.getAttribute("keyboard-element") || "",
-        map: this.getAttribute("keymap-id") || "",
-        layer: parseInt(this.getAttribute("layer") || "0", 10),
-        key: this.getAttribute("selected-key") || "",
-      },
-      queryString: {
-        prefix: "N/A",
-        board: qPfx ? params.get(`${qPfx}-board`) : "",
-        map: qPfx ? params.get(`${qPfx}-map`) : "",
-        layer: qPfx ? params.get(`${qPfx}-layer`) : "",
-        key: qPfx ? params.get(`${qPfx}-key`) : "",
-      },
-    };
-
-    const kmuiId = this.getAttribute("id") ? "#" + this.getAttribute("id") : "";
-
-    console.log(
-      `KeyMapUI${kmuiId}: ${logPrefix}: current raw query string: ${window.location.search}, current state:`
-    );
-    console.table(logTable);
   }
 
   // #endregion

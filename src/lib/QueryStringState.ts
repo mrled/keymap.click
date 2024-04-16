@@ -7,27 +7,90 @@ import { IKeyMapUIStateIdArgs, KeyMapUIState } from "./KeyMapUIState";
 // TODO: support guide and guide step parameters
 
 /* Read the query string and update the state of the KeyMapUI.
+ *
+ * Arguments:
+ * - state: the KeyMapUIState object
+ * - kmui: the KeyMapUI object, which is used to get the current attribute values
  */
-export function setStateFromQueryString(state: KeyMapUIState) {
-  const queryPrefix = state.queryPrefix;
+export function setStateFromQsAndAttrib({
+  state,
+  kmui,
+}: {
+  state: KeyMapUIState;
+  kmui?: KeyMapUI;
+}): (keyof KeyMapUIState)[] {
+  // If the query prefi is already set in the state, use it as a default value.
+  // That should not be the case if kmui is passed (see below), though we don't enforce that.
+  let queryPrefix = state.queryPrefix;
 
-  if (!queryPrefix) {
-    return;
+  // If the kmui is passed, we are setting the state on initial load.
+  // The kmui will pass itself to this function in its connectedCallback() only,
+  // so that this function can configure the state based on its attributes and query string.
+  // This will change the state to reflect what's in the attributes,
+  // and then override those attributes if the query string has different values.
+  // We don't want to pass the kmui parameter in any other situation,
+  // because normally we don't want to override the state with the attributes.
+  const currentAttributes: IKeyMapUIStateIdArgs = {};
+  if (kmui) {
+    if (kmui.hasAttribute("query-prefix")) {
+      queryPrefix = kmui.getAttribute("query-prefix") || "";
+      currentAttributes.queryPrefix = queryPrefix;
+    }
+    if (kmui.hasAttribute("keyboard-element")) {
+      currentAttributes.keyboardElementName =
+        kmui.getAttribute("keyboard-element") || "";
+    }
+    if (kmui.hasAttribute("keymap-id")) {
+      currentAttributes.keymapId = kmui.getAttribute("keymap-id") || "";
+    }
+    if (kmui.hasAttribute("layer")) {
+      currentAttributes.layerIdx = parseInt(
+        kmui.getAttribute("layer") || "0",
+        10
+      );
+    }
+    if (kmui.hasAttribute("selected-key")) {
+      currentAttributes.selectedKey = kmui.getAttribute("selected-key") || "";
+    }
   }
-  const currentParams = new URLSearchParams(window.location.search);
 
-  const qBoard = currentParams.get(`${queryPrefix}-board`);
-  const qMap = currentParams.get(`${queryPrefix}-map`);
-  const qLayer = currentParams.get(`${queryPrefix}-layer`);
-  const qKey = currentParams.get(`${queryPrefix}-key`);
+  const qsArgs: IKeyMapUIStateIdArgs = {};
+  if (queryPrefix) {
+    const currentParams = new URLSearchParams(window.location.search);
+    const qDebug = currentParams.get("debug");
+    const qBoard = currentParams.get(`${queryPrefix}-board`);
+    const qMap = currentParams.get(`${queryPrefix}-map`);
+    const qLayer = currentParams.get(`${queryPrefix}-layer`);
+    const qKey = currentParams.get(`${queryPrefix}-key`);
+    if (qDebug) {
+      qsArgs.debug = qDebug === "true" ? 1 : 0;
+    }
+    if (qBoard) {
+      qsArgs.keyboardElementName = qBoard;
+    }
+    if (qMap) {
+      qsArgs.keymapId = qMap;
+    }
+    if (qLayer) {
+      qsArgs.layerIdx = parseInt(qLayer, 10);
+    }
+    if (qKey) {
+      qsArgs.selectedKey = qKey;
+    }
+  }
 
-  const newStateArgs: IKeyMapUIStateIdArgs = {};
-  if (qBoard) newStateArgs.keyboardElementName = qBoard;
-  if (qMap) newStateArgs.keymapId = qMap;
-  if (qLayer) newStateArgs.layerIdx = parseInt(qLayer, 10);
-  if (qKey) newStateArgs.selectedKey = qKey;
-
+  // Merge the changes from the attributes and the query string into a single object, and apply them to the state.
+  const newStateArgs: IKeyMapUIStateIdArgs = {
+    ...currentAttributes,
+    ...qsArgs,
+  };
   state.setMultiStateByIdsInSingleTransaction(newStateArgs);
+
+  // Return the keys that were defined in the query string or attributes.
+  // This list doesn't take into account what the initial state values were,
+  // just what was set by the query string or attributes,
+  // so it may include keys that were already set to the same value.
+  return Object.keys(newStateArgs) as (keyof KeyMapUIState)[];
 }
 
 /* Set the query string based on the current state.

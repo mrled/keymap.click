@@ -423,6 +423,18 @@ export class KeyMapUIState {
 
   /* Set state all at once by identifiers, perhaps from a query string.
    *
+   * Setting state by identifiers means using known object IDs rather than object references.
+   * For instance, kbModel is a KeyBoardModel object, but we can set it by its keyboardElementName.
+   * The IDs can be encoded in HTML element attribute names or query parameters,
+   * while real objects obviously can't.
+   *
+   * Setting state in a single transaction means that all changes are made at once,
+   * and observers are notified only once.
+   * This is useful when multiple changes are related and should be treated as a single event.
+   * For instance, if we set the kbModel normally, we reset other state properties like the selectedKey,
+   * and observers would be notified of each change separately.
+   * Worse, observers intending to make multiple changes in a row
+   *
    * Trigger a single update for all changes.
    * Handle any effects of one change on another.
    */
@@ -592,6 +604,95 @@ export class KeyMapUIState {
     }
 
     this.notify(changes);
+  }
+
+  /* A helper function to show the current state and query string
+   *
+   * Parameters:
+   * - forceLog: if true, log the state even if debug is off
+   * - kmui: the KeyMapUI element, if available
+   *   if this is provided and it has an id attribute, that will be included in the log messages
+   * - messagePrefix: a string to prepend to the log message
+   * - logQueryString: if true (default), log the query string
+   */
+  logState({
+    forceLog = false,
+    kmui = undefined,
+    messagePrefix = "",
+    logQueryString = true,
+  }: {
+    forceLog?: boolean;
+    kmui?: HTMLElement | undefined;
+    messagePrefix?: string;
+    logQueryString?: boolean;
+  }) {
+    if (this.debug === 0 && !forceLog) {
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const qPfx = this.queryPrefix;
+
+    type LogTableRow = {
+      prefix: string;
+      board: string;
+      map: string;
+      layer: number;
+      key: string;
+      info?: string;
+    };
+    type LogTable = {
+      state: LogTableRow;
+      attribute?: LogTableRow;
+      queryString?: LogTableRow;
+    };
+
+    console.log(`${messagePrefix}: current state:`);
+    const logTable: LogTable = {
+      state: {
+        prefix: qPfx,
+        board: this.kbModel.keyboardElementName,
+        map: this.keymap.uniqueId,
+        layer: this.keymap.layers.indexOf(this.layer),
+        key: this.selectedKey,
+      },
+    };
+    if (kmui) {
+      const kmuiId = kmui.getAttribute("id")
+        ? "#" + kmui.getAttribute("id")
+        : "";
+      logTable.attribute = {
+        prefix: kmui.getAttribute("query-prefix") || "",
+        board: kmui.getAttribute("keyboard-element") || "",
+        map: kmui.getAttribute("keymap-id") || "",
+        layer: parseInt(kmui.getAttribute("layer") || "0", 10),
+        key: kmui.getAttribute("selected-key") || "",
+        info: `KeyMapUI${kmuiId}`,
+      };
+    }
+    if (logQueryString) {
+      console.log("current query string:", window.location.search);
+      if (qPfx) {
+        logTable.queryString = {
+          prefix: qPfx,
+          board: params.get(`${qPfx}-board`) || "",
+          map: params.get(`${qPfx}-map`) || "",
+          layer: parseInt(params.get(`${qPfx}-layer`) || "NaN", 10) || NaN,
+          key: params.get(`${qPfx}-key`) || "",
+        };
+      } else {
+        logTable.queryString = {
+          prefix: "",
+          board: "",
+          map: "",
+          layer: NaN,
+          key: "",
+        };
+      }
+    }
+
+    console.table(logTable);
+    // console.error("logged"); // this shows a stack trace
   }
 
   // #endregion
