@@ -119,7 +119,7 @@ export class KeyMapUIControls
   /* Called when the user selects a keyboard from the dropdown
    */
   private chooseKbModel: ChangeListenerFunction = (e, id, result) => {
-    this.state.setMultiStateByIdsInSingleTransaction({
+    this.state.setStatesByIds({
       keyboardElementName: result.value,
     });
   };
@@ -127,7 +127,7 @@ export class KeyMapUIControls
   /* Called when the user selects a keymap from the dropdown
    */
   private chooseKeymap: ChangeListenerFunction = (e, id, result) => {
-    this.state.setMultiStateByIdsInSingleTransaction({
+    this.state.setStatesByIds({
       keymapId: result.value,
     });
   };
@@ -135,7 +135,7 @@ export class KeyMapUIControls
   /* Called when the user selects a layer from the dropdown
    */
   private chooseLayer: ChangeListenerFunction = (e, id, result) => {
-    this.state.setMultiStateByIdsInSingleTransaction({
+    this.state.setStatesByIds({
       layerIdx: parseInt(result.value),
     });
   };
@@ -143,7 +143,7 @@ export class KeyMapUIControls
   /* Called when the user selects a guide from the dropdown
    */
   private chooseGuide: ChangeListenerFunction = (e, id, result) => {
-    this.state.setMultiStateByIdsInSingleTransaction({ guideId: result.value });
+    this.state.setStatesByIds({ guideId: result.value });
   };
 
   /* Update the debug checkbox.
@@ -176,7 +176,6 @@ export class KeyMapUIControls
       "No keyboards available",
       this.chooseKbModel
     );
-    this.updateKeymapsSelector();
   }
 
   /* Update the keymap selection dropdown.

@@ -84,7 +84,7 @@ export function setStateFromQsAndAttrib({
     ...currentAttributes,
     ...qsArgs,
   };
-  state.setMultiStateByIdsInSingleTransaction(newStateArgs);
+  state.setStatesByIds(newStateArgs);
 
   // Return the keys that were defined in the query string or attributes.
   // This list doesn't take into account what the initial state values were,

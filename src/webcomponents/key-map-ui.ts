@@ -224,22 +224,24 @@ export class KeyMapUI
         this.controls.setAttribute("show-debug", newValue);
         break;
       case "keyboard-element":
-        this.state.setMultiStateByIdsInSingleTransaction({
+        this.state.setStatesByIds({
           keyboardElementName: newValue,
         });
         break;
       case "keymap-id":
-        this.state.setMultiStateByIdsInSingleTransaction({
+        this.state.setStatesByIds({
           keymapId: newValue,
         });
         break;
       case "layer":
-        this.state.setMultiStateByIdsInSingleTransaction({
+        this.state.setStatesByIds({
           layerIdx: parseInt(newValue, 10) || 0,
         });
         break;
       case "selected-key":
-        this.state.selectedKey = newValue;
+        this.state.setStatesByIds({
+          selectedKey: newValue,
+        });
         break;
       case "query-prefix":
         this.state.queryPrefix = newValue;
@@ -521,8 +523,9 @@ export class KeyMapUI
     if (stateChanges.has("kbModel")) {
       this.#updateKbModelState(stateChanges.get("kbModel")!);
     }
-    if (stateChanges.has("layer")) {
-      this.#updateLayerState(stateChanges.get("layer")!);
+    if (stateChanges.has("keymap") || stateChanges.has("layer")) {
+      this.keyboard.createChildren(Array.from(this.state.layer.keys.values()));
+      this.#showWelcomeMessage();
     }
 
     if (stateChanges.has("selectedKey")) {
@@ -545,11 +548,6 @@ export class KeyMapUI
     if (oldKeyboard && this.centerPanel.contains(oldKeyboard)) {
       this.centerPanel.replaceChild(this.keyboard, oldKeyboard);
     }
-  }
-
-  #updateLayerState(change: KeyMapUIStateChange) {
-    this.keyboard.createChildren(Array.from(this.state.layer.keys.values()));
-    this.#showWelcomeMessage();
   }
 
   /* Update the selected key
@@ -740,7 +738,7 @@ export class KeyMapUI
     const e = event as CustomEvent;
     const keyId = e.detail;
     // TODO: should we have the key set the state directly instead of doing it here?
-    this.state.selectedKey = keyId;
+    this.state.setStatesByIds({ selectedKey: keyId });
   }
 
   // #endregion
