@@ -32,6 +32,10 @@ export class KeyMapUIDiagram
 
   readonly observerName = "KeyMapUIDiagram";
 
+  connectedCallback() {
+    this.draw();
+  }
+
   update<KeyMapUIState>(stateChanges: KeyMapUIStateChangeMap) {
     if (stateChanges.has("connectionPairs") || stateChanges.has("debug")) {
       this.draw();
@@ -55,6 +59,7 @@ export class KeyMapUIDiagram
    */
   get readyToDraw(): boolean {
     return (
+      this.isConnected &&
       !!this.centerPanel &&
       !!this.diamargLeft &&
       !!this.diamargRight &&

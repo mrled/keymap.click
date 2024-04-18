@@ -518,7 +518,9 @@ export class KeyMapUIState {
       // If a layer, keymap, or keyboard were not specified, the layer will not change.
       newLayer = this.layer;
     }
-    const changedLayer = newLayer !== oldLayer;
+    // We have to check for a changed keymap (which will also be true if the keyboard changed)
+    // because the layer is a value type and layer 0 of one map is not the same as layer 0 of another.
+    const changedLayer = newLayer !== oldLayer || changedKeymap;
 
     const specifiedGuide = guideId !== undefined;
     const oldGuide = this.guide;
@@ -692,7 +694,6 @@ export class KeyMapUIState {
     }
 
     console.table(logTable);
-    // console.error("logged"); // this shows a stack trace
   }
 
   // #endregion

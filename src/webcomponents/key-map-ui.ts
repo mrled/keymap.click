@@ -169,22 +169,16 @@ export class KeyMapUI
    * Run whether the element is created from HTML or from JavaScript.
    */
   connectedCallback() {
-    this.state.logState({
-      forceLog: true,
-      kmui: this,
-      messagePrefix: "connectedCallback(): Top",
-    });
-
     // The show-debug attribute doesn't set debug level in the state,
     // just whether the debug checkbox is shown.
     // It's not part of the query string stuff.
     const showDebug = this.getAttribute("show-debug") || "false";
-    this.attributeChangedCallback("show-debug", "", showDebug);
+    this.controls.setAttribute("show-debug", showDebug);
 
     // Set the query prefix, which determines which query parameters we read.
-    // Its attributeChangedCallback will read the query string and update the state.
     const queryPrefix = this.getAttribute("query-prefix") || "";
-    this.attributeChangedCallback("query-prefix", "", queryPrefix);
+    this.state.queryPrefix = queryPrefix;
+
     // Now set the state from the query string, using keys that begin with the query prefix.
     const qsChanges = setStateFromQsAndAttrib({
       state: this.state,
@@ -230,19 +224,16 @@ export class KeyMapUI
         this.controls.setAttribute("show-debug", newValue);
         break;
       case "keyboard-element":
-        // this.#updateKeyboardElementName(newValue);
         this.state.setMultiStateByIdsInSingleTransaction({
           keyboardElementName: newValue,
         });
         break;
       case "keymap-id":
-        // this.#updateKeyMapId(newValue);
         this.state.setMultiStateByIdsInSingleTransaction({
           keymapId: newValue,
         });
         break;
       case "layer":
-        // this.#updateLayerIdx(parseInt(newValue, 10) || 0);
         this.state.setMultiStateByIdsInSingleTransaction({
           layerIdx: parseInt(newValue, 10) || 0,
         });
@@ -316,11 +307,11 @@ export class KeyMapUI
   private _diamargLeft: HTMLElement | null = null;
   get diamargLeft(): HTMLElement {
     if (!this._diamargLeft) {
-      this._diamargLeft = this.shadow.querySelector(".keymap-ui-diamarg");
+      this._diamargLeft = this.shadow.querySelector(".keymap-ui-diamarg-left");
     }
     if (!this._diamargLeft) {
       this._diamargLeft = document.createElement("div");
-      this._diamargLeft.className = "keymap-ui-diamarg";
+      this._diamargLeft.className = "keymap-ui-diamarg keymap-ui-diamarg-left";
     }
     return this._diamargLeft;
   }
@@ -328,11 +319,14 @@ export class KeyMapUI
   private _diamargRight: HTMLElement | null = null;
   get diamargRight(): HTMLElement {
     if (!this._diamargRight) {
-      this._diamargRight = this.shadow.querySelector(".keymap-ui-diamarg");
+      this._diamargRight = this.shadow.querySelector(
+        ".keymap-ui-diamarg-right"
+      );
     }
     if (!this._diamargRight) {
       this._diamargRight = document.createElement("div");
-      this._diamargRight.className = "keymap-ui-diamarg";
+      this._diamargRight.className =
+        "keymap-ui-diamarg keymap-ui-diamarg-right";
     }
     return this._diamargRight;
   }
@@ -475,10 +469,11 @@ export class KeyMapUI
     // Direct children of this element
     // Note that because the diagram is last, it is drawn on top of the other elements,
     // which is what we want.
+    const diagram = this.diagram;
     this.setChildrenIdempotently(this.shadow, [
       this.styling,
       this.kidContainer,
-      this.diagram,
+      diagram,
     ]);
     this.setChildrenIdempotently(this.kidContainer, [
       this.diamargLeft,
@@ -554,11 +549,6 @@ export class KeyMapUI
 
   #updateLayerState(change: KeyMapUIStateChange) {
     this.keyboard.createChildren(Array.from(this.state.layer.keys.values()));
-    this.keyInfoNavBar.updateTitleKey(
-      this.state.layer,
-      this.state.kbModel,
-      this.state.selectedKey
-    );
     this.#showWelcomeMessage();
   }
 
@@ -604,6 +594,8 @@ export class KeyMapUI
       this.state.kbModel,
       value
     );
+    // this.keyInfoNavBar might not be in the DOM on initial load, so we have to lay out here.
+    this.layOutIdempotently();
     const navBarHandle = this.keyInfoNavBar.querySelector("key-handle");
 
     // Update every key on the board
@@ -665,12 +657,6 @@ export class KeyMapUI
   /* Update the query prefix and any query parameters that use it.
    */
   #updateQueryPrefix(change: KeyMapUIStateChange) {
-    this.state.logState({
-      forceLog: true,
-      kmui: this,
-      messagePrefix: "#updateQueryPrefix() Top",
-    });
-
     if (change.oldValue) {
       // Remove all old query parameters with the old prefix
       const [params, newQs] = KeyMapUIOptions.parseQueryString(
@@ -681,18 +667,6 @@ export class KeyMapUI
         ? `${window.location.pathname}?${newQs.toString()}`
         : `${window.location.pathname}`;
       window.history.replaceState({}, "", newUrl);
-      this.state.logState({
-        forceLog: true,
-        kmui: this,
-        messagePrefix:
-          "#updateQueryPrefix() After modifying the old parameters",
-      });
-    } else {
-      this.state.logState({
-        forceLog: true,
-        kmui: this,
-        messagePrefix: "#updateQueryPrefix() No old query prefix",
-      });
     }
 
     setStateFromQsAndAttrib({ state: this.state });
@@ -711,10 +685,6 @@ export class KeyMapUI
    * so 'this.state' from the KeyMapUI instance will not be available.
    */
   #resizeCanvas(state: KeyMapUIState) {
-    // console.log(
-    //   `Calling resizeCanvas, kbModel is ${state.kbModel.keyboardElementName}, keymap is ${state.keymap.uniqueId}`,
-    //   state
-    // );
     this.diagram.resize(
       this.kidContainer.offsetWidth,
       this.kidContainer.offsetHeight
