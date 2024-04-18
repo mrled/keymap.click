@@ -175,12 +175,8 @@ export class KeyMapUI
     const showDebug = this.getAttribute("show-debug") || "false";
     this.controls.setAttribute("show-debug", showDebug);
 
-    // Set the query prefix, which determines which query parameters we read.
-    const queryPrefix = this.getAttribute("query-prefix") || "";
-    this.state.queryPrefix = queryPrefix;
-
-    // Now set the state from the query string, using keys that begin with the query prefix.
-    const qsChanges = setStateFromQsAndAttrib({
+    // Set the initial state from the query string and attributes
+    setStateFromQsAndAttrib({
       state: this.state,
       kmui: this,
     });
