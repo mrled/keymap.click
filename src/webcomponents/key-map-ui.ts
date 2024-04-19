@@ -169,6 +169,8 @@ export class KeyMapUI
    * Run whether the element is created from HTML or from JavaScript.
    */
   connectedCallback() {
+    log.setLevel(log.levels.INFO);
+
     // The show-debug attribute doesn't set debug level in the state,
     // just whether the debug checkbox is shown.
     // It's not part of the query string stuff.
