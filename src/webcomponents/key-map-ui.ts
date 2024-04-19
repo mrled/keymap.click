@@ -589,16 +589,18 @@ export class KeyMapUI
         (indicator) => indicator.getAttribute("id") || ""
       );
     } else if (this.state.guideStep?.text?.length || 0 > 0) {
+      const guideStep = this.state.guideStep!;
       while (this.infoProse.firstChild) {
         this.infoProse.removeChild(this.infoProse.firstChild);
       }
-      if (this.state.guideStep?.title) {
+      keySelection = guideStep.selection || [];
+      if (guideStep.title) {
         const h2 = document.createElement("h2");
-        h2.innerHTML = this.state.guideStep.title;
+        h2.innerHTML = guideStep.title;
         this.infoProse.appendChild(h2);
       }
       // TODO: set title from guideStep.title
-      const guideStepText = this.state.guideStep!.text || [""];
+      const guideStepText = guideStep.text || [""];
       guideStepText.forEach((paragraph: string) => {
         const p = document.createElement("p");
         p.innerHTML = paragraph;
