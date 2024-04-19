@@ -1,17 +1,17 @@
-import { KeyMapKey } from "~/lib/keyMap";
-import { KeyBoard } from "./key-board";
-import { KeyboardKey } from "./keyboard-key";
+import { KeymapKey } from "~/lib/Keymap";
+import { ClickyKeyboardElement } from "./clicky-keyboard";
+import { ClickyKeyElement } from "./clicky-key";
 
-/* KeyGrid: An HTML grid template for keyboard keys.
+/* ClickyKeygridElement: An HTML grid template for keyboard keys.
  *
  * A key grid is a sub-section of a keyboard.
  * Some keyboards might have just a single grid for the whole board.
  * An ErgoDox has a left finger grid, a left thumb cluster grid,
  * a right finger grid, and a right thumb cluster grid.
  *
- * Create child <keyboard-key> elements directly,
+ * Create child <clicky-key> elements directly,
  * or use the createKeys() method to create them from key data.
- * When creating keys in HTML, you must create child <keyboard-key> elements
+ * When creating keys in HTML, you must create child <clicky-key> elements
  * and set their attributes manually,
  * including setting an onclick function that emits a "key-selected" event.
  * When using createKeys(),
@@ -19,11 +19,13 @@ import { KeyboardKey } from "./keyboard-key";
  * with the correct attributes and onclick functions.
  *
  * Attributes:
- *   name:                  The name of the grid, used for styling with key-grid[name=THISVALUE].
+ *   name:                  The name of the grid, used for styling with clicky-keygrid[name=THISVALUE].
  *   cols:                  The number of columns in the grid
  *   rows:                  Number of rows in the grid
  */
-export class KeyGrid extends HTMLElement {
+export class ClickyKeygridElement extends HTMLElement {
+  static readonly elementName = "clicky-keygrid";
+
   static get observedAttributes() {
     return ["name", "cols", "rows"];
   }
@@ -57,17 +59,19 @@ export class KeyGrid extends HTMLElement {
         this.style.gridTemplateRows = `repeat(${rows}, var(--keyboard-grid-unit))`;
         break;
       default:
-        console.error(`KeyGrid: Unhandled attribute: ${name}`);
+        console.error(`ClickyKeygridElement: Unhandled attribute: ${name}`);
     }
   }
 
-  /* Get all the child <keyboard-key> elements
+  /* Get all the child <clicky-key> elements
    */
-  get keyElements(): KeyboardKey[] {
-    return Array.from(this.querySelectorAll("keyboard-key")) as KeyboardKey[];
+  get keyElements(): ClickyKeyElement[] {
+    return Array.from(
+      this.querySelectorAll(ClickyKeyElement.elementName)
+    ) as ClickyKeyElement[];
   }
 
-  /* Get a list of all the key IDs of the child <keyboard-key> elements
+  /* Get a list of all the key IDs of the child <clicky-key> elements
    */
   get keyIds() {
     return this.keyElements
@@ -84,16 +88,16 @@ export class KeyGrid extends HTMLElement {
     }
   }
 
-  /* Create a single <keyboard-key> element from key data
+  /* Create a single <clicky-key> element from key data
    */
-  #createKey(keyBoard: KeyBoard, key: KeyMapKey, idx: number) {
+  #createKey(keyboard: ClickyKeyboardElement, key: KeymapKey, idx: number) {
     // TODO: handle image legends
     let legendText = key.textLegend || key.name;
     let legendImage = "";
 
-    const keyElement = document.createElement("keyboard-key");
+    const keyElement = document.createElement(ClickyKeyElement.elementName);
 
-    const physicalKey = keyBoard.model.getPhysicalKey(key.id);
+    const physicalKey = keyboard.model.getPhysicalKey(key.id);
 
     keyElement.setAttribute("position", physicalKey.positionAttribute);
     keyElement.setAttribute("legend-text", legendText);
@@ -109,7 +113,7 @@ export class KeyGrid extends HTMLElement {
       keyElement.dispatchEvent(
         // TODO: Is there a better way to organize our code so that we don't have to do composed:true?
         // We allow this to pass through shadow DOM boundaries because
-        // key-map-ui is the root and its descendents are in the shadow DOM.
+        // clicky-ui is the root and its descendents are in the shadow DOM.
         new CustomEvent("key-selected", {
           bubbles: true, // Allow event to bubble up to parent elements
           composed: true, // Allow event to pass through shadow DOM boundaries
@@ -123,14 +127,14 @@ export class KeyGrid extends HTMLElement {
     return keyElement;
   }
 
-  /* Create <keyboard-key> elements from key data.
-   *   keys:          List of KeyMapKey objects
-   *   keyBoard:      A KeyBoard instance
+  /* Create <clicky-key> elements from key data.
+   *   keys:          List of ClickyKeyElement objects
+   *   keyboard:      A ClickyKeyboard instance
    */
-  createKeys(keyBoard: KeyBoard, keys: KeyMapKey[]) {
+  createKeys(keyboard: ClickyKeyboardElement, keys: KeymapKey[]) {
     this.removeAllChildren();
-    keys.forEach((key: KeyMapKey, idx: number) => {
-      this.#createKey(keyBoard, key, idx);
+    keys.forEach((key: KeymapKey, idx: number) => {
+      this.#createKey(keyboard, key, idx);
     });
   }
 }

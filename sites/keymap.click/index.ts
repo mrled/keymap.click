@@ -5,9 +5,9 @@ import "./website.shared.js";
 import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
 registerAllKeymapClickWebComponents();
 
-import { KeyMapUI } from "~/webcomponents/key-map-ui";
-import { KeyMapTitleScreen } from "~/lib/keyMaps/KeyMapTitleScreen";
-import { MicahErgodoxLayout } from "~/lib/keyMaps/micahErgodox";
+import { ClickyUIElement } from "~/webcomponents/clicky-ui.js";
+import { ClickyTitleScreenKeymap } from "~/lib/keymaps/ClickyTitleScreenKeymap.js";
+import { MicahErgodoxKeymap } from "~/lib/keymaps/MicahErgodoxKeymap.js";
 
 const app = document.querySelector("#app");
 if (!app) {
@@ -41,7 +41,7 @@ const clearQueryStringListItem = document.createElement("li");
 clearQueryStringListItem.appendChild(clearQueryStringButton);
 
 const testLink = document.createElement("a");
-testLink.href = "/?kmui-key=l-f-10-9&kmui-map=blank";
+testLink.href = "/?clicky-key=l-f-10-9&clicky-map=blank";
 testLink.textContent = "Hit test URL";
 const testListItem = document.createElement("li");
 testListItem.appendChild(testLink);
@@ -55,34 +55,38 @@ titleBar.appendChild(menuList);
 
 app.appendChild(titleBar);
 
-const availableKeymaps = [KeyMapTitleScreen, MicahErgodoxLayout];
+const availableKeymaps = [ClickyTitleScreenKeymap, MicahErgodoxKeymap];
 
 const titleDesc = document.createElement("p");
 titleDesc.textContent =
   "Here's the title screen. It's useful at least for testing.";
 app.appendChild(titleDesc);
 
-const kmuiTitle = document.createElement("key-map-ui") as KeyMapUI;
-kmuiTitle.setAttribute("id", "kmui-title");
-kmuiTitle.setAttribute("show-debug", "true");
-kmuiTitle.addKeymaps(availableKeymaps);
-kmuiTitle.setAttribute("keyboard-element", "key-board-title-screen");
-kmuiTitle.setAttribute("keymap-id", "title-screen-map");
-app.appendChild(kmuiTitle);
+const clickyUiTitle = document.createElement(
+  ClickyUIElement.elementName
+) as ClickyUIElement;
+clickyUiTitle.setAttribute("id", "clicky-title");
+clickyUiTitle.setAttribute("show-debug", "true");
+clickyUiTitle.addKeymaps(availableKeymaps);
+clickyUiTitle.setAttribute("keyboard-element", "clicky-keyboard-title-screen");
+clickyUiTitle.setAttribute("keymap-id", "title-screen-map");
+app.appendChild(clickyUiTitle);
 
 const ergodoxDesc = document.createElement("p");
 ergodoxDesc.textContent =
   "Here's the ErgoDox layout I use. This keymap syncs its state with the query string - try clicking around and then reloading the page or opening in another tab.";
 app.appendChild(ergodoxDesc);
 
-const kmuiErgoDox = document.createElement("key-map-ui") as KeyMapUI;
-kmuiErgoDox.setAttribute("id", "kmui-ergodox");
-kmuiErgoDox.setAttribute("show-debug", "true");
-kmuiErgoDox.addKeymaps(availableKeymaps);
-kmuiErgoDox.setAttribute("keyboard-element", "key-board-ergodox");
-kmuiErgoDox.setAttribute("keymap-id", "micah-ergodox");
-kmuiErgoDox.setAttribute("query-prefix", "kmui");
-app.appendChild(kmuiErgoDox);
+const clickyUiErgodox = document.createElement(
+  ClickyUIElement.elementName
+) as ClickyUIElement;
+clickyUiErgodox.setAttribute("id", "clicky-ergodox");
+clickyUiErgodox.setAttribute("show-debug", "true");
+clickyUiErgodox.addKeymaps(availableKeymaps);
+clickyUiErgodox.setAttribute("keyboard-element", "clicky-keyboard-ergodox");
+clickyUiErgodox.setAttribute("keymap-id", "micah-ergodox");
+clickyUiErgodox.setAttribute("query-prefix", "clicky");
+app.appendChild(clickyUiErgodox);
 
 const footer = document.createElement("p");
 footer.className = "site-footer";

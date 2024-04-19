@@ -7,8 +7,8 @@
  * For larger screen sizes, they should be shown next to each other.
  */
 div.keyboard,
-key-board,
-key-board-ergodox {
+clicky-keyboard,
+clicky-keyboard-ergodox {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,8 +17,8 @@ key-board-ergodox {
 }
 @media (min-width: 768px) {
   div.keyboard,
-  key-board,
-  key-board-ergodox {
+  clicky-keyboard,
+  clicky-keyboard-ergodox {
     flex-direction: row;
   }
 }
@@ -66,14 +66,14 @@ h2.keyboard-title {
 
 /* A grid of keys, like a keyboard would have
  */
-key-grid {
+clicky-keygrid {
   display: grid;
   pointer-events: none;
   user-select: none;
 }
 
 /* A single key */
-keyboard-key {
+clicky-key {
   padding: 0.25rem;
   display: flex;
   justify-content: center;
@@ -161,7 +161,7 @@ keyboard-key {
 }
 
 @media (min-width: 768px) {
-  keyboard-key {
+  clicky-key {
     &.legend-type-glyph {
       font-size: 1rem;
     }
@@ -189,14 +189,14 @@ keyboard-key {
 
 /* Left and right thumb clusters of an ErgoDox keyboard */
 .keyboard-left-thumb-cluster,
-key-grid[name="ergodox-left-thumb"] {
+clicky-keygrid[name="ergodox-left-thumb"] {
   transform: translateX(calc(var(--keyboard-grid-unit) * -2))
     translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(25deg);
   transform-origin: 0 calc(var(--keyboard-grid-unit) * 2);
   padding-bottom: calc(var(--keyboard-grid-unit) * 9);
 }
 .keyboard-right-thumb-cluster,
-key-grid[name="ergodox-right-thumb"] {
+clicky-keygrid[name="ergodox-right-thumb"] {
   transform: translateX(calc(var(--keyboard-grid-unit) * 2))
     translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(-25deg);
   transform-origin: calc(var(--keyboard-grid-unit) * 6)
@@ -207,12 +207,11 @@ key-grid[name="ergodox-right-thumb"] {
 /* The keymap UI is a container for the keymap, info panel, and diagram
  * It is also the shadow DOM root, so it needs :host.
  * TODO: either remove the :host selector or this TODO item,
- * when I decide whether to keep the key-map-ui as shadow DOM root.
+ * when I decide whether to keep the clicky-ui as shadow DOM root.
  */
-.key-map-ui,
-key-map-ui,
+clicky-ui,
 :host {
-  /* key-map-ui is a custom element, which doesn't get block by default.
+  /* clicky-ui is a custom element, which doesn't get block by default.
   * If we don't set it here, position:relative of this + position:absolute of the canvas
   * will not work as expected.
   */

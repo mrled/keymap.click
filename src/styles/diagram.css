@@ -2,7 +2,7 @@
  */
 
 /* The diagram web component and its child canvas element */
-key-map-ui-diagram,
+clicky-diagram,
 canvas.keyboard-diagram {
   position: absolute;
   top: 0;
@@ -13,7 +13,7 @@ canvas.keyboard-diagram {
 
 /* A reference in prose to a key on the board.
  */
-key-indicator {
+clicky-indicator {
   text-overflow: truncate;
   background-color: var(--key-diagram-target-bg);
 }

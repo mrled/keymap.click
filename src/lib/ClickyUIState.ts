@@ -1,4 +1,4 @@
-/* A state object to pass to all KeyMapUI children.
+/* A state object to pass to all ClickyUIElement children.
  *
  * A single source of truth for the UI state of the keymap.
  * Use the observer pattern to notify relevant components when the state changes.
@@ -6,18 +6,18 @@
  * We expect that state is immutable.
  * When a component needs to change state, it should create a new object.
  *
- * We expect the root application component - KeyMapUI, in this case -
+ * We expect the root application component - ClickyUIElement, in this case -
  * to create an instance of this class and pass it to all children.
  *
  * The root application component should do something like:
  *  constructor() {
  *    // ...
- *    this.state = new KeyMapUIState()
+ *    this.state = new ClickyUIState()
  *    this.state.initialized = true;
  *    this.state.attach(this);
  *
  * The root application componen should also implement the IStateObserver interface:
- *  update<T extends keyof KeyMapUIState>(key: T, oldValue: KeyMapUIState[T], newValue: KeyMapUIState[T]) {
+ *  update<T extends keyof ClickyUIState>(key: T, oldValue: ClickyUIState[T], newValue: ClickyUIState[T]) {
  *    switch (key) {
  *      doWhateverNeedsDoing();
  *      // ...
@@ -42,11 +42,11 @@
  * and also the IStateObserver interface.
  *  class WhateverElement
  *    extends HTMLElement
- *    implements IStateObserver<KeyMapUIState>
+ *    implements IStateObserver<ClickyUIState>
  *  {
- *    private _state = new KeyMapUIState();
+ *    private _state = new ClickyUIState();
  *    get state() { return this._state; }
- *    set state(value: KeyMapUIState) {
+ *    set state(value: ClickyUIState) {
  *      this._state = value;
  *      this._state.attach(this);
  *      this.someChildElement.state = value; // Can also set state for children here, if applicable
@@ -54,37 +54,37 @@
  *    }
  *
  * (Children can define a default state object with initialized=false,
- * and the KeyMapUI will know to set the global state object on them.
+ * and the ClickyUIElement will know to set the global state object on them.
  * This keeps each child from having to check if its state object is null and makes typing simpler.)
  */
 
-import { KeyBoard } from "~/webcomponents/key-board";
-import { KeyBoardModel } from "./KeyboardModel";
+import { ClickyKeyboardElement } from "~/webcomponents/clicky-keyboard";
+import { KeyboardModel } from "./KeyboardModel";
 import { IStateObserver, StateChange, StateChangeMap } from "./State";
-import { ConnectionPair } from "./keyConnections";
-import { GuideStep, KeyMap, KeyMapGuide, KeyMapLayer } from "./keyMap";
-import { KeyMapTitleScreen } from "./keyMaps/KeyMapTitleScreen";
-import { KeyboardModelTitleScreen } from "~/webcomponents/key-board-title-screen";
+import { ConnectionPair } from "./DiagramConnections";
+import { GuideStep, Keymap, KeymapGuide, KeymapLayer } from "./Keymap";
+import { ClickyTitleScreenKeymap } from "./keymaps/ClickyTitleScreenKeymap";
+import { KeyboardModelTitleScreen } from "~/webcomponents/clicky-keyboard-title-screen";
 
-/* A map of uniqueID strings to KeyMap objects
+/* A map of uniqueID strings to Keymap objects
  */
-export type KeymapMap = Map<string, KeyMap>;
+export type KeymapMap = Map<string, Keymap>;
 
-/* A map of keyboard element names to KeyMapMap objects
+/* A map of keyboard element names to KeymapMap objects
  */
 export type KeyboardKeymapMapMap = Map<string, KeymapMap>;
 
 /* A non-generic state change
  */
-export class KeyMapUIStateChange extends StateChange<KeyMapUIState> {}
+export class ClickyUIStateChange extends StateChange<ClickyUIState> {}
 
-/* A non-generic map of key:KeyMapUIStateChange
+/* A non-generic map of key:ClickyUIStateChange
  */
-export class KeyMapUIStateChangeMap extends Map<string, KeyMapUIStateChange> {}
+export class ClickyUIStateChangeMap extends Map<string, ClickyUIStateChange> {}
 
 /* Arguments that can be passed to setMultiStateByIdsInSingleTransaction
  */
-export interface IKeyMapUIStateIdArgs {
+export interface IClickyUIStateIdArgs {
   debug?: number;
   queryPrefix?: string;
   keyboardElementName?: string;
@@ -95,7 +95,7 @@ export interface IKeyMapUIStateIdArgs {
   selectedKey?: string;
 }
 
-/* An object representing the state of the entire KeyMapUI.
+/* An object representing the state of the entire ClickyUIElement.
  *
  * A single source of truth for the UI state of the keymap.
  *
@@ -125,10 +125,10 @@ export interface IKeyMapUIStateIdArgs {
  *      }
  *    This will only cause a problem for properties that should trigger an update when set to the default value.
  *    For instance, we have a default keyboard model/map that are kind of placeholders,
- *    but if they are set explicitly then we still need to trigger an update to the KeyMapUI
+ *    but if they are set explicitly then we still need to trigger an update to the ClickyUIElement
  *    so that it knows its keyboard model/map have ever been set.
  */
-export class KeyMapUIState {
+export class ClickyUIState {
   constructor() {}
 
   //
@@ -137,11 +137,11 @@ export class KeyMapUIState {
 
   /* A list of observers
    */
-  private observers: IStateObserver<KeyMapUIState>[] = [];
+  private observers: IStateObserver<ClickyUIState>[] = [];
 
   /* Attach an observer
    */
-  attach(observer: IStateObserver<KeyMapUIState>): void {
+  attach(observer: IStateObserver<ClickyUIState>): void {
     const isExist = this.observers.includes(observer);
     if (!isExist) {
       this.observers.push(observer);
@@ -150,7 +150,7 @@ export class KeyMapUIState {
 
   /* Detach an observer
    */
-  detach(observer: IStateObserver<KeyMapUIState>): void {
+  detach(observer: IStateObserver<ClickyUIState>): void {
     const observerIndex = this.observers.indexOf(observer);
     if (observerIndex !== -1) {
       this.observers.splice(observerIndex, 1);
@@ -159,20 +159,20 @@ export class KeyMapUIState {
 
   /* Notify all observers of a set of changes
    */
-  notify(stateChanges: StateChange<KeyMapUIState>[]): void {
-    const stateChangeMap = new KeyMapUIStateChangeMap(
+  notify(stateChanges: StateChange<ClickyUIState>[]): void {
+    const stateChangeMap = new ClickyUIStateChangeMap(
       stateChanges.map((change) => [change.key, change])
     );
     for (const observer of this.observers) {
-      observer.update(stateChangeMap as StateChangeMap<KeyMapUIState>);
+      observer.update(stateChangeMap as StateChangeMap<ClickyUIState>);
     }
   }
 
   // #region State data
 
-  /* Only the key-map-ui component should ever set this.
+  /* Only the clicky-ui component should ever set this.
    * It allows us to define state objects on every component that needs one,
-   * and the key-map-ui will know that any with initialized=false
+   * and the clicky-ui will know that any with initialized=false
    * have not been set to the global state object yet.
    */
   public initialized: boolean = false;
@@ -205,24 +205,24 @@ export class KeyMapUIState {
 
   /* All the keyboard models we know about
    */
-  private _kbModels: KeyBoardModel[] | null = null;
-  public get kbModels(): KeyBoardModel[] {
+  private _kbModels: KeyboardModel[] | null = null;
+  public get kbModels(): KeyboardModel[] {
     if (this._kbModels === null) {
       this._kbModels = [KeyboardModelTitleScreen];
-      this.notify([new KeyMapUIStateChange("kbModels", null, this._kbModels)]);
+      this.notify([new ClickyUIStateChange("kbModels", null, this._kbModels)]);
     }
     return this._kbModels;
   }
-  public set kbModels(value: KeyBoardModel[]) {
+  public set kbModels(value: KeyboardModel[]) {
     if (this._kbModels === value) return;
     const oldValue = this._kbModels;
     this._kbModels = value;
     const oldKeymap = this._keymap;
-    this._keymap = this.kbModel.blankKeyMap;
-    const stateChanges = [new KeyMapUIStateChange("kbModels", oldValue, value)];
+    this._keymap = this.kbModel.blankKeymap;
+    const stateChanges = [new ClickyUIStateChange("kbModels", oldValue, value)];
     if (oldKeymap !== this._keymap) {
       stateChanges.push(
-        new KeyMapUIStateChange("keymap", oldKeymap, this._keymap)
+        new ClickyUIStateChange("keymap", oldKeymap, this._keymap)
       );
     }
     this.notify(stateChanges);
@@ -230,11 +230,11 @@ export class KeyMapUIState {
 
   /* The current keyboard model
    */
-  private _kbModel: KeyBoardModel | null = null;
-  public get kbModel(): KeyBoardModel {
+  private _kbModel: KeyboardModel | null = null;
+  public get kbModel(): KeyboardModel {
     if (this._kbModel === null) {
       this._kbModel = this.kbModels[0];
-      this.notify([new KeyMapUIStateChange("kbModel", null, this._kbModel)]);
+      this.notify([new ClickyUIStateChange("kbModel", null, this._kbModel)]);
     }
     return this._kbModel;
   }
@@ -249,11 +249,11 @@ export class KeyMapUIState {
       this._keymaps.set(this.kbModel.keyboardElementName, new Map());
       const boardMaps = this._keymaps.get(this.kbModel.keyboardElementName)!;
       boardMaps.set(
-        this.kbModel.blankKeyMap.uniqueId,
-        this.kbModel.blankKeyMap
+        this.kbModel.blankKeymap.uniqueId,
+        this.kbModel.blankKeymap
       );
-      boardMaps.set(KeyMapTitleScreen.uniqueId, KeyMapTitleScreen);
-      this.notify([new KeyMapUIStateChange("keymaps", null, this._keymaps)]);
+      boardMaps.set(ClickyTitleScreenKeymap.uniqueId, ClickyTitleScreenKeymap);
+      this.notify([new ClickyUIStateChange("keymaps", null, this._keymaps)]);
     }
     return this._keymaps;
   }
@@ -273,8 +273,8 @@ export class KeyMapUIState {
       });
     });
     // Add a blank keymap for each model
-    this.#idempotentlyAddBlankKeyMap(this.kbModel.keyboardElementName);
-    this.notify([new KeyMapUIStateChange("keymaps", oldValue, value)]);
+    this.#idempotentlyAddBlankKeymap(this.kbModel.keyboardElementName);
+    this.notify([new ClickyUIStateChange("keymaps", oldValue, value)]);
   }
 
   /* Just the keymaps for the current keyboard model
@@ -288,32 +288,32 @@ export class KeyMapUIState {
 
   /* The selected keymap, among the known keymaps
    */
-  private _keymap: KeyMap | null = null;
-  get keymap(): KeyMap {
+  private _keymap: Keymap | null = null;
+  get keymap(): Keymap {
     if (this._keymap === null) {
-      this._keymap = this.#getNonBlankKeyMapIfPossible(
+      this._keymap = this.#getNonBlankKeymapIfPossible(
         this.kbModel.keyboardElementName
       );
-      this.notify([new KeyMapUIStateChange("keymap", null, this._keymap)]);
+      this.notify([new ClickyUIStateChange("keymap", null, this._keymap)]);
     }
     return this._keymap;
   }
 
   /* The ID of the current layer
    */
-  private _layer: KeyMapLayer | null = null;
-  public get layer(): KeyMapLayer {
+  private _layer: KeymapLayer | null = null;
+  public get layer(): KeymapLayer {
     if (this._layer === null) {
       this._layer = this.keymap.layers[0];
-      this.notify([new KeyMapUIStateChange("layer", null, this._layer)]);
+      this.notify([new ClickyUIStateChange("layer", null, this._layer)]);
     }
     return this._layer;
   }
 
   /* The ID of the current guide, if any
    */
-  private _guide: KeyMapGuide | null = null;
-  public get guide(): KeyMapGuide | null {
+  private _guide: KeymapGuide | null = null;
+  public get guide(): KeymapGuide | null {
     return this._guide;
   }
 
@@ -341,7 +341,7 @@ export class KeyMapUIState {
     if (this._connectionPairs === value) return;
     const oldValue = this._connectionPairs;
     this._connectionPairs = value;
-    this.notify([new KeyMapUIStateChange("connectionPairs", oldValue, value)]);
+    this.notify([new ClickyUIStateChange("connectionPairs", oldValue, value)]);
   }
 
   // #region Public helpers
@@ -349,7 +349,7 @@ export class KeyMapUIState {
   /* Set state all at once by identifiers, perhaps from a query string.
    *
    * Setting state by identifiers means using known object IDs rather than object references.
-   * For instance, kbModel is a KeyBoardModel object, but we can set it by its keyboardElementName.
+   * For instance, kbModel is a KeyboardModel object, but we can set it by its keyboardElementName.
    * The IDs can be encoded in HTML element attribute names or query parameters,
    * while real objects obviously can't.
    *
@@ -372,7 +372,7 @@ export class KeyMapUIState {
     guideId,
     guideStepIdx,
     selectedKey,
-  }: IKeyMapUIStateIdArgs) {
+  }: IClickyUIStateIdArgs) {
     //
 
     // Validate the new state properties.
@@ -387,7 +387,7 @@ export class KeyMapUIState {
 
     const specifiedKbModel = keyboardElementName !== undefined;
     const oldKbModel = this.kbModel;
-    let newKbModel: KeyBoardModel | undefined = undefined;
+    let newKbModel: KeyboardModel | undefined = undefined;
     if (specifiedKbModel) {
       newKbModel = this.kbModels.find(
         (m) => m.keyboardElementName === keyboardElementName
@@ -406,7 +406,7 @@ export class KeyMapUIState {
 
     const specifiedKeymap = keymapId !== undefined;
     const oldKeymap = this.keymap;
-    let newKeymap: KeyMap | undefined = undefined;
+    let newKeymap: Keymap | undefined = undefined;
     const kbModelMaps =
       this.keymaps.get(newKbModel.keyboardElementName) || new Map();
     if (specifiedKeymap) {
@@ -425,7 +425,7 @@ export class KeyMapUIState {
     } else if (changedKbModel) {
       // If we don't specify a keymap by ID, but the keyboard changed,
       // use the best default map we can find for that keyboard.
-      newKeymap = this.#getNonBlankKeyMapIfPossible(
+      newKeymap = this.#getNonBlankKeymapIfPossible(
         newKbModel.keyboardElementName
       );
     } else {
@@ -436,7 +436,7 @@ export class KeyMapUIState {
 
     const specifiedLayer = layerIdx !== undefined;
     const oldLayer = this.layer;
-    let newLayer: KeyMapLayer | undefined = undefined;
+    let newLayer: KeymapLayer | undefined = undefined;
     if (specifiedLayer) {
       if (layerIdx < 0 || layerIdx >= newKeymap.layers.length) {
         console.error(`Invalid layer index: ${layerIdx}`);
@@ -457,7 +457,7 @@ export class KeyMapUIState {
 
     const specifiedGuide = guideId !== undefined;
     const oldGuide = this.guide;
-    let newGuide: KeyMapGuide | undefined | null = undefined;
+    let newGuide: KeymapGuide | undefined | null = undefined;
     if (specifiedGuide) {
       // A null guide is valid as-is, and means no guide is selected;
       // a non-null guide ID must be validated.
@@ -516,50 +516,50 @@ export class KeyMapUIState {
     const changedSelectedKey = newSelectedKeyId !== oldSelectedKey;
 
     // Now that input is validated, make changes to the state
-    const changes: KeyMapUIStateChange[] = [];
+    const changes: ClickyUIStateChange[] = [];
 
     if (debug !== undefined) {
-      changes.push(new KeyMapUIStateChange("debug", this.debug, debug));
+      changes.push(new ClickyUIStateChange("debug", this.debug, debug));
       this._debug = debug;
     }
 
     if (queryPrefix !== undefined) {
       changes.push(
-        new KeyMapUIStateChange("queryPrefix", this.queryPrefix, queryPrefix)
+        new ClickyUIStateChange("queryPrefix", this.queryPrefix, queryPrefix)
       );
       this._queryPrefix = queryPrefix;
     }
 
     if (changedKbModel) {
-      changes.push(new KeyMapUIStateChange("kbModel", oldKbModel, newKbModel));
+      changes.push(new ClickyUIStateChange("kbModel", oldKbModel, newKbModel));
       this._kbModel = newKbModel;
     }
 
     if (changedKeymap) {
-      changes.push(new KeyMapUIStateChange("keymap", oldKeymap, newKeymap));
+      changes.push(new ClickyUIStateChange("keymap", oldKeymap, newKeymap));
       this._keymap = newKeymap;
     }
 
     if (changedLayer) {
-      changes.push(new KeyMapUIStateChange("layer", oldLayer, newLayer));
+      changes.push(new ClickyUIStateChange("layer", oldLayer, newLayer));
       this._layer = newLayer;
     }
 
     if (changedGuide) {
-      changes.push(new KeyMapUIStateChange("guide", oldGuide, newGuide));
+      changes.push(new ClickyUIStateChange("guide", oldGuide, newGuide));
       this._guide = newGuide;
     }
 
     if (changedGuideStep) {
       changes.push(
-        new KeyMapUIStateChange("guideStep", oldGuideStep, newGuideStep)
+        new ClickyUIStateChange("guideStep", oldGuideStep, newGuideStep)
       );
       this._guideStep = newGuideStep;
     }
 
     if (changedSelectedKey) {
       changes.push(
-        new KeyMapUIStateChange("selectedKey", oldSelectedKey, newSelectedKeyId)
+        new ClickyUIStateChange("selectedKey", oldSelectedKey, newSelectedKeyId)
       );
       this._selectedKey = newSelectedKeyId;
     }
@@ -571,19 +571,19 @@ export class KeyMapUIState {
    *
    * Parameters:
    * - forceLog: if true, log the state even if debug is off
-   * - kmui: the KeyMapUI element, if available
+   * - clickyUi: the ClickyUI element, if available
    *   if this is provided and it has an id attribute, that will be included in the log messages
    * - messagePrefix: a string to prepend to the log message
    * - logQueryString: if true (default), log the query string
    */
   logState({
     forceLog = false,
-    kmui = undefined,
+    clickyUi = undefined,
     messagePrefix = "",
     logQueryString = true,
   }: {
     forceLog?: boolean;
-    kmui?: HTMLElement | undefined;
+    clickyUi?: HTMLElement | undefined;
     messagePrefix?: string;
     logQueryString?: boolean;
   }) {
@@ -618,17 +618,17 @@ export class KeyMapUIState {
         key: this.selectedKey,
       },
     };
-    if (kmui) {
-      const kmuiId = kmui.getAttribute("id")
-        ? "#" + kmui.getAttribute("id")
+    if (clickyUi) {
+      const clickyUiId = clickyUi.getAttribute("id")
+        ? "#" + clickyUi.getAttribute("id")
         : "";
       logTable.attribute = {
-        prefix: kmui.getAttribute("query-prefix") || "",
-        board: kmui.getAttribute("keyboard-element") || "",
-        map: kmui.getAttribute("keymap-id") || "",
-        layer: parseInt(kmui.getAttribute("layer") || "0", 10),
-        key: kmui.getAttribute("selected-key") || "",
-        info: `KeyMapUI${kmuiId}`,
+        prefix: clickyUi.getAttribute("query-prefix") || "",
+        board: clickyUi.getAttribute("keyboard-element") || "",
+        map: clickyUi.getAttribute("keymap-id") || "",
+        layer: parseInt(clickyUi.getAttribute("layer") || "0", 10),
+        key: clickyUi.getAttribute("selected-key") || "",
+        info: `ClickyUIElement${clickyUiId}`,
       };
     }
     if (logQueryString) {
@@ -661,26 +661,26 @@ export class KeyMapUIState {
 
   /* Idempotently add a blank keymap to our set of known keymaps
    */
-  #idempotentlyAddBlankKeyMap(kbName: string) {
+  #idempotentlyAddBlankKeymap(kbName: string) {
     const kbElemConstructor = customElements.get(kbName);
     if (!kbElemConstructor) {
       return;
     }
     // TODO: this is a hack to get to instance properties, can I do something else?
-    const tmpInstance = new kbElemConstructor() as KeyBoard;
+    const tmpInstance = new kbElemConstructor() as ClickyKeyboardElement;
     if (!this.keymaps.has(kbName)) {
       this.keymaps.set(kbName, new Map());
     }
-    const boardKeyMaps = this.keymaps.get(kbName)!;
-    const blankKeyMap = tmpInstance.model.blankKeyMap;
-    boardKeyMaps.set(blankKeyMap.uniqueId, blankKeyMap);
+    const boardKeymaps = this.keymaps.get(kbName)!;
+    const blankKeymap = tmpInstance.model.blankKeymap;
+    boardKeymaps.set(blankKeymap.uniqueId, blankKeymap);
   }
 
   /* If there is a non-blank keymap for a keyboard model, return it.
    * Otherwise, return the blank keymap.
    * The keyboard model must exist in kbModels.
    */
-  #getNonBlankKeyMapIfPossible(keyboardElementName: string): KeyMap {
+  #getNonBlankKeymapIfPossible(keyboardElementName: string): Keymap {
     const model = this.kbModels.find(
       (m) => m.keyboardElementName === keyboardElementName
     );
@@ -688,10 +688,10 @@ export class KeyMapUIState {
       throw new Error(`Unknown keyboard element name: ${keyboardElementName}`);
     }
     const boardMaps = this.keymaps.get(model.keyboardElementName)!;
-    const nonBlankKeyMap = Array.from(boardMaps.values()).find(
-      (km) => km.uniqueId !== model.blankKeyMap.uniqueId
+    const nonBlankKeymap = Array.from(boardMaps.values()).find(
+      (km) => km.uniqueId !== model.blankKeymap.uniqueId
     );
-    const result = nonBlankKeyMap || model.blankKeyMap;
+    const result = nonBlankKeymap || model.blankKeymap;
     return result;
   }
 

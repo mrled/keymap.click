@@ -1,7 +1,7 @@
 import log from "loglevel";
 
-import { smallerRect, traceRect } from "~/lib/geometry";
-import { Connection, KeyInfoConnectType } from "~/lib/keyConnections";
+import { smallerRect, traceRect } from "~/lib/Geometry";
+import { Connection, KeyInfoConnectType } from "~/lib/DiagramConnections";
 
 /* Colors when drawing diagram lines
  */

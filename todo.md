@@ -10,10 +10,4 @@
     * Allow custom colors by overriding CSS vars; document this
 * Update readme
 * Add interface for like INamedWebComponent, a wc that knows its own element name with a .elementName property, and make registerAll simpler.
-* Standardize capitalization and hyphenization of KeyMap/Keymap, KeyBoard/Keyboard, key-map/keymap, etc
-* Standardize capitalization of filenames
-* Use a prefix for all our webcomponents?
-    * Web components require a dash in their names, this might help with standard hyphenization for single words like keyboard
-    * e.g. `<my-keyboard>` or `<kdc-keyboard>` or something
-* Rename web component classes to end in `Element`
 * Remove all per-element shadow DOMs from everything except KeyMapUI

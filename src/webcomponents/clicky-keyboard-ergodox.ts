@@ -1,12 +1,12 @@
-import { PhysicalKey } from "~/lib/physicalKey";
-import { KeyBoard } from "~/webcomponents/key-board";
-import { KeyMapKey } from "~/lib/keyMap";
-import { Point, Size } from "~/lib/geometry";
-import { KeyGrid } from "~/webcomponents/key-grid";
-import { KeyBoardModel } from "~/lib/KeyboardModel";
+import { PhysicalKey } from "~/lib/PhysicalKey";
+import { ClickyKeyboardElement } from "~/webcomponents/clicky-keyboard";
+import { KeymapKey } from "~/lib/Keymap";
+import { Point, Size } from "~/lib/Geometry";
+import { ClickyKeygridElement } from "~/webcomponents/clicky-keygrid";
+import { KeyboardModel } from "~/lib/KeyboardModel";
 
-export const KeyboardModelErgodox = new KeyBoardModel(
-  "key-board-ergodox",
+export const KeyboardModelErgodox = new KeyboardModel(
+  "clicky-keyboard-ergodox",
   new Point(2, 2),
   new Size(4, 3),
   [
@@ -117,17 +117,19 @@ export const KeyboardModelErgodox = new KeyBoardModel(
 
 /* An ErgoDox keyboard.
  */
-export class KeyBoardErgodox extends KeyBoard {
+export class ClickyKeyboardErgodoxElement extends ClickyKeyboardElement {
+  static readonly elementName = "clicky-keyboard-ergodox";
+  readonly elementName = ClickyKeyboardErgodoxElement.elementName;
+
   constructor() {
     super();
   }
 
-  readonly elementName = "key-board-ergodox";
   readonly model = KeyboardModelErgodox;
 
-  /* Create key-grid and keyboard-key elements from key data for this board.
+  /* Create keygrid and key elements from key data for this board.
    */
-  createChildren(keys: KeyMapKey[]) {
+  createChildren(keys: KeymapKey[]) {
     this.removeAllChildren();
 
     const leftSubBoard = document.createElement("div");
@@ -142,7 +144,9 @@ export class KeyBoardErgodox extends KeyBoard {
     leftGridContainer.className = "keygrid-container";
     leftSubBoard.appendChild(leftGridContainer);
 
-    const leftFingerGrid = document.createElement("key-grid") as KeyGrid;
+    const leftFingerGrid = document.createElement(
+      ClickyKeygridElement.elementName
+    ) as ClickyKeygridElement;
     leftFingerGrid.setAttribute("name", "ergodox-left-finger");
     leftFingerGrid.setAttribute("cols", "15");
     leftFingerGrid.setAttribute("rows", "10");
@@ -152,7 +156,9 @@ export class KeyBoardErgodox extends KeyBoard {
     leftFingerGrid.createKeys(this, leftFingerKeys);
     leftGridContainer.appendChild(leftFingerGrid);
 
-    const leftThumbGrid = document.createElement("key-grid") as KeyGrid;
+    const leftThumbGrid = document.createElement(
+      ClickyKeygridElement.elementName
+    ) as ClickyKeygridElement;
     leftThumbGrid.setAttribute("name", "ergodox-left-thumb");
     leftThumbGrid.setAttribute("cols", "6");
     leftThumbGrid.setAttribute("rows", "6");
@@ -174,7 +180,9 @@ export class KeyBoardErgodox extends KeyBoard {
     rightGridContainer.className = "keygrid-container";
     rightSubBoard.appendChild(rightGridContainer);
 
-    const rightFingerGrid = document.createElement("key-grid") as KeyGrid;
+    const rightFingerGrid = document.createElement(
+      ClickyKeygridElement.elementName
+    ) as ClickyKeygridElement;
     rightFingerGrid.setAttribute("name", "ergodox-right-finger");
     rightFingerGrid.setAttribute("cols", "15");
     rightFingerGrid.setAttribute("rows", "10");
@@ -184,7 +192,9 @@ export class KeyBoardErgodox extends KeyBoard {
     rightFingerGrid.createKeys(this, rightFingerKeys);
     rightGridContainer.appendChild(rightFingerGrid);
 
-    const rightThumbGrid = document.createElement("key-grid") as KeyGrid;
+    const rightThumbGrid = document.createElement(
+      ClickyKeygridElement.elementName
+    ) as ClickyKeygridElement;
     rightThumbGrid.setAttribute("name", "ergodox-right-thumb");
     rightThumbGrid.setAttribute("cols", "6");
     rightThumbGrid.setAttribute("rows", "6");

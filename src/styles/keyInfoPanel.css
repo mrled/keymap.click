@@ -18,7 +18,7 @@
   }
 }
 
-key-info-nav-bar {
+clicky-navbar {
   font-size: 0.75rem;
   line-height: 1rem;
   border-bottom: 1px solid var(--button-border-color);

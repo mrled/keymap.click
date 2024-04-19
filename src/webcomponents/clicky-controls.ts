@@ -1,5 +1,4 @@
-import log from "loglevel";
-import { KeyMapUIState, KeyMapUIStateChangeMap } from "~/lib/KeyMapUIState";
+import { ClickyUIState, ClickyUIStateChangeMap } from "~/lib/ClickyUIState";
 import { IStateObserver } from "~/lib/State";
 
 enum SelectId {
@@ -16,24 +15,26 @@ type ChangeListenerFunction = (
   selectElement: HTMLSelectElement
 ) => void;
 
-/* Controls for key-map-ui
+/* Controls for clicky-ui
  */
-export class KeyMapUIControls
+export class ClickyControlsElement
   extends HTMLElement
-  implements IStateObserver<KeyMapUIState> {
+  implements IStateObserver<ClickyUIState> {
   //
+
+  static readonly elementName = "clicky-controls";
 
   static readonly observedAttributes = ["show-debug"];
 
   private showDebug = false;
 
-  private _state: KeyMapUIState = new KeyMapUIState();
-  set state(value: KeyMapUIState) {
+  private _state: ClickyUIState = new ClickyUIState();
+  set state(value: ClickyUIState) {
     this._state = value;
     this._state.attach(this);
     this.updateAll();
   }
-  get state(): KeyMapUIState {
+  get state(): ClickyUIState {
     return this._state;
   }
 
@@ -63,7 +64,7 @@ export class KeyMapUIControls
   // #region Observed state
   //
 
-  readonly observerName = "KeyMapUIControls";
+  readonly observerName = "ClickyUIControls";
 
   /* Update the controls when the state changes.
    *
@@ -90,7 +91,7 @@ export class KeyMapUIControls
    * for instance, changes to the selected keyboard will automatically
    * update the selected keymap, which will update the selected layer and guide.
    */
-  update<KeyMapUIState>(stateChanges: KeyMapUIStateChangeMap) {
+  update(stateChanges: ClickyUIStateChangeMap) {
     if (stateChanges.get("debug")) {
       this.updateDebugSelector();
     }

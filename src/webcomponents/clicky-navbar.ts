@@ -1,28 +1,30 @@
-import { KeyMap, KeyMapKey, KeyMapLayer } from "~/lib/keyMap";
+import { Keymap, KeymapKey, KeymapLayer } from "~/lib/Keymap";
 
-import { KeyBoardTitleBar } from "~/webcomponents/key-board-title-bar";
-import { KeyBoardModel } from "~/lib/KeyboardModel";
+import { ClickyKeyboardTitleBarElement } from "~/webcomponents/clicky-keyboard-title-bar";
+import { KeyboardModel } from "~/lib/KeyboardModel";
 
 /* Title bar for a key-info-panel
  *
  * TODO: Support guides
  */
-export class KeyInfoNavBar extends HTMLElement {
+export class ClickyNavbarElement extends HTMLElement {
+  static readonly elementName = "clicky-navbar";
+
   constructor() {
     super();
   }
 
-  _titleBoard: KeyBoardTitleBar | null = null;
-  get titleBoard(): KeyBoardTitleBar {
+  _titleBoard: ClickyKeyboardTitleBarElement | null = null;
+  get titleBoard(): ClickyKeyboardTitleBarElement {
     if (!this._titleBoard) {
       this._titleBoard = this.querySelector(
-        "key-board-title-bar"
-      ) as KeyBoardTitleBar;
+        ClickyKeyboardTitleBarElement.elementName
+      ) as ClickyKeyboardTitleBarElement;
     }
     if (!this._titleBoard) {
       this._titleBoard = document.createElement(
-        "key-board-title-bar"
-      ) as KeyBoardTitleBar;
+        ClickyKeyboardTitleBarElement.elementName
+      ) as ClickyKeyboardTitleBarElement;
     }
     return this._titleBoard;
   }
@@ -84,8 +86,8 @@ export class KeyInfoNavBar extends HTMLElement {
   }
 
   updateTitleKey(
-    keymapLayer: KeyMapLayer,
-    referenceModel: KeyBoardModel,
+    keymapLayer: KeymapLayer,
+    referenceModel: KeyboardModel,
     selectedKeyId: string
   ) {
     const modifiedKey = this.titleBoard.updateSelectedKey(

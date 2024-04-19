@@ -1,147 +1,147 @@
-import { KeyboardModelTitleScreen } from "~/webcomponents/key-board-title-screen";
-import { KeyMap, KeyMapKey, KeyMapLayer } from "../keyMap";
+import { KeyboardModelTitleScreen } from "~/webcomponents/clicky-keyboard-title-screen";
+import { Keymap, KeymapKey, KeymapLayer } from "../Keymap";
 
 const keyInfoLayer0 = ["K E Y M A P . C L I C K"];
 const keyInfoLayer1 = ["I just picked some random words for this layer."];
 
-export const KeyMapTitleScreen = new KeyMap({
+export const ClickyTitleScreenKeymap = new Keymap({
   displayName: "Title Screen Map",
   uniqueId: "title-screen-map",
   model: KeyboardModelTitleScreen,
   layers: [
-    KeyMapLayer.fromKeyList({
+    KeymapLayer.fromKeyList({
       displayName: "Title Screen Main Layer",
       welcome: [
         `Hello, and welcome to the key map viewer!`,
         `If you&apos;re seeing this, it means you don&apos;t have a key map selected.`,
       ],
       keys: [
-        new KeyMapKey({
+        new KeymapKey({
           name: "K",
           id: "title-screen-1-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "E",
           id: "title-screen-3-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "Y",
           id: "title-screen-5-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "M",
           id: "title-screen-7-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "A",
           id: "title-screen-9-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "P",
           id: "title-screen-11-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: ".",
           id: "title-screen-13-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "C",
           id: "title-screen-15-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "L",
           id: "title-screen-17-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "I",
           id: "title-screen-19-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "C",
           id: "title-screen-21-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "K",
           id: "title-screen-23-1",
           info: keyInfoLayer0,
         }),
       ],
     }),
-    KeyMapLayer.fromKeyList({
+    KeymapLayer.fromKeyList({
       displayName: "Title Screen Second Layer",
       welcome: [
         `This is an example second layer for the same layout`,
         `Notice that it uses the same keys as the first layer, but the keys are have different letters.`,
       ],
       keys: [
-        new KeyMapKey({
+        new KeymapKey({
           name: "S",
           id: "title-screen-1-1",
           info: keyInfoLayer1,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "C",
           id: "title-screen-3-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "R",
           id: "title-screen-5-1",
           info: keyInfoLayer0,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "E",
           id: "title-screen-7-1",
           info: keyInfoLayer1,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "A",
           id: "title-screen-9-1",
           info: keyInfoLayer1,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "M",
           id: "title-screen-11-1",
           info: keyInfoLayer1,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           unset: true,
           name: "",
           id: "title-screen-13-1",
           info: keyInfoLayer1,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "K",
           id: "title-screen-15-1",
           info: keyInfoLayer1,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "N",
           id: "title-screen-17-1",
           info: keyInfoLayer1,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "I",
           id: "title-screen-19-1",
           info: keyInfoLayer1,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "F",
           id: "title-screen-21-1",
           info: keyInfoLayer1,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           name: "E",
           id: "title-screen-23-1",
           info: keyInfoLayer1,

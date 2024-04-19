@@ -1,3 +1,5 @@
+import { ClickyKeyHandleElement } from "./clicky-key-handle";
+
 /* A keyboard key
  *
  * Properties of the web component:
@@ -21,14 +23,16 @@
  *   target-of-indicator:       True if this key is the target of a diagram liner
  *   key-handle-top:            True if the key handle should be at the top of the key
  *
- * keyboard-key is an autonomous custom element, not a customized built-in element.
+ * clicky-key is an autonomous custom element, not a customized built-in element.
  * It would have been a customized HTMLButtonElement, but Safari doesn't support them.
  * <https://github.com/WebKit/standards-positions/issues/97>.
  *
  * Relevant properties:
  *   onclick:                   An onClick function
  */
-export class KeyboardKey extends HTMLElement {
+export class ClickyKeyElement extends HTMLElement {
+  static readonly elementName = "clicky-key";
+
   legendTextNode: Text | null;
   legendImageElement: Element | null;
   keyHandleElement: Element | null;
@@ -136,7 +140,9 @@ export class KeyboardKey extends HTMLElement {
     }
 
     if (!this.keyHandleElement) {
-      this.keyHandleElement = document.createElement("key-handle");
+      this.keyHandleElement = document.createElement(
+        ClickyKeyHandleElement.elementName
+      );
       this.appendChild(this.keyHandleElement);
     }
     this.keyHandleElement.setAttribute("key-id", id);

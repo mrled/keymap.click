@@ -1,6 +1,6 @@
 /* The options that can be passed in the query string.
  */
-export class KeyMapUIOptions {
+export class ClickyUIOptions {
   prefix: string;
   board: string;
   map: string;
@@ -36,10 +36,10 @@ export class KeyMapUIOptions {
   static parseQueryString(
     prefix: string,
     queryString: string
-  ): [KeyMapUIOptions, URLSearchParams] {
+  ): [ClickyUIOptions, URLSearchParams] {
     const params = new URLSearchParams(queryString);
     const newParams = new URLSearchParams();
-    const result = new KeyMapUIOptions({ prefix });
+    const result = new ClickyUIOptions({ prefix });
     params.forEach((value, key) => {
       switch (key) {
         case `${prefix}-board`:
@@ -71,6 +71,6 @@ export class KeyMapUIOptions {
   /* Show a nice string
    */
   toString(): string {
-    return `KeyMapUIOptions: prefix: ${this.prefix}, board: ${this.board}, map: ${this.map}, layer: ${this.layer}, id: ${this.id}`;
+    return `ClickyUIOptions: prefix: ${this.prefix}, board: ${this.board}, map: ${this.map}, layer: ${this.layer}, id: ${this.id}`;
   }
 }

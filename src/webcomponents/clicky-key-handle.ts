@@ -1,22 +1,24 @@
-import { keyHandleDomIdFromKeyId } from "~/lib/keyConnections";
+import { keyHandleDomIdFromKeyId } from "~/lib/DiagramConnections";
 
-// TODO: should this be its own component, or just a part of keyboard-key ?
+// TODO: should this be its own component, or just a part of clicky-key ?
 
-/* KeyHandle: a small element used as an anchor point to connect a diagram line to this key.
+/* ClickyKeyHandleElement: a small element used as an anchor point to connect a diagram line to this key.
  *
  * We use this because it is transformed with the outer element,
  * for instance the thumb clusters are moved and rotated,
- * and this item is to relatively the same place within its parent <Key> during that transformation.
+ * and this item is to relatively the same place within its parent <ClickyKey> during that transformation.
  *
- * The parent <Key> element is large enough that when it rotates, its BoundingClientRect is enlarged,
+ * The parent <ClickyKey> element is large enough that when it rotates, its BoundingClientRect is enlarged,
  * so the calculation we were doing before of a few px from the top left was actually outside of
- * the rotated <Key> element itself.
+ * the rotated <ClickyKey> element itself.
  *
  * Technically, this handle will have the same problem - its BoundingClientRect is enlarged.
  * However, it is so small that this doesn't matter.
- * The diagram line still looks good inside the <Key>.
+ * The diagram line still looks good inside the <ClickyKey>.
  */
-export class KeyHandle extends HTMLElement {
+export class ClickyKeyHandleElement extends HTMLElement {
+  static readonly elementName = "clicky-key-handle";
+
   static get observedAttributes() {
     return ["key-id", "col-start", "handle-top", "extra-classes"];
   }

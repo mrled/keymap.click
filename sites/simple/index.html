@@ -36,7 +36,7 @@
       h1 {
         margin-bottom: 2rem;
       }
-      key-map-ui {
+      clicky-ui {
         border: 1px solid black;
       }
     </style>
@@ -56,17 +56,20 @@
     <hr />
     <p>keymap.click UI should appear between the two HR elements above.</p>
     <script type="module">
-      import { KeyMapTitleScreen, MicahErgodoxLayout } from "./keymap.click.js";
+      import {
+        ClickyTitleScreenKeymap,
+        MicahErgodoxLayout,
+      } from "./keymap.click.js";
       const app = document.getElementById("app");
-      const kmuiTitle = document.createElement("key-map-ui");
-      const availableKeymaps = [KeyMapTitleScreen, MicahErgodoxLayout];
-      kmuiTitle.setAttribute("id", "kmui-title");
-      kmuiTitle.setAttribute("show-debug", "true");
-      kmuiTitle.setAttribute("query-prefix", "kmui");
-      kmuiTitle.addKeymaps(availableKeymaps);
-      kmuiTitle.setAttribute("keyboard-element", "key-board-title-screen");
-      kmuiTitle.setAttribute("keymap-id", "title-screen-map");
-      app.appendChild(kmuiTitle);
+      const clickyUi = document.createElement("clicky-ui");
+      const availableKeymaps = [ClickyTitleScreenKeymap, MicahErgodoxLayout];
+      clickyUi.setAttribute("id", "clicky-title");
+      clickyUi.setAttribute("show-debug", "true");
+      clickyUi.setAttribute("query-prefix", "clicky");
+      clickyUi.addKeymaps(availableKeymaps);
+      clickyUi.setAttribute("keyboard-element", "clicky-keyboard-title-screen");
+      clickyUi.setAttribute("keymap-id", "title-screen-map");
+      app.appendChild(clickyUi);
     </script>
   </body>
 </html>

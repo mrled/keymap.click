@@ -1,4 +1,4 @@
-import { Point } from "~/lib/geometry.js";
+import { Point } from "~/lib/Geometry.js";
 
 /* A key connection
  * sourceCoords:    Coordinates for a source element in the key info panel.

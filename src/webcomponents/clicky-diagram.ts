@@ -2,22 +2,24 @@
  */
 import log from "loglevel";
 
-import { KeyMapUIState, KeyMapUIStateChangeMap } from "~/lib/KeyMapUIState";
+import { ClickyUIState, ClickyUIStateChangeMap } from "~/lib/ClickyUIState";
 import { IStateObserver } from "~/lib/State";
-import { DiagramLineColors, drawDiagram } from "~/lib/diagram";
+import { DiagramLineColors, drawDiagram } from "~/lib/DiagramDrawing";
 
-export class KeyMapUIDiagram
+export class ClickyDiagramElement
   extends HTMLElement
-  implements IStateObserver<KeyMapUIState> {
+  implements IStateObserver<ClickyUIState> {
   //
+
+  static readonly elementName = "clicky-diagram";
 
   centerPanel: HTMLElement | null = null;
   diamargLeft: HTMLElement | null = null;
   diamargRight: HTMLElement | null = null;
   infoProse: HTMLElement | null = null;
 
-  private _state: KeyMapUIState = new KeyMapUIState();
-  set state(state: KeyMapUIState) {
+  private _state: ClickyUIState = new ClickyUIState();
+  set state(state: ClickyUIState) {
     this._state = state;
     this._state.attach(this);
     this.draw();
@@ -30,13 +32,13 @@ export class KeyMapUIDiagram
     super();
   }
 
-  readonly observerName = "KeyMapUIDiagram";
+  readonly observerName = "ClickyUIDiagram";
 
   connectedCallback() {
     this.draw();
   }
 
-  update<KeyMapUIState>(stateChanges: KeyMapUIStateChangeMap) {
+  update(stateChanges: ClickyUIStateChangeMap) {
     if (stateChanges.has("connectionPairs") || stateChanges.has("debug")) {
       this.draw();
     }

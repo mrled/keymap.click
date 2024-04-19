@@ -1,11 +1,13 @@
 import {
   keyInfoConnectFromClass,
   keyInfoConnectFromClassPrefix,
-} from "~/lib/keyConnections";
+} from "~/lib/DiagramConnections";
 
-/* KeyIndicator: an element off the keyboard that points to some key on the keyboard via a diagram line.
+/* ClickyIndicatorElement: an element off the keyboard that points to some key on the keyboard via a diagram line.
  */
-export class KeyIndicator extends HTMLElement {
+export class ClickyIndicatorElement extends HTMLElement {
+  static readonly elementName = "clicky-indicator";
+
   static get observedAttributes() {
     return ["id"];
   }

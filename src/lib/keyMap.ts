@@ -1,5 +1,5 @@
-import { KeyBoard } from "~/webcomponents/key-board";
-import { KeyBoardModel } from "./KeyboardModel";
+import { ClickyKeyboardElement } from "~/webcomponents/clicky-keyboard";
+import { KeyboardModel } from "./KeyboardModel";
 
 /* A key in a keymap.
  *
@@ -15,7 +15,7 @@ import { KeyBoardModel } from "./KeyboardModel";
  *
  * For the legend, an image is used if provided, otherwise text legend if provided, otherwise the name.
  */
-export class KeyMapKey {
+export class KeymapKey {
   readonly name: string;
   readonly id;
   readonly info: string[];
@@ -80,11 +80,11 @@ export interface IGuideStep {
  * this class adds a reference to the guide and the index of the step,
  * as well as helper functions.
  *
- * KeyMapGuide objects convert a list of objects that implement IGuideStep
+ * KeymapGuide objects convert a list of objects that implement IGuideStep
  * into a list of these objects.
  */
 export class GuideStep implements IGuideStep {
-  readonly guide: KeyMapGuide;
+  readonly guide: KeymapGuide;
   readonly index: number;
   readonly keyId?: string;
   readonly title?: string;
@@ -99,7 +99,7 @@ export class GuideStep implements IGuideStep {
     text,
     selection,
   }: {
-    guide: KeyMapGuide;
+    guide: KeymapGuide;
     index: number;
     keyId?: string;
     title?: string;
@@ -139,7 +139,7 @@ export class GuideStep implements IGuideStep {
 
 /* A guide to the layout of a key map
  */
-export class KeyMapGuide {
+export class KeymapGuide {
   readonly title: string;
   readonly id: string;
   readonly steps: GuideStep[];
@@ -160,13 +160,13 @@ export class KeyMapGuide {
   }
 }
 
-/* A single layer is a map of physical key IDs to KeyMapKey objects.
+/* A single layer is a map of physical key IDs to KeymapKey objects.
  */
-export class KeyMapLayer {
+export class KeymapLayer {
   constructor(
     public readonly displayName: string,
     public readonly welcome: string[],
-    public readonly keys: Map<string, KeyMapKey>
+    public readonly keys: Map<string, KeymapKey>
   ) {}
 
   /* Create a new layer from a list of keys.
@@ -181,14 +181,14 @@ export class KeyMapLayer {
   }: {
     displayName: string;
     welcome: string[];
-    keys: KeyMapKey[];
+    keys: KeymapKey[];
   }) {
-    const duplicateKeys: KeyMapKey[] = [];
+    const duplicateKeys: KeymapKey[] = [];
     const keysById = keys.reduce((map, key) => {
       if (map.has(key.id)) duplicateKeys.push(key);
       map.set(key.id, key);
       return map;
-    }, new Map<string, KeyMapKey>());
+    }, new Map<string, KeymapKey>());
 
     // Make sure we haven't passed any keys with duplicate IDs
     if (duplicateKeys.length > 0) {
@@ -199,7 +199,7 @@ export class KeyMapLayer {
       );
     }
 
-    const newLayer = new KeyMapLayer(displayName, welcome, keysById);
+    const newLayer = new KeymapLayer(displayName, welcome, keysById);
     return newLayer;
   }
 }
@@ -218,12 +218,12 @@ export class KeyMapLayer {
  *
  * Any layer passed in which does not contain all the keys on the keyboard will have unset keys added.
  */
-export class KeyMap {
+export class Keymap {
   displayName: string;
   uniqueId: string;
-  model: KeyBoardModel;
-  guides: KeyMapGuide[];
-  layers: KeyMapLayer[] = [];
+  model: KeyboardModel;
+  guides: KeymapGuide[];
+  layers: KeymapLayer[] = [];
 
   constructor({
     displayName,
@@ -234,9 +234,9 @@ export class KeyMap {
   }: {
     displayName: string;
     uniqueId: string;
-    model: KeyBoardModel;
-    layers: KeyMapLayer[];
-    guides?: KeyMapGuide[]; // TODO: implement
+    model: KeyboardModel;
+    layers: KeymapLayer[];
+    guides?: KeymapGuide[]; // TODO: implement
   }) {
     this.displayName = displayName;
     this.uniqueId = uniqueId;
@@ -250,7 +250,7 @@ export class KeyMap {
         if (!layer.keys.has(key.id)) {
           layer.keys.set(
             key.id,
-            new KeyMapKey({
+            new KeymapKey({
               name: "",
               id: key.id,
               info: [],
@@ -262,7 +262,7 @@ export class KeyMap {
 
       // Check for any keys in the layer that are not on the keyboard
       const invalidKeys = Array.from(layer.keys.values()).filter(
-        (key) => !model.physicalKeyMap[key.id]
+        (key) => !model.physicalKeymap[key.id]
       );
       if (invalidKeys.length > 0) {
         const invalidKeysListStr = invalidKeys.map((key) => key.id).join(", ");

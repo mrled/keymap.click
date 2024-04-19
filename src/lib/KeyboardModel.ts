@@ -3,13 +3,13 @@
  * Specific boards should extend this class.
  */
 
-import { PhysicalKey } from "~/lib/physicalKey";
-import { Point, Size } from "~/lib/geometry";
-import { KeyMap, KeyMapKey, KeyMapLayer } from "~/lib/keyMap";
+import { PhysicalKey } from "~/lib/PhysicalKey";
+import { Point, Size } from "~/lib/Geometry";
+import { Keymap, KeymapKey, KeymapLayer } from "~/lib/Keymap";
 
-type KeyIdToPhysicalKeyMap = { [key: string]: PhysicalKey };
+type KeyIdToPhysicalKeymap = { [key: string]: PhysicalKey };
 
-export class KeyBoardModel {
+export class KeyboardModel {
   constructor(
     //The element name for the keyboard that this instance models
     public readonly keyboardElementName: string,
@@ -26,24 +26,24 @@ export class KeyBoardModel {
 
   /* A map of string key IDs to PhysicalKey objects.
    */
-  private _physicalKeyMap: KeyIdToPhysicalKeyMap = {};
-  get physicalKeyMap() {
-    if (Object.keys(this._physicalKeyMap).length === 0) {
-      this._physicalKeyMap = this.physicalKeys.reduce(
-        (acc: KeyIdToPhysicalKeyMap, key: PhysicalKey) => {
+  private _physicalKeymap: KeyIdToPhysicalKeymap = {};
+  get physicalKeymap() {
+    if (Object.keys(this._physicalKeymap).length === 0) {
+      this._physicalKeymap = this.physicalKeys.reduce(
+        (acc: KeyIdToPhysicalKeymap, key: PhysicalKey) => {
           acc[key.id] = key;
           return acc;
         },
         {}
       );
     }
-    return this._physicalKeyMap;
+    return this._physicalKeymap;
   }
 
   /* Get a physical key by its ID, or throw an error if not found.
    */
   getPhysicalKey(id: string) {
-    const key = this.physicalKeyMap[id];
+    const key = this.physicalKeymap[id];
     if (!key) {
       throw new Error(
         `Physical key not found with id '${id}' on board '${this.keyboardElementName}'`
@@ -52,26 +52,26 @@ export class KeyBoardModel {
     return key;
   }
 
-  /* A helper that provides a blank KeyMapKey for each physical key.
+  /* A helper that provides a blank KeymapKey for each physical key.
    */
-  get blankKeyMapKeys(): KeyMapKey[] {
+  get blankKeymapKeys(): KeymapKey[] {
     return this.physicalKeys.map(
-      (key) => new KeyMapKey({ name: "", id: key.id, info: [""], unset: true })
+      (key) => new KeymapKey({ name: "", id: key.id, info: [""], unset: true })
     );
   }
 
-  /* A helper that provides a blank KeyMap for the keyboard.
+  /* A helper that provides a blank Keymap for the keyboard.
    */
-  get blankKeyMap(): KeyMap {
-    return new KeyMap({
+  get blankKeymap(): Keymap {
+    return new Keymap({
       displayName: "Blank keymap",
       uniqueId: "blank",
       model: this,
       layers: [
-        KeyMapLayer.fromKeyList({
+        KeymapLayer.fromKeyList({
           displayName: "Blank layer",
           welcome: ["No keymap selected"],
-          keys: this.blankKeyMapKeys,
+          keys: this.blankKeymapKeys,
         }),
       ],
       guides: [],

@@ -1,4 +1,4 @@
-import { Point, Size } from "src/lib/geometry";
+import { Point, Size } from "~/lib/Geometry";
 
 /* A physical key on a keyboard.
  *

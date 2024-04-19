@@ -1,12 +1,12 @@
-import { PhysicalKey } from "~/lib/physicalKey";
-import { KeyBoard } from "~/webcomponents/key-board";
-import { KeyMapKey } from "~/lib/keyMap";
-import { Point, Size } from "~/lib/geometry";
-import { KeyGrid } from "~/webcomponents/key-grid";
-import { KeyBoardModel } from "~/lib/KeyboardModel";
+import { PhysicalKey } from "~/lib/PhysicalKey";
+import { ClickyKeyboardElement } from "~/webcomponents/clicky-keyboard";
+import { KeymapKey } from "~/lib/Keymap";
+import { Point, Size } from "~/lib/Geometry";
+import { ClickyKeygridElement } from "~/webcomponents/clicky-keygrid";
+import { KeyboardModel } from "~/lib/KeyboardModel";
 
-export const KeyboardModelTitleScreen = new KeyBoardModel(
-  "key-board-title-screen",
+export const KeyboardModelTitleScreen = new KeyboardModel(
+  "clicky-keyboard-title-screen",
   new Point(2, 2),
   new Size(2, 2),
   [
@@ -27,17 +27,19 @@ export const KeyboardModelTitleScreen = new KeyBoardModel(
 
 /* An ErgoDox keyboard.
  */
-export class KeyBoardTitleScreen extends KeyBoard {
+export class ClickyKeyboardTitleScreenElement extends ClickyKeyboardElement {
+  static readonly elementName = "clicky-keyboard-title-screen";
+  readonly elementName = ClickyKeyboardTitleScreenElement.elementName;
+
   constructor() {
     super();
   }
 
-  readonly elementName = "key-board-title-screen";
   readonly model = KeyboardModelTitleScreen;
 
-  /* Create key-grid and keyboard-key elements from key data for this board.
+  /* Create keygrid and key elements from key data for this board.
    */
-  createChildren(keys: KeyMapKey[]) {
+  createChildren(keys: KeymapKey[]) {
     this.removeAllChildren();
 
     const title = document.createElement("h2");
@@ -48,7 +50,9 @@ export class KeyBoardTitleScreen extends KeyBoard {
     gridContainer.className = "keygrid-container";
     this.appendChild(gridContainer);
 
-    const keygrid = document.createElement("key-grid") as KeyGrid;
+    const keygrid = document.createElement(
+      ClickyKeygridElement.elementName
+    ) as ClickyKeygridElement;
     keygrid.setAttribute("name", "title-screen");
     keygrid.setAttribute("cols", "24");
     keygrid.setAttribute("rows", "2");

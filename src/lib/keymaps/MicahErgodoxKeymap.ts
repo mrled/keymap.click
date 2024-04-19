@@ -1,11 +1,5 @@
-import {
-  KeyMap,
-  KeyMapGuide,
-  KeyMapKey,
-  GuideStep,
-  KeyMapLayer,
-} from "src/lib/keyMap";
-import { KeyboardModelErgodox } from "~/webcomponents/key-board-ergodox";
+import { Keymap, KeymapGuide, KeymapKey, KeymapLayer } from "~/lib/Keymap";
+import { KeyboardModelErgodox } from "~/webcomponents/clicky-keyboard-ergodox";
 
 const normalLayoutInfo = [`Unchanged from normal QWERTY keyboard layout`];
 
@@ -41,9 +35,9 @@ const bracketKeyInfo = [
       <kbd>shift</kbd> key. When I first got my ErgoDox, using shift with either
       hand had become excruciating, and I desperately needed to shift without
       using my pinky. To accomplish this, I remapped
-      <key-indicator id="l-t-1-3">
+      <clicky-indicator id="l-t-1-3">
         <kbd>shift</kbd>
-      </key-indicator>
+      </clicky-indicator>
       to under the thumb. However, moving shift to a new location without
       removing the normal QWERTY shift mapping gave me too much of a crutch, so
       I needed to remove shift from its normal location.
@@ -52,13 +46,13 @@ const bracketKeyInfo = [
       Even so, why brackets? On the ErgoDox default layout, the brackets are in
       an awkward place anyway, and the shift keys are actually easier to reach
       than the default location for
-      <key-indicator id="r-f-9-9">
+      <clicky-indicator id="r-f-9-9">
         <kbd>[</kbd>
-      </key-indicator>
+      </clicky-indicator>
       and
-      <key-indicator id="r-f-11-9">
+      <clicky-indicator id="r-f-11-9">
         <kbd>]</kbd>
-      </key-indicator>
+      </clicky-indicator>
       .
     `,
 ];
@@ -84,9 +78,9 @@ const ctrlKeyInfo = [
     `,
   `
       On a normal keyboard, I remap the key in the
-      <key-indicator id="l-f-1-5">
+      <clicky-indicator id="l-f-1-5">
         <kbd>capslock</kbd>
-      </key-indicator>
+      </clicky-indicator>
       position to <kbd>ctrl</kbd>; for this layout, I had to remove that mapping
       to stop me from falling back to old habits.
     `,
@@ -101,8 +95,8 @@ const optKeyInfo = [
   `
       As <kbd>opt</kbd> + a left/right arrow key is a very common chord,
       it&apos;s worth noting that this placement works well with my
-      <key-indicator id="l-f-8-9">left side</key-indicator> and
-      <key-indicator id="r-f-7-9">right side</key-indicator> arrow layer keys.
+      <clicky-indicator id="l-f-8-9">left side</clicky-indicator> and
+      <clicky-indicator id="r-f-7-9">right side</clicky-indicator> arrow layer keys.
       I can chord <kbd>opt</kbd>+<kbd>arrow layer</kbd> with one thumb without
       any strain, and use the other hand to move the cursor with the arrow keys.
     `,
@@ -111,31 +105,31 @@ const optKeyInfo = [
 const arrowLayerKeyInfo = [
   `
       Enter an arrow layer, where
-      <key-indicator id="l-f-8-3">
+      <clicky-indicator id="l-f-8-3">
         <kbd>e</kbd>
-      </key-indicator>
-      <key-indicator id="l-f-6-5">
+      </clicky-indicator>
+      <clicky-indicator id="l-f-6-5">
         <kbd>s</kbd>
-      </key-indicator>
-      <key-indicator id="l-f-8-5">
+      </clicky-indicator>
+      <clicky-indicator id="l-f-8-5">
         <kbd>d</kbd>
-      </key-indicator>
-      <key-indicator id="l-f-10-5">
+      </clicky-indicator>
+      <clicky-indicator id="l-f-10-5">
         <kbd>f</kbd>
-      </key-indicator>
+      </clicky-indicator>
       and
-      <key-indicator id="r-f-7-3">
+      <clicky-indicator id="r-f-7-3">
         <kbd>i</kbd>
-      </key-indicator>
-      <key-indicator id="r-f-5-5">
+      </clicky-indicator>
+      <clicky-indicator id="r-f-5-5">
         <kbd>j</kbd>
-      </key-indicator>
-      <key-indicator id="r-f-7-5">
+      </clicky-indicator>
+      <clicky-indicator id="r-f-7-5">
         <kbd>k</kbd>
-      </key-indicator>
-      <key-indicator id="r-f-9-5">
+      </clicky-indicator>
+      <clicky-indicator id="r-f-9-5">
         <kbd>l</kbd>
-      </key-indicator>
+      </clicky-indicator>
       are arrow keys.
     `,
   `
@@ -258,7 +252,7 @@ function newQwertyKey(
   physicalKeyId: string,
   textLegend?: string
 ) {
-  return new KeyMapKey({
+  return new KeymapKey({
     name,
     textLegend: textLegend || name,
     id: physicalKeyId,
@@ -267,12 +261,12 @@ function newQwertyKey(
   });
 }
 
-export const MicahErgodoxLayout = new KeyMap({
+export const MicahErgodoxKeymap = new Keymap({
   displayName: "Micah's ErgoDox",
   uniqueId: "micah-ergodox",
   model: KeyboardModelErgodox,
   layers: [
-    KeyMapLayer.fromKeyList({
+    KeymapLayer.fromKeyList({
       displayName: "Micah Ergodox Main Layer",
       welcome: [
         `Welcome to my keymap. I wrote this guide to explain how my ErgoDox helped my RSI.`,
@@ -280,7 +274,7 @@ export const MicahErgodoxLayout = new KeyMap({
       ],
       keys: [
         // left hand, number row
-        new KeyMapKey({
+        new KeymapKey({
           name: "=",
           textLegend: "=+",
           id: "l-f-1-1",
@@ -289,9 +283,9 @@ export const MicahErgodoxLayout = new KeyMap({
             This placement takes a little getting used to, but it&apos;s normal
             for other Ergodox layouts, and honestly isn&apos;t too bad. It helps
             me to remember that it mirrors
-            <key-indicator id="r-f-13-1">
+            <clicky-indicator id="r-f-13-1">
               <kbd>-_</kbd>
-            </key-indicator>
+            </clicky-indicator>
             on the opposite side of the board.
           `,
           ],
@@ -301,14 +295,14 @@ export const MicahErgodoxLayout = new KeyMap({
         newQwertyKey("3", "l-f-8-1"),
         newQwertyKey("4", "l-f-10-1"),
         newQwertyKey("5", "l-f-12-1"),
-        new KeyMapKey({
+        new KeymapKey({
           name: "escape",
           textLegend: "⎋",
           id: "l-f-14-1",
           info: [
             `
               Reduces pinky strain compared to its QWERTY position, which is above
-              <key-indicator id="l-f-1-1">this key</key-indicator> on a QWERTY
+              <clicky-indicator id="l-f-1-1">this key</clicky-indicator> on a QWERTY
               keyboard &mdash; a position that is not actually available on an
               ErgoDox.
             `,
@@ -324,7 +318,7 @@ export const MicahErgodoxLayout = new KeyMap({
           ],
         }),
         // left hand, qwerty row
-        new KeyMapKey({
+        new KeymapKey({
           name: "`",
           textLegend: "`~",
           id: "l-f-1-3",
@@ -332,15 +326,15 @@ export const MicahErgodoxLayout = new KeyMap({
             `
               Slightly different from the location of this key on a normal QWERTY
               keyboard. You could theoretically swap it with
-              <key-indicator id="l-f-1-1">
+              <clicky-indicator id="l-f-1-1">
                 <kbd>=/+</kbd>
-              </key-indicator>
+              </clicky-indicator>
               to keep the QWERTY position, but I decided I preferred that key to
               mirror <kbd>-/_</kbd> on the opposite side of the keyboard so I
               would remember it more easily. That leaves this space as the best
               fit for this key. Additionally, while this is the location for the
               tab key on a normal keyboard, that key is much better suited for a
-              <key-indicator id="l-f-14-3">different location</key-indicator>
+              <clicky-indicator id="l-f-14-3">different location</clicky-indicator>
               under a stronger finger than the pinky.
             `,
           ],
@@ -350,7 +344,7 @@ export const MicahErgodoxLayout = new KeyMap({
         newQwertyKey("e", "l-f-8-3"),
         newQwertyKey("r", "l-f-10-3"),
         newQwertyKey("t", "l-f-12-3"),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "⇥",
           name: "tab",
           id: "l-f-14-3",
@@ -362,20 +356,20 @@ export const MicahErgodoxLayout = new KeyMap({
             `
             A good location for <kbd>tab</kbd> must take into account the
             location of other keys. In this layout, I can easily chord with
-            <key-indicator id="l-f-14-6">
+            <clicky-indicator id="l-f-14-6">
               <kbd>cmd</kbd>
-            </key-indicator>
+            </clicky-indicator>
             to switch programs on macOS,
-            <key-indicator id="l-f-10-9">
+            <clicky-indicator id="l-f-10-9">
               <kbd>alt</kbd>
-            </key-indicator>
+            </clicky-indicator>
             to switch programs on Windows along with other keys like
             <kbd>ctrl</kbd>, and <kbd>shift</kbd>.
           `,
           ],
         }),
         // left hand, asdf row
-        new KeyMapKey({
+        new KeymapKey({
           name: "capslock",
           textLegend: "⇪",
           id: "l-f-1-5",
@@ -385,13 +379,13 @@ export const MicahErgodoxLayout = new KeyMap({
           don&apos;t really use it. On a normal keyboard, I remap this key to
           <kbd>ctrl</kbd>, but I chose not to keep that mapping so I could
           better remember the new
-          <key-indicator id="l-t-5-5">
+          <clicky-indicator id="l-t-5-5">
             <kbd>left ctrl</kbd>
-          </key-indicator>
+          </clicky-indicator>
           and
-          <key-indicator id="r-t-1-5">
+          <clicky-indicator id="r-t-1-5">
             <kbd>right ctrl</kbd>
-          </key-indicator>
+          </clicky-indicator>
           locations.
         `,
           ],
@@ -401,7 +395,7 @@ export const MicahErgodoxLayout = new KeyMap({
         newQwertyKey("d", "l-f-8-5"),
         newQwertyKey("f", "l-f-10-5"),
         newQwertyKey("g", "l-f-12-5"),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "⌘",
           name: "gui",
           id: "l-f-14-6",
@@ -409,7 +403,7 @@ export const MicahErgodoxLayout = new KeyMap({
           selection: guiKeySelection,
         }),
         // left hand, zxcv row
-        new KeyMapKey({
+        new KeymapKey({
           name: "[",
           textLegend: "[{",
           id: "l-f-1-7",
@@ -422,7 +416,7 @@ export const MicahErgodoxLayout = new KeyMap({
         newQwertyKey("v", "l-f-10-7"),
         newQwertyKey("b", "l-f-12-7"),
         // left hand, bottom row
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "⎆f",
           name: "function layer",
           id: "l-f-2-9",
@@ -443,7 +437,7 @@ export const MicahErgodoxLayout = new KeyMap({
           `,
           ],
         }),
-        new KeyMapKey({
+        new KeymapKey({
           unset: true,
           name: "",
           id: "l-f-4-9",
@@ -454,7 +448,7 @@ export const MicahErgodoxLayout = new KeyMap({
           `,
           ],
         }),
-        new KeyMapKey({
+        new KeymapKey({
           unset: true,
           name: "",
           id: "l-f-6-9",
@@ -465,14 +459,14 @@ export const MicahErgodoxLayout = new KeyMap({
           `,
           ],
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "←↓↑→",
           name: "arrow layer",
           id: "l-f-8-9",
           info: arrowLayerKeyInfo,
           selection: arrowLayerKeySelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "⌥",
           name: "option",
           id: "l-f-10-9",
@@ -481,7 +475,7 @@ export const MicahErgodoxLayout = new KeyMap({
         }),
 
         // left thumb keys
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "⌦",
           name: "forward delete",
           id: "l-t-3-1",
@@ -494,14 +488,14 @@ export const MicahErgodoxLayout = new KeyMap({
         `,
           ],
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "Home",
           name: "home",
           id: "l-t-5-1",
           info: pageUpDownHomeEndInfo,
           selection: pageUpDownHomeEndSelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "⇧",
           name: "shift",
           id: "l-t-1-3",
@@ -512,27 +506,27 @@ export const MicahErgodoxLayout = new KeyMap({
           `,
             `
             I can easily reach any key necessary &mdash; the longest reach is to
-            <key-indicator id="l-f-1-1">
+            <clicky-indicator id="l-f-1-1">
               <kbd>=/+</kbd>
-            </key-indicator>
+            </clicky-indicator>
             , and I can do that easily, repeatedly, painlessly, and with room to
             spare.
           `,
             `
             I did have to remap the normal locations for
-            <key-indicator id="l-f-1-7">
+            <clicky-indicator id="l-f-1-7">
               <kbd>left shift</kbd>
-            </key-indicator>
+            </clicky-indicator>
             and
-            <key-indicator id="r-f-13-7">
+            <clicky-indicator id="r-f-13-7">
               <kbd>right shift</kbd>
-            </key-indicator>
+            </clicky-indicator>
             to other keys in order to train my hands to use this new location.
             After a day or two the new locations felt very fast and natural.
           `,
           ],
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "⌫",
           name: "backspace",
           id: "l-t-3-3",
@@ -550,14 +544,14 @@ export const MicahErgodoxLayout = new KeyMap({
           `,
           ],
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "End",
           name: "end",
           id: "l-t-5-3",
           info: pageUpDownHomeEndInfo,
           selection: pageUpDownHomeEndSelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "^",
           name: "control",
           id: "l-t-5-5",
@@ -566,7 +560,7 @@ export const MicahErgodoxLayout = new KeyMap({
         }),
 
         // right hand, number row
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "⎆l",
           name: "leader key",
           id: "r-f-1-1",
@@ -598,34 +592,34 @@ export const MicahErgodoxLayout = new KeyMap({
         newQwertyKey("0", "r-f-11-1"),
         newQwertyKey("-", "r-f-13-1", "-_"),
         // right hand, qwerty row
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "⎆m",
           name: "mouse layer",
           id: "r-f-1-3",
           info: [
             `
             Holding this key activates a mouse layer where
-            <key-indicator id="l-f-8-3">
+            <clicky-indicator id="l-f-8-3">
               <kbd>e</kbd>
-            </key-indicator>
-            <key-indicator id="l-f-6-5">
+            </clicky-indicator>
+            <clicky-indicator id="l-f-6-5">
               <kbd>s</kbd>
-            </key-indicator>
-            <key-indicator id="l-f-8-5">
+            </clicky-indicator>
+            <clicky-indicator id="l-f-8-5">
               <kbd>d</kbd>
-            </key-indicator>
-            <key-indicator id="l-f-10-5">
+            </clicky-indicator>
+            <clicky-indicator id="l-f-10-5">
               <kbd>f</kbd>
-            </key-indicator>
+            </clicky-indicator>
             control the mouse cursor. I also use some keys under the thumbs for
             clicking
-            <key-indicator id="l-t-1-3">
+            <clicky-indicator id="l-t-1-3">
               <kbd>left</kbd>
-            </key-indicator>
+            </clicky-indicator>
             and
-            <key-indicator id="l-t-3-3">
+            <clicky-indicator id="l-t-3-3">
               <kbd>right</kbd>
-            </key-indicator>
+            </clicky-indicator>
             mouse buttons.
           `,
             `
@@ -642,7 +636,7 @@ export const MicahErgodoxLayout = new KeyMap({
         newQwertyKey("p", "r-f-11-3"),
         newQwertyKey("\\", "r-f-13-3", "\\|"),
         // right hand, asdf row
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "⌘",
           name: "gui",
           id: "r-f-1-6",
@@ -661,7 +655,7 @@ export const MicahErgodoxLayout = new KeyMap({
         newQwertyKey(",", "r-f-7-7", ",<"),
         newQwertyKey(".", "r-f-9-7", ".>"),
         newQwertyKey("/", "r-f-11-7", "/?"),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "]}",
           name: "]",
           id: "r-f-13-7",
@@ -669,35 +663,35 @@ export const MicahErgodoxLayout = new KeyMap({
           selection: bracketKeySelection,
         }),
         // the function row at the very bottom
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "⌥",
           name: "option",
           id: "r-f-5-9",
           info: optKeyInfo,
           selection: optKeySelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "←↓↑→",
           name: "arrow layer",
           id: "r-f-7-9",
           info: arrowLayerKeyInfo,
           selection: arrowLayerKeySelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "VOL-",
           name: "volume down",
           id: "r-f-9-9",
           info: volumeControlInfo,
           selection: volKeySelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "VOL+",
           name: "volume up",
           id: "r-f-11-9",
           info: volumeControlInfo,
           selection: volKeySelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "VOL0",
           name: "mute",
           id: "r-f-13-9",
@@ -705,14 +699,14 @@ export const MicahErgodoxLayout = new KeyMap({
           selection: volKeySelection,
         }),
         // right thumb keys
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "PgUp",
           name: "page up",
           id: "r-t-1-1",
           info: pageUpDownHomeEndInfo,
           selection: pageUpDownHomeEndSelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "☰",
           name: "application / menu",
           id: "r-t-3-1",
@@ -723,36 +717,36 @@ export const MicahErgodoxLayout = new KeyMap({
         `,
           ],
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "PgDn",
           name: "page down",
           id: "r-t-1-3",
           info: pageUpDownHomeEndInfo,
           selection: pageUpDownHomeEndSelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "⏎",
           name: "enter / return",
           id: "r-t-3-3",
           info: [
             `
             As with
-            <key-indicator id="l-t-3-3">
+            <clicky-indicator id="l-t-3-3">
               <kbd>backspace</kbd>
-            </key-indicator>
+            </clicky-indicator>
             , I hit this key pretty hard, so moving it out from under a pinky
             finger eased pain right away.
           `,
             `This was easy to get used to`,
             `
             The default ErgoDox layout has it
-            <key-indicator id="r-t-5-3">one key over</key-indicator>, but I
+            <clicky-indicator id="r-t-5-3">one key over</clicky-indicator>, but I
             preferred <kbd>space</kbd> in that spot instead, so I moved return
             here.
           `,
           ],
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "␣",
           name: "space",
           id: "r-t-5-3",
@@ -761,14 +755,14 @@ export const MicahErgodoxLayout = new KeyMap({
           A great place for <kbd>space</kbd>. I initially had mirrored
           <kbd>space</kbd> keys, one under each thumb, but eventually moved the
           left thumb to be
-          <key-indicator id="l-t-1-3">
+          <clicky-indicator id="l-t-1-3">
             <kbd>shift</kbd>
-          </key-indicator>
+          </clicky-indicator>
           , which was immediately a huge positive for me.
         `,
           ],
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "^",
           name: "control",
           id: "r-t-1-5",
@@ -777,7 +771,7 @@ export const MicahErgodoxLayout = new KeyMap({
         }),
       ],
     }),
-    KeyMapLayer.fromKeyList({
+    KeymapLayer.fromKeyList({
       displayName: "Navigation layer",
       welcome: [
         `This layer is designed to make it easier to navigate text.`,
@@ -786,28 +780,28 @@ export const MicahErgodoxLayout = new KeyMap({
         without having to move my hands.`,
       ],
       keys: [
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "↑",
           name: "up",
           id: "l-f-8-3",
           info: arrowKeyInfo,
           selection: arrowKeySelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "←",
           name: "left",
           id: "l-f-6-5",
           info: arrowKeyInfo,
           selection: arrowKeySelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "↓",
           name: "down",
           id: "l-f-8-5",
           info: arrowKeyInfo,
           selection: arrowKeySelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "→",
           name: "right",
           id: "l-f-10-5",
@@ -815,28 +809,28 @@ export const MicahErgodoxLayout = new KeyMap({
           selection: arrowKeySelection,
         }),
 
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "↑",
           name: "up",
           id: "r-f-7-3",
           info: arrowKeyInfo,
           selection: arrowKeySelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "←",
           name: "left",
           id: "r-f-5-5",
           info: arrowKeyInfo,
           selection: arrowKeySelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "↓",
           name: "down",
           id: "r-f-7-5",
           info: arrowKeyInfo,
           selection: arrowKeySelection,
         }),
-        new KeyMapKey({
+        new KeymapKey({
           textLegend: "→",
           name: "right",
           id: "r-f-9-5",
@@ -847,7 +841,7 @@ export const MicahErgodoxLayout = new KeyMap({
     }),
   ],
   guides: [
-    new KeyMapGuide({
+    new KeymapGuide({
       title: "Guide to Micah's ErgoDox layout",
       id: "mrlguide",
       steps: [

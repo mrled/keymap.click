@@ -1,41 +1,27 @@
-import { KeyBoardErgodox } from "~/webcomponents/key-board-ergodox";
-import { KeyBoardTitleBar } from "~/webcomponents/key-board-title-bar";
-import { KeyBoardTitleScreen } from "~/webcomponents/key-board-title-screen";
-// import { KeyBoard } from "~/webcomponents/key-board";
-import { KeyGrid } from "~/webcomponents/key-grid";
-import { KeyHandle } from "~/webcomponents/key-handle";
-import { KeyIndicator } from "~/webcomponents/key-indicator";
-import { KeyInfoNavBar } from "~/webcomponents/key-info-nav-bar";
-import { KeyMapUI } from "~/webcomponents/key-map-ui";
-import { KeyMapUIDiagram } from "~/webcomponents/key-map-ui-diagram";
-import { KeyboardKey } from "~/webcomponents/keyboard-key";
-import { KeyMapUIControls } from "~/webcomponents/key-map-ui-controls";
+import { ClickyKeyboardErgodoxElement } from "~/webcomponents/clicky-keyboard-ergodox";
+import { ClickyKeyboardTitleBarElement } from "~/webcomponents/clicky-keyboard-title-bar";
+import { ClickyKeyboardTitleScreenElement } from "~/webcomponents/clicky-keyboard-title-screen";
+import { ClickyKeygridElement } from "~/webcomponents/clicky-keygrid";
+import { ClickyKeyHandleElement } from "~/webcomponents/clicky-key-handle";
+import { ClickyIndicatorElement } from "~/webcomponents/clicky-indicator";
+import { ClickyNavbarElement } from "~/webcomponents/clicky-navbar";
+import { ClickyUIElement } from "~/webcomponents/clicky-ui";
+import { ClickyDiagramElement } from "~/webcomponents/clicky-diagram";
+import { ClickyKeyElement } from "~/webcomponents/clicky-key";
+import { ClickyControlsElement } from "~/webcomponents/clicky-controls";
 
-interface Registration {
-  elementName: string;
-  elementClass: any;
-  defineOptions?: ElementDefinitionOptions;
-}
-
-const registrations: Registration[] = [
-  { elementName: "key-handle", elementClass: KeyHandle },
-  { elementName: "key-indicator", elementClass: KeyIndicator },
-  {
-    elementName: "keyboard-key",
-    elementClass: KeyboardKey,
-  },
-  { elementName: "key-grid", elementClass: KeyGrid },
-  // { elementName: "key-board", elementClass: KeyBoard }, // Can't define abstract classes
-  {
-    elementName: "key-board-ergodox",
-    elementClass: KeyBoardErgodox,
-  },
-  { elementName: "key-board-title-screen", elementClass: KeyBoardTitleScreen },
-  { elementName: "key-board-title-bar", elementClass: KeyBoardTitleBar },
-  { elementName: "key-info-nav-bar", elementClass: KeyInfoNavBar },
-  { elementName: "key-map-ui", elementClass: KeyMapUI },
-  { elementName: "key-map-ui-controls", elementClass: KeyMapUIControls },
-  { elementName: "key-map-ui-diagram", elementClass: KeyMapUIDiagram },
+const allWebComponents = [
+  ClickyControlsElement,
+  ClickyDiagramElement,
+  ClickyKeyElement,
+  ClickyKeygridElement,
+  ClickyKeyHandleElement,
+  ClickyIndicatorElement,
+  ClickyKeyboardErgodoxElement,
+  ClickyKeyboardTitleBarElement,
+  ClickyKeyboardTitleScreenElement,
+  ClickyNavbarElement,
+  ClickyUIElement,
 ];
 
 /* Register all keymap.click web components
@@ -47,10 +33,9 @@ const registrations: Registration[] = [
  * <https://github.com/microsoft/TypeScript/issues/9191>)
  */
 export function registerAllKeymapClickWebComponents() {
-  // Register all web components
-  for (const { elementName, elementClass, defineOptions } of registrations) {
-    if (!customElements.get(elementName)) {
-      customElements.define(elementName, elementClass, defineOptions);
+  for (const webComponent of allWebComponents) {
+    if (!customElements.get(webComponent.elementName)) {
+      customElements.define(webComponent.elementName, webComponent);
     }
   }
 }
