@@ -851,7 +851,7 @@ export const MicahErgodoxLayout = new KeyMap({
       title: "Guide to Micah's ErgoDox layout",
       id: "mrlguide",
       steps: [
-        new GuideStep({
+        {
           title: "Welcome to the guide to my main keyboard layout",
           text: [
             `
@@ -886,8 +886,8 @@ export const MicahErgodoxLayout = new KeyMap({
             `Once I changed these keys, my pain decreased drastically.`,
           ],
           selection: pinkyReliefSelection,
-        }),
-        new GuideStep({
+        },
+        {
           title: "QWERTY keys",
           text: [
             `
@@ -916,8 +916,8 @@ export const MicahErgodoxLayout = new KeyMap({
             `,
           ],
           selection: qwertySelection,
-        }),
-        new GuideStep({
+        },
+        {
           title: "Changing key locations to relieve my pinky",
           text: [
             `
@@ -927,17 +927,17 @@ export const MicahErgodoxLayout = new KeyMap({
             `In the following steps, we will examine them individually.`,
           ],
           selection: pinkyReliefSelection,
-        }),
-        new GuideStep({ keyId: "l-f-14-1" }),
-        new GuideStep({ keyId: "l-f-14-3" }),
-        new GuideStep({ keyId: "l-t-1-3" }),
-        new GuideStep({ keyId: "l-t-3-3" }),
-        new GuideStep({
+        },
+        { keyId: "l-f-14-1" },
+        { keyId: "l-f-14-3" },
+        { keyId: "l-t-1-3" },
+        { keyId: "l-t-3-3" },
+        {
           keyId: "l-t-5-5",
           selection: ctrlKeySelection,
-        }),
-        new GuideStep({ keyId: "r-t-3-3" }),
-        new GuideStep({
+        },
+        { keyId: "r-t-3-3" },
+        {
           title: "Other remapped keys",
           text: [
             `
@@ -951,22 +951,22 @@ export const MicahErgodoxLayout = new KeyMap({
             `,
           ],
           selection: movedQwertyNonReliefSelection,
-        }),
-        new GuideStep({ keyId: "l-f-1-1" }),
-        new GuideStep({ keyId: "l-f-1-3" }),
-        new GuideStep({
+        },
+        { keyId: "l-f-1-1" },
+        { keyId: "l-f-1-3" },
+        {
           keyId: "r-f-13-7",
           selection: bracketKeySelection,
-        }),
-        new GuideStep({
+        },
+        {
           keyId: "r-f-1-6",
           selection: guiKeySelection,
-        }),
-        new GuideStep({
+        },
+        {
           keyId: "r-f-5-9",
           selection: optKeySelection,
-        }),
-        new GuideStep({
+        },
+        {
           title: "Layers and extra features",
           text: [
             `
@@ -977,19 +977,19 @@ export const MicahErgodoxLayout = new KeyMap({
             `,
           ],
           selection: extraFeaturesSelection,
-        }),
-        new GuideStep({ keyId: "l-f-2-9" }),
-        new GuideStep({ keyId: "r-f-7-9" }),
-        new GuideStep({ keyId: "r-f-1-1" }),
-        new GuideStep({ keyId: "r-f-1-3" }),
-        new GuideStep({
+        },
+        { keyId: "l-f-2-9" },
+        { keyId: "r-f-7-9" },
+        { keyId: "r-f-1-1" },
+        { keyId: "r-f-1-3" },
+        {
           keyId: "r-f-11-9",
           selection: volKeySelection,
-        }),
-        new GuideStep({
+        },
+        {
           title: "The end",
           text: [`Thanks for all the clicks.`],
-        }),
+        },
       ],
     }),
   ],

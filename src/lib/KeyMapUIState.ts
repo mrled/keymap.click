@@ -62,7 +62,7 @@ import { KeyBoard } from "~/webcomponents/key-board";
 import { KeyBoardModel } from "./KeyboardModel";
 import { IStateObserver, StateChange, StateChangeMap } from "./State";
 import { ConnectionPair } from "./keyConnections";
-import { KeyMap, KeyMapGuide, KeyMapLayer } from "./keyMap";
+import { GuideStep, KeyMap, KeyMapGuide, KeyMapLayer } from "./keyMap";
 import { KeyMapTitleScreen } from "./keyMaps/KeyMapTitleScreen";
 import { KeyboardModelTitleScreen } from "~/webcomponents/key-board-title-screen";
 
@@ -91,6 +91,7 @@ export interface IKeyMapUIStateIdArgs {
   keymapId?: string;
   layerIdx?: number;
   guideId?: string;
+  guideStepIdx?: number;
   selectedKey?: string;
 }
 
@@ -316,6 +317,13 @@ export class KeyMapUIState {
     return this._guide;
   }
 
+  /* The current guide step, if any
+   */
+  private _guideStep: GuideStep | null = null;
+  get guideStep(): GuideStep | null {
+    return this._guideStep;
+  }
+
   /* The ID of the selected key
    */
   private _selectedKey: string = "";
@@ -362,6 +370,7 @@ export class KeyMapUIState {
     keymapId,
     layerIdx,
     guideId,
+    guideStepIdx,
     selectedKey,
   }: IKeyMapUIStateIdArgs) {
     //
@@ -455,7 +464,7 @@ export class KeyMapUIState {
       if (guideId === "") {
         newGuide = null;
       } else {
-        newGuide = this.keymap.guides.find((g) => g.id === guideId);
+        newGuide = newKeymap.guides.find((g) => g.id === guideId);
         if (!newGuide) {
           console.error(`No guide found for id: ${guideId} on keymap `);
           return;
@@ -470,6 +479,25 @@ export class KeyMapUIState {
       newGuide = this.guide;
     }
     const changedGuide = newGuide !== oldGuide;
+
+    const specifiedGuideStep = guideStepIdx !== undefined;
+    const oldGuideStep = this.guideStep;
+    let newGuideStep = this.guideStep;
+    if (specifiedGuideStep) {
+      if (!newGuide) {
+        newGuideStep = null;
+      } else if (guideStepIdx < 0 || guideStepIdx >= newGuide.steps.length) {
+        console.error(`Invalid guide step index: ${guideStepIdx}`);
+      } else {
+        newGuideStep = newGuide.steps[guideStepIdx];
+      }
+    } else if (newGuide !== null) {
+      // If we don't specify a guide step but a guide is selected, go to the first step.
+      newGuideStep = newGuide.steps[0];
+    } else {
+      newGuideStep = null;
+    }
+    const changedGuideStep = newGuideStep !== oldGuideStep;
 
     const specifiedSelectedKey = selectedKey !== undefined;
     const oldSelectedKey = this.selectedKey;
@@ -520,6 +548,13 @@ export class KeyMapUIState {
     if (changedGuide) {
       changes.push(new KeyMapUIStateChange("guide", oldGuide, newGuide));
       this._guide = newGuide;
+    }
+
+    if (changedGuideStep) {
+      changes.push(
+        new KeyMapUIStateChange("guideStep", oldGuideStep, newGuideStep)
+      );
+      this._guideStep = newGuideStep;
     }
 
     if (changedSelectedKey) {

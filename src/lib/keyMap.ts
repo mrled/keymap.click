@@ -67,23 +67,47 @@ export class KeyMapKey {
  * or it may provide a title and text to display.
  * In either case, it may also provide an array of key IDs to highlight together.
  */
-export class GuideStep {
+export interface IGuideStep {
+  keyId?: string;
+  title?: string;
+  text?: string[];
+  selection?: string[];
+}
+
+/* A single step in a guided tour of a layout.
+ *
+ * Aside from the implementation of IGuideStep documented above,
+ * this class adds a reference to the guide and the index of the step,
+ * as well as helper functions.
+ *
+ * KeyMapGuide objects convert a list of objects that implement IGuideStep
+ * into a list of these objects.
+ */
+export class GuideStep implements IGuideStep {
+  readonly guide: KeyMapGuide;
+  readonly index: number;
   readonly keyId?: string;
   readonly title?: string;
   readonly text?: string[];
   readonly selection?: string[];
 
   constructor({
+    guide,
+    index,
     keyId,
     title,
     text,
     selection,
   }: {
+    guide: KeyMapGuide;
+    index: number;
     keyId?: string;
     title?: string;
     text?: string[];
     selection?: string[];
   }) {
+    this.guide = guide;
+    this.index = index;
     if (keyId) {
       if (title || text) {
         throw new Error("Key ID must be the only parameter if provided.");
@@ -97,6 +121,19 @@ export class GuideStep {
       this.text = text;
     }
     this.selection = selection || [];
+  }
+
+  get isFirstStep() {
+    return this.index === 0;
+  }
+  get isLastStep() {
+    return this.index === this.guide.steps.length - 1;
+  }
+  get nextStep(): GuideStep | null {
+    return this.isLastStep ? null : this.guide.steps[this.index + 1];
+  }
+  get previousStep(): GuideStep | null {
+    return this.isFirstStep ? null : this.guide.steps[this.index - 1];
   }
 }
 
@@ -113,11 +150,13 @@ export class KeyMapGuide {
   }: {
     title: string;
     id: string;
-    steps: GuideStep[];
+    steps: IGuideStep[];
   }) {
     this.title = title;
     this.id = id;
-    this.steps = steps;
+    this.steps = steps.map(
+      (step, index) => new GuideStep({ guide: this, index, ...step })
+    );
   }
 }
 

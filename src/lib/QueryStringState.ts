@@ -62,6 +62,8 @@ export function setStateFromQsAndAttrib({
     const qMap = currentParams.get(`${queryPrefix}-map`);
     const qLayer = currentParams.get(`${queryPrefix}-layer`);
     const qKey = currentParams.get(`${queryPrefix}-key`);
+    const qGuide = currentParams.get(`${queryPrefix}-guide`);
+    const qStep = currentParams.get(`${queryPrefix}-step`);
     if (qDebug) {
       qsArgs.debug = qDebug === "true" ? 1 : 0;
     }
@@ -76,6 +78,12 @@ export function setStateFromQsAndAttrib({
     }
     if (qKey) {
       qsArgs.selectedKey = qKey;
+    }
+    if (qGuide) {
+      qsArgs.guideId = qGuide;
+    }
+    if (qStep) {
+      qsArgs.guideStepIdx = parseInt(qStep, 10);
     }
   }
 
@@ -121,11 +129,15 @@ export function setQueryStringFromState(state: KeyMapUIState, kmui: KeyMapUI) {
   const tLayer = state.layer;
   const tLayerIdx = state.keymap.layers.indexOf(tLayer);
   const tKey = state.selectedKey;
+  const tGuide = state.guide?.id;
+  const tStep = state.guideStep?.index;
 
   const aBoardElement = kmui.getAttribute("keyboard-element") || "";
   const aMap = kmui.getAttribute("keymap-id") || "";
   const aLayer = parseInt(kmui.getAttribute("layer") || "0", 10);
   const aKey = kmui.getAttribute("selected-key") || "";
+  const aGuide = kmui.getAttribute("guide-id") || "";
+  const aGuideStep = parseInt(kmui.getAttribute("guide-step") || "0", 10);
 
   if (tBoardElement && aBoardElement !== tBoardElement) {
     newParams.set(`${queryPrefix}-board`, tBoardElement);
@@ -149,6 +161,18 @@ export function setQueryStringFromState(state: KeyMapUIState, kmui: KeyMapUI) {
     newParams.set(`${queryPrefix}-key`, tKey);
   } else {
     newParams.delete(`${queryPrefix}-key`);
+  }
+
+  if (tGuide && aGuide !== tGuide) {
+    newParams.set(`${queryPrefix}-guide`, tGuide);
+  } else {
+    newParams.delete(`${queryPrefix}-guide`);
+  }
+
+  if (tStep && aGuideStep !== tStep) {
+    newParams.set(`${queryPrefix}-step`, tStep.toString());
+  } else {
+    newParams.delete(`${queryPrefix}-step`);
   }
 
   const newUrl =

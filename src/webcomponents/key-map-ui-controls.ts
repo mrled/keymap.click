@@ -99,12 +99,15 @@ export class KeyMapUIControls
     }
     if (stateChanges.get("keymaps") || stateChanges.get("keymap")) {
       this.updateKeymapsSelector();
+      // TODO: avoid updating guideSelector in two places in this function
+      this.updateGuidesSelector();
     }
     if (stateChanges.get("keymap") || stateChanges.get("layer")) {
       this.updateLayersSelector();
     }
-    if (stateChanges.get("keymap") || stateChanges.get("guide")) {
+    if (stateChanges.get("guide") || stateChanges.get("guideStep")) {
       this.updateGuidesSelector();
+      this.layoutIdempmotently();
     }
   }
 
@@ -265,6 +268,13 @@ export class KeyMapUIControls
           margin-left: 1em;
         }
       `;
+      if (this.state.guide === null) {
+        result.innerText += `
+          .guide-controls {
+            display: none;
+          }
+        `;
+      }
     }
     return result;
   }
@@ -284,6 +294,39 @@ export class KeyMapUIControls
 
     const span = document.createElement("span");
     span.append(checkbox, label);
+    return span;
+  }
+
+  /* Guide controls
+   */
+  get guideControls(): HTMLSpanElement {
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "Previous step";
+    prevButton.addEventListener("click", () => {
+      if (this.state.guideStep && !this.state.guideStep.isFirstStep) {
+        this.state.setStatesByIds({
+          guideStepIdx: this.state.guideStep.index - 1,
+        });
+      }
+    });
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "Next step";
+    nextButton.addEventListener("click", () => {
+      if (this.state.guideStep && !this.state.guideStep.isLastStep) {
+        this.state.setStatesByIds({
+          guideStepIdx: this.state.guideStep.index + 1,
+        });
+      }
+    });
+    const exitButton = document.createElement("button");
+    exitButton.textContent = "Exit guide";
+    exitButton.addEventListener("click", () => {
+      this.state.setStatesByIds({ guideId: "" });
+    });
+
+    const span = document.createElement("span");
+    span.className = "guide-controls";
+    span.append(prevButton, nextButton, exitButton);
     return span;
   }
 
@@ -381,7 +424,8 @@ export class KeyMapUIControls
       this.getPair(SelectId.Keyboard, "Keyboard", this.chooseKbModel),
       this.getPair(SelectId.Keymap, "Keymap", this.chooseKeymap),
       this.getPair(SelectId.Layer, "Layer", this.chooseLayer),
-      this.getPair(SelectId.Guide, "Guide", this.chooseGuide)
+      this.getPair(SelectId.Guide, "Guide", this.chooseGuide),
+      this.guideControls
     );
     this.updateAll();
   }

@@ -524,8 +524,12 @@ export class KeyMapUI
       this.#showWelcomeMessage();
     }
 
-    if (stateChanges.has("selectedKey")) {
-      this.#updateSelectedKeyState(stateChanges.get("selectedKey")!);
+    if (
+      stateChanges.has("guideStep") ||
+      stateChanges.has("guide") ||
+      stateChanges.has("selectedKey")
+    ) {
+      this.#updateSelectedKeyState();
     }
 
     setQueryStringFromState(this.state, this);
@@ -546,20 +550,28 @@ export class KeyMapUI
     }
   }
 
-  /* Update the selected key
+  /* Update the selected key or guide step
    */
-  #updateSelectedKeyState(change: KeyMapUIStateChange) {
-    const value = change.newValue as string;
+  #updateSelectedKeyState() {
+    let activeKeyId: string = "";
     let keySelection: string[] = [];
     const indicatedElementsById: { [key: string]: KeyHandle } = {};
     let proseKeyIndicators: KeyIndicator[] = [];
     let indicatedKeyIds: string[] = [];
 
-    if (value) {
-      const keyData = this.state.layer.keys.get(value);
+    if (this.state.guideStep) {
+      if (this.state.guideStep.keyId) {
+        activeKeyId = this.state.guideStep.keyId;
+      }
+    } else {
+      activeKeyId = this.state.selectedKey;
+    }
+
+    if (activeKeyId) {
+      const keyData = this.state.layer.keys.get(activeKeyId);
       if (!keyData) {
         console.error(
-          `KeyMapUI: Key ${value} not found in key map '${this.state.keymap.uniqueId}'`
+          `KeyMapUI: Key ${activeKeyId} not found in key map '${this.state.keymap.uniqueId}'`
         );
         return;
       }
@@ -574,6 +586,22 @@ export class KeyMapUI
       indicatedKeyIds = proseKeyIndicators.map(
         (indicator) => indicator.getAttribute("id") || ""
       );
+    } else if (this.state.guideStep?.text?.length || 0 > 0) {
+      while (this.infoProse.firstChild) {
+        this.infoProse.removeChild(this.infoProse.firstChild);
+      }
+      if (this.state.guideStep?.title) {
+        const h2 = document.createElement("h2");
+        h2.innerHTML = this.state.guideStep.title;
+        this.infoProse.appendChild(h2);
+      }
+      // TODO: set title from guideStep.title
+      const guideStepText = this.state.guideStep!.text || [""];
+      guideStepText.forEach((paragraph: string) => {
+        const p = document.createElement("p");
+        p.innerHTML = paragraph;
+        this.infoProse.appendChild(p);
+      });
     } else {
       keySelection = [];
       this.#showWelcomeMessage();
@@ -586,7 +614,7 @@ export class KeyMapUI
     this.keyInfoNavBar.updateTitleKey(
       this.state.layer,
       this.state.kbModel,
-      value
+      activeKeyId
     );
     // this.keyInfoNavBar might not be in the DOM on initial load, so we have to lay out here.
     this.layOutIdempotently();
@@ -600,7 +628,7 @@ export class KeyMapUI
         console.error(`KeyMapUI: Keyboard child key has no id: ${key}`);
         return;
       }
-      const active = keyId === value;
+      const active = keyId === activeKeyId;
       const inKeySelection = !active && keySelection.indexOf(keyId) > -1;
       const indicatorTarget = indicatedKeyIds.indexOf(keyId) > -1;
       key.setAttribute("active", active.toString());
