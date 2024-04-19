@@ -108,6 +108,7 @@ export class KeyMapUIControls
     if (stateChanges.get("guide") || stateChanges.get("guideStep")) {
       this.updateGuidesSelector();
       this.layoutIdempmotently();
+      this.updateGuideControls();
     }
   }
 
@@ -117,6 +118,7 @@ export class KeyMapUIControls
     this.updateKeymapsSelector();
     this.updateLayersSelector();
     this.updateGuidesSelector();
+    this.updateGuideControls();
   }
 
   /* Called when the user selects a keyboard from the dropdown
@@ -246,6 +248,23 @@ export class KeyMapUIControls
     );
   }
 
+  /* Update the guide step controls
+   */
+  private updateGuideControls() {
+    if (this.state.guideStep) {
+      if (this.state.guideStep.isFirstStep) {
+        this.shadow.querySelector("#prev-step")?.setAttribute("disabled", "");
+      } else {
+        this.shadow.querySelector("#prev-step")?.removeAttribute("disabled");
+      }
+      if (this.state.guideStep.isLastStep) {
+        this.shadow.querySelector("#next-step")?.setAttribute("disabled", "");
+      } else {
+        this.shadow.querySelector("#next-step")?.removeAttribute("disabled");
+      }
+    }
+  }
+
   // #endregion
 
   //
@@ -301,6 +320,7 @@ export class KeyMapUIControls
    */
   get guideControls(): HTMLSpanElement {
     const prevButton = document.createElement("button");
+    prevButton.id = "prev-step";
     prevButton.textContent = "Previous step";
     prevButton.addEventListener("click", () => {
       if (this.state.guideStep && !this.state.guideStep.isFirstStep) {
@@ -310,6 +330,7 @@ export class KeyMapUIControls
       }
     });
     const nextButton = document.createElement("button");
+    nextButton.id = "next-step";
     nextButton.textContent = "Next step";
     nextButton.addEventListener("click", () => {
       if (this.state.guideStep && !this.state.guideStep.isLastStep) {
