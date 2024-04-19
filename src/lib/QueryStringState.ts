@@ -140,7 +140,7 @@ export function setQueryStringFromState(state: KeyMapUIState, kmui: KeyMapUI) {
   }
 
   if (tLayer && aLayer !== tLayerIdx) {
-    newParams.set(`${queryPrefix}-layer`, tLayer.toString());
+    newParams.set(`${queryPrefix}-layer`, tLayerIdx.toString());
   } else {
     newParams.delete(`${queryPrefix}-layer`);
   }

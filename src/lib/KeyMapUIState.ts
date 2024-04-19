@@ -398,12 +398,19 @@ export class KeyMapUIState {
     const specifiedKeymap = keymapId !== undefined;
     const oldKeymap = this.keymap;
     let newKeymap: KeyMap | undefined = undefined;
+    const kbModelMaps =
+      this.keymaps.get(newKbModel.keyboardElementName) || new Map();
     if (specifiedKeymap) {
-      newKeymap = Array.from(this.boardMaps.values()).find(
+      newKeymap = Array.from(kbModelMaps.values()).find(
         (km) => km.uniqueId === keymapId
       );
       if (!newKeymap) {
-        console.error(`No keymap found for unique ID: ${keymapId}`);
+        const knownMaps = Array.from(kbModelMaps.values())
+          .map((m) => m.uniqueId)
+          .join(", ");
+        console.error(
+          `No keymap found for board ${newKbModel.keyboardElementName} with unique ID: ${keymapId}; known keymaps for board: ${knownMaps}`
+        );
         return;
       }
     } else if (changedKbModel) {
