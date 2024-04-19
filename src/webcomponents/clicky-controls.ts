@@ -173,7 +173,7 @@ export class ClickyControlsElement
       const option = document.createElement("option") as HTMLOptionElement;
       option.value = model.keyboardElementName;
       option.selected = model === this.state.kbModel;
-      option.textContent = model.keyboardElementName;
+      option.textContent = model.displayName;
       return option;
     }, [] as HTMLOptionElement[]);
     this.updateSelector(

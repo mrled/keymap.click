@@ -7,6 +7,7 @@ import { KeyboardModel } from "~/lib/KeyboardModel";
 
 export const KeyboardModelTitleScreen = new KeyboardModel(
   "clicky-keyboard-title-screen",
+  "Clicky Title Screen",
   new Point(2, 2),
   new Size(2, 2),
   [

@@ -7,6 +7,7 @@ import { KeyboardModel } from "~/lib/KeyboardModel";
 
 export const KeyboardModelErgodox = new KeyboardModel(
   "clicky-keyboard-ergodox",
+  "ErgoDox",
   new Point(2, 2),
   new Size(4, 3),
   [

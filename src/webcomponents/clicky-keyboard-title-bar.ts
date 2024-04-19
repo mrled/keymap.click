@@ -31,6 +31,7 @@ export class ClickyKeyboardTitleBarElement extends ClickyKeyboardElement {
     this._physicalKeys = [this.titleKey];
     this._model = new KeyboardModel(
       ClickyKeyboardTitleBarElement.elementName,
+      "TitleBar",
       new Point(2, 2),
       new Size(2, 2),
       this._physicalKeys
@@ -50,6 +51,7 @@ export class ClickyKeyboardTitleBarElement extends ClickyKeyboardElement {
     if (model) {
       this._model = new KeyboardModel(
         this.elementName,
+        model.displayName,
         model.defaultBlankKeySize,
         model.maxKeySize,
         this._physicalKeys

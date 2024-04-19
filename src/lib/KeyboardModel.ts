@@ -14,6 +14,9 @@ export class KeyboardModel {
     //The element name for the keyboard that this instance models
     public readonly keyboardElementName: string,
 
+    // A human-friendly name for the keyboard
+    public readonly displayName: string,
+
     // The size of the blank key to display in the title bar when no key is selected.
     public readonly defaultBlankKeySize: Point = new Point(2, 2),
 

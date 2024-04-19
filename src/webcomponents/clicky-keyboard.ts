@@ -23,6 +23,9 @@ export abstract class ClickyKeyboardElement extends HTMLElement {
    * the customElements.define() call uses the static property.
    * TODO: Can we make this nicer?
    * I think we can't; TypeScript doesn't support abstract static properties or interface static properties.
+   *
+   * The recommended approach is to define the static property
+   * and then have the instance property return the static property.
    */
   static readonly elementName: string;
   abstract readonly elementName: string;
