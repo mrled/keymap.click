@@ -55,8 +55,6 @@ titleBar.appendChild(menuList);
 
 app.appendChild(titleBar);
 
-const availableKeymaps = [ClickyTitleScreenKeymap, MicahErgodoxKeymap];
-
 const titleDesc = document.createElement("p");
 titleDesc.textContent =
   "Here's the title screen. It's useful at least for testing.";
@@ -67,7 +65,7 @@ const clickyUiTitle = document.createElement(
 ) as ClickyUIElement;
 clickyUiTitle.setAttribute("id", "clicky-title");
 clickyUiTitle.setAttribute("show-debug", "true");
-clickyUiTitle.addKeymaps(availableKeymaps);
+clickyUiTitle.setModelsAndMaps([ClickyTitleScreenKeymap]);
 clickyUiTitle.setAttribute("keyboard-element", "clicky-keyboard-title-screen");
 clickyUiTitle.setAttribute("keymap-id", "title-screen-map");
 app.appendChild(clickyUiTitle);
@@ -82,7 +80,7 @@ const clickyUiErgodox = document.createElement(
 ) as ClickyUIElement;
 clickyUiErgodox.setAttribute("id", "clicky-ergodox");
 clickyUiErgodox.setAttribute("show-debug", "true");
-clickyUiErgodox.addKeymaps(availableKeymaps);
+clickyUiErgodox.setModelsAndMaps([MicahErgodoxKeymap]);
 clickyUiErgodox.setAttribute("keyboard-element", "clicky-keyboard-ergodox");
 clickyUiErgodox.setAttribute("keymap-id", "micah-ergodox");
 clickyUiErgodox.setAttribute("query-prefix", "clicky");
