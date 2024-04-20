@@ -236,7 +236,7 @@ export class Keymap {
     uniqueId: string;
     model: KeyboardModel;
     layers: KeymapLayer[];
-    guides?: KeymapGuide[]; // TODO: implement
+    guides?: KeymapGuide[];
   }) {
     this.displayName = displayName;
     this.uniqueId = uniqueId;

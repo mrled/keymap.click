@@ -100,7 +100,13 @@ export class ClickyControlsElement
     }
     if (stateChanges.get("keymaps") || stateChanges.get("keymap")) {
       this.updateKeymapsSelector();
-      // TODO: avoid updating guideSelector in two places in this function
+    }
+    if (
+      stateChanges.get("keymaps") ||
+      stateChanges.get("keymap") ||
+      stateChanges.get("guide") ||
+      stateChanges.get("guideStep")
+    ) {
       this.updateGuidesSelector();
     }
     if (stateChanges.get("keymap") || stateChanges.get("layer")) {

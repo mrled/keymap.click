@@ -4,8 +4,6 @@ import { ClickyKeyboardTitleBarElement } from "~/webcomponents/clicky-keyboard-t
 import { KeyboardModel } from "~/lib/KeyboardModel";
 
 /* Title bar for a key-info-panel
- *
- * TODO: Support guides
  */
 export class ClickyNavbarElement extends HTMLElement {
   static readonly elementName = "clicky-navbar";

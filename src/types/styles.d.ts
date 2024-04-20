@@ -14,7 +14,8 @@ declare module "*.css" {
 
 /* This provides similar typing for Vite-specific ?inline CSS imports,
  * which is Vite's way of importing CSS as a plain text string.
- * TODO: when we switch from Vite to esbuild for the main site, remove this.
+ *
+ * Can be removed if we stop using Vite.
  */
 declare module "*.css?inline" {
   const content: string;

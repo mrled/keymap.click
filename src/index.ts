@@ -1,6 +1,9 @@
 /* Import all our code so that esbuild can find it.
  *
- * TODO: consider writing a script or using a plugin that does this.
+ * Only elements that are required by consumers should be exported here.
+ * Also, make sure all our custom elements get registered.
+ *
+ * This can be done with a plugin or something, but we probably don't need to.
  * <https://github.com/evanw/esbuild/issues/722>
  */
 

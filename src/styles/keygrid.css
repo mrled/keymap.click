@@ -206,8 +206,6 @@ clicky-keygrid[name="ergodox-right-thumb"] {
 
 /* The keymap UI is a container for the keymap, info panel, and diagram
  * It is also the shadow DOM root, so it needs :host.
- * TODO: either remove the :host selector or this TODO item,
- * when I decide whether to keep the clicky-ui as shadow DOM root.
  */
 clicky-ui,
 :host {

@@ -5,8 +5,6 @@
  */
 
 /* The :root is the top level of the light DOM, and the :host is the top level of the shadow DOM.
- * Specify both to ensure that the variables are available in both places.
- * TODO: if we deprecate light DOM support in the future, remove :root.
  */
 :root,
 :host {

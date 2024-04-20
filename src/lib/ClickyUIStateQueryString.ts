@@ -4,8 +4,6 @@
 import { ClickyUIElement } from "~/webcomponents/clicky-ui";
 import { IClickyUIStateIdArgs, ClickyUIState } from "./ClickyUIState";
 
-// TODO: support guide and guide step parameters
-
 /* Read the query string and update the state of the ClickyUIElement.
  *
  * Arguments:
