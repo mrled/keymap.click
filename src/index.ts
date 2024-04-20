@@ -11,8 +11,4 @@ import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall
 
 registerAllKeymapClickWebComponents();
 
-export {
-  ClickyUIElement,
-  MicahErgodoxKeymap as MicahErgodoxLayout,
-  ClickyTitleScreenKeymap,
-};
+export { ClickyUIElement, MicahErgodoxKeymap, ClickyTitleScreenKeymap };

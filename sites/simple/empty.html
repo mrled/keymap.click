@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/cmd2.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Clicky test site</title>
+    <script src="/reloader.js"></script>
+    <link rel="stylesheet" href="/simple.css" />
+  </head>
+  <body>
+    <h1>
+      <a href="/empty.html">Simple Clicky test site: Empty keymap list</a>
+    </h1>
+    <p>Go back to the <a href="/">main page</a>.</p>
+    <p>
+      This page shows what happens when ClickyUI's list of keymaps (and keyboard
+      models) is empty (it should show the sample title "keyboard".)
+    </p>
+    <hr />
+    <div id="app"></div>
+    <hr />
+    <p>keymap.click UI should appear between the two HR elements above.</p>
+    <script type="module">
+      import "./keymap.click.js";
+      const app = document.getElementById("app");
+      const clickyUi = document.createElement("clicky-ui");
+      clickyUi.setAttribute("id", "clicky-empty");
+      clickyUi.setAttribute("show-debug", "true");
+      clickyUi.setAttribute("query-prefix", "clicky");
+      clickyUi.setModelsAndMaps([]);
+      app.appendChild(clickyUi);
+    </script>
+  </body>
+</html>

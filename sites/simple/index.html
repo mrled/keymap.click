@@ -4,45 +4,12 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/cmd2.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple keymap.click test site</title>
-    <script>
-      // Automatically reload the page when the bundle is rebuilt.
-      // TODO: If we end up building the production website this way, turn this off in production.
-      // <https://esbuild.github.io/api/#live-reload>
-      new EventSource("/esbuild").addEventListener("change", () =>
-        location.reload()
-      );
-    </script>
-    <style>
-      :root {
-        font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-        line-height: 1.5;
-        font-weight: 400;
-
-        font-synthesis: none;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-      body {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 2rem;
-        text-align: center;
-      }
-      body.page {
-        margin: 4rem;
-      }
-      h1 {
-        margin-bottom: 2rem;
-      }
-      clicky-ui {
-        border: 1px solid black;
-      }
-    </style>
+    <title>Simple Clicky test site</title>
+    <script src="/reloader.js"></script>
+    <link rel="stylesheet" href="/simple.css" />
   </head>
   <body>
-    <h1><a href="/">Simple keymap.click test site</a></h1>
+    <h1><a href="/">Simple Clicky test site</a></h1>
     <p>
       This is a very simple test site for the web component. It uses support in
       esbuild for bundling the JavaScript and CSS files, and serving a static
@@ -51,6 +18,24 @@
       of the source JavaScript or CSS files change, but note that changes to
       this static HTML file do not trigger a rebuild.
     </p>
+    <p>
+      This page contains a Clicky UI with both the title screen and ergodox
+      boards available. There are a few more test pages you can see:
+    </p>
+    <ul>
+      <li>
+        <a href="/empty.html">/empty.html</a> to see a ClickyUI that doesn't
+        know about any keyboards or keymaps
+      </li>
+      <li>
+        <a href="/titleboard.html">/titleboard.html</a>: A ClickyUI with just
+        the sample title screen keymap.
+      </li>
+      <li>
+        <a href="/ergodox.html">/ergodox.html</a>: A ClickyUI with my ErgoDox
+        layout.
+      </li>
+    </ul>
     <hr />
     <div id="app"></div>
     <hr />
@@ -58,11 +43,16 @@
     <script type="module">
       import {
         ClickyTitleScreenKeymap,
-        MicahErgodoxLayout,
+        MicahErgodoxKeymap,
       } from "./keymap.click.js";
       const app = document.getElementById("app");
       const clickyUi = document.createElement("clicky-ui");
-      const availableKeymaps = [ClickyTitleScreenKeymap, MicahErgodoxLayout];
+      const availableKeymaps = [
+        ClickyTitleScreenKeymap,
+        ClickyTitleScreenKeymap.model.blankKeymap,
+        MicahErgodoxKeymap,
+        MicahErgodoxKeymap.model.blankKeymap,
+      ];
       clickyUi.setAttribute("id", "clicky-title");
       clickyUi.setAttribute("show-debug", "true");
       clickyUi.setAttribute("query-prefix", "clicky");

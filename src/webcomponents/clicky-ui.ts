@@ -2,7 +2,7 @@ import log from "loglevel";
 
 import { ClickyUIOptions } from "~/lib/ClickyUIOptions";
 import { ConnectionPair, KeyInfoConnectType } from "~/lib/DiagramConnections";
-import { Keymap, KeymapLayer } from "~/lib/Keymap";
+import { Keymap } from "~/lib/Keymap";
 
 import { ClickyKeyHandleElement } from "~/webcomponents/clicky-key-handle";
 import { ClickyIndicatorElement } from "~/webcomponents/clicky-indicator";
@@ -136,6 +136,14 @@ export class ClickyUIElement
   // #region Public API methods
   //
 
+  /* Removes all keymaps and replaces them with the given keymaps.
+   *
+   * Removes all boards and adds boards referenced by the given keymaps.
+   */
+  setModelsAndMaps(keymaps: Keymap[]) {
+    this.state.setModelsAndMaps(keymaps);
+  }
+
   /* Given a list of Keymap instances, set the keymaps state property.
    *
    * Users will call this method to tell the UI what keymaps are available.
@@ -154,12 +162,6 @@ export class ClickyUIElement
       boardKeymaps.set(keymap.uniqueId, keymap);
     });
     this.state.keymaps = newKeymaps;
-  }
-
-  /* Set the kbModels state property.
-   */
-  addKbModels(value: KeyboardModel[]) {
-    this.state.kbModels = [...this.state.kbModels, ...value];
   }
 
   // #endregion
@@ -381,12 +383,14 @@ export class ClickyUIElement
 
   private _keyboard: ClickyKeyboardElement | null = null;
   get keyboard(): ClickyKeyboardElement {
+    let needsCreate = false;
     if (!this._keyboard) {
       // First, try to find a keyboard in the DOM
       // TODO: this will never work... the element will never be called <keyboard>
       this._keyboard = this.shadow.querySelector(
         ClickyKeyboardElement.elementName
       ) as ClickyKeyboardElement;
+      needsCreate = true;
     }
     if (!this._keyboard) {
       // Next, look for the keyboard element by name if it was set
@@ -398,6 +402,9 @@ export class ClickyUIElement
       this._keyboard = document.createElement(
         this.state.kbModel.keyboardElementName
       ) as ClickyKeyboardElement;
+    }
+    if (needsCreate) {
+      this._keyboard.createChildren(Array.from(this.state.layer.keys.values()));
     }
     return this._keyboard;
   }

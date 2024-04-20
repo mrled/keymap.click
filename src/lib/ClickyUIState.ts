@@ -58,13 +58,11 @@
  * This keeps each child from having to check if its state object is null and makes typing simpler.)
  */
 
-import { ClickyKeyboardElement } from "~/webcomponents/clicky-keyboard";
 import { KeyboardModel } from "./KeyboardModel";
 import { IStateObserver, StateChange, StateChangeMap } from "./State";
 import { ConnectionPair } from "./DiagramConnections";
 import { GuideStep, Keymap, KeymapGuide, KeymapLayer } from "./Keymap";
 import { ClickyTitleScreenKeymap } from "./keymaps/ClickyTitleScreenKeymap";
-import { KeyboardModelTitleScreen } from "~/webcomponents/clicky-keyboard-title-screen";
 
 /* A map of uniqueID strings to Keymap objects
  */
@@ -160,6 +158,7 @@ export class ClickyUIState {
   /* Notify all observers of a set of changes
    */
   notify(stateChanges: StateChange<ClickyUIState>[]): void {
+    if (stateChanges.length === 0) return;
     const stateChangeMap = new ClickyUIStateChangeMap(
       stateChanges.map((change) => [change.key, change])
     );
@@ -203,29 +202,18 @@ export class ClickyUIState {
     this.notify([new StateChange("queryPrefix", oldValue, value)]);
   }
 
+  // TODO: do not notify on kbModels change, just on keymaps change - kbModels without keymaps update is useless
   /* All the keyboard models we know about
    */
-  private _kbModels: KeyboardModel[] | null = null;
   public get kbModels(): KeyboardModel[] {
-    if (this._kbModels === null) {
-      this._kbModels = [KeyboardModelTitleScreen];
-      this.notify([new ClickyUIStateChange("kbModels", null, this._kbModels)]);
-    }
-    return this._kbModels;
-  }
-  public set kbModels(value: KeyboardModel[]) {
-    if (this._kbModels === value) return;
-    const oldValue = this._kbModels;
-    this._kbModels = value;
-    const oldKeymap = this._keymap;
-    this._keymap = this.kbModel.blankKeymap;
-    const stateChanges = [new ClickyUIStateChange("kbModels", oldValue, value)];
-    if (oldKeymap !== this._keymap) {
-      stateChanges.push(
-        new ClickyUIStateChange("keymap", oldKeymap, this._keymap)
-      );
-    }
-    this.notify(stateChanges);
+    const result: KeyboardModel[] = [];
+    this.keymaps.forEach((boardMap, kbElemName) => {
+      const firstKeymap = boardMap.values().next().value;
+      if (firstKeymap) {
+        result.push(firstKeymap.model);
+      }
+    });
+    return result;
   }
 
   /* The current keyboard model
@@ -239,26 +227,40 @@ export class ClickyUIState {
     return this._kbModel;
   }
 
-  /* All keymaps that we know about
+  /* The default keyboard model
+   *
+   * If the state is loaded without otherwise specifying a keyboard model,
+   * such as by the query string or having the user select one,
+   * it will default to the first entry in the keymaps.
    */
-  private _keymaps: KeyboardKeymapMapMap | null = null;
+  public get defaultKbModel(): KeyboardModel {
+    return this.defaultKeymap.model;
+  }
+
+  /* All keymaps that we know about
+   *
+   * We guarantee that this is never empty.
+   *
+   * The kbModels property returns the models for all the keymaps found in this list.
+   * The kbModel and keymap properties are guaranteed to exist inside this list.
+   */
+  private _keymaps: KeyboardKeymapMapMap = new Map();
   public get keymaps(): KeyboardKeymapMapMap {
-    // Initialize with the blank keymap and the title screen keymap for the title screen kbModel.
-    if (this._keymaps === null) {
-      this._keymaps = new Map();
-      this._keymaps.set(this.kbModel.keyboardElementName, new Map());
-      const boardMaps = this._keymaps.get(this.kbModel.keyboardElementName)!;
-      boardMaps.set(
-        this.kbModel.blankKeymap.uniqueId,
-        this.kbModel.blankKeymap
+    if (this._keymaps.size === 0) {
+      const newBoardMaps: KeymapMap = new Map();
+      newBoardMaps.set(
+        ClickyTitleScreenKeymap.uniqueId,
+        ClickyTitleScreenKeymap
       );
-      boardMaps.set(ClickyTitleScreenKeymap.uniqueId, ClickyTitleScreenKeymap);
-      this.notify([new ClickyUIStateChange("keymaps", null, this._keymaps)]);
+      this._keymaps.set(
+        ClickyTitleScreenKeymap.model.keyboardElementName,
+        newBoardMaps
+      );
+      this.notify([new ClickyUIStateChange("keymaps", [], this._keymaps)]);
     }
     return this._keymaps;
   }
   public set keymaps(value: KeyboardKeymapMapMap) {
-    // This setter doesn't ensure that the title screen keymap is present.
     if (this._keymaps === value) return;
     const oldValue = this._keymaps;
     this._keymaps = value;
@@ -272,9 +274,19 @@ export class ClickyUIState {
         }
       });
     });
-    // Add a blank keymap for each model
-    this.#idempotentlyAddBlankKeymap(this.kbModel.keyboardElementName);
     this.notify([new ClickyUIStateChange("keymaps", oldValue, value)]);
+  }
+
+  /* The default keymap.
+   *
+   * If the state is loaded without otherwise specifying a keymap,
+   * such as by the query string or having the user select one,
+   * it will default to the first entry in the keymaps.
+   */
+  public get defaultKeymap(): Keymap {
+    const firstKeymapMap: KeymapMap = this.keymaps.values().next().value;
+    const firstKeymap: Keymap = firstKeymapMap.values().next().value;
+    return firstKeymap;
   }
 
   /* Just the keymaps for the current keyboard model
@@ -291,9 +303,7 @@ export class ClickyUIState {
   private _keymap: Keymap | null = null;
   get keymap(): Keymap {
     if (this._keymap === null) {
-      this._keymap = this.#getNonBlankKeymapIfPossible(
-        this.kbModel.keyboardElementName
-      );
+      this._keymap = this.defaultKeymap;
       this.notify([new ClickyUIStateChange("keymap", null, this._keymap)]);
     }
     return this._keymap;
@@ -345,6 +355,77 @@ export class ClickyUIState {
   }
 
   // #region Public helpers
+
+  /* Replace the existing set of keyboard models and keymaps.
+   *
+   * Remove all existing keyboards and maps.
+   * Add each keymap and model in the new set.
+   * Set the current keymap and kbModel to the first item in the new set.
+   */
+  setModelsAndMaps(keymaps: Keymap[]) {
+    if (keymaps.length === 0) {
+      console.error("No keymaps provided");
+      return;
+    }
+
+    const oldKbModel = this._kbModel;
+    const oldKeymaps = this._keymaps;
+    const oldKeymap = this._keymap;
+    const oldLayer = this._layer;
+    const oldGuide = this._guide;
+    const oldGuideStep = this._guideStep;
+    const oldSelectedKey = this._selectedKey;
+
+    this._kbModel = null;
+    this._keymap = null;
+    this._layer = null;
+    this._guide = null;
+    this._guideStep = null;
+    this._selectedKey = "";
+
+    const newKeymaps = new Map<string, Map<string, Keymap>>();
+    keymaps.forEach((keymap) => {
+      const kbName = keymap.model.keyboardElementName;
+      if (!newKeymaps.has(kbName)) {
+        newKeymaps.set(kbName, new Map());
+      }
+      const boardKeymaps = newKeymaps.get(kbName)!;
+      boardKeymaps.set(keymap.uniqueId, keymap);
+    });
+
+    // Get the first keymap and layer from the first keyboard model.
+    // We know these exist because we just added them.
+    const firstKeymapMap: KeymapMap = newKeymaps.values().next().value;
+    const firstKeymap: Keymap = firstKeymapMap.values().next().value;
+
+    this._keymaps = newKeymaps;
+    this._keymap = firstKeymap;
+    this._kbModel = firstKeymap.model;
+    this._layer = firstKeymap.layers[0];
+
+    const changes: ClickyUIStateChange[] = [
+      new ClickyUIStateChange("kbModels", null, this.kbModels),
+      new ClickyUIStateChange("kbModel", oldKbModel, this.kbModel),
+      new ClickyUIStateChange("keymap", oldKeymaps, this.keymap),
+      new ClickyUIStateChange("keymaps", oldKeymap, this.keymaps),
+      new ClickyUIStateChange("layer", oldLayer, this.layer),
+    ];
+    if (oldGuide) {
+      changes.push(new ClickyUIStateChange("guide", oldGuide, this.guide));
+    }
+    if (oldGuideStep) {
+      changes.push(
+        new ClickyUIStateChange("guideStep", oldGuideStep, this._guideStep)
+      );
+    }
+    if (oldSelectedKey) {
+      changes.push(
+        new ClickyUIStateChange("selectedKey", oldSelectedKey, this.selectedKey)
+      );
+    }
+
+    this.notify(changes);
+  }
 
   /* Set state all at once by identifiers, perhaps from a query string.
    *
@@ -423,11 +504,11 @@ export class ClickyUIState {
         return;
       }
     } else if (changedKbModel) {
-      // If we don't specify a keymap by ID, but the keyboard changed,
-      // use the best default map we can find for that keyboard.
-      newKeymap = this.#getNonBlankKeymapIfPossible(
-        newKbModel.keyboardElementName
-      );
+      // If we don't specify a keymap by ID, but the keyboard changed, get the first keymap.
+      newKeymap = this.keymaps
+        .get(newKbModel.keyboardElementName)!
+        .values()
+        .next().value as Keymap;
     } else {
       // If a keymap or keyboard were not specified, the keymap will not change.
       newKeymap = this.keymap;
@@ -653,46 +734,6 @@ export class ClickyUIState {
     }
 
     console.table(logTable);
-  }
-
-  // #endregion
-
-  // #region Private helpers
-
-  /* Idempotently add a blank keymap to our set of known keymaps
-   */
-  #idempotentlyAddBlankKeymap(kbName: string) {
-    const kbElemConstructor = customElements.get(kbName);
-    if (!kbElemConstructor) {
-      return;
-    }
-    // TODO: this is a hack to get to instance properties, can I do something else?
-    const tmpInstance = new kbElemConstructor() as ClickyKeyboardElement;
-    if (!this.keymaps.has(kbName)) {
-      this.keymaps.set(kbName, new Map());
-    }
-    const boardKeymaps = this.keymaps.get(kbName)!;
-    const blankKeymap = tmpInstance.model.blankKeymap;
-    boardKeymaps.set(blankKeymap.uniqueId, blankKeymap);
-  }
-
-  /* If there is a non-blank keymap for a keyboard model, return it.
-   * Otherwise, return the blank keymap.
-   * The keyboard model must exist in kbModels.
-   */
-  #getNonBlankKeymapIfPossible(keyboardElementName: string): Keymap {
-    const model = this.kbModels.find(
-      (m) => m.keyboardElementName === keyboardElementName
-    );
-    if (!model) {
-      throw new Error(`Unknown keyboard element name: ${keyboardElementName}`);
-    }
-    const boardMaps = this.keymaps.get(model.keyboardElementName)!;
-    const nonBlankKeymap = Array.from(boardMaps.values()).find(
-      (km) => km.uniqueId !== model.blankKeymap.uniqueId
-    );
-    const result = nonBlankKeymap || model.blankKeymap;
-    return result;
   }
 
   // #endregion

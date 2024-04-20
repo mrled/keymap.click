@@ -143,13 +143,17 @@ export function setQueryStringFromState(
   const aGuide = clickyUi.getAttribute("guide-id") || "";
   const aGuideStep = parseInt(clickyUi.getAttribute("guide-step") || "0", 10);
 
-  if (tBoardElement && aBoardElement !== tBoardElement) {
+  if (
+    tBoardElement &&
+    tBoardElement !== state.defaultKbModel.keyboardElementName &&
+    aBoardElement !== tBoardElement
+  ) {
     newParams.set(`${queryPrefix}-board`, tBoardElement);
   } else {
     newParams.delete(`${queryPrefix}-board`);
   }
 
-  if (tMap && aMap !== tMap) {
+  if (tMap && tMap !== state.defaultKeymap.uniqueId && aMap !== tMap) {
     newParams.set(`${queryPrefix}-map`, tMap);
   } else {
     newParams.delete(`${queryPrefix}-map`);
