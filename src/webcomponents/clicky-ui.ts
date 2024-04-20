@@ -55,7 +55,6 @@ import keyInfoPanelStyleStr from "~/styles/keyInfoPanel.css?inline";
  *
  * Attributes:
  * show-debug           Show checkbox to display debug information on the diagram and in the console.
- * keyboard-element     The name of the custom element to use as the keyboard.
  * keymap-id            The name of one of the passed-in keymaps to use.
  * layer                The layer number to use.
  * selected-key         The id of the key that is selected.
@@ -65,20 +64,19 @@ import keyInfoPanelStyleStr from "~/styles/keyInfoPanel.css?inline";
  *                      so the ClickyUIElement will not read from or write to the query string by default.
  *
  * Query string parameters:
- * board            The name of the custom element to use as the keyboard. (TODO: not implemented)
- * map              The name of one of the passed-in keymaps to use. (TODO: not implemented)
- * layer            The layer number to use. (TODO: not implemented)
+ * map              The name of one of the passed-in keymaps to use.
+ * layer            The layer number to use.
  * id               The id of the key to select.
  *
  * Query string example:
  * 1. The ClickyUIElement is declared in the DOM as:
- *    <clicky-ui keyboard-element="clicky-keyboard-ergodox" selected-key="l-f-1-1" query-prefix="clicky"></clicky-ui>
+ *    <clicky-ui selected-key="l-f-1-1" query-prefix="clicky"></clicky-ui>
  * 2. The user loads the URL <https://example.com/>
- *    The query string is empty, so the ClickyUI loads with the clicky-keyboard-ergodox keyboard and the l-f-1-1 key selected.
- * 3. The user loads the URL <https://example.com/?clicky-board=example-board&clicky-map=mymap&clicky-layer=2&clicky-key=r-t-2-2>
- *    The ClickyUIElement loads with the example-board keyboard, the mymap keymap, the layer number 2, and the r-t-2-2 key selected,
- *    overriding the keyboard-element and selected-key attributes set on the element in the DOM.
- * 4. When the user selects a key, or changes the board/map, the URL is updated with the new query parameters.
+ *    The query string is empty, so the ClickyUI loads with the default keymap and the l-f-1-1 key selected.
+ * 3. The user loads the URL <https://example.com/?clicky-map=mymap&clicky-layer=2&clicky-key=r-t-2-2>
+ *    The ClickyUIElement loads with the mymap keymap, the layer number 2, and the r-t-2-2 key selected,
+ *    overriding the selected-key attribute set on the element in the DOM.
+ * 4. When the user selects a key, or changes the map, the URL is updated with the new query parameters.
  */
 
 export class ClickyUIElement
@@ -144,26 +142,6 @@ export class ClickyUIElement
     this.state.setModelsAndMaps(keymaps);
   }
 
-  /* Given a list of Keymap instances, set the keymaps state property.
-   *
-   * Users will call this method to tell the UI what keymaps are available.
-   */
-  addKeymaps(value: Keymap[]) {
-    const newKeymaps = new Map<string, Map<string, Keymap>>();
-    this.state.keymaps.forEach((value, key) => {
-      newKeymaps.set(key, value);
-    });
-    value.forEach((keymap) => {
-      const kbName = keymap.model.keyboardElementName;
-      if (!newKeymaps.has(kbName)) {
-        newKeymaps.set(kbName, new Map());
-      }
-      const boardKeymaps = newKeymaps.get(kbName)!;
-      boardKeymaps.set(keymap.uniqueId, keymap);
-    });
-    this.state.keymaps = newKeymaps;
-  }
-
   // #endregion
 
   //
@@ -201,14 +179,7 @@ export class ClickyUIElement
    * (changes to other attributes are ignored).
    */
   static get observedAttributes() {
-    return [
-      "show-debug",
-      "keyboard-element",
-      "keymap-id",
-      "layer",
-      "query-prefix",
-      "selected-key",
-    ];
+    return ["show-debug", "keymap-id", "layer", "query-prefix", "selected-key"];
   }
 
   /* Run this code when an attribute is changed from JavaScript.
@@ -226,11 +197,6 @@ export class ClickyUIElement
     switch (name) {
       case "show-debug":
         this.controls.setAttribute("show-debug", newValue);
-        break;
-      case "keyboard-element":
-        this.state.setStatesByIds({
-          keyboardElementName: newValue,
-        });
         break;
       case "keymap-id":
         this.state.setStatesByIds({
@@ -303,7 +269,7 @@ export class ClickyUIElement
       ) as ClickyNavbarElement;
       this._keyInfoNavbar.updateTitleKey(
         this.state.layer,
-        this.state.kbModel,
+        this.state.keymap.model,
         this.state.selectedKey
       );
     }
@@ -386,22 +352,23 @@ export class ClickyUIElement
     let needsCreate = false;
     if (!this._keyboard) {
       // First, try to find a keyboard in the DOM
-      // TODO: this will never work... the element will never be called <keyboard>
       this._keyboard = this.shadow.querySelector(
-        ClickyKeyboardElement.elementName
+        "#keyboard"
       ) as ClickyKeyboardElement;
       needsCreate = true;
     }
     if (!this._keyboard) {
       // Next, look for the keyboard element by name if it was set
-      if (!customElements.get(this.state.kbModel.keyboardElementName)) {
+      const kbElementName = this.state.keymap.model.keyboardElementName;
+      if (!customElements.get(kbElementName)) {
         throw new Error(
-          `ClickyUIElement: Keyboard element ${this.state.kbModel.keyboardElementName} not found`
+          `ClickyUIElement: Keyboard element ${kbElementName} not found`
         );
       }
       this._keyboard = document.createElement(
-        this.state.kbModel.keyboardElementName
+        kbElementName
       ) as ClickyKeyboardElement;
+      this._keyboard.setAttribute("id", "keyboard");
     }
     if (needsCreate) {
       this._keyboard.createChildren(Array.from(this.state.layer.keys.values()));
@@ -528,15 +495,25 @@ export class ClickyUIElement
       this.#updateQueryPrefix(stateChanges.get("queryPrefix")!);
     }
 
-    // Watch for changes in model or layer, but not keymap.
-    // The model change indicates we need to replace the keyboard web component.
-    // Model and keymap changes automatically trigger a change to the layer state property too.
-    // The layer state property change implies recreating the keyboard's children
-    // (legends, etc) and updating the title key, so for that update,
-    // we only need to watch for the most specific change: the layer.
-    if (stateChanges.has("kbModel")) {
-      this.#updateKbModelState(stateChanges.get("kbModel")!);
+    // If the keymap changes, the board may change too.
+    if (stateChanges.has("keymap")) {
+      const keymapChange = stateChanges.get("keymap")!;
+      const newKeymap = keymapChange.newValue as Keymap;
+      const oldKeyboard = this.keyboard;
+
+      if (oldKeyboard.elementName != newKeymap.model.keyboardElementName) {
+        this._keyboard = document.createElement(
+          newKeymap.model.keyboardElementName
+        ) as ClickyKeyboardElement;
+        this.keyInfoNavbar.setAttribute("key-id", "");
+      }
+
+      // Replace the old keyboard with the new one in the DOM
+      if (oldKeyboard && this.centerPanel.contains(oldKeyboard)) {
+        this.centerPanel.replaceChild(this.keyboard, oldKeyboard);
+      }
     }
+
     if (stateChanges.has("keymap") || stateChanges.has("layer")) {
       this.keyboard.createChildren(Array.from(this.state.layer.keys.values()));
       this.#showWelcomeMessage();
@@ -551,21 +528,6 @@ export class ClickyUIElement
     }
 
     setQueryStringFromState(this.state, this);
-  }
-
-  #updateKbModelState(change: ClickyUIStateChange) {
-    const newKbValue = change.newValue as KeyboardModel;
-    const oldKeyboard = this.keyboard;
-
-    this._keyboard = document.createElement(
-      newKbValue.keyboardElementName
-    ) as ClickyKeyboardElement;
-    this.keyInfoNavbar.setAttribute("key-id", "");
-
-    // Replace the old keyboard with the new one in the DOM
-    if (oldKeyboard && this.centerPanel.contains(oldKeyboard)) {
-      this.centerPanel.replaceChild(this.keyboard, oldKeyboard);
-    }
   }
 
   /* Update the selected key or guide step
@@ -633,7 +595,7 @@ export class ClickyUIElement
     // Update the key in the key info navbar
     this.keyInfoNavbar.updateTitleKey(
       this.state.layer,
-      this.state.kbModel,
+      this.state.keymap.model,
       activeKeyId
     );
     // this.keyInfoNavbar might not be in the DOM on initial load, so we have to lay out here.

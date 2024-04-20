@@ -262,7 +262,7 @@ function newQwertyKey(
 }
 
 export const MicahErgodoxKeymap = new Keymap({
-  displayName: "Micah's ErgoDox",
+  displayName: "Micah's Keymap",
   uniqueId: "micah-ergodox",
   model: KeyboardModelErgodox,
   layers: [

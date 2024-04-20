@@ -34,10 +34,6 @@ export function setStateFromQsAndAttrib({
       queryPrefix = clickyUi.getAttribute("query-prefix") || "";
       currentAttributes.queryPrefix = queryPrefix;
     }
-    if (clickyUi.hasAttribute("keyboard-element")) {
-      currentAttributes.keyboardElementName =
-        clickyUi.getAttribute("keyboard-element") || "";
-    }
     if (clickyUi.hasAttribute("keymap-id")) {
       currentAttributes.keymapId = clickyUi.getAttribute("keymap-id") || "";
     }
@@ -57,7 +53,6 @@ export function setStateFromQsAndAttrib({
   if (queryPrefix) {
     const currentParams = new URLSearchParams(window.location.search);
     const qDebug = currentParams.get("debug");
-    const qBoard = currentParams.get(`${queryPrefix}-board`);
     const qMap = currentParams.get(`${queryPrefix}-map`);
     const qLayer = currentParams.get(`${queryPrefix}-layer`);
     const qKey = currentParams.get(`${queryPrefix}-key`);
@@ -65,9 +60,6 @@ export function setStateFromQsAndAttrib({
     const qStep = currentParams.get(`${queryPrefix}-step`);
     if (qDebug) {
       qsArgs.debug = qDebug === "true" ? 1 : 0;
-    }
-    if (qBoard) {
-      qsArgs.keyboardElementName = qBoard;
     }
     if (qMap) {
       qsArgs.keymapId = qMap;
@@ -126,7 +118,6 @@ export function setQueryStringFromState(
   }
   const newParams = new URLSearchParams(window.location.search);
 
-  const tBoardElement = state.kbModel.keyboardElementName;
   const tMap = state.keymap.uniqueId;
   const tLayer = state.layer;
   const tLayerIdx = state.keymap.layers.indexOf(tLayer);
@@ -134,22 +125,11 @@ export function setQueryStringFromState(
   const tGuide = state.guide?.id;
   const tStep = state.guideStep?.index;
 
-  const aBoardElement = clickyUi.getAttribute("keyboard-element") || "";
   const aMap = clickyUi.getAttribute("keymap-id") || "";
   const aLayer = parseInt(clickyUi.getAttribute("layer") || "0", 10);
   const aKey = clickyUi.getAttribute("selected-key") || "";
   const aGuide = clickyUi.getAttribute("guide-id") || "";
   const aGuideStep = parseInt(clickyUi.getAttribute("guide-step") || "0", 10);
-
-  if (
-    tBoardElement &&
-    tBoardElement !== state.defaultKbModel.keyboardElementName &&
-    aBoardElement !== tBoardElement
-  ) {
-    newParams.set(`${queryPrefix}-board`, tBoardElement);
-  } else {
-    newParams.delete(`${queryPrefix}-board`);
-  }
 
   if (tMap && tMap !== state.defaultKeymap.uniqueId && aMap !== tMap) {
     newParams.set(`${queryPrefix}-map`, tMap);

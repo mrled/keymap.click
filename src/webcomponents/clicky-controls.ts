@@ -3,7 +3,6 @@ import { IStateObserver } from "~/lib/State";
 
 enum SelectId {
   Debug = "debug",
-  Keyboard = "keyboard",
   Keymap = "keymap",
   Layer = "layer",
   Guide = "guide",
@@ -68,12 +67,12 @@ export class ClickyControlsElement
 
   /* Update the controls when the state changes.
    *
-   * We want to update if either the *available* keyboards/keymaps/layers/guides change,
+   * We want to update if either the *available* keymaps/layers/guides change,
    * so that we can change the options in the dropdowns,
    * or if the *selected* ones change, so that we can show the currently selected option.
    *
    * Each of these user input elements has a way to check for both changes.
-   * For changes to the available keyboards and keymaps,
+   * For changes to the available keymaps,
    * there is a dedicated property containing all available items.
    * For changes to the layers and guides,
    * we watch for changes to the selected keymap.
@@ -81,22 +80,18 @@ export class ClickyControlsElement
    *  ============|===================|=================
    *    controls  |  available items  |  selected item
    *  ============|===================|=================
-   *   keyboards  |     kbModels      |    kbModel
    *   keymaps    |     keymaps       |    keymap
    *   layers     |     keymap        |    layer
    *   guides     |     keymap        |    guide
    *  ============|===================|=================
    *
    * Keep in mind which state automatically updates other state --
-   * for instance, changes to the selected keyboard will automatically
-   * update the selected keymap, which will update the selected layer and guide.
+   * for instance, changes to the selected keymap will automatically
+   * update the selected layer and guide.
    */
   update(stateChanges: ClickyUIStateChangeMap) {
     if (stateChanges.get("debug")) {
       this.updateDebugSelector();
-    }
-    if (stateChanges.get("kbModels") || stateChanges.get("kbModel")) {
-      this.updateKbModelsSelector();
     }
     if (stateChanges.get("keymaps") || stateChanges.get("keymap")) {
       this.updateKeymapsSelector();
@@ -121,20 +116,11 @@ export class ClickyControlsElement
 
   private updateAll() {
     this.updateDebugSelector();
-    this.updateKbModelsSelector();
     this.updateKeymapsSelector();
     this.updateLayersSelector();
     this.updateGuidesSelector();
     this.updateGuideControls();
   }
-
-  /* Called when the user selects a keyboard from the dropdown
-   */
-  private chooseKbModel: ChangeListenerFunction = (e, id, result) => {
-    this.state.setStatesByIds({
-      keyboardElementName: result.value,
-    });
-  };
 
   /* Called when the user selects a keymap from the dropdown
    */
@@ -171,35 +157,15 @@ export class ClickyControlsElement
     debugCheckbox.checked = this.state.debug === 1;
   }
 
-  /* Update the keyboard selection dropdown.
-   * Called when the list of available keyboards changes or the selected board changes.
-   */
-  private updateKbModelsSelector() {
-    const options = this.state.kbModels.map((model) => {
-      const option = document.createElement("option") as HTMLOptionElement;
-      option.value = model.keyboardElementName;
-      option.selected = model === this.state.kbModel;
-      option.textContent = model.displayName;
-      return option;
-    }, [] as HTMLOptionElement[]);
-    this.updateSelector(
-      SelectId.Keyboard,
-      options,
-      "No keyboards available",
-      this.chooseKbModel
-    );
-  }
-
   /* Update the keymap selection dropdown.
    * Called when the list of available keymaps changes or the selected keymap changes.
    */
   private updateKeymapsSelector() {
-    const boardMaps = this.state.boardMaps;
-    const options = Array.from(boardMaps).map(([keymapId, keymap]) => {
+    const options = Array.from(this.state.keymaps).map(([keymapId, keymap]) => {
       const option = document.createElement("option") as HTMLOptionElement;
       option.value = keymapId;
       option.selected = keymap.uniqueId === this.state.keymap.uniqueId;
-      option.textContent = keymap.displayName;
+      option.textContent = `${keymap.displayName} (${keymap.model.displayName})`;
       return option;
     }, [] as HTMLOptionElement[]);
     this.updateSelector(
@@ -316,7 +282,7 @@ export class ClickyControlsElement
     });
     const label = document.createElement("label");
     label.htmlFor = SelectId.Debug;
-    label.textContent = "Enable debugging";
+    label.textContent = "🚫🐞";
 
     const span = document.createElement("span");
     span.append(checkbox, label);
@@ -449,7 +415,6 @@ export class ClickyControlsElement
       this.shadow.appendChild(this.debugPair);
     }
     this.shadow.append(
-      this.getPair(SelectId.Keyboard, "Keyboard", this.chooseKbModel),
       this.getPair(SelectId.Keymap, "Keymap", this.chooseKeymap),
       this.getPair(SelectId.Layer, "Layer", this.chooseLayer),
       this.getPair(SelectId.Guide, "Guide", this.chooseGuide),

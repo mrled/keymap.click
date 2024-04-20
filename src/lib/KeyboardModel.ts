@@ -67,8 +67,8 @@ export class KeyboardModel {
    */
   get blankKeymap(): Keymap {
     return new Keymap({
-      displayName: "Blank keymap",
-      uniqueId: "blank",
+      displayName: "Blank",
+      uniqueId: `${this.keyboardElementName}-blank-keymap`,
       model: this,
       layers: [
         KeymapLayer.fromKeyList({
