@@ -10,7 +10,7 @@
     "testsite:separate": "(rm -rf dist/separate || true) && mkdir -p dist/separate && npm run component:build && cp -r dist/webcomponent dist/separate/keymap.click && cp sites/separate/index.html dist/separate/ && node scripts/nodeserver.cjs dist/separate",
     "testsite:simple": "esbuild --bundle --watch --outfile=sites/simple/keymap.click.js --format=esm --sourcemap --loader:.css=text --servedir=sites/simple/ src/index.ts",
     "website:dev": "vite sites/keymap.click",
-    "website:build": "vite build --outDir ../../dist/keymap.click sites/keymap.click",
+    "website:build": "vite build --emptyOutDir --outDir ../../dist/keymap.click sites/keymap.click",
     "website:preview": "vite preview sites/keymap.click"
   },
   "dependencies": {
