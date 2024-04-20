@@ -1,5 +1,5 @@
 import { KeyboardModelTitleScreen } from "~/webcomponents/clicky-keyboard-title-screen";
-import { Keymap, KeymapKey, KeymapLayer } from "../Keymap";
+import { Keymap, KeymapKey, KeymapLayer } from "~/lib/Keymap";
 
 const keyInfoLayer0 = ["K E Y M A P . C L I C K"];
 const keyInfoLayer1 = ["I just picked some random words for this layer."];
