@@ -47,7 +47,8 @@ export class ClickyNavbarElement extends HTMLElement {
         }
         this._deselectKeyButton.dispatchEvent(
           new CustomEvent("key-selected", {
-            bubbles: true,
+            bubbles: true, // Allow event to bubble up to parent elements
+            composed: true, // Allow event to pass through shadow DOM boundaries
             detail: "",
           })
         );
