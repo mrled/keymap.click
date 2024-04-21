@@ -478,7 +478,7 @@ export class ClickyUIState {
       // If a guide, keymap, or keyboard were not specified, the guide will not change.
       newGuide = this.guide;
     }
-    const changedGuide = newGuide !== oldGuide;
+    let changedGuide = newGuide !== oldGuide;
 
     const specifiedGuideStep = guideStepIdx !== undefined;
     const oldGuideStep = this.guideStep;
@@ -497,13 +497,20 @@ export class ClickyUIState {
     } else {
       newGuideStep = null;
     }
-    const changedGuideStep = newGuideStep !== oldGuideStep;
+    let changedGuideStep = newGuideStep !== oldGuideStep;
 
     const specifiedSelectedKey = selectedKey !== undefined;
     const oldSelectedKey = this.selectedKey;
     let newSelectedKeyId: string = "";
     if (specifiedSelectedKey) {
       newSelectedKeyId = selectedKey as string;
+      // If a guide (or step) is selected, selecting a key exits the guide
+      if (newGuide) {
+        newGuide = null;
+        newGuideStep = null;
+        changedGuide = true;
+        changedGuideStep = true;
+      }
     } else if (changedKeymap || changedLayer || changedGuide) {
       // If we don't specify a key by ID,
       // but did specify any argument that implies different key functionality,
