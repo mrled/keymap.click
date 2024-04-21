@@ -8,10 +8,8 @@ import { ClickyNavbarElement } from "~/webcomponents/clicky-navbar";
 import { ClickyUIElement } from "~/webcomponents/clicky-ui";
 import { ClickyDiagramElement } from "~/webcomponents/clicky-diagram";
 import { ClickyKeyElement } from "~/webcomponents/clicky-key";
-import { ClickyControlsElement } from "~/webcomponents/clicky-controls";
 
 const allWebComponents = [
-  ClickyControlsElement,
   ClickyDiagramElement,
   ClickyKeyElement,
   ClickyKeygridElement,

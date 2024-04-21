@@ -19,7 +19,6 @@ import {
   setQueryStringFromState,
   setStateFromQsAndAttrib,
 } from "~/lib/ClickyUIStateQueryString";
-import { ClickyControlsElement } from "./clicky-controls";
 
 // Import CSS files as inline strings.
 // Vite supports the ?inline query parameter to load a file as a string;
@@ -158,7 +157,7 @@ export class ClickyUIElement
     // just whether the debug checkbox is shown.
     // It's not part of the query string stuff.
     const showDebug = this.getAttribute("show-debug") || "false";
-    this.controls.setAttribute("show-debug", showDebug);
+    this.keyInfoNavbar.setAttribute("show-debug", showDebug);
 
     // Set the initial state from the query string and attributes
     setStateFromQsAndAttrib({
@@ -196,7 +195,7 @@ export class ClickyUIElement
     // TODO: sync the state names with the element names for a better time
     switch (name) {
       case "show-debug":
-        this.controls.setAttribute("show-debug", newValue);
+        this.keyInfoNavbar.setAttribute("show-debug", newValue);
         break;
       case "keymap-id":
         this.state.setStatesByIds({
@@ -273,6 +272,9 @@ export class ClickyUIElement
         this.state.selectedKey
       );
     }
+    if (!this._keyInfoNavbar.state.initialized) {
+      this._keyInfoNavbar.state = this.state;
+    }
     return this._keyInfoNavbar;
   }
 
@@ -327,24 +329,6 @@ export class ClickyUIElement
       this._kidContainer.className = "keymap-ui-kid-container";
     }
     return this._kidContainer;
-  }
-
-  private _controls: ClickyControlsElement | null = null;
-  get controls(): ClickyControlsElement {
-    if (!this._controls) {
-      this._controls = this.shadow.querySelector(
-        ClickyControlsElement.elementName
-      ) as ClickyControlsElement;
-    }
-    if (!this._controls) {
-      this._controls = document.createElement(
-        ClickyControlsElement.elementName
-      ) as ClickyControlsElement;
-    }
-    if (!this._controls.state.initialized) {
-      this._controls.state = this.state;
-    }
-    return this._controls;
   }
 
   private _keyboard: ClickyKeyboardElement | null = null;
@@ -464,7 +448,6 @@ export class ClickyUIElement
       this.diamargRight,
     ]);
     this.setChildrenIdempotently(this.centerPanel, [
-      this.controls,
       this.keyboard,
       this.infoContainer,
     ]);
