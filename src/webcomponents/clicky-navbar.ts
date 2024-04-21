@@ -310,9 +310,11 @@ export class ClickyNavbarElement
     if (!this._layerTabs) {
       this._layerTabs = document.createElement("ul") as HTMLUListElement;
       this._layerTabs.classList.add("layer-tabs");
-      if (this.state.keymap.layers.length <= 1) {
-        this._layerTabs.classList.add("hidden");
-      }
+      // Don't hide the list of layer buttons even if there's just one layer,
+      // because clicking on a layer button takes you to the layer's welcome page.
+      // if (this.state.keymap.layers.length <= 1) {
+      //   this._layerTabs.classList.add("hidden");
+      // }
       const labelLi = document.createElement("li");
       labelLi.textContent = "Layers";
       this._layerTabs.append(labelLi);
