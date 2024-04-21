@@ -535,6 +535,8 @@ export class ClickyUIElement
   #updateInfoProsePanelFromState() {
     let activeKeyId: string = "";
     let keySelection: string[] = [];
+    let proseTitleElement = document.createElement("h3");
+    let proseTextElements: HTMLParagraphElement[] = [];
     const indicatedElementsById: { [key: string]: ClickyKeyHandleElement } = {};
     let proseKeyIndicators: ClickyIndicatorElement[] = [];
     let indicatedKeyIds: string[] = [];
@@ -553,7 +555,8 @@ export class ClickyUIElement
     }
 
     if (activeKeyId) {
-      // If there's an active key, show the key information in the prose panel
+      // If there's an active key, show the key information in the prose panel.
+      // (This will also trigger if the active key is in a guide step.)
       const keyData = this.state.layer.keys.get(activeKeyId);
       if (!keyData) {
         console.error(
@@ -562,58 +565,47 @@ export class ClickyUIElement
         return;
       }
       keySelection = keyData.selection || [];
-
-      const h3 = document.createElement("h3");
-      if (keyData.unset) {
-        h3.innerHTML = `Unset key`;
-      } else {
-        h3.innerHTML = `The <kbd>${keyData.name}</kbd> key`;
-      }
-      this.infoProse.appendChild(h3);
-
-      // Update the key info prose including descriptions etc.
-      // Get all the key IDs that are targets of <clicky-indicator>s.
-      keyData.info.forEach((paragraph: string) => {
+      proseTitleElement.innerHTML = keyData.unset
+        ? `Unset key`
+        : `The <kbd>${keyData.name}</kbd> key`;
+      proseTextElements = keyData.info.map((paragraph: string) => {
         const p = document.createElement("p");
         p.innerHTML = paragraph;
-        const indicators = p.querySelectorAll(
-          ClickyIndicatorElement.elementName
-        );
-        Array.from(indicators).forEach((indicator) =>
-          proseKeyIndicators.push(indicator as ClickyIndicatorElement)
-        );
-        this.infoProse.appendChild(p);
+        return p;
       });
-
-      // Construct a list of all keys indicated in the prose
-      indicatedKeyIds = proseKeyIndicators.map(
-        (indicator) => indicator.getAttribute("id") || ""
-      );
     } else if (this.state.guideStep?.text?.length || 0 > 0) {
-      // If there's an active guide step, show the guide step information in the prose panel
+      // If there's an active guide step but not an active key,
+      // show the guide step information in the prose panel
       const guideStep = this.state.guideStep!;
       keySelection = guideStep.selection || [];
-      if (guideStep.title) {
-        const h2 = document.createElement("h2");
-        h2.innerHTML = guideStep.title;
-        this.infoProse.appendChild(h2);
-      }
-      const guideStepText = guideStep.text || [""];
-      guideStepText.forEach((paragraph: string) => {
-        const p = document.createElement("p");
-        p.innerHTML = paragraph;
-        this.infoProse.appendChild(p);
-      });
+      proseTitleElement.innerHTML = guideStep.title || "";
+      proseTextElements =
+        guideStep.text?.map((paragraph: string) => {
+          const p = document.createElement("p");
+          p.innerHTML = paragraph;
+          return p;
+        }) || [];
     } else {
       // If there's no active key or guide step, show the current layer's welcome text
       keySelection = [];
-
-      this.state.layer.welcome.forEach((paragraph: string) => {
+      proseTitleElement.innerText = this.state.layer.displayName;
+      proseTextElements = this.state.layer.welcome.map((paragraph: string) => {
         const p = document.createElement("p");
         p.innerHTML = paragraph;
-        this.infoProse.appendChild(p);
+        return p;
       });
     }
+
+    this.infoProse.appendChild(proseTitleElement);
+    this.infoProse.append(...proseTextElements);
+
+    proseKeyIndicators = Array.from(
+      this.infoProse.querySelectorAll(ClickyIndicatorElement.elementName)
+    );
+    // Construct a list of all keys indicated in the prose
+    indicatedKeyIds = proseKeyIndicators.map(
+      (indicator) => indicator.getAttribute("id") || ""
+    );
 
     // Clear any existing connections that back the diagram lines
     const connectionPairs: ConnectionPair[] = [];
