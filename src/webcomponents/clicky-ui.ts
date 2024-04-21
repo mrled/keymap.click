@@ -514,9 +514,9 @@ export class ClickyUIElement
       }
     }
 
+    // When the keymap or layer changes, recreate all the keys to update all the legends.
     if (stateChanges.has("keymap") || stateChanges.has("layer")) {
       this.keyboard.createChildren(Array.from(this.state.layer.keys.values()));
-      this.#showWelcomeMessage();
     }
 
     if (
@@ -524,15 +524,15 @@ export class ClickyUIElement
       stateChanges.has("guide") ||
       stateChanges.has("selectedKey")
     ) {
-      this.#updateSelectedKeyState();
+      this.#updateInfoProsePanelFromState();
     }
 
     setQueryStringFromState(this.state, this);
   }
 
-  /* Update the selected key or guide step
+  /* Update the info prose panel based on active key, guide step, etc.
    */
-  #updateSelectedKeyState() {
+  #updateInfoProsePanelFromState() {
     let activeKeyId: string = "";
     let keySelection: string[] = [];
     const indicatedElementsById: { [key: string]: ClickyKeyHandleElement } = {};
@@ -547,7 +547,13 @@ export class ClickyUIElement
       activeKeyId = this.state.selectedKey;
     }
 
+    // Clear the existing content in the key info prose panel
+    while (this.infoProse.firstChild) {
+      this.infoProse.removeChild(this.infoProse.firstChild);
+    }
+
     if (activeKeyId) {
+      // If there's an active key, show the key information in the prose panel
       const keyData = this.state.layer.keys.get(activeKeyId);
       if (!keyData) {
         console.error(
@@ -556,28 +562,42 @@ export class ClickyUIElement
         return;
       }
       keySelection = keyData.selection || [];
+
+      const h3 = document.createElement("h3");
+      if (keyData.unset) {
+        h3.innerHTML = `Unset key`;
+      } else {
+        h3.innerHTML = `The <kbd>${keyData.name}</kbd> key`;
+      }
+      this.infoProse.appendChild(h3);
+
       // Update the key info prose including descriptions etc.
       // Get all the key IDs that are targets of <clicky-indicator>s.
-      proseKeyIndicators = this.#setKeyInfoContent(
-        keyData.name,
-        keyData.unset || false,
-        keyData.info
-      );
+      keyData.info.forEach((paragraph: string) => {
+        const p = document.createElement("p");
+        p.innerHTML = paragraph;
+        const indicators = p.querySelectorAll(
+          ClickyIndicatorElement.elementName
+        );
+        Array.from(indicators).forEach((indicator) =>
+          proseKeyIndicators.push(indicator as ClickyIndicatorElement)
+        );
+        this.infoProse.appendChild(p);
+      });
+
+      // Construct a list of all keys indicated in the prose
       indicatedKeyIds = proseKeyIndicators.map(
         (indicator) => indicator.getAttribute("id") || ""
       );
     } else if (this.state.guideStep?.text?.length || 0 > 0) {
+      // If there's an active guide step, show the guide step information in the prose panel
       const guideStep = this.state.guideStep!;
-      while (this.infoProse.firstChild) {
-        this.infoProse.removeChild(this.infoProse.firstChild);
-      }
       keySelection = guideStep.selection || [];
       if (guideStep.title) {
         const h2 = document.createElement("h2");
         h2.innerHTML = guideStep.title;
         this.infoProse.appendChild(h2);
       }
-      // TODO: set title from guideStep.title
       const guideStepText = guideStep.text || [""];
       guideStepText.forEach((paragraph: string) => {
         const p = document.createElement("p");
@@ -585,8 +605,14 @@ export class ClickyUIElement
         this.infoProse.appendChild(p);
       });
     } else {
+      // If there's no active key or guide step, show the current layer's welcome text
       keySelection = [];
-      this.#showWelcomeMessage();
+
+      this.state.layer.welcome.forEach((paragraph: string) => {
+        const p = document.createElement("p");
+        p.innerHTML = paragraph;
+        this.infoProse.appendChild(p);
+      });
     }
 
     // Clear any existing connections that back the diagram lines
@@ -699,51 +725,6 @@ export class ClickyUIElement
       this.kidContainer.offsetWidth,
       this.kidContainer.offsetHeight
     );
-  }
-
-  /* Set the key information content for the selected key
-   * Return an array of key ids that are targets of <clicky-indicator>s.
-   */
-  #setKeyInfoContent(
-    name: string,
-    unset: boolean,
-    info: string[]
-  ): ClickyIndicatorElement[] {
-    while (this.infoProse.firstChild) {
-      this.infoProse.removeChild(this.infoProse.firstChild);
-    }
-    const keyIndicators: ClickyIndicatorElement[] = [];
-    const h3 = document.createElement("h3");
-
-    if (unset) {
-      h3.innerHTML = `Unset key`;
-    } else {
-      h3.innerHTML = `The <kbd>${name}</kbd> key`;
-    }
-    this.infoProse.appendChild(h3);
-    info.forEach((paragraph: string) => {
-      const p = document.createElement("p");
-      p.innerHTML = paragraph;
-      const indicators = p.querySelectorAll(ClickyIndicatorElement.elementName);
-      Array.from(indicators).forEach((indicator) =>
-        keyIndicators.push(indicator as ClickyIndicatorElement)
-      );
-      this.infoProse.appendChild(p);
-    });
-    return keyIndicators;
-  }
-
-  /* Show the welcome message for the keymap
-   */
-  #showWelcomeMessage() {
-    while (this.infoProse.firstChild) {
-      this.infoProse.removeChild(this.infoProse.firstChild);
-    }
-    this.state.layer.welcome.forEach((paragraph: string) => {
-      const p = document.createElement("p");
-      p.innerHTML = paragraph;
-      this.infoProse.appendChild(p);
-    });
   }
 
   /* Handle a key being selected on the keyboard
