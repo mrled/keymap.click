@@ -5,7 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/cmd2.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Simple Clicky test site</title>
-    <script src="/reloader.js"></script>
+    <script src="/common.js"></script>
     <link rel="stylesheet" href="/simple.css" />
   </head>
   <body>
@@ -13,6 +13,10 @@
       <a href="/titleboard.html">Simple Clicky test site: Title Board only</a>
     </h1>
     <p>Go back to the <a href="/">main page</a>.</p>
+    <p>
+      Toggle debug controls on all ClickyUI elements on this page:
+      <button onclick="toggleAllClickyDebug()">Toggle Debug Controls</button>
+    </p>
     <hr />
     <div id="app"></div>
     <hr />
