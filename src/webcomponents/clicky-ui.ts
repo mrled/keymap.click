@@ -167,6 +167,7 @@ export class ClickyUIElement
     });
 
     this.layOutIdempotently();
+    this.#updateInfoProsePanelFromState();
 
     // Resize the canvas to the size of the kidContainer for the first time
     this.#resizeCanvas(this.state);
