@@ -73,6 +73,7 @@ export class KeyboardModel {
       layers: [
         KeymapLayer.fromKeyList({
           displayName: "Blank layer",
+          shortName: "Blank",
           welcome: ["No keymap selected"],
           keys: this.blankKeymapKeys,
         }),
