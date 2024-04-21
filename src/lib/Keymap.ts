@@ -140,18 +140,22 @@ export class GuideStep implements IGuideStep {
  */
 export class KeymapGuide {
   readonly title: string;
+  readonly shortName: string;
   readonly id: string;
   readonly steps: GuideStep[];
   constructor({
     title,
+    shortName,
     id,
     steps,
   }: {
     title: string;
+    shortName: string;
     id: string;
     steps: IGuideStep[];
   }) {
     this.title = title;
+    this.shortName = shortName;
     this.id = id;
     this.steps = steps.map(
       (step, index) => new GuideStep({ guide: this, index, ...step })

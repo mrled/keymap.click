@@ -110,12 +110,6 @@ export class ClickyNavbarElement
       referenceModel,
       selectedKeyId
     );
-
-    if (selectedKeyId || this.state.guide) {
-      this.layerHomeButton.disabled = false;
-    } else {
-      this.layerHomeButton.disabled = true;
-    }
   }
 
   // #endregion
@@ -163,7 +157,7 @@ export class ClickyNavbarElement
       this.updateDebugSelector();
     }
     if (stateChanges.get("keymaps") || stateChanges.get("keymap")) {
-      this.updateKeymapsSelector();
+      this.recreateKeymapSelector();
     }
     if (
       stateChanges.get("keymaps") ||
@@ -171,7 +165,7 @@ export class ClickyNavbarElement
       stateChanges.get("guide") ||
       stateChanges.get("guideStep")
     ) {
-      this.updateGuidesSelector();
+      this.recreateGuideList();
     }
     if (stateChanges.get("keymap") || stateChanges.get("layer")) {
       this.recreateLayerTabs();
@@ -183,9 +177,9 @@ export class ClickyNavbarElement
 
   private updateAll() {
     this.updateDebugSelector();
-    this.updateKeymapsSelector();
+    this.recreateKeymapSelector();
     this.recreateLayerTabs();
-    this.updateGuidesSelector();
+    this.recreateGuideList();
     this.updateGuideControls();
   }
 
@@ -220,50 +214,6 @@ export class ClickyNavbarElement
       return;
     }
     debugCheckbox.checked = this.state.debug === 1;
-  }
-
-  /* Update the keymap selection dropdown.
-   * Called when the list of available keymaps changes or the selected keymap changes.
-   */
-  private updateKeymapsSelector() {
-    const options = Array.from(this.state.keymaps).map(([keymapId, keymap]) => {
-      const option = document.createElement("option") as HTMLOptionElement;
-      option.value = keymapId;
-      option.selected = keymap.uniqueId === this.state.keymap.uniqueId;
-      option.textContent = `${keymap.displayName} (${keymap.model.displayName})`;
-      return option;
-    }, [] as HTMLOptionElement[]);
-    this.updateSelector(
-      Slctr.Keymap,
-      options,
-      "No keymaps available",
-      this.chooseKeymap
-    );
-  }
-
-  /* Update the guide selection dropdown.
-   * Called when the list of available guides changes or the selected guide changes.
-   */
-  private updateGuidesSelector() {
-    const noGuideSelectedOption = document.createElement("option");
-    noGuideSelectedOption.value = "";
-    noGuideSelectedOption.textContent = "No guide selected";
-    noGuideSelectedOption.selected = this.state.guide === null;
-
-    const guideOptions = this.state.keymap.guides.map((guide, idx) => {
-      const option = document.createElement("option") as HTMLOptionElement;
-      option.value = guide.id;
-      option.selected = guide.title === this.state.guide?.title;
-      option.textContent = guide.title;
-      return option;
-    }, [] as HTMLOptionElement[]);
-    const options = [noGuideSelectedOption, ...guideOptions];
-    this.updateSelector(
-      Slctr.Guide,
-      options,
-      "No guides available",
-      this.chooseGuide
-    );
   }
 
   /* Update the guide step controls
@@ -316,22 +266,6 @@ export class ClickyNavbarElement
     return this._debugPair;
   }
 
-  /* Keymap navigation controls
-   */
-  private _layerHomeButton: HTMLButtonElement | null = null;
-  get layerHomeButton(): HTMLButtonElement {
-    if (!this._layerHomeButton) {
-      this._layerHomeButton = document.createElement("button");
-      this._layerHomeButton.setAttribute("id", Slctr.LayerHome.r);
-      this._layerHomeButton.classList.add("control-button");
-      this._layerHomeButton.textContent = "🏠";
-      this._layerHomeButton.ariaLabel = "Go to layer home";
-      this._layerHomeButton.addEventListener("click", () => {
-        this.state.setStatesByIds({ guideId: "", selectedKey: "" });
-      });
-    }
-    return this._layerHomeButton;
-  }
   private _guidePrevButton: HTMLButtonElement | null = null;
   get guidePrevButton(): HTMLButtonElement {
     if (!this._guidePrevButton) {
@@ -370,20 +304,6 @@ export class ClickyNavbarElement
     }
     return this._guideNextButton;
   }
-  private _controls: HTMLSpanElement | null = null;
-  get controls(): HTMLSpanElement {
-    if (!this._controls) {
-      this._controls = document.createElement("span") as HTMLSpanElement;
-      this._controls.className = Slctr.CtrlButtons.r;
-      this._controls.setAttribute("id", Slctr.CtrlButtons.r);
-      this._controls.append(
-        this.layerHomeButton,
-        this.guidePrevButton,
-        this.guideNextButton
-      );
-    }
-    return this._controls;
-  }
 
   private _layerTabs: HTMLUListElement | null = null;
   get layerTabs(): HTMLUListElement {
@@ -402,7 +322,7 @@ export class ClickyNavbarElement
         tabButton.classList.add("layer-tab-button");
         const li = document.createElement("li");
         tabButton.addEventListener("click", () => {
-          this.state.setStatesByIds({ layerIdx: idx });
+          this.state.setStatesByIds({ layerIdx: idx, selectedKey: "" });
         });
         li.classList.add("layer-tab");
         li.appendChild(tabButton);
@@ -420,30 +340,111 @@ export class ClickyNavbarElement
     }
   }
 
-  /* Update the options in a select element.
-   */
-  private updateSelector(
-    selectId: Sels,
-    options: HTMLOptionElement[],
-    noOptionsText: string,
-    changeListener: ChangeListenerFunction
-  ) {
-    const select = this.getSelect(selectId, changeListener);
-    while (select.firstChild) {
-      select.removeChild(select.firstChild);
+  private _keymapSelector: HTMLSelectElement | null = null;
+  get keymapSelector(): HTMLSelectElement {
+    if (!this._keymapSelector) {
+      this._keymapSelector = document.createElement("select");
+      this._keymapSelector.setAttribute("id", Slctr.Keymap.r);
+      this._keymapSelector.addEventListener("change", (e: Event) => {
+        if (!this._keymapSelector) return;
+        this.chooseKeymap(e, Slctr.Keymap.r, this._keymapSelector);
+      });
+      if (this.state.keymaps.size <= 1) {
+        this._keymapSelector.disabled = true;
+      }
+      const options: HTMLOptionElement[] = Array.from(
+        this.state.keymaps.values()
+      ).map((keymap) => {
+        const option = document.createElement("option");
+        option.value = keymap.uniqueId;
+        option.textContent = keymap.displayName;
+        if (keymap.uniqueId === this.state.keymap.uniqueId) {
+          option.selected = true;
+        }
+        return option;
+      });
+      this._keymapSelector.append(...options);
     }
-    if (options.length === 0) {
-      select.disabled = true;
-      const option = document.createElement("option");
-      option.value = "none";
-      option.textContent = noOptionsText;
-      options.push(option);
-    } else if (options.length === 1) {
-      select.disabled = true;
-    } else {
-      select.disabled = false;
+    return this._keymapSelector;
+  }
+  recreateKeymapSelector() {
+    const oldKeymapSelector = this._keymapSelector;
+    this._keymapSelector = null;
+    if (oldKeymapSelector && this.keymapPair.contains(oldKeymapSelector)) {
+      this.keymapPair.replaceChild(this.keymapSelector, oldKeymapSelector);
     }
-    select.append(...options);
+  }
+
+  private _keymapPair: HTMLSpanElement | null = null;
+  get keymapPair(): HTMLSpanElement {
+    if (!this._keymapPair) {
+      this._keymapPair = document.createElement("span");
+      this._keymapPair.setAttribute("id", Slctr.Keymap.r + "-pair");
+      if (this.state.keymaps.size <= 1) {
+        this._keymapPair.classList.add("hidden");
+      }
+      this._keymapPair.classList.add("controls-pair");
+      this._keymapPair.append(
+        this.getLabel(Slctr.Keymap, "Keymap"),
+        this.keymapSelector
+      );
+    }
+    return this._keymapPair;
+  }
+
+  private _guideList: HTMLUListElement | null = null;
+  get guideList(): HTMLUListElement {
+    if (!this._guideList) {
+      this._guideList = document.createElement("ul");
+      this._guideList.setAttribute("id", Slctr.Guide.r);
+      this._guideList.classList.add("guide-list");
+
+      const labelLi = document.createElement("li");
+      labelLi.textContent = "Guides";
+      this._guideList.append(labelLi);
+      if (this.state.keymap.guides.length < 1) {
+        this._guideList.classList.add("hidden");
+      }
+
+      const controlsLi = document.createElement("li");
+      controlsLi.classList.add("guide-tab");
+      controlsLi.append(this.guidePrevButton, this.guideNextButton);
+      if (this.state.guide === null) {
+        controlsLi.classList.add("hidden");
+      }
+      this._guideList.append(controlsLi);
+
+      const guideItems = this.state.keymap.guides.map((guide) => {
+        const tabButton = document.createElement("button");
+        if (guide.id === this.state.guide?.id) {
+          tabButton.textContent = `Restart ${guide.shortName}`;
+        } else {
+          tabButton.textContent = `Start ${guide.shortName}`;
+        }
+        if (this.state.guideStep?.index === 0) {
+          tabButton.disabled = true;
+        } else {
+          tabButton.disabled = false;
+        }
+        tabButton.classList.add("guide-tab-button");
+        const li = document.createElement("li");
+        tabButton.addEventListener("click", () => {
+          this.state.setStatesByIds({ guideId: guide.id });
+        });
+        li.classList.add("guide-tab");
+        li.appendChild(tabButton);
+        return li;
+      });
+      this._guideList.append(...guideItems);
+    }
+    return this._guideList;
+  }
+  recreateGuideList() {
+    const oldGuideList = this._guideList;
+    this._guideList = null;
+    if (oldGuideList && this.contains(oldGuideList)) {
+      this.replaceChild(this.guideList, oldGuideList);
+    }
   }
 
   /* Get a label element by the ID of its select element.
@@ -461,47 +462,6 @@ export class ClickyNavbarElement
     return result;
   }
 
-  /* Get a select element by its ID.
-   * If it doesn't exist, create it.
-   */
-  private getSelect(
-    selector: Sels,
-    changeListener: ChangeListenerFunction
-  ): HTMLSelectElement {
-    let result = this.querySelector(selector.i) as HTMLSelectElement;
-    if (!result) {
-      result = document.createElement("select");
-      // result.id = id;
-      result.setAttribute("id", selector.r);
-      result.addEventListener("change", (e: Event) =>
-        changeListener(e, selector.r, result)
-      );
-    }
-    return result;
-  }
-
-  /* Get a span element containing a label and a select element.
-   * Use the select element's ID to make the span's ID.
-   */
-  private getPair(
-    selectId: Sels,
-    labelText: string,
-    changeListener: ChangeListenerFunction
-  ): HTMLSpanElement {
-    const spanId = `${selectId.r}-pair`;
-    let result = this.querySelector(`span#${spanId}`) as HTMLSpanElement;
-    if (!result) {
-      result = document.createElement("span");
-      result.setAttribute("id", spanId);
-      result.classList.add("controls-pair");
-      result.append(
-        this.getLabel(selectId, labelText),
-        this.getSelect(selectId, changeListener)
-      );
-    }
-    return result;
-  }
-
   /* Lay out the child elements.
    */
   private layoutIdempotently() {
@@ -510,13 +470,8 @@ export class ClickyNavbarElement
     }
     const titleKeyRow = document.createElement("div");
     titleKeyRow.classList.add("title-key-row");
-    titleKeyRow.append(this.titleBoard, this.controls, this.debugPair);
-    this.append(
-      titleKeyRow,
-      this.layerTabs,
-      this.getPair(Slctr.Keymap, "Keymap", this.chooseKeymap),
-      this.getPair(Slctr.Guide, "Guide", this.chooseGuide)
-    );
+    titleKeyRow.append(this.titleBoard, this.debugPair);
+    this.append(titleKeyRow, this.layerTabs, this.keymapPair, this.guideList);
     this.updateAll();
   }
 

@@ -845,6 +845,7 @@ export const MicahErgodoxKeymap = new Keymap({
   guides: [
     new KeymapGuide({
       title: "Guide to Micah's ErgoDox layout",
+      shortName: "Guide",
       id: "mrlguide",
       steps: [
         {
