@@ -19,7 +19,6 @@ import {
   setQueryStringFromState,
   setStateFromQsAndAttrib,
 } from "~/lib/ClickyUIStateQueryString";
-import { KeyboardModel } from "~/lib/KeyboardModel";
 import { ClickyControlsElement } from "./clicky-controls";
 
 // Import CSS files as inline strings.

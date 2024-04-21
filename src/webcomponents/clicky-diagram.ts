@@ -1,6 +1,5 @@
 /* The diagram is the canvas where we draw lines to keys on the keyboard to draw user attention.
  */
-import log from "loglevel";
 
 import { ClickyUIState, ClickyUIStateChangeMap } from "~/lib/ClickyUIState";
 import { IStateObserver } from "~/lib/State";

@@ -1,6 +1,6 @@
 import { PhysicalKey } from "~/lib/PhysicalKey";
 import { ClickyKeyboardElement } from "~/webcomponents/clicky-keyboard";
-import { Keymap, KeymapKey, KeymapLayer } from "~/lib/Keymap";
+import { KeymapKey, KeymapLayer } from "~/lib/Keymap";
 import { ClickyKeygridElement } from "~/webcomponents/clicky-keygrid";
 import { ClickyKeyElement } from "./clicky-key";
 import { Point, Size } from "~/lib/Geometry";

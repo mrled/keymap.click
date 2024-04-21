@@ -1,4 +1,3 @@
-import { ClickyKeyboardElement } from "~/webcomponents/clicky-keyboard";
 import { KeyboardModel } from "./KeyboardModel";
 
 /* A key in a keymap.

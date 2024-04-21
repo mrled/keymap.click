@@ -1,4 +1,4 @@
-import { Keymap, KeymapKey, KeymapLayer } from "~/lib/Keymap";
+import { KeymapLayer } from "~/lib/Keymap";
 
 import { ClickyKeyboardTitleBarElement } from "~/webcomponents/clicky-keyboard-title-bar";
 import { KeyboardModel } from "~/lib/KeyboardModel";
