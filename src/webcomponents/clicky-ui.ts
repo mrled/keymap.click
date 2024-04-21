@@ -506,11 +506,11 @@ export class ClickyUIElement
           newKeymap.model.keyboardElementName
         ) as ClickyKeyboardElement;
         this.keyInfoNavbar.setAttribute("key-id", "");
-      }
 
-      // Replace the old keyboard with the new one in the DOM
-      if (oldKeyboard && this.centerPanel.contains(oldKeyboard)) {
-        this.centerPanel.replaceChild(this.keyboard, oldKeyboard);
+        // Replace the old keyboard with the new one in the DOM
+        if (oldKeyboard && this.centerPanel.contains(oldKeyboard)) {
+          this.centerPanel.replaceChild(this.keyboard, oldKeyboard);
+        }
       }
     }
 
