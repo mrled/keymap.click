@@ -11,6 +11,7 @@ export const ClickyTitleScreenKeymap = new Keymap({
   layers: [
     KeymapLayer.fromKeyList({
       displayName: "Title Screen Main Layer",
+      shortName: "Main",
       welcome: [
         `Hello, and welcome to the key map viewer!`,
         `If you&apos;re seeing this, it means you don&apos;t have a key map selected.`,
@@ -80,6 +81,7 @@ export const ClickyTitleScreenKeymap = new Keymap({
     }),
     KeymapLayer.fromKeyList({
       displayName: "Title Screen Second Layer",
+      shortName: "Second",
       welcome: [
         `This is an example second layer for the same layout`,
         `Notice that it uses the same keys as the first layer, but the keys are have different letters.`,

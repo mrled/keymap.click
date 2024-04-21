@@ -43,6 +43,7 @@
     <script type="module">
       import {
         ClickyTitleScreenKeymap,
+        ClickyTitleScreenKeymapManyLayer,
         MicahErgodoxKeymap,
       } from "./keymap.click.js";
       const app = document.getElementById("app");
@@ -50,6 +51,8 @@
       const availableKeymaps = [
         ClickyTitleScreenKeymap,
         ClickyTitleScreenKeymap.model.blankKeymap,
+        ClickyTitleScreenKeymapManyLayer,
+        ClickyTitleScreenKeymapManyLayer.model.blankKeymap,
         MicahErgodoxKeymap,
         MicahErgodoxKeymap.model.blankKeymap,
       ];

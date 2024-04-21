@@ -268,6 +268,7 @@ export const MicahErgodoxKeymap = new Keymap({
   layers: [
     KeymapLayer.fromKeyList({
       displayName: "Micah Ergodox Main Layer",
+      shortName: "Main",
       welcome: [
         `Welcome to my keymap. I wrote this guide to explain how my ErgoDox helped my RSI.`,
         `Select a key from the board above to learn more about it.`,
@@ -773,6 +774,7 @@ export const MicahErgodoxKeymap = new Keymap({
     }),
     KeymapLayer.fromKeyList({
       displayName: "Navigation layer",
+      shortName: "Nav",
       welcome: [
         `This layer is designed to make it easier to navigate text.`,
         `I hold down a special key on the main layer to activate this layer,

@@ -9,9 +9,15 @@
 
 import { ClickyUIElement } from "~/webcomponents/clicky-ui";
 import { ClickyTitleScreenKeymap } from "~/lib/keymaps/ClickyTitleScreenKeymap";
+import { ClickyTitleScreenKeymapManyLayer } from "~/lib/keymaps/ClickyTitleScreenKeymapManyLayer";
 import { MicahErgodoxKeymap } from "~/lib/keymaps/MicahErgodoxKeymap";
 import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
 
 registerAllKeymapClickWebComponents();
 
-export { ClickyUIElement, MicahErgodoxKeymap, ClickyTitleScreenKeymap };
+export {
+  ClickyUIElement,
+  MicahErgodoxKeymap,
+  ClickyTitleScreenKeymapManyLayer,
+  ClickyTitleScreenKeymap,
+};

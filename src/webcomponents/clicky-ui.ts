@@ -503,6 +503,8 @@ export class ClickyUIElement
     }
 
     if (
+      stateChanges.has("keymap") ||
+      stateChanges.has("layer") ||
       stateChanges.has("guideStep") ||
       stateChanges.has("guide") ||
       stateChanges.has("selectedKey")

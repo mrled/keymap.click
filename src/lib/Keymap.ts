@@ -164,6 +164,7 @@ export class KeymapGuide {
 export class KeymapLayer {
   constructor(
     public readonly displayName: string,
+    public readonly shortName: string,
     public readonly welcome: string[],
     public readonly keys: Map<string, KeymapKey>
   ) {}
@@ -175,10 +176,12 @@ export class KeymapLayer {
    */
   static fromKeyList({
     displayName,
+    shortName,
     welcome,
     keys,
   }: {
     displayName: string;
+    shortName: string;
     welcome: string[];
     keys: KeymapKey[];
   }) {
@@ -198,7 +201,7 @@ export class KeymapLayer {
       );
     }
 
-    const newLayer = new KeymapLayer(displayName, welcome, keysById);
+    const newLayer = new KeymapLayer(displayName, shortName, welcome, keysById);
     return newLayer;
   }
 }

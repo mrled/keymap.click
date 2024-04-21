@@ -24,15 +24,53 @@ clicky-navbar {
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--button-border-color);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
-  > * {
-    padding: 0 1rem;
+  input[type="checkbox"] {
+    vertical-align: middle;
+  }
+
+  > ul.layer-tabs {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+
+    overflow-x: auto; /* Allow tabs to scroll horizontally */
+
+    li {
+      padding: 0.5em 1em;
+      vertical-align: bottom;
+    }
+    li.layer-tab {
+      padding: 0;
+      button.layer-tab-button {
+        border: 1px solid var(--button-border-color);
+        &:hover {
+          background-color: var(--button-bg-hover);
+        }
+        &:active {
+          background-color: var(--button-bg-active);
+        }
+      }
+    }
+    &.hidden {
+      display: none;
+    }
+  }
+
+  > div.title-key-row {
+    display: flex;
+    padding: 0.5em;
+    margin: 0.5em;
+
+    > * {
+      margin: 0 1em;
+    }
   }
 
   span.controls-pair {
     display: inline-block;
-    margin-left: 2em;
     padding: 0.5em;
     select {
       margin-left: 1em;

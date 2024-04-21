@@ -1,3 +1,4 @@
+import { c } from "vite/dist/node/types.d-AKzkD8vd";
 import { ClickyUIState, ClickyUIStateChangeMap } from "~/lib/ClickyUIState";
 import { KeyboardModel } from "~/lib/KeyboardModel";
 import { KeymapLayer } from "~/lib/Keymap";
@@ -40,7 +41,6 @@ class Selector {
 const Slctr = {
   Debug: new Selector("debug"),
   Keymap: new Selector("keymap"),
-  Layer: new Selector("layer"),
   Guide: new Selector("guide"),
   CtrlButtons: new Selector("control-buttons"),
   GuideNext: new Selector("guide-next-step"),
@@ -174,7 +174,7 @@ export class ClickyNavbarElement
       this.updateGuidesSelector();
     }
     if (stateChanges.get("keymap") || stateChanges.get("layer")) {
-      this.updateLayersSelector();
+      this.recreateLayerTabs();
     }
     if (stateChanges.get("guide") || stateChanges.get("guideStep")) {
       this.updateGuideControls();
@@ -184,7 +184,7 @@ export class ClickyNavbarElement
   private updateAll() {
     this.updateDebugSelector();
     this.updateKeymapsSelector();
-    this.updateLayersSelector();
+    this.recreateLayerTabs();
     this.updateGuidesSelector();
     this.updateGuideControls();
   }
@@ -241,26 +241,6 @@ export class ClickyNavbarElement
     );
   }
 
-  /* Update the layer selection dropdown.
-   * Called when the list of available layers changes or the selected layer changes.
-   */
-  private updateLayersSelector() {
-    const options = this.state.keymap.layers.map((layer, idx) => {
-      const option = document.createElement("option") as HTMLOptionElement;
-      option.value = idx.toString();
-      option.selected =
-        idx === this.state.keymap.layers.indexOf(this.state.layer);
-      option.textContent = layer.displayName;
-      return option;
-    }, [] as HTMLOptionElement[]);
-    this.updateSelector(
-      Slctr.Layer,
-      options,
-      "No layers available",
-      this.chooseLayer
-    );
-  }
-
   /* Update the guide selection dropdown.
    * Called when the list of available guides changes or the selected guide changes.
    */
@@ -292,12 +272,6 @@ export class ClickyNavbarElement
     const inGuide = this.state.guide !== null;
     this.showHideElement(this.guidePrevButton, inGuide);
     this.showHideElement(this.guideNextButton, inGuide);
-    console.log(
-      `updateGuideControls. null: ${this.state.guide === null}, !null: ${
-        this.state.guide !== null
-      }, guide: `,
-      this.state.guide
-    );
     if (this.state.guideStep) {
       if (this.state.guideStep.isFirstStep) {
         this.querySelector(Slctr.GuidePrev.i)?.setAttribute("disabled", "");
@@ -411,6 +385,41 @@ export class ClickyNavbarElement
     return this._controls;
   }
 
+  private _layerTabs: HTMLUListElement | null = null;
+  get layerTabs(): HTMLUListElement {
+    if (!this._layerTabs) {
+      this._layerTabs = document.createElement("ul") as HTMLUListElement;
+      this._layerTabs.classList.add("layer-tabs");
+      if (this.state.keymap.layers.length <= 1) {
+        this._layerTabs.classList.add("hidden");
+      }
+      const labelLi = document.createElement("li");
+      labelLi.textContent = "Layers";
+      this._layerTabs.append(labelLi);
+      const layerItems = this.state.keymap.layers.map((layer, idx) => {
+        const tabButton = document.createElement("button");
+        tabButton.textContent = layer.shortName;
+        tabButton.classList.add("layer-tab-button");
+        const li = document.createElement("li");
+        tabButton.addEventListener("click", () => {
+          this.state.setStatesByIds({ layerIdx: idx });
+        });
+        li.classList.add("layer-tab");
+        li.appendChild(tabButton);
+        return li;
+      });
+      this._layerTabs.append(...layerItems);
+    }
+    return this._layerTabs;
+  }
+  recreateLayerTabs() {
+    const oldLayerTabs = this._layerTabs;
+    this._layerTabs = null;
+    if (oldLayerTabs && this.contains(oldLayerTabs)) {
+      this.replaceChild(this.layerTabs, oldLayerTabs);
+    }
+  }
+
   /* Update the options in a select element.
    */
   private updateSelector(
@@ -499,12 +508,13 @@ export class ClickyNavbarElement
     while (this.firstChild) {
       this.removeChild(this.firstChild);
     }
+    const titleKeyRow = document.createElement("div");
+    titleKeyRow.classList.add("title-key-row");
+    titleKeyRow.append(this.titleBoard, this.controls, this.debugPair);
     this.append(
-      this.titleBoard,
-      this.controls,
-      this.debugPair,
+      titleKeyRow,
+      this.layerTabs,
       this.getPair(Slctr.Keymap, "Keymap", this.chooseKeymap),
-      this.getPair(Slctr.Layer, "Layer", this.chooseLayer),
       this.getPair(Slctr.Guide, "Guide", this.chooseGuide)
     );
     this.updateAll();
@@ -532,13 +542,10 @@ export class ClickyNavbarElement
   /* Apply or remove the 'hidden' class to an element
    */
   private showHideElement(element: Element, show: boolean) {
-    const elemId = element.getAttribute("id");
     if (show && element.classList.contains("hidden")) {
       element.classList.remove("hidden");
-      console.trace(`showing (ID ${elemId})`, element);
     } else if (!show && !element.classList.contains("hidden")) {
       element.classList.add("hidden");
-      console.trace(`hiding (ID ${elemId})`, element);
     }
   }
 
