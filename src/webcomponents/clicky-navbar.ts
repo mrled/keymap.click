@@ -45,8 +45,7 @@ const Slctr = {
   CtrlButtons: new Selector("control-buttons"),
   GuideNext: new Selector("guide-next-step"),
   GuidePrev: new Selector("guide-prev-step"),
-  GuideExit: new Selector("guide-exit"),
-  Deselect: new Selector("deselect-key"),
+  LayerHome: new Selector("layer-home"),
 } as const;
 type Sels = typeof Slctr[keyof typeof Slctr];
 
@@ -111,11 +110,12 @@ export class ClickyNavbarElement
       referenceModel,
       selectedKeyId
     );
-    this.layerHomeButton.disabled = !!this.state.guide
-      ? true
-      : modifiedKey.unset
-      ? false
-      : true;
+
+    if (selectedKeyId || this.state.guide) {
+      this.layerHomeButton.disabled = false;
+    } else {
+      this.layerHomeButton.disabled = true;
+    }
   }
 
   // #endregion
@@ -348,7 +348,7 @@ export class ClickyNavbarElement
   get layerHomeButton(): HTMLButtonElement {
     if (!this._layerHomeButton) {
       this._layerHomeButton = document.createElement("button");
-      this._layerHomeButton.setAttribute("id", Slctr.GuideExit.r);
+      this._layerHomeButton.setAttribute("id", Slctr.LayerHome.r);
       this._layerHomeButton.classList.add("control-button");
       this._layerHomeButton.textContent = "🏠";
       this._layerHomeButton.ariaLabel = "Go to layer home";
