@@ -62,26 +62,9 @@ export class ClickyNavbarElement extends HTMLElement {
     }
   }
 
-  _titleH2: HTMLElement | null = null;
-  get titleH2() {
-    if (!this._titleH2) {
-      this._titleH2 = this.querySelector("h2");
-    }
-    if (!this._titleH2) {
-      this._titleH2 = document.createElement("h2");
-    }
-    return this._titleH2;
-  }
-  private titleH2Create() {
-    if (!this.contains(this.titleH2)) {
-      this.appendChild(this.titleH2);
-    }
-  }
-
   connectedCallback() {
     this.titleBoardCreate();
     this.deselectKeyButtonCreate();
-    this.titleH2Create();
   }
 
   updateTitleKey(
@@ -95,10 +78,8 @@ export class ClickyNavbarElement extends HTMLElement {
       selectedKeyId
     );
     if (modifiedKey.unset) {
-      this.titleH2.textContent = "Welcome";
       this.deselectKeyButton.disabled = true;
     } else {
-      this.titleH2.textContent = "Key information";
       this.deselectKeyButton.disabled = false;
     }
   }
