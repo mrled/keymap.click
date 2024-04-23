@@ -66,7 +66,6 @@ const clickmapUiTitle = document.createElement(
 clickmapUiTitle.setAttribute("id", "clickmap-title");
 clickmapUiTitle.setAttribute("show-debug", "true");
 clickmapUiTitle.setModelsAndMaps([ClickmapTitleScreenKeymap]);
-clickmapUiTitle.setAttribute("keyboard-element", "clickmap-keyboard-title-screen");
 clickmapUiTitle.setAttribute("keymap-id", "title-screen-map");
 app.appendChild(clickmapUiTitle);
 
@@ -81,7 +80,6 @@ const clickmapUiErgodox = document.createElement(
 clickmapUiErgodox.setAttribute("id", "clickmap-ergodox");
 clickmapUiErgodox.setAttribute("show-debug", "true");
 clickmapUiErgodox.setModelsAndMaps([MicahErgodoxKeymap]);
-clickmapUiErgodox.setAttribute("keyboard-element", "clickmap-keyboard-ergodox");
 clickmapUiErgodox.setAttribute("keymap-id", "micah-ergodox");
 clickmapUiErgodox.setAttribute("query-prefix", "clickmap");
 app.appendChild(clickmapUiErgodox);

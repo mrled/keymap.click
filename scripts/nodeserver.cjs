@@ -31,6 +31,9 @@ const server = http.createServer((req, res) => {
     case ".css":
       contentType = "text/css";
       break;
+    case ".svg":
+      contentType = "image/svg+xml";
+      break;
   }
 
   console.log(`Serving ${filePath} with content type ${contentType}`);

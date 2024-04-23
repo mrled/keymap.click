@@ -43,13 +43,13 @@
     <hr />
     <div id="app"></div>
     <hr />
-    <p>keymap.click UI should appear between the two HR elements above.</p>
+    <p>Clickmap UI should appear between the two HR elements above.</p>
     <script type="module">
       import {
         ClickmapTitleScreenKeymap,
         ClickmapTitleScreenKeymapManyLayer,
         MicahErgodoxKeymap,
-      } from "./keymap.click.js";
+      } from "./clickmap.js";
       const app = document.getElementById("app");
       const clickmapUi = document.createElement("clickmap-ui");
       const availableKeymaps = [
@@ -64,7 +64,6 @@
       clickmapUi.setAttribute("show-debug", "true");
       clickmapUi.setAttribute("query-prefix", "clickmap");
       clickmapUi.setModelsAndMaps(availableKeymaps);
-      clickmapUi.setAttribute("keyboard-element", "clickmap-keyboard-title-screen");
       clickmapUi.setAttribute("keymap-id", "title-screen-map");
       app.appendChild(clickmapUi);
     </script>

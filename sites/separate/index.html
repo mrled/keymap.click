@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/cmd2.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Separate keymap.click test site</title>
+    <title>Separate Clickmap test site</title>
     <style>
       :root {
         font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -31,11 +31,10 @@
         border: 1px solid black;
       }
     </style>
-    <link rel="stylesheet" href="/keymap.click/index.css" />
-    <script type="module" src="/keymap.click/index.js"></script>
+    <script type="module" src="/clickmap.js"></script>
   </head>
   <body>
-    <h1>Separate keymap.click test site</h1>
+    <h1>Separate Clickmap test site</h1>
     <p>
       This is a basic test site for the web component. It builds the web
       component in release mode and serves it with a simple Node webserver. If
@@ -46,16 +45,30 @@
       different test site.
     </p>
     <hr />
-    <div id="app" />
+    <div id="app"></div>
     <script type="module">
+      import {
+        ClickmapTitleScreenKeymap,
+        ClickmapTitleScreenKeymapManyLayer,
+        MicahErgodoxKeymap,
+      } from "./clickmap.js";
       const clickmapUi = document.createElement("clickmap-ui");
+      const availableKeymaps = [
+        ClickmapTitleScreenKeymap,
+        ClickmapTitleScreenKeymap.model.blankKeymap,
+        ClickmapTitleScreenKeymapManyLayer,
+        ClickmapTitleScreenKeymapManyLayer.model.blankKeymap,
+        MicahErgodoxKeymap,
+        MicahErgodoxKeymap.model.blankKeymap,
+      ];
       clickmapUi.setAttribute("id", "clickmap-title");
       clickmapUi.setAttribute("show-debug", "true");
-      clickmapUi.setAttribute("keyboard-element", "clickmap-keyboard-title-screen");
+      clickmapUi.setAttribute("query-prefix", "clickmap");
+      clickmapUi.setModelsAndMaps(availableKeymaps);
       clickmapUi.setAttribute("keymap-id", "title-screen-map");
       document.getElementById("app").appendChild(clickmapUi);
     </script>
     <hr />
-    <p>keymap.click UI should appear between the two HR elements above.</p>
+    <p>Clickmap UI should appear between the two HR elements above.</p>
   </body>
 </html>
