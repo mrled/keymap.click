@@ -17,6 +17,10 @@ body.page {
   margin: 4rem;
 }
 
+a {
+  color: #c05621;
+}
+
 div.site-title-bar {
   margin-bottom: 2rem;
 }
