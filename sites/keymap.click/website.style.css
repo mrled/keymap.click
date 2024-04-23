@@ -42,7 +42,8 @@ ul.site-menu {
 }
 
 clickmap-ui {
-  border: 1px solid black;
+  margin: 2rem 0;
+  padding: 1rem 0;
 }
 
 div.site-footer {
