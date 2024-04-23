@@ -4,9 +4,9 @@ import { Keymap, KeymapKey, KeymapLayer } from "~/lib/Keymap";
 const keyInfoLayer0 = ["K E Y M A P . C L I C K"];
 const keyInfoLayer1 = ["I just picked some random words for this layer."];
 
-export const ClickmapTitleScreenKeymap = new Keymap({
-  displayName: "Title Screen Map",
-  uniqueId: "title-screen-map",
+export const ClickmapTitleScreenKeymapOldVersion = new Keymap({
+  displayName: "Title Screen Map (Old Version)",
+  uniqueId: "title-screen-map-old",
   model: KeyboardModelTitleScreen,
   layers: [
     KeymapLayer.fromKeyList({

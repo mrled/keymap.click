@@ -8,9 +8,10 @@
  */
 
 import { ClickmapUIElement } from "~/webcomponents/clickmap-ui";
-import { ClickmapTitleScreenKeymap } from "~/lib/keymaps/ClickmapTitleScreenKeymap";
+import { ClickmapTitleScreenKeymapOldVersion } from "~/lib/keymaps/ClickmapTitleScreenKeymap";
 import { ClickmapTitleScreenKeymapManyLayer } from "~/lib/keymaps/ClickmapTitleScreenKeymapManyLayer";
 import { MicahErgodoxKeymap } from "~/lib/keymaps/MicahErgodoxKeymap";
+import { ClickmapTitleScreenKeymap } from "~/lib/keymaps/Planck48TitleScreenKeymap";
 import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
 
 registerAllKeymapClickWebComponents();
@@ -18,6 +19,7 @@ registerAllKeymapClickWebComponents();
 export {
   ClickmapUIElement,
   MicahErgodoxKeymap,
-  ClickmapTitleScreenKeymapManyLayer,
   ClickmapTitleScreenKeymap,
+  ClickmapTitleScreenKeymapManyLayer,
+  ClickmapTitleScreenKeymapOldVersion,
 };

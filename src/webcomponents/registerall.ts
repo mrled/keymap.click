@@ -1,4 +1,5 @@
 import { ClickmapKeyboardErgodoxElement } from "~/webcomponents/clickmap-keyboard-ergodox";
+import { ClickmapKeyboardPlanck48Element } from "./clickmap-keyboard-planck48";
 import { ClickmapKeyboardTitleBarElement } from "~/webcomponents/clickmap-keyboard-title-bar";
 import { ClickmapKeyboardTitleScreenElement } from "~/webcomponents/clickmap-keyboard-title-screen";
 import { ClickmapKeygridElement } from "~/webcomponents/clickmap-keygrid";
@@ -16,6 +17,7 @@ const allWebComponents = [
   ClickmapKeyHandleElement,
   ClickmapIndicatorElement,
   ClickmapKeyboardErgodoxElement,
+  ClickmapKeyboardPlanck48Element,
   ClickmapKeyboardTitleBarElement,
   ClickmapKeyboardTitleScreenElement,
   ClickmapNavbarElement,

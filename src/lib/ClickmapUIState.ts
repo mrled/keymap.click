@@ -62,7 +62,7 @@ import { KeyboardModel } from "./KeyboardModel";
 import { IStateObserver, StateChange, StateChangeMap } from "./State";
 import { ConnectionPair } from "./DiagramConnections";
 import { GuideStep, Keymap, KeymapGuide, KeymapLayer } from "./Keymap";
-import { ClickmapTitleScreenKeymap } from "./keymaps/ClickmapTitleScreenKeymap";
+import { ClickmapTitleScreenKeymapOldVersion } from "./keymaps/ClickmapTitleScreenKeymap";
 
 /* A map of uniqueID strings to Keymap objects
  */
@@ -237,8 +237,8 @@ export class ClickmapUIState {
   public get keymaps(): KeymapMap {
     if (this._keymaps.size === 0) {
       this._keymaps.set(
-        ClickmapTitleScreenKeymap.uniqueId,
-        ClickmapTitleScreenKeymap
+        ClickmapTitleScreenKeymapOldVersion.uniqueId,
+        ClickmapTitleScreenKeymapOldVersion
       );
       this.notify([new ClickmapUIStateChange("keymaps", [], this._keymaps)]);
     }
