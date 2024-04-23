@@ -1,9 +1,11 @@
-import { c } from "vite/dist/node/types.d-AKzkD8vd";
-import { ClickyUIState, ClickyUIStateChangeMap } from "~/lib/ClickyUIState";
+import {
+  ClickmapUIState,
+  ClickmapUIStateChangeMap,
+} from "~/lib/ClickmapUIState";
 import { KeyboardModel } from "~/lib/KeyboardModel";
 import { KeymapLayer } from "~/lib/Keymap";
 import { IStateObserver } from "~/lib/State";
-import { ClickyKeyboardTitleBarElement } from "~/webcomponents/clicky-keyboard-title-bar";
+import { ClickmapKeyboardTitleBarElement } from "~/webcomponents/clickmap-keyboard-title-bar";
 
 // #region Helper types
 
@@ -61,14 +63,14 @@ type ChangeListenerFunction = (
 
 /* Title bar for a key-info-panel
  */
-export class ClickyNavbarElement
+export class ClickmapNavbarElement
   extends HTMLElement
-  implements IStateObserver<ClickyUIState> {
+  implements IStateObserver<ClickmapUIState> {
   //
 
   // #region Constructor and lifecycle
 
-  static readonly elementName = "clicky-navbar";
+  static readonly elementName = "clickmap-navbar";
 
   static readonly observedAttributes = ["show-debug"];
 
@@ -116,15 +118,15 @@ export class ClickyNavbarElement
 
   // #region Observed state
 
-  readonly observerName = "ClickyUIControls";
+  readonly observerName = "ClickmapUIControls";
 
-  private _state: ClickyUIState = new ClickyUIState();
-  set state(value: ClickyUIState) {
+  private _state: ClickmapUIState = new ClickmapUIState();
+  set state(value: ClickmapUIState) {
     this._state = value;
     this._state.attach(this);
     this.updateAll();
   }
-  get state(): ClickyUIState {
+  get state(): ClickmapUIState {
     return this._state;
   }
 
@@ -152,7 +154,7 @@ export class ClickyNavbarElement
    * for instance, changes to the selected keymap will automatically
    * update the selected layer and guide.
    */
-  update(stateChanges: ClickyUIStateChangeMap) {
+  update(stateChanges: ClickmapUIStateChangeMap) {
     if (stateChanges.get("debug")) {
       this.updateDebugSelector();
     }
@@ -477,17 +479,17 @@ export class ClickyNavbarElement
     this.updateAll();
   }
 
-  _titleBoard: ClickyKeyboardTitleBarElement | null = null;
-  get titleBoard(): ClickyKeyboardTitleBarElement {
+  _titleBoard: ClickmapKeyboardTitleBarElement | null = null;
+  get titleBoard(): ClickmapKeyboardTitleBarElement {
     if (!this._titleBoard) {
       this._titleBoard = this.querySelector(
-        ClickyKeyboardTitleBarElement.elementName
-      ) as ClickyKeyboardTitleBarElement;
+        ClickmapKeyboardTitleBarElement.elementName
+      ) as ClickmapKeyboardTitleBarElement;
     }
     if (!this._titleBoard) {
       this._titleBoard = document.createElement(
-        ClickyKeyboardTitleBarElement.elementName
-      ) as ClickyKeyboardTitleBarElement;
+        ClickmapKeyboardTitleBarElement.elementName
+      ) as ClickmapKeyboardTitleBarElement;
     }
     return this._titleBoard;
   }

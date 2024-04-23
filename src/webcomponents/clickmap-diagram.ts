@@ -1,24 +1,27 @@
 /* The diagram is the canvas where we draw lines to keys on the keyboard to draw user attention.
  */
 
-import { ClickyUIState, ClickyUIStateChangeMap } from "~/lib/ClickyUIState";
+import {
+  ClickmapUIState,
+  ClickmapUIStateChangeMap,
+} from "~/lib/ClickmapUIState";
 import { IStateObserver } from "~/lib/State";
 import { DiagramLineColors, drawDiagram } from "~/lib/DiagramDrawing";
 
-export class ClickyDiagramElement
+export class ClickmapDiagramElement
   extends HTMLElement
-  implements IStateObserver<ClickyUIState> {
+  implements IStateObserver<ClickmapUIState> {
   //
 
-  static readonly elementName = "clicky-diagram";
+  static readonly elementName = "clickmap-diagram";
 
   centerPanel: HTMLElement | null = null;
   diamargLeft: HTMLElement | null = null;
   diamargRight: HTMLElement | null = null;
   infoProse: HTMLElement | null = null;
 
-  private _state: ClickyUIState = new ClickyUIState();
-  set state(state: ClickyUIState) {
+  private _state: ClickmapUIState = new ClickmapUIState();
+  set state(state: ClickmapUIState) {
     this._state = state;
     this._state.attach(this);
     this.draw();
@@ -31,13 +34,13 @@ export class ClickyDiagramElement
     super();
   }
 
-  readonly observerName = "ClickyUIDiagram";
+  readonly observerName = "ClickmapUIDiagram";
 
   connectedCallback() {
     this.draw();
   }
 
-  update(stateChanges: ClickyUIStateChangeMap) {
+  update(stateChanges: ClickmapUIStateChangeMap) {
     if (stateChanges.has("connectionPairs") || stateChanges.has("debug")) {
       this.draw();
     }

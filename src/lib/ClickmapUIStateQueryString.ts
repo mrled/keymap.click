@@ -1,55 +1,55 @@
 /* Synchronize the query string and a state object
  */
 
-import { ClickyUIElement } from "~/webcomponents/clicky-ui";
-import { IClickyUIStateIdArgs, ClickyUIState } from "./ClickyUIState";
+import { ClickmapUIElement } from "~/webcomponents/clickmap-ui";
+import { IClickmapUIStateIdArgs, ClickmapUIState } from "./ClickmapUIState";
 
-/* Read the query string and update the state of the ClickyUIElement.
+/* Read the query string and update the state of the ClickmapUIElement.
  *
  * Arguments:
- * - state: the ClickyUIState object
- * - clickyUi: the ClickyUIElement object, which is used to get the current attribute values
+ * - state: the ClickmapUIState object
+ * - clickmapUi: the ClickmapUIElement object, which is used to get the current attribute values
  */
 export function setStateFromQsAndAttrib({
   state,
-  clickyUi,
+  clickmapUi,
 }: {
-  state: ClickyUIState;
-  clickyUi?: ClickyUIElement;
-}): (keyof ClickyUIState)[] {
+  state: ClickmapUIState;
+  clickmapUi?: ClickmapUIElement;
+}): (keyof ClickmapUIState)[] {
   // If the query prefi is already set in the state, use it as a default value.
-  // That should not be the case if clickyUi is passed (see below), though we don't enforce that.
+  // That should not be the case if clickmapUi is passed (see below), though we don't enforce that.
   let queryPrefix = state.queryPrefix;
 
-  // If the clickyUi is passed, we are setting the state on initial load.
-  // The clickyUi will pass itself to this function in its connectedCallback() only,
+  // If the clickmapUi is passed, we are setting the state on initial load.
+  // The clickmapUi will pass itself to this function in its connectedCallback() only,
   // so that this function can configure the state based on its attributes and query string.
   // This will change the state to reflect what's in the attributes,
   // and then override those attributes if the query string has different values.
-  // We don't want to pass the clickyUi parameter in any other situation,
+  // We don't want to pass the clickmapUi parameter in any other situation,
   // because normally we don't want to override the state with the attributes.
-  const currentAttributes: IClickyUIStateIdArgs = {};
-  if (clickyUi) {
-    if (clickyUi.hasAttribute("query-prefix")) {
-      queryPrefix = clickyUi.getAttribute("query-prefix") || "";
+  const currentAttributes: IClickmapUIStateIdArgs = {};
+  if (clickmapUi) {
+    if (clickmapUi.hasAttribute("query-prefix")) {
+      queryPrefix = clickmapUi.getAttribute("query-prefix") || "";
       currentAttributes.queryPrefix = queryPrefix;
     }
-    if (clickyUi.hasAttribute("keymap-id")) {
-      currentAttributes.keymapId = clickyUi.getAttribute("keymap-id") || "";
+    if (clickmapUi.hasAttribute("keymap-id")) {
+      currentAttributes.keymapId = clickmapUi.getAttribute("keymap-id") || "";
     }
-    if (clickyUi.hasAttribute("layer")) {
+    if (clickmapUi.hasAttribute("layer")) {
       currentAttributes.layerIdx = parseInt(
-        clickyUi.getAttribute("layer") || "0",
+        clickmapUi.getAttribute("layer") || "0",
         10
       );
     }
-    if (clickyUi.hasAttribute("selected-key")) {
+    if (clickmapUi.hasAttribute("selected-key")) {
       currentAttributes.selectedKey =
-        clickyUi.getAttribute("selected-key") || "";
+        clickmapUi.getAttribute("selected-key") || "";
     }
   }
 
-  const qsArgs: IClickyUIStateIdArgs = {};
+  const qsArgs: IClickmapUIStateIdArgs = {};
   if (queryPrefix) {
     const currentParams = new URLSearchParams(window.location.search);
     const qDebug = currentParams.get("debug");
@@ -79,7 +79,7 @@ export function setStateFromQsAndAttrib({
   }
 
   // Merge the changes from the attributes and the query string into a single object, and apply them to the state.
-  const newStateArgs: IClickyUIStateIdArgs = {
+  const newStateArgs: IClickmapUIStateIdArgs = {
     ...currentAttributes,
     ...qsArgs,
   };
@@ -89,7 +89,7 @@ export function setStateFromQsAndAttrib({
   // This list doesn't take into account what the initial state values were,
   // just what was set by the query string or attributes,
   // so it may include keys that were already set to the same value.
-  return Object.keys(newStateArgs) as (keyof ClickyUIState)[];
+  return Object.keys(newStateArgs) as (keyof ClickmapUIState)[];
 }
 
 /* Set the query string based on the current state.
@@ -108,8 +108,8 @@ export function setStateFromQsAndAttrib({
  * Requires the element to be passed in so we can get the current attribute values.
  */
 export function setQueryStringFromState(
-  state: ClickyUIState,
-  clickyUi: ClickyUIElement
+  state: ClickmapUIState,
+  clickmapUi: ClickmapUIElement
 ) {
   const queryPrefix = state.queryPrefix;
 
@@ -125,11 +125,11 @@ export function setQueryStringFromState(
   const tGuide = state.guide?.id;
   const tStep = state.guideStep?.index;
 
-  const aMap = clickyUi.getAttribute("keymap-id") || "";
-  const aLayer = parseInt(clickyUi.getAttribute("layer") || "0", 10);
-  const aKey = clickyUi.getAttribute("selected-key") || "";
-  const aGuide = clickyUi.getAttribute("guide-id") || "";
-  const aGuideStep = parseInt(clickyUi.getAttribute("guide-step") || "0", 10);
+  const aMap = clickmapUi.getAttribute("keymap-id") || "";
+  const aLayer = parseInt(clickmapUi.getAttribute("layer") || "0", 10);
+  const aKey = clickmapUi.getAttribute("selected-key") || "";
+  const aGuide = clickmapUi.getAttribute("guide-id") || "";
+  const aGuideStep = parseInt(clickmapUi.getAttribute("guide-step") || "0", 10);
 
   if (tMap && tMap !== state.defaultKeymap.uniqueId && aMap !== tMap) {
     newParams.set(`${queryPrefix}-map`, tMap);

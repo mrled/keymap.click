@@ -1,5 +1,5 @@
 import { Keymap, KeymapGuide, KeymapKey, KeymapLayer } from "~/lib/Keymap";
-import { KeyboardModelErgodox } from "~/webcomponents/clicky-keyboard-ergodox";
+import { KeyboardModelErgodox } from "~/webcomponents/clickmap-keyboard-ergodox";
 
 const normalLayoutInfo = [`Unchanged from normal QWERTY keyboard layout`];
 
@@ -35,9 +35,9 @@ const bracketKeyInfo = [
       <kbd>shift</kbd> key. When I first got my ErgoDox, using shift with either
       hand had become excruciating, and I desperately needed to shift without
       using my pinky. To accomplish this, I remapped
-      <clicky-indicator id="l-t-1-3">
+      <clickmap-indicator id="l-t-1-3">
         <kbd>shift</kbd>
-      </clicky-indicator>
+      </clickmap-indicator>
       to under the thumb. However, moving shift to a new location without
       removing the normal QWERTY shift mapping gave me too much of a crutch, so
       I needed to remove shift from its normal location.
@@ -46,13 +46,13 @@ const bracketKeyInfo = [
       Even so, why brackets? On the ErgoDox default layout, the brackets are in
       an awkward place anyway, and the shift keys are actually easier to reach
       than the default location for
-      <clicky-indicator id="r-f-9-9">
+      <clickmap-indicator id="r-f-9-9">
         <kbd>[</kbd>
-      </clicky-indicator>
+      </clickmap-indicator>
       and
-      <clicky-indicator id="r-f-11-9">
+      <clickmap-indicator id="r-f-11-9">
         <kbd>]</kbd>
-      </clicky-indicator>
+      </clickmap-indicator>
       .
     `,
 ];
@@ -78,9 +78,9 @@ const ctrlKeyInfo = [
     `,
   `
       On a normal keyboard, I remap the key in the
-      <clicky-indicator id="l-f-1-5">
+      <clickmap-indicator id="l-f-1-5">
         <kbd>capslock</kbd>
-      </clicky-indicator>
+      </clickmap-indicator>
       position to <kbd>ctrl</kbd>; for this layout, I had to remove that mapping
       to stop me from falling back to old habits.
     `,
@@ -95,8 +95,8 @@ const optKeyInfo = [
   `
       As <kbd>opt</kbd> + a left/right arrow key is a very common chord,
       it&apos;s worth noting that this placement works well with my
-      <clicky-indicator id="l-f-8-9">left side</clicky-indicator> and
-      <clicky-indicator id="r-f-7-9">right side</clicky-indicator> arrow layer keys.
+      <clickmap-indicator id="l-f-8-9">left side</clickmap-indicator> and
+      <clickmap-indicator id="r-f-7-9">right side</clickmap-indicator> arrow layer keys.
       I can chord <kbd>opt</kbd>+<kbd>arrow layer</kbd> with one thumb without
       any strain, and use the other hand to move the cursor with the arrow keys.
     `,
@@ -105,31 +105,31 @@ const optKeyInfo = [
 const arrowLayerKeyInfo = [
   `
       Enter an arrow layer, where
-      <clicky-indicator id="l-f-8-3">
+      <clickmap-indicator id="l-f-8-3">
         <kbd>e</kbd>
-      </clicky-indicator>
-      <clicky-indicator id="l-f-6-5">
+      </clickmap-indicator>
+      <clickmap-indicator id="l-f-6-5">
         <kbd>s</kbd>
-      </clicky-indicator>
-      <clicky-indicator id="l-f-8-5">
+      </clickmap-indicator>
+      <clickmap-indicator id="l-f-8-5">
         <kbd>d</kbd>
-      </clicky-indicator>
-      <clicky-indicator id="l-f-10-5">
+      </clickmap-indicator>
+      <clickmap-indicator id="l-f-10-5">
         <kbd>f</kbd>
-      </clicky-indicator>
+      </clickmap-indicator>
       and
-      <clicky-indicator id="r-f-7-3">
+      <clickmap-indicator id="r-f-7-3">
         <kbd>i</kbd>
-      </clicky-indicator>
-      <clicky-indicator id="r-f-5-5">
+      </clickmap-indicator>
+      <clickmap-indicator id="r-f-5-5">
         <kbd>j</kbd>
-      </clicky-indicator>
-      <clicky-indicator id="r-f-7-5">
+      </clickmap-indicator>
+      <clickmap-indicator id="r-f-7-5">
         <kbd>k</kbd>
-      </clicky-indicator>
-      <clicky-indicator id="r-f-9-5">
+      </clickmap-indicator>
+      <clickmap-indicator id="r-f-9-5">
         <kbd>l</kbd>
-      </clicky-indicator>
+      </clickmap-indicator>
       are arrow keys.
     `,
   `
@@ -284,9 +284,9 @@ export const MicahErgodoxKeymap = new Keymap({
             This placement takes a little getting used to, but it&apos;s normal
             for other Ergodox layouts, and honestly isn&apos;t too bad. It helps
             me to remember that it mirrors
-            <clicky-indicator id="r-f-13-1">
+            <clickmap-indicator id="r-f-13-1">
               <kbd>-_</kbd>
-            </clicky-indicator>
+            </clickmap-indicator>
             on the opposite side of the board.
           `,
           ],
@@ -303,7 +303,7 @@ export const MicahErgodoxKeymap = new Keymap({
           info: [
             `
               Reduces pinky strain compared to its QWERTY position, which is above
-              <clicky-indicator id="l-f-1-1">this key</clicky-indicator> on a QWERTY
+              <clickmap-indicator id="l-f-1-1">this key</clickmap-indicator> on a QWERTY
               keyboard &mdash; a position that is not actually available on an
               ErgoDox.
             `,
@@ -327,15 +327,15 @@ export const MicahErgodoxKeymap = new Keymap({
             `
               Slightly different from the location of this key on a normal QWERTY
               keyboard. You could theoretically swap it with
-              <clicky-indicator id="l-f-1-1">
+              <clickmap-indicator id="l-f-1-1">
                 <kbd>=/+</kbd>
-              </clicky-indicator>
+              </clickmap-indicator>
               to keep the QWERTY position, but I decided I preferred that key to
               mirror <kbd>-/_</kbd> on the opposite side of the keyboard so I
               would remember it more easily. That leaves this space as the best
               fit for this key. Additionally, while this is the location for the
               tab key on a normal keyboard, that key is much better suited for a
-              <clicky-indicator id="l-f-14-3">different location</clicky-indicator>
+              <clickmap-indicator id="l-f-14-3">different location</clickmap-indicator>
               under a stronger finger than the pinky.
             `,
           ],
@@ -357,13 +357,13 @@ export const MicahErgodoxKeymap = new Keymap({
             `
             A good location for <kbd>tab</kbd> must take into account the
             location of other keys. In this layout, I can easily chord with
-            <clicky-indicator id="l-f-14-6">
+            <clickmap-indicator id="l-f-14-6">
               <kbd>cmd</kbd>
-            </clicky-indicator>
+            </clickmap-indicator>
             to switch programs on macOS,
-            <clicky-indicator id="l-f-10-9">
+            <clickmap-indicator id="l-f-10-9">
               <kbd>alt</kbd>
-            </clicky-indicator>
+            </clickmap-indicator>
             to switch programs on Windows along with other keys like
             <kbd>ctrl</kbd>, and <kbd>shift</kbd>.
           `,
@@ -380,13 +380,13 @@ export const MicahErgodoxKeymap = new Keymap({
           don&apos;t really use it. On a normal keyboard, I remap this key to
           <kbd>ctrl</kbd>, but I chose not to keep that mapping so I could
           better remember the new
-          <clicky-indicator id="l-t-5-5">
+          <clickmap-indicator id="l-t-5-5">
             <kbd>left ctrl</kbd>
-          </clicky-indicator>
+          </clickmap-indicator>
           and
-          <clicky-indicator id="r-t-1-5">
+          <clickmap-indicator id="r-t-1-5">
             <kbd>right ctrl</kbd>
-          </clicky-indicator>
+          </clickmap-indicator>
           locations.
         `,
           ],
@@ -507,21 +507,21 @@ export const MicahErgodoxKeymap = new Keymap({
           `,
             `
             I can easily reach any key necessary &mdash; the longest reach is to
-            <clicky-indicator id="l-f-1-1">
+            <clickmap-indicator id="l-f-1-1">
               <kbd>=/+</kbd>
-            </clicky-indicator>
+            </clickmap-indicator>
             , and I can do that easily, repeatedly, painlessly, and with room to
             spare.
           `,
             `
             I did have to remap the normal locations for
-            <clicky-indicator id="l-f-1-7">
+            <clickmap-indicator id="l-f-1-7">
               <kbd>left shift</kbd>
-            </clicky-indicator>
+            </clickmap-indicator>
             and
-            <clicky-indicator id="r-f-13-7">
+            <clickmap-indicator id="r-f-13-7">
               <kbd>right shift</kbd>
-            </clicky-indicator>
+            </clickmap-indicator>
             to other keys in order to train my hands to use this new location.
             After a day or two the new locations felt very fast and natural.
           `,
@@ -600,27 +600,27 @@ export const MicahErgodoxKeymap = new Keymap({
           info: [
             `
             Holding this key activates a mouse layer where
-            <clicky-indicator id="l-f-8-3">
+            <clickmap-indicator id="l-f-8-3">
               <kbd>e</kbd>
-            </clicky-indicator>
-            <clicky-indicator id="l-f-6-5">
+            </clickmap-indicator>
+            <clickmap-indicator id="l-f-6-5">
               <kbd>s</kbd>
-            </clicky-indicator>
-            <clicky-indicator id="l-f-8-5">
+            </clickmap-indicator>
+            <clickmap-indicator id="l-f-8-5">
               <kbd>d</kbd>
-            </clicky-indicator>
-            <clicky-indicator id="l-f-10-5">
+            </clickmap-indicator>
+            <clickmap-indicator id="l-f-10-5">
               <kbd>f</kbd>
-            </clicky-indicator>
+            </clickmap-indicator>
             control the mouse cursor. I also use some keys under the thumbs for
             clicking
-            <clicky-indicator id="l-t-1-3">
+            <clickmap-indicator id="l-t-1-3">
               <kbd>left</kbd>
-            </clicky-indicator>
+            </clickmap-indicator>
             and
-            <clicky-indicator id="l-t-3-3">
+            <clickmap-indicator id="l-t-3-3">
               <kbd>right</kbd>
-            </clicky-indicator>
+            </clickmap-indicator>
             mouse buttons.
           `,
             `
@@ -732,16 +732,16 @@ export const MicahErgodoxKeymap = new Keymap({
           info: [
             `
             As with
-            <clicky-indicator id="l-t-3-3">
+            <clickmap-indicator id="l-t-3-3">
               <kbd>backspace</kbd>
-            </clicky-indicator>
+            </clickmap-indicator>
             , I hit this key pretty hard, so moving it out from under a pinky
             finger eased pain right away.
           `,
             `This was easy to get used to`,
             `
             The default ErgoDox layout has it
-            <clicky-indicator id="r-t-5-3">one key over</clicky-indicator>, but I
+            <clickmap-indicator id="r-t-5-3">one key over</clickmap-indicator>, but I
             preferred <kbd>space</kbd> in that spot instead, so I moved return
             here.
           `,
@@ -756,9 +756,9 @@ export const MicahErgodoxKeymap = new Keymap({
           A great place for <kbd>space</kbd>. I initially had mirrored
           <kbd>space</kbd> keys, one under each thumb, but eventually moved the
           left thumb to be
-          <clicky-indicator id="l-t-1-3">
+          <clickmap-indicator id="l-t-1-3">
             <kbd>shift</kbd>
-          </clicky-indicator>
+          </clickmap-indicator>
           , which was immediately a huge positive for me.
         `,
           ],

@@ -18,7 +18,7 @@
   }
 }
 
-clicky-navbar {
+clickmap-navbar {
   font-size: 0.75rem;
   line-height: 1rem;
   padding-bottom: 1rem;
@@ -105,7 +105,7 @@ clicky-navbar {
 }
 
 @media (max-width: 768px) {
-  clicky-navbar {
+  clickmap-navbar {
     flex-direction: column;
   }
 }

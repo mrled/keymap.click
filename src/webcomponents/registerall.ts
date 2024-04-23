@@ -1,25 +1,25 @@
-import { ClickyKeyboardErgodoxElement } from "~/webcomponents/clicky-keyboard-ergodox";
-import { ClickyKeyboardTitleBarElement } from "~/webcomponents/clicky-keyboard-title-bar";
-import { ClickyKeyboardTitleScreenElement } from "~/webcomponents/clicky-keyboard-title-screen";
-import { ClickyKeygridElement } from "~/webcomponents/clicky-keygrid";
-import { ClickyKeyHandleElement } from "~/webcomponents/clicky-key-handle";
-import { ClickyIndicatorElement } from "~/webcomponents/clicky-indicator";
-import { ClickyNavbarElement } from "~/webcomponents/clicky-navbar";
-import { ClickyUIElement } from "~/webcomponents/clicky-ui";
-import { ClickyDiagramElement } from "~/webcomponents/clicky-diagram";
-import { ClickyKeyElement } from "~/webcomponents/clicky-key";
+import { ClickmapKeyboardErgodoxElement } from "~/webcomponents/clickmap-keyboard-ergodox";
+import { ClickmapKeyboardTitleBarElement } from "~/webcomponents/clickmap-keyboard-title-bar";
+import { ClickmapKeyboardTitleScreenElement } from "~/webcomponents/clickmap-keyboard-title-screen";
+import { ClickmapKeygridElement } from "~/webcomponents/clickmap-keygrid";
+import { ClickmapKeyHandleElement } from "~/webcomponents/clickmap-key-handle";
+import { ClickmapIndicatorElement } from "~/webcomponents/clickmap-indicator";
+import { ClickmapNavbarElement } from "~/webcomponents/clickmap-navbar";
+import { ClickmapUIElement } from "~/webcomponents/clickmap-ui";
+import { ClickmapDiagramElement } from "~/webcomponents/clickmap-diagram";
+import { ClickmapKeyElement } from "~/webcomponents/clickmap-key";
 
 const allWebComponents = [
-  ClickyDiagramElement,
-  ClickyKeyElement,
-  ClickyKeygridElement,
-  ClickyKeyHandleElement,
-  ClickyIndicatorElement,
-  ClickyKeyboardErgodoxElement,
-  ClickyKeyboardTitleBarElement,
-  ClickyKeyboardTitleScreenElement,
-  ClickyNavbarElement,
-  ClickyUIElement,
+  ClickmapDiagramElement,
+  ClickmapKeyElement,
+  ClickmapKeygridElement,
+  ClickmapKeyHandleElement,
+  ClickmapIndicatorElement,
+  ClickmapKeyboardErgodoxElement,
+  ClickmapKeyboardTitleBarElement,
+  ClickmapKeyboardTitleScreenElement,
+  ClickmapNavbarElement,
+  ClickmapUIElement,
 ];
 
 /* Register all keymap.click web components

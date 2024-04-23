@@ -4,33 +4,33 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/cmd2.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple Clicky test site</title>
+    <title>Simple Clickmap test site</title>
     <script src="/common.js"></script>
     <link rel="stylesheet" href="/simple.css" />
   </head>
   <body>
     <h1>
-      <a href="/titleboard.html">Simple Clicky test site: Title Board only</a>
+      <a href="/titleboard.html">Simple Clickmap test site: Title Board only</a>
     </h1>
     <p>Go back to the <a href="/">main page</a>.</p>
     <p>
-      Toggle debug controls on all ClickyUI elements on this page:
-      <button onclick="toggleAllClickyDebug()">Toggle Debug Controls</button>
+      Toggle debug controls on all ClickmapUI elements on this page:
+      <button onclick="toggleAllClickmapDebug()">Toggle Debug Controls</button>
     </p>
     <hr />
     <div id="app"></div>
     <hr />
     <p>keymap.click UI should appear between the two HR elements above.</p>
     <script type="module">
-      import { ClickyTitleScreenKeymap } from "./keymap.click.js";
+      import { ClickmapTitleScreenKeymap } from "./keymap.click.js";
       const app = document.getElementById("app");
-      const clickyUi = document.createElement("clicky-ui");
-      const availableKeymaps = [ClickyTitleScreenKeymap];
-      clickyUi.setAttribute("id", "clicky-title");
-      clickyUi.setAttribute("show-debug", "true");
-      clickyUi.setAttribute("query-prefix", "clicky");
-      clickyUi.setModelsAndMaps(availableKeymaps);
-      app.appendChild(clickyUi);
+      const clickmapUi = document.createElement("clickmap-ui");
+      const availableKeymaps = [ClickmapTitleScreenKeymap];
+      clickmapUi.setAttribute("id", "clickmap-title");
+      clickmapUi.setAttribute("show-debug", "true");
+      clickmapUi.setAttribute("query-prefix", "clickmap");
+      clickmapUi.setModelsAndMaps(availableKeymaps);
+      app.appendChild(clickmapUi);
     </script>
   </body>
 </html>

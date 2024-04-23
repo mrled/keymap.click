@@ -1,4 +1,4 @@
-import { ClickyKeyHandleElement } from "./clicky-key-handle";
+import { ClickmapKeyHandleElement } from "./clickmap-key-handle";
 
 /* A keyboard key
  *
@@ -23,15 +23,15 @@ import { ClickyKeyHandleElement } from "./clicky-key-handle";
  *   target-of-indicator:       True if this key is the target of a diagram liner
  *   key-handle-top:            True if the key handle should be at the top of the key
  *
- * clicky-key is an autonomous custom element, not a customized built-in element.
+ * clickmap-key is an autonomous custom element, not a customized built-in element.
  * It would have been a customized HTMLButtonElement, but Safari doesn't support them.
  * <https://github.com/WebKit/standards-positions/issues/97>.
  *
  * Relevant properties:
  *   onclick:                   An onClick function
  */
-export class ClickyKeyElement extends HTMLElement {
-  static readonly elementName = "clicky-key";
+export class ClickmapKeyElement extends HTMLElement {
+  static readonly elementName = "clickmap-key";
 
   legendTextNode: Text | null;
   legendImageElement: Element | null;
@@ -141,7 +141,7 @@ export class ClickyKeyElement extends HTMLElement {
 
     if (!this.keyHandleElement) {
       this.keyHandleElement = document.createElement(
-        ClickyKeyHandleElement.elementName
+        ClickmapKeyHandleElement.elementName
       );
       this.appendChild(this.keyHandleElement);
     }

@@ -4,10 +4,10 @@
  */
 
 import { KeymapKey } from "~/lib/Keymap";
-import { ClickyKeyElement } from "./clicky-key";
+import { ClickmapKeyElement } from "./clickmap-key";
 import { KeyboardModel } from "~/lib/KeyboardModel";
 
-export abstract class ClickyKeyboardElement extends HTMLElement {
+export abstract class ClickmapKeyboardElement extends HTMLElement {
   constructor() {
     super();
   }
@@ -19,7 +19,7 @@ export abstract class ClickyKeyboardElement extends HTMLElement {
    *
    * Note that in addition to this INSTANCE property,
    * there will usually also be a STATIC property of the same name.
-   * The clicky UI and state uses the instance property;
+   * The clickmap UI and state uses the instance property;
    * the customElements.define() call uses the static property.
    * TODO: Can we make this nicer?
    * I think we can't; TypeScript doesn't support abstract static properties or interface static properties.
@@ -34,12 +34,12 @@ export abstract class ClickyKeyboardElement extends HTMLElement {
    */
   abstract model: KeyboardModel;
 
-  /* Get all the child <clicky-key> elements.
+  /* Get all the child <clickmap-key> elements.
    */
   get keyElements() {
     return Array.from(
-      this.querySelectorAll(ClickyKeyElement.elementName)
-    ) as ClickyKeyElement[];
+      this.querySelectorAll(ClickmapKeyElement.elementName)
+    ) as ClickmapKeyElement[];
   }
 
   /* Subclasses should implement this method to create child elements.

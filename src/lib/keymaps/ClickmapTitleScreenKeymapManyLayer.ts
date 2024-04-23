@@ -1,4 +1,4 @@
-import { KeyboardModelTitleScreen } from "~/webcomponents/clicky-keyboard-title-screen";
+import { KeyboardModelTitleScreen } from "~/webcomponents/clickmap-keyboard-title-screen";
 import { Keymap, KeymapKey, KeymapLayer } from "~/lib/Keymap";
 
 function generateLayer(layerIdx: number): KeymapLayer {
@@ -24,7 +24,7 @@ function generateLayer(layerIdx: number): KeymapLayer {
   });
 }
 
-export const ClickyTitleScreenKeymapManyLayer = new Keymap({
+export const ClickmapTitleScreenKeymapManyLayer = new Keymap({
   displayName: "Title Screen Map Many Layer",
   uniqueId: "title-screen-map-many-layer",
   model: KeyboardModelTitleScreen,

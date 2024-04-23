@@ -1,13 +1,13 @@
 import { PhysicalKey } from "~/lib/PhysicalKey";
-import { ClickyKeyboardElement } from "~/webcomponents/clicky-keyboard";
+import { ClickmapKeyboardElement } from "~/webcomponents/clickmap-keyboard";
 import { KeymapKey } from "~/lib/Keymap";
 import { Point, Size } from "~/lib/Geometry";
-import { ClickyKeygridElement } from "~/webcomponents/clicky-keygrid";
+import { ClickmapKeygridElement } from "~/webcomponents/clickmap-keygrid";
 import { KeyboardModel } from "~/lib/KeyboardModel";
 
 export const KeyboardModelTitleScreen = new KeyboardModel(
-  "clicky-keyboard-title-screen",
-  "Clicky Title Screen Keyboard",
+  "clickmap-keyboard-title-screen",
+  "Clickmap Title Screen Keyboard",
   new Point(2, 2),
   new Size(2, 2),
   [
@@ -28,9 +28,9 @@ export const KeyboardModelTitleScreen = new KeyboardModel(
 
 /* An ErgoDox keyboard.
  */
-export class ClickyKeyboardTitleScreenElement extends ClickyKeyboardElement {
-  static readonly elementName = "clicky-keyboard-title-screen";
-  readonly elementName = ClickyKeyboardTitleScreenElement.elementName;
+export class ClickmapKeyboardTitleScreenElement extends ClickmapKeyboardElement {
+  static readonly elementName = "clickmap-keyboard-title-screen";
+  readonly elementName = ClickmapKeyboardTitleScreenElement.elementName;
 
   constructor() {
     super();
@@ -52,8 +52,8 @@ export class ClickyKeyboardTitleScreenElement extends ClickyKeyboardElement {
     this.appendChild(gridContainer);
 
     const keygrid = document.createElement(
-      ClickyKeygridElement.elementName
-    ) as ClickyKeygridElement;
+      ClickmapKeygridElement.elementName
+    ) as ClickmapKeygridElement;
     keygrid.setAttribute("name", "title-screen");
     keygrid.setAttribute("cols", "24");
     keygrid.setAttribute("rows", "2");

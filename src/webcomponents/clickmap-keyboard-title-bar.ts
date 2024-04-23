@@ -1,8 +1,8 @@
 import { PhysicalKey } from "~/lib/PhysicalKey";
-import { ClickyKeyboardElement } from "~/webcomponents/clicky-keyboard";
+import { ClickmapKeyboardElement } from "~/webcomponents/clickmap-keyboard";
 import { KeymapKey, KeymapLayer } from "~/lib/Keymap";
-import { ClickyKeygridElement } from "~/webcomponents/clicky-keygrid";
-import { ClickyKeyElement } from "./clicky-key";
+import { ClickmapKeygridElement } from "~/webcomponents/clickmap-keygrid";
+import { ClickmapKeyElement } from "./clickmap-key";
 import { Point, Size } from "~/lib/Geometry";
 import { KeyboardModel } from "~/lib/KeyboardModel";
 
@@ -10,12 +10,12 @@ import { KeyboardModel } from "~/lib/KeyboardModel";
  *
  * It will contain just one key, which will be a copy of the selected key in the reference keyboard.
  */
-export class ClickyKeyboardTitleBarElement extends ClickyKeyboardElement {
-  static readonly elementName = "clicky-keyboard-title-bar";
-  readonly elementName = ClickyKeyboardTitleBarElement.elementName;
+export class ClickmapKeyboardTitleBarElement extends ClickmapKeyboardElement {
+  static readonly elementName = "clickmap-keyboard-title-bar";
+  readonly elementName = ClickmapKeyboardTitleBarElement.elementName;
 
   keymapKey: KeymapKey | null = null;
-  keyElement: ClickyKeyElement | null = null;
+  keyElement: ClickmapKeyElement | null = null;
   private _physicalKeys: PhysicalKey[] = [];
   titleKey: PhysicalKey;
   private _model: KeyboardModel;
@@ -30,7 +30,7 @@ export class ClickyKeyboardTitleBarElement extends ClickyKeyboardElement {
     );
     this._physicalKeys = [this.titleKey];
     this._model = new KeyboardModel(
-      ClickyKeyboardTitleBarElement.elementName,
+      ClickmapKeyboardTitleBarElement.elementName,
       "TitleBar",
       new Point(2, 2),
       new Size(2, 2),
@@ -59,17 +59,17 @@ export class ClickyKeyboardTitleBarElement extends ClickyKeyboardElement {
     }
   }
 
-  _grid: ClickyKeygridElement | null = null;
-  get grid(): ClickyKeygridElement {
+  _grid: ClickmapKeygridElement | null = null;
+  get grid(): ClickmapKeygridElement {
     if (!this._grid) {
       this._grid = this.querySelector(
-        ClickyKeygridElement.elementName
-      ) as ClickyKeygridElement;
+        ClickmapKeygridElement.elementName
+      ) as ClickmapKeygridElement;
     }
     if (!this._grid) {
       this._grid = document.createElement(
-        ClickyKeygridElement.elementName
-      ) as ClickyKeygridElement;
+        ClickmapKeygridElement.elementName
+      ) as ClickmapKeygridElement;
       this.appendChild(this._grid);
       this.grid.setAttribute("name", "title-bar");
     }
@@ -150,7 +150,7 @@ export class ClickyKeyboardTitleBarElement extends ClickyKeyboardElement {
   createChildren(keys: KeymapKey[]) {
     // TODO: handle this more elegantly
     throw new Error(
-      "You don't want to call createChildren() on ClickyKeyboardTitleBarElement; use updateSelectedKey() instead."
+      "You don't want to call createChildren() on ClickmapKeyboardTitleBarElement; use updateSelectedKey() instead."
     );
   }
 

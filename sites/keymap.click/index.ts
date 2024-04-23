@@ -5,8 +5,8 @@ import "./website.shared.js";
 import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
 registerAllKeymapClickWebComponents();
 
-import { ClickyUIElement } from "~/webcomponents/clicky-ui.js";
-import { ClickyTitleScreenKeymap } from "~/lib/keymaps/ClickyTitleScreenKeymap.js";
+import { ClickmapUIElement } from "~/webcomponents/clickmap-ui.js";
+import { ClickmapTitleScreenKeymap } from "~/lib/keymaps/ClickmapTitleScreenKeymap.js";
 import { MicahErgodoxKeymap } from "~/lib/keymaps/MicahErgodoxKeymap.js";
 
 const app = document.querySelector("#app");
@@ -41,7 +41,7 @@ const clearQueryStringListItem = document.createElement("li");
 clearQueryStringListItem.appendChild(clearQueryStringButton);
 
 const testLink = document.createElement("a");
-testLink.href = "/?clicky-key=l-f-10-9&clicky-map=blank";
+testLink.href = "/?clickmap-key=l-f-10-9&clickmap-map=blank";
 testLink.textContent = "Hit test URL";
 const testListItem = document.createElement("li");
 testListItem.appendChild(testLink);
@@ -60,31 +60,31 @@ titleDesc.textContent =
   "Here's the title screen. It's useful at least for testing.";
 app.appendChild(titleDesc);
 
-const clickyUiTitle = document.createElement(
-  ClickyUIElement.elementName
-) as ClickyUIElement;
-clickyUiTitle.setAttribute("id", "clicky-title");
-clickyUiTitle.setAttribute("show-debug", "true");
-clickyUiTitle.setModelsAndMaps([ClickyTitleScreenKeymap]);
-clickyUiTitle.setAttribute("keyboard-element", "clicky-keyboard-title-screen");
-clickyUiTitle.setAttribute("keymap-id", "title-screen-map");
-app.appendChild(clickyUiTitle);
+const clickmapUiTitle = document.createElement(
+  ClickmapUIElement.elementName
+) as ClickmapUIElement;
+clickmapUiTitle.setAttribute("id", "clickmap-title");
+clickmapUiTitle.setAttribute("show-debug", "true");
+clickmapUiTitle.setModelsAndMaps([ClickmapTitleScreenKeymap]);
+clickmapUiTitle.setAttribute("keyboard-element", "clickmap-keyboard-title-screen");
+clickmapUiTitle.setAttribute("keymap-id", "title-screen-map");
+app.appendChild(clickmapUiTitle);
 
 const ergodoxDesc = document.createElement("p");
 ergodoxDesc.textContent =
   "Here's the ErgoDox layout I use. This keymap syncs its state with the query string - try clicking around and then reloading the page or opening in another tab.";
 app.appendChild(ergodoxDesc);
 
-const clickyUiErgodox = document.createElement(
-  ClickyUIElement.elementName
-) as ClickyUIElement;
-clickyUiErgodox.setAttribute("id", "clicky-ergodox");
-clickyUiErgodox.setAttribute("show-debug", "true");
-clickyUiErgodox.setModelsAndMaps([MicahErgodoxKeymap]);
-clickyUiErgodox.setAttribute("keyboard-element", "clicky-keyboard-ergodox");
-clickyUiErgodox.setAttribute("keymap-id", "micah-ergodox");
-clickyUiErgodox.setAttribute("query-prefix", "clicky");
-app.appendChild(clickyUiErgodox);
+const clickmapUiErgodox = document.createElement(
+  ClickmapUIElement.elementName
+) as ClickmapUIElement;
+clickmapUiErgodox.setAttribute("id", "clickmap-ergodox");
+clickmapUiErgodox.setAttribute("show-debug", "true");
+clickmapUiErgodox.setModelsAndMaps([MicahErgodoxKeymap]);
+clickmapUiErgodox.setAttribute("keyboard-element", "clickmap-keyboard-ergodox");
+clickmapUiErgodox.setAttribute("keymap-id", "micah-ergodox");
+clickmapUiErgodox.setAttribute("query-prefix", "clickmap");
+app.appendChild(clickmapUiErgodox);
 
 const footer = document.createElement("p");
 footer.className = "site-footer";

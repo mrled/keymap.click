@@ -27,7 +27,7 @@
       h1 {
         margin-bottom: 2rem;
       }
-      clicky-ui {
+      clickmap-ui {
         border: 1px solid black;
       }
     </style>
@@ -48,12 +48,12 @@
     <hr />
     <div id="app" />
     <script type="module">
-      const clickyUi = document.createElement("clicky-ui");
-      clickyUi.setAttribute("id", "clicky-title");
-      clickyUi.setAttribute("show-debug", "true");
-      clickyUi.setAttribute("keyboard-element", "clicky-keyboard-title-screen");
-      clickyUi.setAttribute("keymap-id", "title-screen-map");
-      document.getElementById("app").appendChild(clickyUi);
+      const clickmapUi = document.createElement("clickmap-ui");
+      clickmapUi.setAttribute("id", "clickmap-title");
+      clickmapUi.setAttribute("show-debug", "true");
+      clickmapUi.setAttribute("keyboard-element", "clickmap-keyboard-title-screen");
+      clickmapUi.setAttribute("keymap-id", "title-screen-map");
+      document.getElementById("app").appendChild(clickmapUi);
     </script>
     <hr />
     <p>keymap.click UI should appear between the two HR elements above.</p>
