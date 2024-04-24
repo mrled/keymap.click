@@ -1,0 +1,21 @@
+{
+  "name": "@mrled/clickmap",
+  "version": "2.0.0",
+  "private": false,
+  "type": "module",
+  "main": "dist/clickmap.js",
+  "scripts": {
+    "build": "esbuild --bundle --sourcemap --format=esm --loader:.css=text  --global-name=clickmap --outfile=dist/clickmap.js src/index.ts",
+    "simple.dev": "esbuild --bundle --watch --outfile=testsites/simple/clickmap.js --format=esm --sourcemap --loader:.css=text --servedir=testsites/simple/ src/index.ts"
+  },
+  "dependencies": {
+    "loglevel": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.28",
+    "esbuild": "^0.20.2",
+    "eslint": "^7.9.0",
+    "prettier": "2.1.1",
+    "typescript": "^5.4.2"
+  }
+}
