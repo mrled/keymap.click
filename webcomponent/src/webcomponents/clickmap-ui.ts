@@ -1,4 +1,4 @@
-import log from "~/vendor/loglevel/index.cjs";
+import log from "~/vendor/loglevel/index.js";
 
 import { ClickmapUIOptions } from "~/lib/ClickmapUIOptions";
 import { ConnectionPair, KeyInfoConnectType } from "~/lib/DiagramConnections";
