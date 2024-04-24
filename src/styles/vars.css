@@ -60,14 +60,22 @@
   --link-fg: rgba(49, 130, 206, 1);
 
   /* Key, board, and grid styles
- * We use a base --keyboard-grid-unit variable, which lets us scale easily
- */
-  --keyboard-grid-unit: 1rem;
+   * We use a base --keyboard-grid-unit variable, which lets us scale easily
+   */
+  --keyboard-grid-unit: 0.75rem;
   --kid-diamarg-width: calc(var(--keyboard-grid-unit) * 2);
 }
 
+@media (min-width: 600px) {
+  :root,
+  :host {
+    --keyboard-grid-unit: 1rem;
+  }
+}
+
 @media (min-width: 900px) {
-  :root {
+  :root,
+  :host {
     --keyboard-grid-unit: 1.25rem;
   }
 }

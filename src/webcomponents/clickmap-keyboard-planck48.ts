@@ -81,6 +81,9 @@ export class ClickmapKeyboardPlanck48Element extends ClickmapKeyboardElement {
 
   readonly model = KeyboardModelPlanck48;
 
+  readonly columns: number = 24;
+  readonly rows: number = 8;
+
   /* Create keygrid and key elements from key data for this board.
    */
   createChildren(keys: KeymapKey[]) {
@@ -94,9 +97,16 @@ export class ClickmapKeyboardPlanck48Element extends ClickmapKeyboardElement {
       ClickmapKeygridElement.elementName
     ) as ClickmapKeygridElement;
     keyGrid.setAttribute("name", "planck48");
-    keyGrid.setAttribute("cols", "24");
-    keyGrid.setAttribute("rows", "8");
+    keyGrid.setAttribute("cols", this.columns.toString());
+    keyGrid.setAttribute("rows", this.rows.toString());
     keyGrid.createKeys(this, keys);
     gridContainer.appendChild(keyGrid);
+  }
+
+  calculateSize() {
+    const rootStyle = getComputedStyle(this);
+    const keyboardGridUnit = rootStyle.getPropertyValue("--keyboard-grid-unit");
+    this.style.width = `calc(${this.columns} * ${keyboardGridUnit})`;
+    this.style.height = `calc(${this.rows} * ${keyboardGridUnit})`;
   }
 }

@@ -6,19 +6,14 @@
  * In smaller screen sizes, two halves should be shown vertically.
  * For larger screen sizes, they should be shown next to each other.
  */
-div.keyboard,
-clickmap-keyboard,
-clickmap-keyboard-ergodox {
+.clickmap-keyboard {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-top: 0;
 }
 @media (min-width: 768px) {
-  div.keyboard,
-  clickmap-keyboard,
-  clickmap-keyboard-ergodox {
+  .clickmap-keyboard {
     flex-direction: row;
   }
 }
@@ -147,27 +142,16 @@ clickmap-key {
    * and are shown in a smaller font to fit in the space.
    */
   &.legend-type-glyph {
-    font-size: 0.875rem;
+    font-size: calc(var(--keyboard-grid-unit) * 0.9);
   }
   &.legend-type-text {
-    font-size: 0.5rem;
+    font-size: calc(var(--keyboard-grid-unit) * 0.667);
   }
 
   /* An image used as a legend for a key */
   > img {
     width: 1rem;
     height: 1rem;
-  }
-}
-
-@media (min-width: 768px) {
-  clickmap-key {
-    &.legend-type-glyph {
-      font-size: 1rem;
-    }
-    &.legend-type-text {
-      font-size: 0.75rem;
-    }
   }
 }
 
@@ -210,9 +194,9 @@ clickmap-keygrid[name="ergodox-right-thumb"] {
 clickmap-ui,
 :host {
   /* clickmap-ui is a custom element, which doesn't get block by default.
-  * If we don't set it here, position:relative of this + position:absolute of the canvas
-  * will not work as expected.
-  */
+   * If we don't set it here, position:relative of this + position:absolute of the canvas
+   * will not work as expected.
+   */
   display: block;
 
   position: relative;
@@ -233,6 +217,11 @@ clickmap-ui,
   .keymap-ui-center-panel {
     display: flex;
     flex-direction: column;
+
+    /* If keyboard is too wide, grow in both directions */
+    justify-content: center;
+    align-items: center;
+
     margin: 0;
     padding: 0;
     border: none;

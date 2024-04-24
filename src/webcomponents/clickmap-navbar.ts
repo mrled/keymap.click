@@ -193,20 +193,6 @@ export class ClickmapNavbarElement
     });
   };
 
-  /* Called when the user selects a layer from the dropdown
-   */
-  private chooseLayer: ChangeListenerFunction = (e, id, result) => {
-    this.state.setStatesByIds({
-      layerIdx: parseInt(result.value),
-    });
-  };
-
-  /* Called when the user selects a guide from the dropdown
-   */
-  private chooseGuide: ChangeListenerFunction = (e, id, result) => {
-    this.state.setStatesByIds({ guideId: result.value });
-  };
-
   /* Update the debug checkbox.
    * Called when the debug state changes.
    */
@@ -361,7 +347,8 @@ export class ClickmapNavbarElement
       ).map((keymap) => {
         const option = document.createElement("option");
         option.value = keymap.uniqueId;
-        option.textContent = keymap.displayName;
+        // option.textContent = keymap.displayName;
+        option.textContent = `${keymap.displayName} (${keymap.model.displayName})`;
         if (keymap.uniqueId === this.state.keymap.uniqueId) {
           option.selected = true;
         }

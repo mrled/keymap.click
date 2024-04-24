@@ -79,6 +79,10 @@ clickmap-navbar {
       margin-left: 1em;
     }
 
+    select#keymap {
+      max-width: 15em;
+    }
+
     /* Override display:inline-block by selecting for .hidden here again --
      * even though we already have a separate .hidden selector outside of span.controls-pair.
      */

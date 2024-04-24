@@ -353,6 +353,7 @@ export class ClickmapUIElement
         kbElementName
       ) as ClickmapKeyboardElement;
       this._keyboard.setAttribute("id", "keyboard");
+      this._keyboard.classList.add("clickmap-keyboard");
     }
     if (needsCreate) {
       this._keyboard.createChildren(Array.from(this.state.layer.keys.values()));
