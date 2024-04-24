@@ -1,4 +1,4 @@
-import log from "loglevel";
+import log from "~/vendor/loglevel/index.cjs";
 
 import { smallerRect, traceRect } from "~/lib/Geometry";
 import { Connection, KeyInfoConnectType } from "~/lib/DiagramConnections";

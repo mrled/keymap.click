@@ -16,4 +16,4 @@
     * take up less space
     * allow hiding it
     * Don't have its positioning change if other things on the screen change, e.g. right now sometimes if you change guide steps the parent gets wider or narrower and the location of the controls shifts around
-* Remove all third party runtime dependencies from the web component
+* Remove vendored loglevel / replace with something that uses the debug state property?
