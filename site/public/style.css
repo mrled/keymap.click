@@ -13,10 +13,6 @@ body {
   margin: 0;
 }
 
-body.page {
-  margin: 4rem;
-}
-
 a {
   color: #c05621;
 }
@@ -25,7 +21,7 @@ div.site-title-bar {
   margin-bottom: 2rem;
 }
 
-#app {
+main#content {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;

@@ -86,9 +86,22 @@ site/dist: site/package.json site/node_modules $(SITESOURCES)
 .PHONY: keymap.click
 keymap.click: site/node_modules site/dist ## Build the keymap.click website
 
-.PHONY: keymap.click.dev
-keymap.click.dev: site/node_modules ## Run the keymap.click website in development mode
+# Watch the webcomponent for changes and copy the output to site/public/clickmap.js.
+.PHONY: keymap.click.clickmap.watch
+keymap.click.clickmap.watch: webcomponent/node_modules
+	cd ./webcomponent && npm run keymap.click.watch
+
+# Watch the keymap.click website for changes and run the eleventy server.
+.PHONY: keymap.click.watch
+keymap.click.watch: site/node_modules
 	cd ./site && npm run dev
+
+.PHONY: keymap.click.dev
+keymap.click.dev: ## Run the keymap.click website in development mode, automatically watching for changes and rebuilding
+	@\
+		$(MAKE) keymap.click.clickmap.watch & \
+		$(MAKE) keymap.click.watch & \
+		wait
 
 #endregion
 
