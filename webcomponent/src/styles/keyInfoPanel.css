@@ -81,6 +81,7 @@ clickmap-navbar {
 
     select#keymap {
       max-width: 15em;
+      text-overflow: ellipsis;
     }
 
     /* Override display:inline-block by selecting for .hidden here again --
