@@ -1,5 +1,3 @@
-import log from "~/vendor/loglevel/index.js";
-
 import { smallerRect, traceRect } from "~/lib/Geometry";
 import { Connection, KeyInfoConnectType } from "~/lib/DiagramConnections";
 
@@ -42,7 +40,7 @@ const drawVisualDebugInfo = (
   diamargLeftRect: DOMRect,
   diamargRightRect: DOMRect
 ) => {
-  log.debug(`diagram: visual debugging enabled`);
+  console.log(`diagram: visual debugging enabled`);
   context.lineWidth = 2;
 
   // Draw a rectangle inset from the three KID elements.
@@ -50,7 +48,7 @@ const drawVisualDebugInfo = (
   // Also draw a line down the center of the keyboard.
 
   if (keyboardAndPanelRect) {
-    log.debug(
+    console.log(
       `Drawing into the keyboard/panel rectangle`,
       keyboardAndPanelRect
     );
@@ -71,30 +69,30 @@ const drawVisualDebugInfo = (
     traceRect(smallerRect(keyboardAndPanelRect), context);
     context.stroke();
   } else {
-    log.debug(
+    console.log(
       `diagram: could not draw center line because there was no keyboardAndPanelRect`
     );
   }
 
   if (diamargLeftRect) {
-    log.debug(`Drawing into diamargLeftRect`, diamargLeftRect);
+    console.log(`Drawing into diamargLeftRect`, diamargLeftRect);
     const diamargLeftRectInner = smallerRect(diamargLeftRect);
     context.strokeStyle = diagramLineColors.debugLeft;
     context.beginPath();
     traceRect(diamargLeftRectInner, context);
     context.stroke();
   } else {
-    log.debug(`diagram: there is no diamargLeftRect`);
+    console.log(`diagram: there is no diamargLeftRect`);
   }
   if (diamargRightRect) {
-    log.debug(`Drawing into diamargRightRect`, diamargRightRect);
+    console.log(`Drawing into diamargRightRect`, diamargRightRect);
     const diamargRightRectInner = smallerRect(diamargRightRect);
     context.strokeStyle = diagramLineColors.debugRight;
     context.beginPath();
     traceRect(diamargRightRectInner, context);
     context.stroke();
   } else {
-    log.debug(`diagram: there is no diamargRightRect`);
+    console.log(`diagram: there is no diamargRightRect`);
   }
 };
 
@@ -126,7 +124,8 @@ const drawDiagramLineTextref = (
   sourceYInsetTickSize: number,
   diamargRightRect: DOMRect,
   diamargLeftRect: DOMRect,
-  marginInsetTickSize: number
+  marginInsetTickSize: number,
+  debug: boolean
 ) => {
   const source = connection.sourceCoords;
   const target = connection.targetCoords;
@@ -149,9 +148,11 @@ const drawDiagramLineTextref = (
     sourceInsetY += sourceYInsetTickSize;
   }
   alreadySeenCoords.push(sourceInsetY);
-  log.debug(
-    `Selected source Y coordinate of ${sourceInsetY} from initial value of ${source.y}`
-  );
+  if (debug) {
+    console.log(
+      `Selected source Y coordinate of ${sourceInsetY} from initial value of ${source.y}`
+    );
+  }
 
   const diamargRect = rightMargin ? diamargRightRect : diamargLeftRect;
 
@@ -228,7 +229,7 @@ export const drawDiagram = (
 ) => {
   const context = canvas.getContext("2d");
   if (!context) {
-    log.error("Could not get context for canvas");
+    console.error("Could not get context for canvas");
     return;
   }
 
@@ -264,11 +265,15 @@ export const drawDiagram = (
    */
   // log.debug(`The lines object is a ${typeof connections}, and it logs as:`, connections);
   if (!connections) {
-    log.debug("No connections to set");
+    if (debug) {
+      console.log("No connections to set");
+    }
     return;
   }
   if (!keyboardAndPanelRect) {
-    log.debug("keyboardAndPanelRect is null?");
+    if (debug) {
+      console.log("keyboardAndPanelRect is null?");
+    }
     return;
   }
 
@@ -298,7 +303,9 @@ export const drawDiagram = (
   let rightDiagramYCoordinates: number[] = [];
 
   connections.forEach((connection: Connection) => {
-    log.debug(`Drawing connection ${connection.stringify()}`);
+    if (debug) {
+      console.log(`Drawing connection ${connection.stringify()}`);
+    }
 
     if (connection.connectionType == KeyInfoConnectType.TextRef) {
       drawDiagramLineTextref(
@@ -311,7 +318,8 @@ export const drawDiagram = (
         sourceYInsetTickSize,
         diamargRightRect,
         diamargLeftRect,
-        marginInsetTickSize
+        marginInsetTickSize,
+        debug
       );
     } else if (connection.connectionType == KeyInfoConnectType.Selected) {
       drawDiagramLineSelected(context, connection, diagramLineColors);

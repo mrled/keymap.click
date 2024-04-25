@@ -20,11 +20,6 @@
     "jsx": "preserve",
     "allowImportingTsExtensions": true,
     "baseUrl": ".",
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types",
-      "./src/vendor"
-    ],
     "paths": {
       "~/*": [
         "src/*"

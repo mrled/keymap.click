@@ -1,5 +1,3 @@
-import log from "~/vendor/loglevel/index.js";
-
 import { ClickmapUIOptions } from "~/lib/ClickmapUIOptions";
 import { ConnectionPair, KeyInfoConnectType } from "~/lib/DiagramConnections";
 import { Keymap } from "~/lib/Keymap";
@@ -151,8 +149,6 @@ export class ClickmapUIElement
    * Run whether the element is created from HTML or from JavaScript.
    */
   connectedCallback() {
-    log.setLevel(log.levels.INFO);
-
     // The show-debug attribute doesn't set debug level in the state,
     // just whether the debug checkbox is shown.
     // It's not part of the query string stuff.
@@ -469,11 +465,6 @@ export class ClickmapUIElement
   update(stateChanges: ClickmapUIStateChangeMap) {
     if (!this.isConnected) {
       return;
-    }
-    if (stateChanges.has("debug")) {
-      log.setLevel(
-        stateChanges.get("debug") ? log.levels.DEBUG : log.levels.INFO
-      );
     }
     if (stateChanges.has("queryPrefix")) {
       this.#updateQueryPrefix(stateChanges.get("queryPrefix")!);
