@@ -1,6 +1,6 @@
 import { KeyboardModel } from "./KeyboardModel";
 
-/* A key in a keymap.
+/* A key in a layout.
  *
  * name:              The name of the key; must be unique within the key map
  * id:                The ID of the physical key this key corresponds to
@@ -210,7 +210,7 @@ export class KeymapLayer {
   }
 }
 
-/* A key map for a keyboard.
+/* A layout for a keyboard.
  *
  * Maps IDs of physical keys to descriptive text and function of the key.
  * May contain guides to the layout.
@@ -224,7 +224,7 @@ export class KeymapLayer {
  *
  * Any layer passed in which does not contain all the keys on the keyboard will have unset keys added.
  */
-export class Keymap {
+export class KeymapLayout {
   displayName: string;
   uniqueId: string;
   model: KeyboardModel;

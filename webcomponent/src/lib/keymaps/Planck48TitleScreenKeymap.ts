@@ -1,9 +1,9 @@
-import { Keymap, KeymapKey, KeymapLayer } from "~/lib/Keymap";
+import { KeymapLayout, KeymapKey, KeymapLayer } from "~/lib/Layout";
 import { KeyboardModelPlanck48 } from "~/webcomponents/clickmap-keyboard-planck48";
 
 const keyInfoLayer0 = ["K E Y M A P . C L I C K"];
 
-export const ClickmapTitleScreenKeymap = new Keymap({
+export const ClickmapTitleScreenKeymap = new KeymapLayout({
   displayName: "Title Screen Map",
   uniqueId: "title-screen-map",
   model: KeyboardModelPlanck48,

@@ -1,4 +1,9 @@
-import { Keymap, KeymapGuide, KeymapKey, KeymapLayer } from "~/lib/Keymap";
+import {
+  KeymapLayout,
+  KeymapGuide,
+  KeymapKey,
+  KeymapLayer,
+} from "~/lib/Layout";
 import { KeyboardModelErgodox } from "~/webcomponents/clickmap-keyboard-ergodox";
 
 const normalLayoutInfo = [`Unchanged from normal QWERTY keyboard layout`];
@@ -261,7 +266,7 @@ function newQwertyKey(
   });
 }
 
-export const MicahErgodoxKeymap = new Keymap({
+export const MicahErgodoxKeymap = new KeymapLayout({
   displayName: "Micah's Keymap",
   uniqueId: "micah-ergodox",
   model: KeyboardModelErgodox,

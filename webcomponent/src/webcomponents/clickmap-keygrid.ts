@@ -1,4 +1,4 @@
-import { KeymapKey } from "~/lib/Keymap";
+import { KeymapKey } from "~/lib/Layout";
 import { ClickmapKeyboardElement } from "./clickmap-keyboard";
 import { ClickmapKeyElement } from "./clickmap-key";
 

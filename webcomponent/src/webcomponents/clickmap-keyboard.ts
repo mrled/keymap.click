@@ -3,7 +3,7 @@
  * Specific boards should extend this class.
  */
 
-import { KeymapKey } from "~/lib/Keymap";
+import { KeymapKey } from "~/lib/Layout";
 import { ClickmapKeyElement } from "./clickmap-key";
 import { KeyboardModel } from "~/lib/KeyboardModel";
 

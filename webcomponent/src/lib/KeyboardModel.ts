@@ -5,7 +5,7 @@
 
 import { PhysicalKey } from "~/lib/PhysicalKey";
 import { Point, Size } from "~/lib/Geometry";
-import { Keymap, KeymapKey, KeymapLayer } from "~/lib/Keymap";
+import { KeymapLayout, KeymapKey, KeymapLayer } from "~/lib/Layout";
 
 type KeyIdToPhysicalKeymap = { [key: string]: PhysicalKey };
 
@@ -65,8 +65,8 @@ export class KeyboardModel {
 
   /* A helper that provides a blank Keymap for the keyboard.
    */
-  get blankKeymap(): Keymap {
-    return new Keymap({
+  get blankKeymap(): KeymapLayout {
+    return new KeymapLayout({
       displayName: "Blank",
       uniqueId: `${this.keyboardElementName}-blank-keymap`,
       model: this,

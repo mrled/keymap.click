@@ -1,10 +1,10 @@
 import { KeyboardModelTitleScreen } from "~/webcomponents/clickmap-keyboard-title-screen";
-import { Keymap, KeymapKey, KeymapLayer } from "~/lib/Keymap";
+import { KeymapLayout, KeymapKey, KeymapLayer } from "~/lib/Layout";
 
 const keyInfoLayer0 = ["K E Y M A P . C L I C K"];
 const keyInfoLayer1 = ["I just picked some random words for this layer."];
 
-export const ClickmapTitleScreenKeymapOldVersion = new Keymap({
+export const ClickmapTitleScreenKeymapOldVersion = new KeymapLayout({
   displayName: "Title Screen Map (Old Version)",
   uniqueId: "title-screen-map-old",
   model: KeyboardModelTitleScreen,

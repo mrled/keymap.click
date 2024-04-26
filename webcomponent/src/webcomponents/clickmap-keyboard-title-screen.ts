@@ -1,6 +1,6 @@
 import { PhysicalKey } from "~/lib/PhysicalKey";
 import { ClickmapKeyboardElement } from "~/webcomponents/clickmap-keyboard";
-import { KeymapKey } from "~/lib/Keymap";
+import { KeymapKey } from "~/lib/Layout";
 import { Point, Size } from "~/lib/Geometry";
 import { ClickmapKeygridElement } from "~/webcomponents/clickmap-keygrid";
 import { KeyboardModel } from "~/lib/KeyboardModel";

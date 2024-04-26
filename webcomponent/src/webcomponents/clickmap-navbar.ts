@@ -3,7 +3,7 @@ import {
   ClickmapUIStateChangeMap,
 } from "~/lib/ClickmapUIState";
 import { KeyboardModel } from "~/lib/KeyboardModel";
-import { KeymapLayer } from "~/lib/Keymap";
+import { KeymapLayer } from "~/lib/Layout";
 import { IStateObserver } from "~/lib/State";
 import { ClickmapKeyboardTitleBarElement } from "~/webcomponents/clickmap-keyboard-title-bar";
 

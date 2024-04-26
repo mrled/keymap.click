@@ -61,12 +61,12 @@
 import { KeyboardModel } from "./KeyboardModel";
 import { IStateObserver, StateChange, StateChangeMap } from "./State";
 import { ConnectionPair } from "./DiagramConnections";
-import { GuideStep, Keymap, KeymapGuide, KeymapLayer } from "./Keymap";
+import { GuideStep, KeymapLayout, KeymapGuide, KeymapLayer } from "./Layout";
 import { ClickmapTitleScreenKeymapOldVersion } from "./keymaps/ClickmapTitleScreenKeymap";
 
 /* A map of uniqueID strings to Keymap objects
  */
-export type KeymapMap = Map<string, Keymap>;
+export type LayoutMap = Map<string, KeymapLayout>;
 
 /* A non-generic state change
  */
@@ -233,8 +233,8 @@ export class ClickmapUIState {
    * The _kbModels property returns the models for all the keymaps found in this list.
    * The kbModel and keymap properties are guaranteed to exist inside this list.
    */
-  private _keymaps: KeymapMap = new Map();
-  public get keymaps(): KeymapMap {
+  private _keymaps: LayoutMap = new Map();
+  public get keymaps(): LayoutMap {
     if (this._keymaps.size === 0) {
       this._keymaps.set(
         ClickmapTitleScreenKeymapOldVersion.uniqueId,
@@ -244,7 +244,7 @@ export class ClickmapUIState {
     }
     return this._keymaps;
   }
-  public set keymaps(value: KeymapMap) {
+  public set keymaps(value: LayoutMap) {
     if (this._keymaps === value) return;
     const oldValue = this._keymaps;
     this._keymaps = value;
@@ -257,15 +257,15 @@ export class ClickmapUIState {
    * such as by the query string or having the user select one,
    * it will default to the first entry in the keymaps.
    */
-  public get defaultKeymap(): Keymap {
-    const firstKeymap: Keymap = this.keymaps.values().next().value;
+  public get defaultKeymap(): KeymapLayout {
+    const firstKeymap: KeymapLayout = this.keymaps.values().next().value;
     return firstKeymap;
   }
 
   /* The selected keymap, among the known keymaps
    */
-  private _keymap: Keymap | null = null;
-  get keymap(): Keymap {
+  private _keymap: KeymapLayout | null = null;
+  get keymap(): KeymapLayout {
     if (this._keymap === null) {
       this._keymap = this.defaultKeymap;
       this.notify([new ClickmapUIStateChange("keymap", null, this._keymap)]);
@@ -328,7 +328,7 @@ export class ClickmapUIState {
    * Add each keymap and model in the new set.
    * Set the current keymap and kbModel to the first item in the new set.
    */
-  setModelsAndMaps(keymaps: Keymap[]) {
+  setModelsAndMaps(keymaps: KeymapLayout[]) {
     if (keymaps.length === 0) {
       console.error("No keymaps provided");
       return;
@@ -347,14 +347,14 @@ export class ClickmapUIState {
     this._guideStep = null;
     this._selectedKey = "";
 
-    const newKeymaps: KeymapMap = new Map();
+    const newKeymaps: LayoutMap = new Map();
     keymaps.forEach((keymap) => {
       newKeymaps.set(keymap.uniqueId, keymap);
     });
 
     // Get the first keymap and layer from the first keyboard model.
     // We know these exist because we just added them.
-    const firstKeymap: Keymap = newKeymaps.values().next().value;
+    const firstKeymap: KeymapLayout = newKeymaps.values().next().value;
 
     this._keymaps = newKeymaps;
     this._keymap = firstKeymap;
@@ -425,7 +425,7 @@ export class ClickmapUIState {
 
     const specifiedKeymap = keymapId !== undefined;
     const oldKeymap = this.keymap;
-    let newKeymap: Keymap | undefined = undefined;
+    let newKeymap: KeymapLayout | undefined = undefined;
     if (specifiedKeymap) {
       newKeymap = this.keymaps.get(keymapId);
       if (!newKeymap) {

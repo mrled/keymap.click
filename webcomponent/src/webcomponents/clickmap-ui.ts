@@ -1,6 +1,6 @@
 import { ClickmapUIOptions } from "~/lib/ClickmapUIOptions";
 import { ConnectionPair, KeyInfoConnectType } from "~/lib/DiagramConnections";
-import { Keymap } from "~/lib/Keymap";
+import { KeymapLayout } from "~/lib/Layout";
 
 import { ClickmapKeyHandleElement } from "~/webcomponents/clickmap-key-handle";
 import { ClickmapIndicatorElement } from "~/webcomponents/clickmap-indicator";
@@ -134,7 +134,7 @@ export class ClickmapUIElement
    *
    * Removes all boards and adds boards referenced by the given keymaps.
    */
-  setModelsAndMaps(keymaps: Keymap[]) {
+  setModelsAndMaps(keymaps: KeymapLayout[]) {
     this.state.setModelsAndMaps(keymaps);
   }
 
@@ -473,7 +473,7 @@ export class ClickmapUIElement
     // If the keymap changes, the board may change too.
     if (stateChanges.has("keymap")) {
       const keymapChange = stateChanges.get("keymap")!;
-      const newKeymap = keymapChange.newValue as Keymap;
+      const newKeymap = keymapChange.newValue as KeymapLayout;
       const oldKeyboard = this.keyboard;
 
       if (oldKeyboard.elementName != newKeymap.model.keyboardElementName) {
