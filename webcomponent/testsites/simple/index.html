@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/cmd2.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple Clickmap test site</title>
+    <title>Simple keymap.click test site</title>
     <script src="/common.js"></script>
     <link rel="stylesheet" href="/simple.css" />
   </head>
   <body>
-    <h1><a href="/">Simple Clickmap test site</a></h1>
+    <h1><a href="/">Simple keymap.click test site</a></h1>
     <p>
       This is a very simple test site for the web component. It uses support in
       esbuild for bundling the JavaScript and CSS files, and serving a static
@@ -19,53 +19,53 @@
       this static HTML file do not trigger a rebuild.
     </p>
     <p>
-      This page contains a Clickmap UI with both the title screen and ergodox
+      This page contains a KeymapUI with both the title screen and ergodox
       boards available. There are a few more test pages you can see:
     </p>
     <ul>
       <li>
-        <a href="/empty.html">/empty.html</a> to see a ClickmapUI that doesn't
+        <a href="/empty.html">/empty.html</a> to see a KeymapUI that doesn't
         know about any keyboards or keymaps
       </li>
       <li>
-        <a href="/titleboard.html">/titleboard.html</a>: A ClickmapUI with just
+        <a href="/titleboard.html">/titleboard.html</a>: A KeymapUI with just
         the sample title screen keymap.
       </li>
       <li>
-        <a href="/ergodox.html">/ergodox.html</a>: A ClickmapUI with my ErgoDox
+        <a href="/ergodox.html">/ergodox.html</a>: A KeymapUI with my ErgoDox
         layout.
       </li>
     </ul>
     <p>
-      Toggle debug controls on all ClickmapUI elements on this page:
-      <button onclick="toggleAllClickmapDebug()">Toggle Debug Controls</button>
+      Toggle debug controls on all KeymapUI elements on this page:
+      <button onclick="toggleAllKeymapUiDebug()">Toggle Debug Controls</button>
     </p>
     <hr />
     <div id="app"></div>
     <hr />
-    <p>Clickmap UI should appear between the two HR elements above.</p>
+    <p>KeymapUI should appear between the two HR elements above.</p>
     <script type="module">
       import {
-        ClickmapTitleScreenKeymap,
-        ClickmapTitleScreenKeymapManyLayer,
-        MicahErgodoxKeymap,
-      } from "./clickmap.js";
+        KeymapTitleScreenLayout,
+        KeymapTitleScreenLayoutManyLayer,
+        MicahErgodoxLayout,
+      } from "./keymap.click.js";
       const app = document.getElementById("app");
-      const clickmapUi = document.createElement("clickmap-ui");
+      const keymapUi = document.createElement("keymap-ui");
       const availableKeymaps = [
-        ClickmapTitleScreenKeymap,
-        ClickmapTitleScreenKeymap.model.blankKeymap,
-        ClickmapTitleScreenKeymapManyLayer,
-        ClickmapTitleScreenKeymapManyLayer.model.blankKeymap,
-        MicahErgodoxKeymap,
-        MicahErgodoxKeymap.model.blankKeymap,
+        KeymapTitleScreenLayout,
+        KeymapTitleScreenLayout.model.blankKeymap,
+        KeymapTitleScreenLayoutManyLayer,
+        KeymapTitleScreenLayoutManyLayer.model.blankKeymap,
+        MicahErgodoxLayout,
+        MicahErgodoxLayout.model.blankKeymap,
       ];
-      clickmapUi.setAttribute("id", "clickmap-title");
-      clickmapUi.setAttribute("show-debug", "true");
-      clickmapUi.setAttribute("query-prefix", "clickmap");
-      clickmapUi.setModelsAndMaps(availableKeymaps);
-      clickmapUi.setAttribute("keymap-id", "title-screen-map");
-      app.appendChild(clickmapUi);
+      keymapUi.setAttribute("id", "keymap-title");
+      keymapUi.setAttribute("show-debug", "true");
+      keymapUi.setAttribute("query-prefix", "keymap");
+      keymapUi.setModelsAndMaps(availableKeymaps);
+      keymapUi.setAttribute("keymap-id", "title-screen-map");
+      app.appendChild(keymapUi);
     </script>
   </body>
 </html>

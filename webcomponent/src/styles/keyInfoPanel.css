@@ -18,7 +18,7 @@
   }
 }
 
-clickmap-navbar {
+keymap-navbar {
   font-size: 0.75rem;
   line-height: 1rem;
   padding-bottom: 1rem;
@@ -110,7 +110,7 @@ clickmap-navbar {
 }
 
 @media (max-width: 768px) {
-  clickmap-navbar {
+  keymap-navbar {
     flex-direction: column;
   }
 }

@@ -1,15 +1,15 @@
 import { PhysicalKey } from "~/lib/PhysicalKey";
-import { ClickmapKeyboardElement } from "~/webcomponents/clickmap-keyboard";
+import { KeymapKeyboardElement } from "~/webcomponents/keymap-keyboard";
 import { KeymapKey } from "~/lib/Layout";
 import { Point, Size } from "~/lib/Geometry";
-import { ClickmapKeygridElement } from "~/webcomponents/clickmap-keygrid";
+import { KeymapKeygridElement } from "~/webcomponents/keymap-keygrid";
 import { KeyboardModel } from "~/lib/KeyboardModel";
 
 /* A Planck keyboard with 48 keys (all 1U keys, no 2U keys).
  */
 
 export const KeyboardModelPlanck48 = new KeyboardModel(
-  "clickmap-keyboard-planck48",
+  "keymap-keyboard-planck48",
   "Planck 48",
   new Point(2, 2),
   new Size(4, 3),
@@ -71,9 +71,9 @@ export const KeyboardModelPlanck48 = new KeyboardModel(
 
 /* An ErgoDox keyboard.
  */
-export class ClickmapKeyboardPlanck48Element extends ClickmapKeyboardElement {
-  static readonly elementName: string = "clickmap-keyboard-planck48";
-  readonly elementName = ClickmapKeyboardPlanck48Element.elementName;
+export class KeymapKeyboardPlanck48Element extends KeymapKeyboardElement {
+  static readonly elementName: string = "keymap-keyboard-planck48";
+  readonly elementName = KeymapKeyboardPlanck48Element.elementName;
 
   constructor() {
     super();
@@ -94,8 +94,8 @@ export class ClickmapKeyboardPlanck48Element extends ClickmapKeyboardElement {
     this.appendChild(gridContainer);
 
     const keyGrid = document.createElement(
-      ClickmapKeygridElement.elementName
-    ) as ClickmapKeygridElement;
+      KeymapKeygridElement.elementName
+    ) as KeymapKeygridElement;
     keyGrid.setAttribute("name", "planck48");
     keyGrid.setAttribute("cols", this.columns.toString());
     keyGrid.setAttribute("rows", this.rows.toString());

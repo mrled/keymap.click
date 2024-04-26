@@ -1,27 +1,24 @@
 /* The diagram is the canvas where we draw lines to keys on the keyboard to draw user attention.
  */
 
-import {
-  ClickmapUIState,
-  ClickmapUIStateChangeMap,
-} from "~/lib/ClickmapUIState";
+import { KeymapUIState, KeymapUIStateChangeMap } from "~/lib/KeymapUIState";
 import { IStateObserver } from "~/lib/State";
 import { DiagramLineColors, drawDiagram } from "~/lib/DiagramDrawing";
 
-export class ClickmapDiagramElement
+export class KeymapDiagramElement
   extends HTMLElement
-  implements IStateObserver<ClickmapUIState> {
+  implements IStateObserver<KeymapUIState> {
   //
 
-  static readonly elementName = "clickmap-diagram";
+  static readonly elementName = "keymap-diagram";
 
   centerPanel: HTMLElement | null = null;
   diamargLeft: HTMLElement | null = null;
   diamargRight: HTMLElement | null = null;
   infoProse: HTMLElement | null = null;
 
-  private _state: ClickmapUIState = new ClickmapUIState();
-  set state(state: ClickmapUIState) {
+  private _state: KeymapUIState = new KeymapUIState();
+  set state(state: KeymapUIState) {
     this._state = state;
     this._state.attach(this);
     this.draw();
@@ -34,13 +31,13 @@ export class ClickmapDiagramElement
     super();
   }
 
-  readonly observerName = "ClickmapUIDiagram";
+  readonly observerName = "KeymapDiagramElement";
 
   connectedCallback() {
     this.draw();
   }
 
-  update(stateChanges: ClickmapUIStateChangeMap) {
+  update(stateChanges: KeymapUIStateChangeMap) {
     if (stateChanges.has("connectionPairs") || stateChanges.has("debug")) {
       this.draw();
     }

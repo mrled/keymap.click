@@ -3,10 +3,10 @@ import {
   keyInfoConnectFromClassPrefix,
 } from "~/lib/DiagramConnections";
 
-/* ClickmapIndicatorElement: an element off the keyboard that points to some key on the keyboard via a diagram line.
+/* KeymapIndicatorElement: an element off the keyboard that points to some key on the keyboard via a diagram line.
  */
-export class ClickmapIndicatorElement extends HTMLElement {
-  static readonly elementName = "clickmap-indicator";
+export class KeymapIndicatorElement extends HTMLElement {
+  static readonly elementName = "keymap-indicator";
 
   static get observedAttributes() {
     return ["id"];

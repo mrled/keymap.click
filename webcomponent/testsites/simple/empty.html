@@ -4,36 +4,36 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/cmd2.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple Clickmap test site</title>
+    <title>Simple keymap.click test site</title>
     <script src="/common.js"></script>
     <link rel="stylesheet" href="/simple.css" />
   </head>
   <body>
     <h1>
-      <a href="/empty.html">Simple Clickmap test site: Empty keymap list</a>
+      <a href="/empty.html">Simple keymap.click test site: Empty keymap list</a>
     </h1>
     <p>Go back to the <a href="/">main page</a>.</p>
     <p>
-      This page shows what happens when ClickmapUI's list of keymaps (and
-      keyboard models) is empty (it should show the sample title "keyboard".)
+      This page shows what happens when KeymapUI's list of keymaps (and keyboard
+      models) is empty (it should show the sample title "keyboard".)
     </p>
     <p>
-      Toggle debug controls on all ClickmapUI elements on this page:
-      <button onclick="toggleAllClickmapDebug()">Toggle Debug Controls</button>
+      Toggle debug controls on all KeymapUI elements on this page:
+      <button onclick="toggleAllKeymapUiDebug()">Toggle Debug Controls</button>
     </p>
     <hr />
     <div id="app"></div>
     <hr />
-    <p>Clickmap UI should appear between the two HR elements above.</p>
+    <p>KeymapUI should appear between the two HR elements above.</p>
     <script type="module">
-      import "./clickmap.js";
+      import "./keymap.click.js";
       const app = document.getElementById("app");
-      const clickmapUi = document.createElement("clickmap-ui");
-      clickmapUi.setAttribute("id", "clickmap-empty");
-      clickmapUi.setAttribute("show-debug", "true");
-      clickmapUi.setAttribute("query-prefix", "clickmap");
-      clickmapUi.setModelsAndMaps([]);
-      app.appendChild(clickmapUi);
+      const keymapUi = document.createElement("keymap-ui");
+      keymapUi.setAttribute("id", "keymap-empty");
+      keymapUi.setAttribute("show-debug", "true");
+      keymapUi.setAttribute("query-prefix", "keymap");
+      keymapUi.setModelsAndMaps([]);
+      app.appendChild(keymapUi);
     </script>
   </body>
 </html>

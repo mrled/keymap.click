@@ -4,10 +4,10 @@
  */
 
 import { KeymapKey } from "~/lib/Layout";
-import { ClickmapKeyElement } from "./clickmap-key";
+import { KeymapKeyElement } from "./keymap-key";
 import { KeyboardModel } from "~/lib/KeyboardModel";
 
-export abstract class ClickmapKeyboardElement extends HTMLElement {
+export abstract class KeymapKeyboardElement extends HTMLElement {
   /* A ResizeObserver to watch for changes in the board's size
    * and recalculate the size of the board.
    */
@@ -26,7 +26,7 @@ export abstract class ClickmapKeyboardElement extends HTMLElement {
    *
    * Note that in addition to this INSTANCE property,
    * there will usually also be a STATIC property of the same name.
-   * The clickmap UI and state uses the instance property;
+   * The KeymapUIElement and state uses the instance property;
    * the customElements.define() call uses the static property.
    * TODO: Can we make this nicer?
    * I think we can't; TypeScript doesn't support abstract static properties or interface static properties.
@@ -51,12 +51,12 @@ export abstract class ClickmapKeyboardElement extends HTMLElement {
    */
   abstract model: KeyboardModel;
 
-  /* Get all the child <clickmap-key> elements.
+  /* Get all the child <keymap-key> elements.
    */
   get keyElements() {
     return Array.from(
-      this.querySelectorAll(ClickmapKeyElement.elementName)
-    ) as ClickmapKeyElement[];
+      this.querySelectorAll(KeymapKeyElement.elementName)
+    ) as KeymapKeyElement[];
   }
 
   /* Subclasses should implement this method to create child elements.

@@ -1,22 +1,22 @@
-import { ClickmapUIOptions } from "~/lib/ClickmapUIOptions";
+import { KeymapUIOptions } from "~/lib/KeymapUIOptions";
 import { ConnectionPair, KeyInfoConnectType } from "~/lib/DiagramConnections";
 import { KeymapLayout } from "~/lib/Layout";
 
-import { ClickmapKeyHandleElement } from "~/webcomponents/clickmap-key-handle";
-import { ClickmapIndicatorElement } from "~/webcomponents/clickmap-indicator";
-import { ClickmapKeyboardElement } from "./clickmap-keyboard";
-import { ClickmapNavbarElement } from "~/webcomponents/clickmap-navbar";
-import { ClickmapDiagramElement } from "./clickmap-diagram";
+import { KeymapKeyHandleElement } from "~/webcomponents/keymap-key-handle";
+import { KeymapIndicatorElement } from "~/webcomponents/keymap-indicator";
+import { KeymapKeyboardElement } from "./keymap-keyboard";
+import { KeymapNavbarElement } from "~/webcomponents/keymap-navbar";
+import { KeymapDiagramElement } from "./keymap-diagram";
 import {
-  ClickmapUIState,
-  ClickmapUIStateChange,
-  ClickmapUIStateChangeMap,
-} from "~/lib/ClickmapUIState";
+  KeymapUIState,
+  KeymapUIStateChange,
+  KeymapUIStateChangeMap,
+} from "~/lib/KeymapUIState";
 import { IStateObserver } from "~/lib/State";
 import {
   setQueryStringFromState,
   setStateFromQsAndAttrib,
-} from "~/lib/ClickmapUIStateQueryString";
+} from "~/lib/KeymapUIStateQueryString";
 
 // Import CSS files as inline strings.
 // Vite supports the ?inline query parameter to load a file as a string;
@@ -55,9 +55,9 @@ import keyInfoPanelStyleStr from "~/styles/keyInfoPanel.css?inline";
  * layer                The layer number to use.
  * selected-key         The id of the key that is selected.
  * query-prefix         A prefix for query parameters.
- *                      If set, the ClickmapUIElement will look for parameters in the URL query string with this prefix.
+ *                      If set, the KeymapUIElement will look for parameters in the URL query string with this prefix.
  *                      This attribute is not set by default,
- *                      so the ClickmapUIElement will not read from or write to the query string by default.
+ *                      so the KeymapUIElement will not read from or write to the query string by default.
  *
  * Query string parameters:
  * map              The name of one of the passed-in keymaps to use.
@@ -65,24 +65,24 @@ import keyInfoPanelStyleStr from "~/styles/keyInfoPanel.css?inline";
  * id               The id of the key to select.
  *
  * Query string example:
- * 1. The ClickmapUIElement is declared in the DOM as:
- *    <clickmap-ui selected-key="l-f-1-1" query-prefix="clickmap"></clickmap-ui>
+ * 1. The KeymapUIElement is declared in the DOM as:
+ *    <keymap-ui selected-key="l-f-1-1" query-prefix="keymap"></keymap-ui>
  * 2. The user loads the URL <https://example.com/>
- *    The query string is empty, so the ClickmapUI loads with the default keymap and the l-f-1-1 key selected.
- * 3. The user loads the URL <https://example.com/?clickmap-map=mymap&clickmap-layer=2&clickmap-key=r-t-2-2>
- *    The ClickmapUIElement loads with the mymap keymap, the layer number 2, and the r-t-2-2 key selected,
+ *    The query string is empty, so the KeymapUI loads with the default keymap and the l-f-1-1 key selected.
+ * 3. The user loads the URL <https://example.com/?keymap-map=mymap&keymap-layer=2&keymap-key=r-t-2-2>
+ *    The KeymapUIElement loads with the mymap keymap, the layer number 2, and the r-t-2-2 key selected,
  *    overriding the selected-key attribute set on the element in the DOM.
  * 4. When the user selects a key, or changes the map, the URL is updated with the new query parameters.
  */
 
-export class ClickmapUIElement
+export class KeymapUIElement
   extends HTMLElement
-  implements IStateObserver<ClickmapUIState> {
+  implements IStateObserver<KeymapUIState> {
   //
 
   /* The element name to register with customElements.define().
    */
-  static readonly elementName = "clickmap-ui";
+  static readonly elementName = "keymap-ui";
 
   /* The shadow DOM for us and all descendents.
    */
@@ -97,14 +97,14 @@ export class ClickmapUIElement
    * This should not be set outside of the constructor
    * (but state.setState() can be used to set individual properties outside of the constructor).
    */
-  private state: ClickmapUIState;
+  private state: KeymapUIState;
 
   constructor() {
     super();
 
     /* Set the state object that will be passed to all children.
      */
-    this.state = new ClickmapUIState();
+    this.state = new KeymapUIState();
     this.state.initialized = true;
     this.state.attach(this);
 
@@ -158,7 +158,7 @@ export class ClickmapUIElement
     // Set the initial state from the query string and attributes
     setStateFromQsAndAttrib({
       state: this.state,
-      clickmapUi: this,
+      keymapUi: this,
     });
 
     this.layOutIdempotently();
@@ -212,7 +212,7 @@ export class ClickmapUIElement
         this.state.queryPrefix = newValue;
         break;
       default:
-        console.error(`ClickmapUIElement: Unhandled attribute: ${name}`);
+        console.error(`KeymapUIElement: Unhandled attribute: ${name}`);
         break;
     }
 
@@ -235,7 +235,7 @@ export class ClickmapUIElement
       // Concatenate all the CSS strings into one string and place it in a <style> element.
       // This is kind of an annoying hack because bundling is awful.
       // TODO: pack CSS separately and use a <style src="..."> element instead.
-      // That would be more efficient for web pages that use multiple ClickmapUIElement objects.
+      // That would be more efficient for web pages that use multiple KeymapUIElement objects.
       // However, that's rare so it's not a priority.
       const styleContents = [
         // Ordered styles
@@ -251,17 +251,17 @@ export class ClickmapUIElement
     return this._styling;
   }
 
-  private _keyInfoNavbar: ClickmapNavbarElement | null = null;
-  get keyInfoNavbar(): ClickmapNavbarElement {
+  private _keyInfoNavbar: KeymapNavbarElement | null = null;
+  get keyInfoNavbar(): KeymapNavbarElement {
     if (!this._keyInfoNavbar) {
       this._keyInfoNavbar = this.shadow.querySelector(
-        ClickmapNavbarElement.elementName
-      ) as ClickmapNavbarElement;
+        KeymapNavbarElement.elementName
+      ) as KeymapNavbarElement;
     }
     if (!this._keyInfoNavbar) {
       this._keyInfoNavbar = document.createElement(
-        ClickmapNavbarElement.elementName
-      ) as ClickmapNavbarElement;
+        KeymapNavbarElement.elementName
+      ) as KeymapNavbarElement;
       this._keyInfoNavbar.updateTitleKey(
         this.state.layer,
         this.state.keymap.model,
@@ -327,14 +327,14 @@ export class ClickmapUIElement
     return this._kidContainer;
   }
 
-  private _keyboard: ClickmapKeyboardElement | null = null;
-  get keyboard(): ClickmapKeyboardElement {
+  private _keyboard: KeymapKeyboardElement | null = null;
+  get keyboard(): KeymapKeyboardElement {
     let needsCreate = false;
     if (!this._keyboard) {
       // First, try to find a keyboard in the DOM
       this._keyboard = this.shadow.querySelector(
         "#keyboard"
-      ) as ClickmapKeyboardElement;
+      ) as KeymapKeyboardElement;
       needsCreate = true;
     }
     if (!this._keyboard) {
@@ -342,14 +342,14 @@ export class ClickmapUIElement
       const kbElementName = this.state.keymap.model.keyboardElementName;
       if (!customElements.get(kbElementName)) {
         throw new Error(
-          `ClickmapUIElement: Keyboard element ${kbElementName} not found`
+          `KeymapUIElement: Keyboard element ${kbElementName} not found`
         );
       }
       this._keyboard = document.createElement(
         kbElementName
-      ) as ClickmapKeyboardElement;
+      ) as KeymapKeyboardElement;
       this._keyboard.setAttribute("id", "keyboard");
-      this._keyboard.classList.add("clickmap-keyboard");
+      this._keyboard.classList.add("keymap-keyboard");
     }
     if (needsCreate) {
       this._keyboard.createChildren(Array.from(this.state.layer.keys.values()));
@@ -383,17 +383,17 @@ export class ClickmapUIElement
     return this._infoProse;
   }
 
-  private _diagram: ClickmapDiagramElement | null = null;
-  get diagram(): ClickmapDiagramElement {
+  private _diagram: KeymapDiagramElement | null = null;
+  get diagram(): KeymapDiagramElement {
     if (!this._diagram) {
       this._diagram = this.shadow.querySelector(
-        ClickmapDiagramElement.elementName
-      ) as ClickmapDiagramElement;
+        KeymapDiagramElement.elementName
+      ) as KeymapDiagramElement;
     }
     if (!this._diagram) {
       this._diagram = document.createElement(
-        ClickmapDiagramElement.elementName
-      ) as ClickmapDiagramElement;
+        KeymapDiagramElement.elementName
+      ) as KeymapDiagramElement;
     }
     if (!this._diagram.readyToDraw) {
       this._diagram.centerPanel = this.centerPanel;
@@ -460,9 +460,9 @@ export class ClickmapUIElement
   // #region Handle state changes
   //
 
-  readonly observerName = "ClickmapUIElement";
+  readonly observerName = "KeymapUIElement";
 
-  update(stateChanges: ClickmapUIStateChangeMap) {
+  update(stateChanges: KeymapUIStateChangeMap) {
     if (!this.isConnected) {
       return;
     }
@@ -479,7 +479,7 @@ export class ClickmapUIElement
       if (oldKeyboard.elementName != newKeymap.model.keyboardElementName) {
         this._keyboard = document.createElement(
           newKeymap.model.keyboardElementName
-        ) as ClickmapKeyboardElement;
+        ) as KeymapKeyboardElement;
         this.keyInfoNavbar.setAttribute("key-id", "");
 
         // Replace the old keyboard with the new one in the DOM
@@ -515,9 +515,9 @@ export class ClickmapUIElement
     let proseTitleElement = document.createElement("h3");
     let proseTextElements: HTMLParagraphElement[] = [];
     const indicatedElementsById: {
-      [key: string]: ClickmapKeyHandleElement;
+      [key: string]: KeymapKeyHandleElement;
     } = {};
-    let proseKeyIndicators: ClickmapIndicatorElement[] = [];
+    let proseKeyIndicators: KeymapIndicatorElement[] = [];
     let indicatedKeyIds: string[] = [];
 
     if (this.state.guideStep) {
@@ -539,7 +539,7 @@ export class ClickmapUIElement
       const keyData = this.state.layer.keys.get(activeKeyId);
       if (!keyData) {
         console.error(
-          `ClickmapUIElement: Key ${activeKeyId} not found in key map '${this.state.keymap.uniqueId}'`
+          `KeymapUIElement: Key ${activeKeyId} not found in key map '${this.state.keymap.uniqueId}'`
         );
         return;
       }
@@ -579,7 +579,7 @@ export class ClickmapUIElement
     this.infoProse.append(...proseTextElements);
 
     proseKeyIndicators = Array.from(
-      this.infoProse.querySelectorAll(ClickmapIndicatorElement.elementName)
+      this.infoProse.querySelectorAll(KeymapIndicatorElement.elementName)
     );
     // Construct a list of all keys indicated in the prose
     indicatedKeyIds = proseKeyIndicators.map(
@@ -598,7 +598,7 @@ export class ClickmapUIElement
     // this.keyInfoNavbar might not be in the DOM on initial load, so we have to lay out here.
     this.layOutIdempotently();
     const navBarHandle = this.keyInfoNavbar.querySelector(
-      ClickmapKeyHandleElement.elementName
+      KeymapKeyHandleElement.elementName
     );
 
     // Update every key on the board
@@ -606,9 +606,7 @@ export class ClickmapUIElement
     this.keyboard.keyElements.forEach((key) => {
       const keyId = key.getAttribute("id");
       if (!keyId) {
-        console.error(
-          `ClickmapUIElement: Keyboard child key has no id: ${key}`
-        );
+        console.error(`KeymapUIElement: Keyboard child key has no id: ${key}`);
         return;
       }
       const active = keyId === activeKeyId;
@@ -619,8 +617,8 @@ export class ClickmapUIElement
       key.setAttribute("target-of-indicator", indicatorTarget.toString());
 
       const keyHandle = key.querySelector(
-        ClickmapKeyHandleElement.elementName
-      ) as ClickmapKeyHandleElement;
+        KeymapKeyHandleElement.elementName
+      ) as KeymapKeyHandleElement;
       if (!keyHandle) return;
 
       if (active && navBarHandle) {
@@ -644,15 +642,13 @@ export class ClickmapUIElement
     proseKeyIndicators.forEach((indicator) => {
       const indicatorId = indicator.getAttribute("id");
       if (!indicatorId) {
-        console.error(
-          `ClickmapUIElement: Key indicator has no id: ${indicator}`
-        );
+        console.error(`KeymapUIElement: Key indicator has no id: ${indicator}`);
         return;
       }
       const indicated = indicatedElementsById[indicatorId];
       if (!indicated) {
         console.error(
-          `ClickmapUIElement: Key indicator has no target: ${indicatorId}`
+          `KeymapUIElement: Key indicator has no target: ${indicatorId}`
         );
         return;
       }
@@ -667,10 +663,10 @@ export class ClickmapUIElement
 
   /* Update the query prefix and any query parameters that use it.
    */
-  #updateQueryPrefix(change: ClickmapUIStateChange) {
+  #updateQueryPrefix(change: KeymapUIStateChange) {
     if (change.oldValue) {
       // Remove all old query parameters with the old prefix
-      const [params, newQs] = ClickmapUIOptions.parseQueryString(
+      const [params, newQs] = KeymapUIOptions.parseQueryString(
         change.oldValue as string,
         window.location.search
       );
@@ -693,9 +689,9 @@ export class ClickmapUIElement
    *
    * Pass state to it because it's a callback for a ResizeObserver --
    * 'this' will refer to the ResizeObserver, when called by it,
-   * so 'this.state' from the ClickmapUIElement instance will not be available.
+   * so 'this.state' from the KeymapUIElement instance will not be available.
    */
-  #resizeCanvas(state: ClickmapUIState) {
+  #resizeCanvas(state: KeymapUIState) {
     this.diagram.resize(
       this.kidContainer.offsetWidth,
       this.kidContainer.offsetHeight
@@ -704,7 +700,7 @@ export class ClickmapUIElement
 
   /* Handle a key being selected on the keyboard
    *
-   * This is a custom event that is fired by <clickmap-key> elements.
+   * This is a custom event that is fired by <keymap-key> elements.
    */
   #handleKeySelected(event: Event) {
     const e = event as CustomEvent;

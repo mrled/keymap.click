@@ -1,11 +1,8 @@
-import {
-  ClickmapUIState,
-  ClickmapUIStateChangeMap,
-} from "~/lib/ClickmapUIState";
+import { KeymapUIState, KeymapUIStateChangeMap } from "~/lib/KeymapUIState";
 import { KeyboardModel } from "~/lib/KeyboardModel";
 import { KeymapLayer } from "~/lib/Layout";
 import { IStateObserver } from "~/lib/State";
-import { ClickmapKeyboardTitleBarElement } from "~/webcomponents/clickmap-keyboard-title-bar";
+import { KeymapKeyboardTitleBarElement } from "~/webcomponents/keymap-keyboard-title-bar";
 
 // #region Helper types
 
@@ -63,14 +60,14 @@ type ChangeListenerFunction = (
 
 /* Title bar for a key-info-panel
  */
-export class ClickmapNavbarElement
+export class KeymapNavbarElement
   extends HTMLElement
-  implements IStateObserver<ClickmapUIState> {
+  implements IStateObserver<KeymapUIState> {
   //
 
   // #region Constructor and lifecycle
 
-  static readonly elementName = "clickmap-navbar";
+  static readonly elementName = "keymap-navbar";
 
   static readonly observedAttributes = ["show-debug"];
 
@@ -118,15 +115,15 @@ export class ClickmapNavbarElement
 
   // #region Observed state
 
-  readonly observerName = "ClickmapUIControls";
+  readonly observerName = "KeymapNavbarElement";
 
-  private _state: ClickmapUIState = new ClickmapUIState();
-  set state(value: ClickmapUIState) {
+  private _state: KeymapUIState = new KeymapUIState();
+  set state(value: KeymapUIState) {
     this._state = value;
     this._state.attach(this);
     this.updateAll();
   }
-  get state(): ClickmapUIState {
+  get state(): KeymapUIState {
     return this._state;
   }
 
@@ -154,7 +151,7 @@ export class ClickmapNavbarElement
    * for instance, changes to the selected keymap will automatically
    * update the selected layer and guide.
    */
-  update(stateChanges: ClickmapUIStateChangeMap) {
+  update(stateChanges: KeymapUIStateChangeMap) {
     if (stateChanges.get("debug")) {
       this.updateDebugSelector();
     }
@@ -466,17 +463,17 @@ export class ClickmapNavbarElement
     this.updateAll();
   }
 
-  _titleBoard: ClickmapKeyboardTitleBarElement | null = null;
-  get titleBoard(): ClickmapKeyboardTitleBarElement {
+  _titleBoard: KeymapKeyboardTitleBarElement | null = null;
+  get titleBoard(): KeymapKeyboardTitleBarElement {
     if (!this._titleBoard) {
       this._titleBoard = this.querySelector(
-        ClickmapKeyboardTitleBarElement.elementName
-      ) as ClickmapKeyboardTitleBarElement;
+        KeymapKeyboardTitleBarElement.elementName
+      ) as KeymapKeyboardTitleBarElement;
     }
     if (!this._titleBoard) {
       this._titleBoard = document.createElement(
-        ClickmapKeyboardTitleBarElement.elementName
-      ) as ClickmapKeyboardTitleBarElement;
+        KeymapKeyboardTitleBarElement.elementName
+      ) as KeymapKeyboardTitleBarElement;
     }
     return this._titleBoard;
   }

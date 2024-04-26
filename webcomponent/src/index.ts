@@ -7,19 +7,19 @@
  * <https://github.com/evanw/esbuild/issues/722>
  */
 
-import { ClickmapUIElement } from "~/webcomponents/clickmap-ui";
-import { ClickmapTitleScreenKeymapOldVersion } from "~/lib/keymaps/ClickmapTitleScreenKeymap";
-import { ClickmapTitleScreenKeymapManyLayer } from "~/lib/keymaps/ClickmapTitleScreenKeymapManyLayer";
-import { MicahErgodoxKeymap } from "~/lib/keymaps/MicahErgodoxKeymap";
-import { ClickmapTitleScreenKeymap } from "~/lib/keymaps/Planck48TitleScreenKeymap";
+import { KeymapUIElement } from "~/webcomponents/keymap-ui";
+import { KeymapTitleScreenLayoutOldVersion } from "~/lib/keymaps/KeymapTitleScreenLayoutOldVersion";
+import { KeymapTitleScreenLayoutManyLayer } from "~/lib/keymaps/KeymapTitleScreenLayoutManyLayer";
+import { MicahErgodoxLayout } from "~/lib/keymaps/MicahErgodoxKeymap";
+import { KeymapTitleScreenLayout } from "~/lib/keymaps/Planck48TitleScreenKeymap";
 import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
 
 registerAllKeymapClickWebComponents();
 
 export {
-  ClickmapUIElement,
-  MicahErgodoxKeymap,
-  ClickmapTitleScreenKeymap,
-  ClickmapTitleScreenKeymapManyLayer,
-  ClickmapTitleScreenKeymapOldVersion,
+  KeymapUIElement,
+  MicahErgodoxLayout,
+  KeymapTitleScreenLayout,
+  KeymapTitleScreenLayoutManyLayer,
+  KeymapTitleScreenLayoutOldVersion,
 };

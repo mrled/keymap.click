@@ -6,14 +6,14 @@
  * In smaller screen sizes, two halves should be shown vertically.
  * For larger screen sizes, they should be shown next to each other.
  */
-.clickmap-keyboard {
+.keymap-keyboard {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
 @media (min-width: 768px) {
-  .clickmap-keyboard {
+  .keymap-keyboard {
     flex-direction: row;
   }
 }
@@ -61,14 +61,14 @@ h2.keyboard-title {
 
 /* A grid of keys, like a keyboard would have
  */
-clickmap-keygrid {
+keymap-keygrid {
   display: grid;
   pointer-events: none;
   user-select: none;
 }
 
 /* A single key */
-clickmap-key {
+keymap-key {
   padding: 0.25rem;
   display: flex;
   justify-content: center;
@@ -173,14 +173,14 @@ clickmap-key {
 
 /* Left and right thumb clusters of an ErgoDox keyboard */
 .keyboard-left-thumb-cluster,
-clickmap-keygrid[name="ergodox-left-thumb"] {
+keymap-keygrid[name="ergodox-left-thumb"] {
   transform: translateX(calc(var(--keyboard-grid-unit) * -2))
     translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(25deg);
   transform-origin: 0 calc(var(--keyboard-grid-unit) * 2);
   padding-bottom: calc(var(--keyboard-grid-unit) * 9);
 }
 .keyboard-right-thumb-cluster,
-clickmap-keygrid[name="ergodox-right-thumb"] {
+keymap-keygrid[name="ergodox-right-thumb"] {
   transform: translateX(calc(var(--keyboard-grid-unit) * 2))
     translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(-25deg);
   transform-origin: calc(var(--keyboard-grid-unit) * 6)
@@ -191,9 +191,9 @@ clickmap-keygrid[name="ergodox-right-thumb"] {
 /* The keymap UI is a container for the keymap, info panel, and diagram
  * It is also the shadow DOM root, so it needs :host.
  */
-clickmap-ui,
+keymap-ui,
 :host {
-  /* clickmap-ui is a custom element, which doesn't get block by default.
+  /* keymap-ui is a custom element, which doesn't get block by default.
    * If we don't set it here, position:relative of this + position:absolute of the canvas
    * will not work as expected.
    */

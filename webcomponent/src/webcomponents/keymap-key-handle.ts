@@ -1,23 +1,23 @@
 import { keyHandleDomIdFromKeyId } from "~/lib/DiagramConnections";
 
-// TODO: should this be its own component, or just a part of clickmap-key ?
+// TODO: should this be its own component, or just a part of keymap-key ?
 
-/* ClickmapKeyHandleElement: a small element used as an anchor point to connect a diagram line to this key.
+/* KeymapKeyHandleElement: a small element used as an anchor point to connect a diagram line to this key.
  *
  * We use this because it is transformed with the outer element,
  * for instance the thumb clusters are moved and rotated,
- * and this item is to relatively the same place within its parent <ClickmapKey> during that transformation.
+ * and this item is to relatively the same place within its parent <KeymapKey> during that transformation.
  *
- * The parent <ClickmapKey> element is large enough that when it rotates, its BoundingClientRect is enlarged,
+ * The parent <KeymapKey> element is large enough that when it rotates, its BoundingClientRect is enlarged,
  * so the calculation we were doing before of a few px from the top left was actually outside of
- * the rotated <ClickmapKey> element itself.
+ * the rotated <KeymapKey> element itself.
  *
  * Technically, this handle will have the same problem - its BoundingClientRect is enlarged.
  * However, it is so small that this doesn't matter.
- * The diagram line still looks good inside the <ClickmapKey>.
+ * The diagram line still looks good inside the <KeymapKey>.
  */
-export class ClickmapKeyHandleElement extends HTMLElement {
-  static readonly elementName = "clickmap-key-handle";
+export class KeymapKeyHandleElement extends HTMLElement {
+  static readonly elementName = "keymap-key-handle";
 
   static get observedAttributes() {
     return ["key-id", "col-start", "handle-top", "extra-classes"];

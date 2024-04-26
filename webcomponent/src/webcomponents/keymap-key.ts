@@ -1,4 +1,4 @@
-import { ClickmapKeyHandleElement } from "./clickmap-key-handle";
+import { KeymapKeyHandleElement } from "./keymap-key-handle";
 
 /* A keyboard key
  *
@@ -23,15 +23,15 @@ import { ClickmapKeyHandleElement } from "./clickmap-key-handle";
  *   target-of-indicator:       True if this key is the target of a diagram liner
  *   key-handle-top:            True if the key handle should be at the top of the key
  *
- * clickmap-key is an autonomous custom element, not a customized built-in element.
+ * keymap-key is an autonomous custom element, not a customized built-in element.
  * It would have been a customized HTMLButtonElement, but Safari doesn't support them.
  * <https://github.com/WebKit/standards-positions/issues/97>.
  *
  * Relevant properties:
  *   onclick:                   An onClick function
  */
-export class ClickmapKeyElement extends HTMLElement {
-  static readonly elementName = "clickmap-key";
+export class KeymapKeyElement extends HTMLElement {
+  static readonly elementName = "keymap-key";
 
   legendTextNode: Text | null;
   legendImageElement: Element | null;
@@ -141,7 +141,7 @@ export class ClickmapKeyElement extends HTMLElement {
 
     if (!this.keyHandleElement) {
       this.keyHandleElement = document.createElement(
-        ClickmapKeyHandleElement.elementName
+        KeymapKeyHandleElement.elementName
       );
       this.appendChild(this.keyHandleElement);
     }

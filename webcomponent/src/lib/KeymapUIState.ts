@@ -1,4 +1,4 @@
-/* A state object to pass to all ClickmapUIElement children.
+/* A state object to pass to all KeymapUIElement children.
  *
  * A single source of truth for the UI state of the keymap.
  * Use the observer pattern to notify relevant components when the state changes.
@@ -6,18 +6,18 @@
  * We expect that state is immutable.
  * When a component needs to change state, it should create a new object.
  *
- * We expect the root application component - ClickmapUIElement, in this case -
+ * We expect the root application component - KeymapUIElement, in this case -
  * to create an instance of this class and pass it to all children.
  *
  * The root application component should do something like:
  *  constructor() {
  *    // ...
- *    this.state = new ClickmapUIState()
+ *    this.state = new KeymapUIState()
  *    this.state.initialized = true;
  *    this.state.attach(this);
  *
  * The root application componen should also implement the IStateObserver interface:
- *  update<T extends keyof ClickmapUIState>(key: T, oldValue: ClickmapUIState[T], newValue: ClickmapUIState[T]) {
+ *  update<T extends keyof KeymapUIState>(key: T, oldValue: KeymapUIState[T], newValue: KeymapUIState[T]) {
  *    switch (key) {
  *      doWhateverNeedsDoing();
  *      // ...
@@ -42,11 +42,11 @@
  * and also the IStateObserver interface.
  *  class WhateverElement
  *    extends HTMLElement
- *    implements IStateObserver<ClickmapUIState>
+ *    implements IStateObserver<KeymapUIState>
  *  {
- *    private _state = new ClickmapUIState();
+ *    private _state = new KeymapUIState();
  *    get state() { return this._state; }
- *    set state(value: ClickmapUIState) {
+ *    set state(value: KeymapUIState) {
  *      this._state = value;
  *      this._state.attach(this);
  *      this.someChildElement.state = value; // Can also set state for children here, if applicable
@@ -54,7 +54,7 @@
  *    }
  *
  * (Children can define a default state object with initialized=false,
- * and the ClickmapUIElement will know to set the global state object on them.
+ * and the KeymapUIElement will know to set the global state object on them.
  * This keeps each child from having to check if its state object is null and makes typing simpler.)
  */
 
@@ -62,7 +62,7 @@ import { KeyboardModel } from "./KeyboardModel";
 import { IStateObserver, StateChange, StateChangeMap } from "./State";
 import { ConnectionPair } from "./DiagramConnections";
 import { GuideStep, KeymapLayout, KeymapGuide, KeymapLayer } from "./Layout";
-import { ClickmapTitleScreenKeymapOldVersion } from "./keymaps/ClickmapTitleScreenKeymap";
+import { KeymapTitleScreenLayoutOldVersion } from "./keymaps/KeymapTitleScreenLayoutOldVersion";
 
 /* A map of uniqueID strings to Keymap objects
  */
@@ -70,18 +70,15 @@ export type LayoutMap = Map<string, KeymapLayout>;
 
 /* A non-generic state change
  */
-export class ClickmapUIStateChange extends StateChange<ClickmapUIState> {}
+export class KeymapUIStateChange extends StateChange<KeymapUIState> {}
 
-/* A non-generic map of key:ClickmapUIStateChange
+/* A non-generic map of key:KeymapUIStateChange
  */
-export class ClickmapUIStateChangeMap extends Map<
-  string,
-  ClickmapUIStateChange
-> {}
+export class KeymapUIStateChangeMap extends Map<string, KeymapUIStateChange> {}
 
 /* Arguments that can be passed to setMultiStateByIdsInSingleTransaction
  */
-export interface IClickmapUIStateIdArgs {
+export interface IKeymapUIStateIdArgs {
   debug?: number;
   queryPrefix?: string;
   keymapId?: string;
@@ -91,7 +88,7 @@ export interface IClickmapUIStateIdArgs {
   selectedKey?: string;
 }
 
-/* An object representing the state of the entire ClickmapUIElement.
+/* An object representing the state of the entire KeymapUIElement.
  *
  * A single source of truth for the UI state of the keymap.
  *
@@ -121,10 +118,10 @@ export interface IClickmapUIStateIdArgs {
  *      }
  *    This will only cause a problem for properties that should trigger an update when set to the default value.
  *    For instance, we have a default keyboard model/map that are kind of placeholders,
- *    but if they are set explicitly then we still need to trigger an update to the ClickmapUIElement
+ *    but if they are set explicitly then we still need to trigger an update to the KeymapUIElement
  *    so that it knows its keyboard model/map have ever been set.
  */
-export class ClickmapUIState {
+export class KeymapUIState {
   constructor() {}
 
   //
@@ -133,11 +130,11 @@ export class ClickmapUIState {
 
   /* A list of observers
    */
-  private observers: IStateObserver<ClickmapUIState>[] = [];
+  private observers: IStateObserver<KeymapUIState>[] = [];
 
   /* Attach an observer
    */
-  attach(observer: IStateObserver<ClickmapUIState>): void {
+  attach(observer: IStateObserver<KeymapUIState>): void {
     const isExist = this.observers.includes(observer);
     if (!isExist) {
       this.observers.push(observer);
@@ -146,7 +143,7 @@ export class ClickmapUIState {
 
   /* Detach an observer
    */
-  detach(observer: IStateObserver<ClickmapUIState>): void {
+  detach(observer: IStateObserver<KeymapUIState>): void {
     const observerIndex = this.observers.indexOf(observer);
     if (observerIndex !== -1) {
       this.observers.splice(observerIndex, 1);
@@ -155,21 +152,21 @@ export class ClickmapUIState {
 
   /* Notify all observers of a set of changes
    */
-  notify(stateChanges: StateChange<ClickmapUIState>[]): void {
+  notify(stateChanges: StateChange<KeymapUIState>[]): void {
     if (stateChanges.length === 0) return;
-    const stateChangeMap = new ClickmapUIStateChangeMap(
+    const stateChangeMap = new KeymapUIStateChangeMap(
       stateChanges.map((change) => [change.key, change])
     );
     for (const observer of this.observers) {
-      observer.update(stateChangeMap as StateChangeMap<ClickmapUIState>);
+      observer.update(stateChangeMap as StateChangeMap<KeymapUIState>);
     }
   }
 
   // #region State data
 
-  /* Only the clickmap-ui component should ever set this.
+  /* Only the keymap-ui component should ever set this.
    * It allows us to define state objects on every component that needs one,
-   * and the clickmap-ui will know that any with initialized=false
+   * and the keymap-ui will know that any with initialized=false
    * have not been set to the global state object yet.
    */
   public initialized: boolean = false;
@@ -237,10 +234,10 @@ export class ClickmapUIState {
   public get keymaps(): LayoutMap {
     if (this._keymaps.size === 0) {
       this._keymaps.set(
-        ClickmapTitleScreenKeymapOldVersion.uniqueId,
-        ClickmapTitleScreenKeymapOldVersion
+        KeymapTitleScreenLayoutOldVersion.uniqueId,
+        KeymapTitleScreenLayoutOldVersion
       );
-      this.notify([new ClickmapUIStateChange("keymaps", [], this._keymaps)]);
+      this.notify([new KeymapUIStateChange("keymaps", [], this._keymaps)]);
     }
     return this._keymaps;
   }
@@ -248,7 +245,7 @@ export class ClickmapUIState {
     if (this._keymaps === value) return;
     const oldValue = this._keymaps;
     this._keymaps = value;
-    this.notify([new ClickmapUIStateChange("keymaps", oldValue, value)]);
+    this.notify([new KeymapUIStateChange("keymaps", oldValue, value)]);
   }
 
   /* The default keymap.
@@ -268,7 +265,7 @@ export class ClickmapUIState {
   get keymap(): KeymapLayout {
     if (this._keymap === null) {
       this._keymap = this.defaultKeymap;
-      this.notify([new ClickmapUIStateChange("keymap", null, this._keymap)]);
+      this.notify([new KeymapUIStateChange("keymap", null, this._keymap)]);
     }
     return this._keymap;
   }
@@ -279,7 +276,7 @@ export class ClickmapUIState {
   public get layer(): KeymapLayer {
     if (this._layer === null) {
       this._layer = this.keymap.layers[0];
-      this.notify([new ClickmapUIStateChange("layer", null, this._layer)]);
+      this.notify([new KeymapUIStateChange("layer", null, this._layer)]);
     }
     return this._layer;
   }
@@ -315,9 +312,7 @@ export class ClickmapUIState {
     if (this._connectionPairs === value) return;
     const oldValue = this._connectionPairs;
     this._connectionPairs = value;
-    this.notify([
-      new ClickmapUIStateChange("connectionPairs", oldValue, value),
-    ]);
+    this.notify([new KeymapUIStateChange("connectionPairs", oldValue, value)]);
   }
 
   // #region Public helpers
@@ -360,26 +355,22 @@ export class ClickmapUIState {
     this._keymap = firstKeymap;
     this._layer = firstKeymap.layers[0];
 
-    const changes: ClickmapUIStateChange[] = [
-      new ClickmapUIStateChange("keymap", oldKeymaps, this.keymap),
-      new ClickmapUIStateChange("keymaps", oldKeymap, this.keymaps),
-      new ClickmapUIStateChange("layer", oldLayer, this.layer),
+    const changes: KeymapUIStateChange[] = [
+      new KeymapUIStateChange("keymap", oldKeymaps, this.keymap),
+      new KeymapUIStateChange("keymaps", oldKeymap, this.keymaps),
+      new KeymapUIStateChange("layer", oldLayer, this.layer),
     ];
     if (oldGuide) {
-      changes.push(new ClickmapUIStateChange("guide", oldGuide, this.guide));
+      changes.push(new KeymapUIStateChange("guide", oldGuide, this.guide));
     }
     if (oldGuideStep) {
       changes.push(
-        new ClickmapUIStateChange("guideStep", oldGuideStep, this._guideStep)
+        new KeymapUIStateChange("guideStep", oldGuideStep, this._guideStep)
       );
     }
     if (oldSelectedKey) {
       changes.push(
-        new ClickmapUIStateChange(
-          "selectedKey",
-          oldSelectedKey,
-          this.selectedKey
-        )
+        new KeymapUIStateChange("selectedKey", oldSelectedKey, this.selectedKey)
       );
     }
 
@@ -410,7 +401,7 @@ export class ClickmapUIState {
     guideId,
     guideStepIdx,
     selectedKey,
-  }: IClickmapUIStateIdArgs) {
+  }: IKeymapUIStateIdArgs) {
     //
 
     // Validate the new state properties.
@@ -532,49 +523,45 @@ export class ClickmapUIState {
     const changedSelectedKey = newSelectedKeyId !== oldSelectedKey;
 
     // Now that input is validated, make changes to the state
-    const changes: ClickmapUIStateChange[] = [];
+    const changes: KeymapUIStateChange[] = [];
 
     if (debug !== undefined) {
-      changes.push(new ClickmapUIStateChange("debug", this.debug, debug));
+      changes.push(new KeymapUIStateChange("debug", this.debug, debug));
       this._debug = debug;
     }
 
     if (queryPrefix !== undefined) {
       changes.push(
-        new ClickmapUIStateChange("queryPrefix", this.queryPrefix, queryPrefix)
+        new KeymapUIStateChange("queryPrefix", this.queryPrefix, queryPrefix)
       );
       this._queryPrefix = queryPrefix;
     }
 
     if (changedKeymap) {
-      changes.push(new ClickmapUIStateChange("keymap", oldKeymap, newKeymap));
+      changes.push(new KeymapUIStateChange("keymap", oldKeymap, newKeymap));
       this._keymap = newKeymap;
     }
 
     if (changedLayer) {
-      changes.push(new ClickmapUIStateChange("layer", oldLayer, newLayer));
+      changes.push(new KeymapUIStateChange("layer", oldLayer, newLayer));
       this._layer = newLayer;
     }
 
     if (changedGuide) {
-      changes.push(new ClickmapUIStateChange("guide", oldGuide, newGuide));
+      changes.push(new KeymapUIStateChange("guide", oldGuide, newGuide));
       this._guide = newGuide;
     }
 
     if (changedGuideStep) {
       changes.push(
-        new ClickmapUIStateChange("guideStep", oldGuideStep, newGuideStep)
+        new KeymapUIStateChange("guideStep", oldGuideStep, newGuideStep)
       );
       this._guideStep = newGuideStep;
     }
 
     if (changedSelectedKey) {
       changes.push(
-        new ClickmapUIStateChange(
-          "selectedKey",
-          oldSelectedKey,
-          newSelectedKeyId
-        )
+        new KeymapUIStateChange("selectedKey", oldSelectedKey, newSelectedKeyId)
       );
       this._selectedKey = newSelectedKeyId;
     }
@@ -586,19 +573,19 @@ export class ClickmapUIState {
    *
    * Parameters:
    * - forceLog: if true, log the state even if debug is off
-   * - clickmapUi: the ClickmapUI element, if available
+   * - keymapUi: the KeymapUI element, if available
    *   if this is provided and it has an id attribute, that will be included in the log messages
    * - messagePrefix: a string to prepend to the log message
    * - logQueryString: if true (default), log the query string
    */
   logState({
     forceLog = false,
-    clickmapUi = undefined,
+    keymapUi = undefined,
     messagePrefix = "",
     logQueryString = true,
   }: {
     forceLog?: boolean;
-    clickmapUi?: HTMLElement | undefined;
+    keymapUi?: HTMLElement | undefined;
     messagePrefix?: string;
     logQueryString?: boolean;
   }) {
@@ -633,18 +620,18 @@ export class ClickmapUIState {
         key: this.selectedKey,
       },
     };
-    if (clickmapUi) {
+    if (keymapUi) {
       // TODO: Remove board/map/layer attributes. even selected-key?
-      const clickmapUiId = clickmapUi.getAttribute("id")
-        ? "#" + clickmapUi.getAttribute("id")
+      const keymapUiId = keymapUi.getAttribute("id")
+        ? "#" + keymapUi.getAttribute("id")
         : "";
       logTable.attribute = {
-        prefix: clickmapUi.getAttribute("query-prefix") || "",
+        prefix: keymapUi.getAttribute("query-prefix") || "",
         board: "N/A",
-        map: clickmapUi.getAttribute("keymap-id") || "",
-        layer: parseInt(clickmapUi.getAttribute("layer") || "0", 10),
-        key: clickmapUi.getAttribute("selected-key") || "",
-        info: `ClickmapUIElement${clickmapUiId}`,
+        map: keymapUi.getAttribute("keymap-id") || "",
+        layer: parseInt(keymapUi.getAttribute("layer") || "0", 10),
+        key: keymapUi.getAttribute("selected-key") || "",
+        info: `KeymapUIElement${keymapUiId}`,
       };
     }
     if (logQueryString) {
