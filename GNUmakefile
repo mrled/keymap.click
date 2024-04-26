@@ -29,78 +29,78 @@ help: ## Show this help
 
 .PHONY: lint
 lint: ## Run eslint
-	cd ./webcomponent && npx eslint .
-	cd ./site && npx eslint .
+	cd ./ui && npx eslint .
+	cd ./www && npx eslint .
 
 .PHONY: clean
 clean: ## Clean up
-	rm -rf webcomponent/dist
-	rm -rf site/dist
+	rm -rf ui/dist
+	rm -rf www/dist
 
-#region webcomponent
+#region keymap.click.ui
 
-WEBCOMPONENT_SOURCES = $(shell find webcomponent/src -type f)
-TESTSITE_SEPARATE_SOURCES = $(shell find webcomponent/testsites/separate -type f)
-TESTSITE_SIMPLE_SOURCES = $(shell find webcomponent/testsites/simple -type f)
+UI_SOURCES = $(shell find ui/src -type f)
+TESTSITE_SEPARATE_SOURCES = $(shell find ui/testsites/separate -type f)
+TESTSITE_SIMPLE_SOURCES = $(shell find ui/testsites/simple -type f)
 
-webcomponent/node_modules: webcomponent/package.json webcomponent/package-lock.json
-	cd ./webcomponent && npm install
-	touch webcomponent/node_modules
+ui/node_modules: ui/package.json ui/package-lock.json
+	cd ./ui && npm install
+	touch ui/node_modules
 
-webcomponent/dist/keymap.click.js: webcomponent/node_modules $(WEBCOMPONENT_SOURCES)
-	cd ./webcomponent && npm run build
+ui/dist/keymap.click.js: ui/node_modules $(UI_SOURCES)
+	cd ./ui && npm run build
 
-.PHONY: webcomponent
-webcomponent: webcomponent/node_modules webcomponent/dist/keymap.click.js ## Build the webcomponent
+.PHONY: ui
+ui: ui/node_modules ui/dist/keymap.click.js ## Build the ui
 
-webcomponent/dist/separate/index.html: webcomponent/dist/keymap.click.js $(TESTSITE_SEPARATE_SOURCES)
-	@rm -rf webcomponent/dist/separate >/dev/null || true
-	mkdir -p webcomponent/dist
-	cp -r webcomponent/testsites/separate webcomponent/dist/separate
-	cp -r webcomponent/dist/keymap.click.js* webcomponent/dist/separate/
+ui/dist/separate/index.html: ui/dist/keymap.click.js $(TESTSITE_SEPARATE_SOURCES)
+	@rm -rf ui/dist/separate >/dev/null || true
+	mkdir -p ui/dist
+	cp -r ui/testsites/separate ui/dist/separate
+	cp -r ui/dist/keymap.click.js* ui/dist/separate/
 
-.PHONY: test.separate
-test.separate: webcomponent/dist/separate/index.html ## Build the separate test site for the webcomponent
+.PHONY: ui.test.separate
+ui.test.separate: ui/dist/separate/index.html ## Build the separate test site for the ui
 
-.PHONY: test.separate.dev
-test.separate.dev: webcomponent/dist/separate/index.html ## Run a server for the separate test site for the webcomponent and open a browser
-	node webcomponent/scripts/nodeserver.cjs webcomponent/dist/separate
+.PHONY: ui.test.separate.dev
+ui.test.separate.dev: ui/dist/separate/index.html ## Run a server for the separate test site for the ui and open a browser
+	node ui/scripts/nodeserver.cjs ui/dist/separate
 
-.PHONY: test.simple.dev
-test.simple.dev: webcomponent/node_modules ## Run the simple test site for the webcomponent
-	cd ./webcomponent && npm run simple.dev
+.PHONY: ui.test.simple.dev
+ui.test.simple.dev: ui/node_modules ## Run the simple test site for the ui
+	cd ./ui && npm run simple.dev
 
 #endregion
 
-#region keymap.click website
+#region keymap.click.www
 
-SITESOURCES = $(shell find site -type f -not \( -path "site/dist" -o -path "site/node_modules" \))
+WWW_SOURCES = $(shell find www -type f -not \( -path "www/dist" -o -path "www/node_modules" \))
 
-site/node_modules: site/package.json
-	cd ./site && npm install
-	touch site/node_modules
+www/node_modules: www/package.json
+	cd ./www && npm install
+	touch www/node_modules
 
-site/dist: site/package.json site/node_modules $(SITESOURCES)
-	cd ./site && npm run build
+www/dist: www/package.json www/node_modules $(WWW_SOURCES)
+	cd ./www && npm run build
 
-.PHONY: keymap.click
-keymap.click: site/node_modules site/dist ## Build the keymap.click website
+.PHONY: www
+www: www/node_modules www/dist ## Build the keymap.click website
 
-# Watch the webcomponent for changes and copy the output to site/public/keymap.click.js.
-.PHONY: keymap.click.webcomponent.watch
-keymap.click.webcomponent.watch: webcomponent/node_modules
-	cd ./webcomponent && npm run keymap.click.watch
+# Watch the ui for changes and copy the output to www/public/keymap.click.js.
+.PHONY: www.ui.watch
+www.ui.watch: ui/node_modules
+	cd ./ui && npm run keymap.click.watch
 
 # Watch the keymap.click website for changes and run the eleventy server.
-.PHONY: keymap.click.watch
-keymap.click.watch: site/node_modules
-	cd ./site && npm run dev
+.PHONY: www.watch
+www.watch: www/node_modules
+	cd ./www && npm run dev
 
-.PHONY: keymap.click.dev
-keymap.click.dev: ## Run the keymap.click website in development mode, automatically watching for changes and rebuilding
+.PHONY: www.dev
+www.dev: ## Run the keymap.click website in development mode, automatically watching for changes and rebuilding
 	@\
-		$(MAKE) keymap.click.webcomponent.watch & \
-		$(MAKE) keymap.click.watch & \
+		$(MAKE) www.ui.watch & \
+		$(MAKE) www.watch & \
 		wait
 
 #endregion
