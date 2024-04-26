@@ -1,5 +1,5 @@
 {
-  "name": "www.keymap.click",
+  "name": "@keymap.click/www",
   "version": "2.0.0",
   "private": true,
   "type": "commonjs",
@@ -12,9 +12,7 @@
   },
   "devDependencies": {
     "@11ty/eleventy": "^2.0.1",
-    "@types/node": "^20.11.28",
     "eslint": "^7.9.0",
-    "prettier": "2.1.1",
-    "typescript": "^5.4.2"
+    "prettier": "2.1.1"
   }
 }
