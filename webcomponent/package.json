@@ -5,8 +5,8 @@
   "type": "module",
   "main": "dist/clickmap.js",
   "scripts": {
-    "build": "esbuild --bundle --sourcemap --format=esm --loader:.css=text  --global-name=clickmap --outfile=dist/clickmap.js src/index.ts",
-    "keymap.click.watch": "esbuild --bundle --sourcemap --format=esm --loader:.css=text  --global-name=clickmap --outfile=../site/public/clickmap.js src/index.ts --watch=forever",
+    "build": "esbuild --bundle --sourcemap --format=esm --loader:.css=text  --global-name=clickmap --minify --outfile=dist/clickmap.js src/index.ts",
+    "keymap.click.watch": "esbuild --bundle --sourcemap --format=esm --loader:.css=text  --global-name=clickmap --minify --outfile=../site/public/clickmap.js src/index.ts --watch=forever",
     "simple.dev": "esbuild --bundle --watch --outfile=testsites/simple/clickmap.js --format=esm --sourcemap --loader:.css=text --servedir=testsites/simple/ src/index.ts"
   },
   "devDependencies": {
