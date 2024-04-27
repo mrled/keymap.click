@@ -4,13 +4,16 @@
   "private": false,
   "type": "module",
   "main": "dist/keymap.click.js",
+  "types": "dist/keymap.click.d.ts",
   "scripts": {
     "build": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --outfile=dist/keymap.click.js src/index.ts",
+    "postbuild": "tsc --project tsconfig.json && dts-bundle-generator --config dts-bundle-generator.json",
     "keymap.click.watch": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --outfile=../site/public/keymap.click.js src/index.ts --watch=forever",
     "simple.dev": "esbuild --bundle --watch --outfile=testsites/simple/keymap.click.js --format=esm --sourcemap --loader:.css=text --servedir=testsites/simple/ src/index.ts"
   },
   "devDependencies": {
     "@types/node": "^20.11.28",
+    "dts-bundle-generator": "^9.5.1",
     "esbuild": "^0.20.2",
     "eslint": "^7.9.0",
     "prettier": "2.1.1",

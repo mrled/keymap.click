@@ -1,3 +1,13 @@
+// Import the CSS types directly here.
+// This is not required for esbuild (maybe ignored by esbuild?),
+// but is required for dts-bundle-generator.
+// <https://github.com/timocov/dts-bundle-generator/issues/227>
+//
+/// <reference path="../types/styles.d.ts" />
+//
+// WARNING: triple-slash directives must be at the top of the file.
+// <https://www.typescriptlang.org/docs/handbook/triple-slash-directives.html>
+
 import { KeymapUIOptions } from "~/lib/KeymapUIOptions";
 import { ConnectionPair, KeyInfoConnectType } from "~/lib/DiagramConnections";
 import { KeymapLayout } from "~/lib/Layout";
