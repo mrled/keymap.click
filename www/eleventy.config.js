@@ -8,4 +8,11 @@ module.exports = (eleventyConfig) => {
   eleventyConfig.addPlugin(eleventyNavigationPlugin);
   eleventyConfig.addPlugin(draftsPlugin);
   eleventyConfig.addPlugin(demosPlugin);
+  return {
+    dir: {
+      input: "content",
+      includes: "../_includes",
+      output: "_site",
+    },
+  };
 };
