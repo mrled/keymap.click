@@ -40,8 +40,6 @@ clean: ## Clean up
 #region keymap.click.ui
 
 UI_SOURCES = $(shell find ui/src -type f)
-TESTSITE_SEPARATE_SOURCES = $(shell find ui/testsites/separate -type f)
-TESTSITE_SIMPLE_SOURCES = $(shell find ui/testsites/simple -type f)
 
 ui/node_modules: ui/package.json ui/package-lock.json
 	cd ./ui && npm install
@@ -52,23 +50,6 @@ ui/dist/keymap.click.js: ui/node_modules $(UI_SOURCES)
 
 .PHONY: ui
 ui: ui/node_modules ui/dist/keymap.click.js ## Build the ui
-
-ui/dist/separate/index.html: ui/dist/keymap.click.js $(TESTSITE_SEPARATE_SOURCES)
-	@rm -rf ui/dist/separate >/dev/null || true
-	mkdir -p ui/dist
-	cp -r ui/testsites/separate ui/dist/separate
-	cp -r ui/dist/keymap.click.js* ui/dist/separate/
-
-.PHONY: ui.test.separate
-ui.test.separate: ui/dist/separate/index.html ## Build the separate test site for the ui
-
-.PHONY: ui.test.separate.dev
-ui.test.separate.dev: ui/dist/separate/index.html ## Run a server for the separate test site for the ui and open a browser
-	node ui/scripts/nodeserver.cjs ui/dist/separate
-
-.PHONY: ui.test.simple.dev
-ui.test.simple.dev: ui/node_modules ## Run the simple test site for the ui
-	cd ./ui && npm run simple.dev
 
 #endregion
 

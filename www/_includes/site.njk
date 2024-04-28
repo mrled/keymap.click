@@ -9,7 +9,9 @@ title: keymap.click
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" type="image/svg+xml" href="/cmd-c05621.svg" />
     <script src="https://cdn.usefathom.com/script.js" data-site="HDMUSVII" defer></script>
-    <title>{{ title }}</title>
+    <script src="/common.js" defer></script>
+    <title>{% if eleventyNavigation and eleventyNavigation.title %}{{ eleventyNavigation.title }}{% else %}{{ title }}{% endif %}</title>
+
   </head>
   <body>
     <nav id="sidebar">
