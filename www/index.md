@@ -1,8 +1,9 @@
 ---
 layout: site.njk
+eleventyNavigation:
+  key: index
+  title: Home
 ---
-
-# [keymap.click](/)
 
 keymap.click is a tool for visualizing keymaps.
 

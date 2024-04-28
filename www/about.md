@@ -1,6 +1,10 @@
 ---
 layout: site.njk
 title: About
+eleventyNavigation:
+  title: What is this site?
+  parent: index
+  order: 1
 ---
 <h1>What is this?</h1>
 <p>This site is a visual explanation of my keyboard layout.</p>

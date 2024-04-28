@@ -1,6 +1,11 @@
 ---
 layout: site.njk
 title: ErgoDox
+eleventyNavigation:
+  title: About the ErgoDox
+  key: ErgoDox
+  parent: index
+  order: 2
 ---
 
 

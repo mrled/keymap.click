@@ -1,6 +1,10 @@
 ---
 layout: site.njk
 title: Colophon
+eleventyNavigation:
+  key: Colophon
+  parent: index
+  order: 4
 ---
 
 Many thanks to those listed here.

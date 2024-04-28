@@ -4,11 +4,14 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "build": "eleventy",
-    "dev": "eleventy --serve"
+    "build:dev": "BUILD_DRAFTS=true BUILD_DEMOS=true eleventy",
+    "build:prod": "eleventy",
+    "serve:dev": "BUILD_DRAFTS=true BUILD_DEMOS=true eleventy --serve",
+    "serve:prod": "eleventy --serve"
   },
   "devDependencies": {
     "@11ty/eleventy": "^2.0.1",
+    "@11ty/eleventy-navigation": "^0.3.5",
     "eslint": "^7.9.0",
     "prettier": "2.1.1"
   }

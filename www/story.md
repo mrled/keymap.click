@@ -1,6 +1,10 @@
 ---
 layout: site.njk
 title: Personal history
+eleventyNavigation:
+  key: Personal history
+  parent: index
+  order: 3
 ---
 
 

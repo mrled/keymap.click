@@ -12,6 +12,10 @@ title: keymap.click
     <title>{{ title }}</title>
   </head>
   <body>
+    <nav id="sidebar">
+      <h1><a href="/">keymap.click</a></h1>
+      {{ collections.all | eleventyNavigation | eleventyNavigationToHtml | safe }}
+    </nav>
     <main id="content">
       {{ content | safe }}
     </main>

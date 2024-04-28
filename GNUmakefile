@@ -81,23 +81,23 @@ www/node_modules: www/package.json
 	touch www/node_modules
 
 www/dist: www/package.json www/node_modules $(WWW_SOURCES)
-	cd ./www && npm run build
+	cd ./www && npm run build:prod
 
 .PHONY: www
-www: www/node_modules www/dist ## Build the keymap.click website
+www: www/node_modules www/dist ## Build the keymap.click website in production mode
 
-# Watch the ui for changes and copy the output to www/public/keymap.click.js.
+# Watch the ui web component for changes and copy the output to www/public/keymap.click.js.
 .PHONY: www.ui.watch
 www.ui.watch: ui/node_modules
 	cd ./ui && npm run keymap.click.watch
 
-# Watch the keymap.click website for changes and run the eleventy server.
+# Watch the keymap.click website for changes and run the eleventy server in dev mode
 .PHONY: www.watch
 www.watch: www/node_modules
-	cd ./www && npm run dev
+	cd ./www && npm run serve:dev
 
-.PHONY: www.dev
-www.dev: ## Run the keymap.click website in development mode, automatically watching for changes and rebuilding
+.PHONY: www.serve
+www.serve: ## Run the keymap.click website in development mode, automatically watching for changes and rebuilding
 	@\
 		$(MAKE) www.ui.watch & \
 		$(MAKE) www.watch & \
