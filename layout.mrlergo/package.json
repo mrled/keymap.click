@@ -1,0 +1,19 @@
+{
+  "name": "@keymap.click/layout.mrlergo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "build": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --external:@keymap.click/ui --external:@keymap.click/keyboard.ergodox --outfile=dist/layout.mrlergo.js index.ts"
+  },
+  "author": "Micah R Ledbetter",
+  "license": "Unlicense",
+  "dependencies": {
+    "@keymap.click/ui": "file:../ui",
+    "@keymap.click/keyboard.ergodox": "file:../keyboard.ergodox"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.2",
+    "typescript": "^5.4.5"
+  }
+}

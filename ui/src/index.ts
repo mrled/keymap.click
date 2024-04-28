@@ -15,6 +15,7 @@ import { KeymapTitleScreenLayout } from "~/lib/keymaps/Planck48TitleScreenKeymap
 import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
 
 import { PhysicalKey } from "~/lib/PhysicalKey";
+import { KeymapLayout, KeymapGuide, KeymapLayer } from "~/lib/Layout";
 import { KeymapKeyboardElement } from "~/webcomponents/keymap-keyboard";
 import { KeymapKey } from "~/lib/Layout";
 import { Point, Size } from "~/lib/Geometry";
@@ -33,6 +34,9 @@ export {
   // Used by authors of keyboard models and layouts
   PhysicalKey,
   KeymapKeyboardElement,
+  KeymapLayout,
+  KeymapGuide,
+  KeymapLayer,
   KeymapKey,
   Point,
   Size,
