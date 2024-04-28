@@ -10,7 +10,6 @@
 import { KeymapUIElement } from "~/webcomponents/keymap-ui";
 import { KeymapTitleScreenLayoutOldVersion } from "~/lib/keymaps/KeymapTitleScreenLayoutOldVersion";
 import { KeymapTitleScreenLayoutManyLayer } from "~/lib/keymaps/KeymapTitleScreenLayoutManyLayer";
-import { MicahErgodoxLayout } from "~/lib/keymaps/MicahErgodoxKeymap";
 import { KeymapTitleScreenLayout } from "~/lib/keymaps/Planck48TitleScreenKeymap";
 import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
 
@@ -27,7 +26,6 @@ registerAllKeymapClickWebComponents();
 export {
   // Used by consumers
   KeymapUIElement,
-  MicahErgodoxLayout,
   KeymapTitleScreenLayout,
   KeymapTitleScreenLayoutManyLayer,
   KeymapTitleScreenLayoutOldVersion,

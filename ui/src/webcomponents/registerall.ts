@@ -1,4 +1,3 @@
-import { KeymapKeyboardErgodoxElement } from "~/webcomponents/keymap-keyboard-ergodox";
 import { KeymapKeyboardPlanck48Element } from "./keymap-keyboard-planck48";
 import { KeymapKeyboardTitleBarElement } from "~/webcomponents/keymap-keyboard-title-bar";
 import { KeymapKeyboardTitleScreenElement } from "~/webcomponents/keymap-keyboard-title-screen";
@@ -16,7 +15,6 @@ const allWebComponents = [
   KeymapKeygridElement,
   KeymapKeyHandleElement,
   KeymapIndicatorElement,
-  KeymapKeyboardErgodoxElement,
   KeymapKeyboardPlanck48Element,
   KeymapKeyboardTitleBarElement,
   KeymapKeyboardTitleScreenElement,

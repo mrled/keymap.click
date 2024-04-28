@@ -8,4 +8,5 @@ yarn-error.log*
 
 .vscode
 dist
+staticdist
 _site

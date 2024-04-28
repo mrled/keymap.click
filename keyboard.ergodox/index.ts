@@ -8,7 +8,7 @@ import {
   KeymapKey,
 } from "@keymap.click/ui";
 
-export const KeyboardModelErgodox = new KeyboardModel(
+const KeyboardModelErgodox = new KeyboardModel(
   "keymap-keyboard-ergodox",
   "ErgoDox",
   new Point(2, 2),
@@ -121,7 +121,7 @@ export const KeyboardModelErgodox = new KeyboardModel(
 
 /* An ErgoDox keyboard.
  */
-export class KeymapKeyboardErgodoxElement extends KeymapKeyboardElement {
+class KeymapKeyboardErgodoxElement extends KeymapKeyboardElement {
   static elementName = "keymap-keyboard-ergodox";
   elementName = KeymapKeyboardErgodoxElement.elementName;
 
@@ -209,3 +209,12 @@ export class KeymapKeyboardErgodoxElement extends KeymapKeyboardElement {
     rightGridContainer.appendChild(rightThumbGrid);
   }
 }
+
+if (!customElements.get(KeymapKeyboardErgodoxElement.elementName)) {
+  customElements.define(
+    KeymapKeyboardErgodoxElement.elementName,
+    KeymapKeyboardErgodoxElement
+  );
+}
+
+export { KeymapKeyboardErgodoxElement, KeyboardModelErgodox };

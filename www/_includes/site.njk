@@ -8,6 +8,17 @@ title: keymap.click
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" type="image/svg+xml" href="/cmd-c05621.svg" />
+
+    <script type="importmap">
+    {
+      "imports": {
+        "@keymap.click/ui": "/keymap.click.js",
+        "@keymap.click/keyboard.ergodox": "/keyboard.ergodox.js",
+        "@keymap.click/layout.mrlergo": "/layout.mrlergo.js"
+      }
+    }
+    </script>
+
     <script src="https://cdn.usefathom.com/script.js" data-site="HDMUSVII" defer></script>
     <script src="/common.js" defer></script>
     <title>{% if eleventyNavigation and eleventyNavigation.title %}{{ eleventyNavigation.title }}{% else %}{{ title }}{% endif %}</title>
