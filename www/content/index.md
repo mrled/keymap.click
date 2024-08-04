@@ -22,25 +22,16 @@ For more information, see the [about page](/about).
 Thanks for all the clicks.
 
 <script type="module">
-import {
-  KeymapUIElement,
-  MicahErgodoxLayout,
-  KeymapTitleScreenLayout,
-} from "/keymap.click.js";
+import { KeymapTitleScreenLayout } from "@keymap.click/ui";
 
-let keymapContainer = document.querySelector("#keymap-container")
-
-keymapContainer.appendChild(document.createElement("hr"));
-
-let keymapUi = document.createElement(KeymapUIElement.elementName);
+let keymapUi = document.createElement("keymap-ui");
 keymapUi.setAttribute("id", "keymap-title");
-keymapUi.setModelsAndMaps([
-  KeymapTitleScreenLayout,
-  MicahErgodoxLayout,
-]);
+keymapUi.setModelsAndMaps([KeymapTitleScreenLayout]);
 keymapUi.setAttribute("keymap-id", "title-screen-map");
 keymapUi.setAttribute("query-prefix", "keymap");
-keymapContainer.appendChild(keymapUi);
 
+let keymapContainer = document.querySelector("#keymap-container")
+keymapContainer.appendChild(document.createElement("hr"));
+keymapContainer.appendChild(keymapUi);
 keymapContainer.appendChild(document.createElement("hr"));
 </script>
