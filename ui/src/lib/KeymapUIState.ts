@@ -253,9 +253,11 @@ export class KeymapUIState {
    * If the state is loaded without otherwise specifying a keymap,
    * such as by the query string or having the user select one,
    * it will default to the first entry in the keymaps.
+   *
+   * We know at least the empty keymap will exist.
    */
   public get defaultKeymap(): KeymapLayout {
-    const firstKeymap: KeymapLayout = this.keymaps.values().next().value;
+    const firstKeymap: KeymapLayout = this.keymaps.values().next().value!;
     return firstKeymap;
   }
 
@@ -349,7 +351,7 @@ export class KeymapUIState {
 
     // Get the first keymap and layer from the first keyboard model.
     // We know these exist because we just added them.
-    const firstKeymap: KeymapLayout = newKeymaps.values().next().value;
+    const firstKeymap: KeymapLayout = newKeymaps.values().next().value!;
 
     this._keymaps = newKeymaps;
     this._keymap = firstKeymap;
