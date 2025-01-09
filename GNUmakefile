@@ -50,6 +50,9 @@ ui/node_modules: ui/package.json ui/package-lock.json
 ui/dist/keymap.click.js: ui/node_modules $(UI_SOURCES)
 	cd ./ui && npm run build
 
+www/staticdist/keymap.click.js: ui/dist/keymap.click.js
+	cp ui/dist/keymap.click.js www/staticdist/keymap.click.js
+
 .PHONY: ui
 ui: ui/node_modules ui/dist/keymap.click.js ## Build the ui
 
@@ -65,6 +68,9 @@ keyboard.ergodox/node_modules: keyboard.ergodox/package.json
 
 keyboard.ergodox/dist/keyboard.ergodox.js: keyboard.ergodox/node_modules ui/dist/keymap.click.js $(KEYBOARD_ERGODOX_SOURCES)
 	cd ./keyboard.ergodox && npm run build
+
+www/staticdist/keyboard.ergodox.js: keyboard.ergodox/dist/keyboard.ergodox.js
+	cp keyboard.ergodox/dist/keyboard.ergodox.js www/staticdist/keyboard.ergodox.js
 
 .PHONY: keyboard.ergodox
 keyboard.ergodox: keyboard.ergodox/dist/keyboard.ergodox.js ## Build the keyboard.ergodox package
@@ -82,6 +88,9 @@ layout.mrlergo/node_modules: layout.mrlergo/package.json
 layout.mrlergo/dist/layout.mrlergo.js: layout.mrlergo/node_modules ui/dist/keymap.click.js keyboard.ergodox/dist/keyboard.ergodox.js $(LAYOUT_MRLERGO_SOURCES)
 	cd ./layout.mrlergo && npm run build
 
+www/staticdist/layout.mrlergo.js: layout.mrlergo/dist/layout.mrlergo.js
+	cp layout.mrlergo/dist/layout.mrlergo.js www/staticdist/layout.mrlergo.js
+
 .PHONY: layout.mrlergo
 layout.mrlergo: layout.mrlergo/dist/layout.mrlergo.js ## Build the layout.mrlergo package
 
@@ -95,10 +104,7 @@ www/node_modules: www/package.json
 	cd ./www && npm install
 	touch www/node_modules
 
-www/dist: www/package.json www/node_modules $(WWW_SOURCES)
-	cp keyboard.ergodox/dist/keyboard.ergodox.js www/staticdist/keyboard.ergodox.js
-	cp layout.mrlergo/dist/layout.mrlergo.js www/staticdist/layout.mrlergo.js
-	cp ui/dist/keymap.click.js www/staticdist/keymap.click.js
+www/dist: www/package.json www/node_modules www/staticdist/keymap.click.js www/staticdist/keyboard.ergodox.js www/staticdist/layout.mrlergo.js $(WWW_SOURCES)
 	cd ./www && npm run build:prod
 
 .PHONY: www
