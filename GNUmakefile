@@ -97,6 +97,9 @@ www/node_modules: www/package.json
 	touch www/node_modules
 
 www/dist: www/package.json www/node_modules $(WWW_SOURCES)
+	cp keyboard.ergodox/dist/keyboard.ergodox.js www/staticdist/keyboard.ergodox.js
+	cp layout.mrlergo/dist/layout.mrlergo.js www/staticdist/layout.mrlergo.js
+	cp ui/dist/keymap.click.js www/staticdist/keymap.click.js
 	cd ./www && npm run build:prod
 
 .PHONY: www
@@ -132,4 +135,3 @@ www.serve: ## Run the keymap.click website in development mode, automatically wa
 		wait
 
 #endregion
-
