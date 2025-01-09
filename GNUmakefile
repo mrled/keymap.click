@@ -18,9 +18,8 @@
 # Warn if any variables are undefined.
 MAKEFLAGS += --warn-undefined-variables
 
-# Fail if any command fails.
-# Note that just because we're using GNU Make doesn't mean we're using Bash.
-.SHELLFLAGS := -eu
+SHELL := /bin/bash
+.SHELLFLAGS := -eu -o pipefail -c
 
 # Show a nice table of Make targets.
 .PHONY: help
