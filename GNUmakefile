@@ -18,6 +18,7 @@
 # Warn if any variables are undefined.
 MAKEFLAGS += --warn-undefined-variables
 
+# Using bash fixes build problems in Vercel.
 SHELL := /bin/bash
 .SHELLFLAGS := -eu -o pipefail -c
 
