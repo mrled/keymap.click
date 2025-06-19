@@ -5,6 +5,7 @@
   "workspaces": [
     "ui",
     "keyboard.ergodox",
+    "keyboard.planck48",
     "layout.mrlergo",
     "www"
   ],

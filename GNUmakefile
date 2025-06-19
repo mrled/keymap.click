@@ -61,6 +61,14 @@ keyboard.ergodox/dist/keyboard.ergodox.js: node_modules/.installed ui/dist/keyma
 keyboard.ergodox: keyboard.ergodox/dist/keyboard.ergodox.js ## Build the keyboard.ergodox package
 
 
+## @keymap.click/keyboard.planck48
+KEYBOARD_PLANCK48_SOURCES = $(shell find keyboard.planck48/ -type f -maxdepth 1)
+keyboard.planck48/dist/keyboard.planck48.js: keyboard.planck48/node_modules/.installed ui/dist/keymap.click.js $(KEYBOARD_PLANCK48_SOURCES)
+	npm run build -w keyboard.planck48
+.PHONY: keyboard.planck48
+keyboard.planck48: keyboard.planck48/dist/keyboard.planck48.js ## Build the keyboard.planck48 package
+
+
 ## @keymap.click/layout.mrlergo
 LAYOUT_MRLERGO_SOURCES = $(shell find layout.mrlergo/ -type f -maxdepth 1)
 layout.mrlergo/dist/layout.mrlergo.js: node_modules/.installed ui/dist/keymap.click.js keyboard.ergodox/dist/keyboard.ergodox.js $(LAYOUT_MRLERGO_SOURCES)
