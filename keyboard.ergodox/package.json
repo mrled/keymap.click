@@ -11,11 +11,9 @@
   "author": "Micah R Ledbetter",
   "license": "Unlicense",
   "dependencies": {
-    "@keymap.click/ui": "file:../ui"
+    "@keymap.click/ui": "*"
   },
   "devDependencies": {
-    "dts-bundle-generator": "^9.5.1",
-    "esbuild": "^0.25.5",
-    "typescript": "^5.8.3"
+    "dts-bundle-generator": "^9.5.1"
   }
 }

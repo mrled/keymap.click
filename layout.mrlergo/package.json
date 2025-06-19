@@ -10,11 +10,8 @@
   "author": "Micah R Ledbetter",
   "license": "Unlicense",
   "dependencies": {
-    "@keymap.click/ui": "file:../ui",
-    "@keymap.click/keyboard.ergodox": "file:../keyboard.ergodox"
+    "@keymap.click/ui": "*",
+    "@keymap.click/keyboard.ergodox": "*"
   },
-  "devDependencies": {
-    "esbuild": "^0.25.5",
-    "typescript": "^5.8.3"
-  }
+  "devDependencies": {}
 }
