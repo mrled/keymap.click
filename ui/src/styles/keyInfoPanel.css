@@ -96,12 +96,6 @@ keymap-navbar {
     display: inline-block;
     margin: 0;
     padding: 0;
-    > button {
-      margin: 0;
-      padding: 0;
-      width: 2em;
-      height: 2em;
-    }
   }
 
   .hidden {
