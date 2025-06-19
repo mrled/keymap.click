@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --external:@keymap.click/ui --external:@keymap.click/keyboard.ergodox --outfile=dist/layout.mrlergo.js index.ts",
-    "keymap.click.watch": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --external:@keymap.click/ui --external:@keymap.click/keyboard.ergodox --outfile=../www/staticdist/layout.mrlergo.js index.ts --watch=forever"
+    "keymap.click.watch": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --external:@keymap.click/ui --external:@keymap.click/keyboard.ergodox --outfile=../www/static/keymap.click/layout.mrlergo.js index.ts --watch=forever"
   },
   "author": "Micah R Ledbetter",
   "license": "Unlicense",

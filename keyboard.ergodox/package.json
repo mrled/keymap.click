@@ -6,7 +6,7 @@
   "scripts": {
     "build": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --external:@keymap.click/ui --outfile=dist/keyboard.ergodox.js index.ts",
     "postbuild": "tsc --project tsconfig.json && dts-bundle-generator --project=tsconfig.json --no-banner --sort --export-referenced-types=false --out-file=dist/keyboard.ergodox.d.ts index.ts",
-    "keymap.click.watch": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --external:@keymap.click/ui --outfile=../www/staticdist/keyboard.ergodox.js index.ts --watch=forever"
+    "keymap.click.watch": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --external:@keymap.click/ui --outfile=../www/static/keymap.click/keyboard.ergodox.js index.ts --watch=forever"
   },
   "author": "Micah R Ledbetter",
   "license": "Unlicense",

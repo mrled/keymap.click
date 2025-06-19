@@ -38,7 +38,7 @@ clean: ## Clean up
 	rm -rf keyboard.ergodox/dist
 	rm -rf layout.mrlergo/dist
 	rm -rf www/_site
-	rm -rf www/staticdist
+	rm -rf www/static/keymap.click
 
 #region keymap.click.ui
 
@@ -96,19 +96,19 @@ www/node_modules: www/package.json
 	cd ./www && npm install
 	touch www/node_modules
 
-www/staticdist:
-	mkdir -p www/staticdist
+www/static/keymap.click/keymap.click.js: ui/dist/keymap.click.js
+	mkdir -p www/static/keymap.click
+	cp ui/dist/keymap.click.js www/static/keymap.click/keymap.click.js
 
-www/staticdist/keymap.click.js: ui/dist/keymap.click.js www/staticdist
-	cp ui/dist/keymap.click.js www/staticdist/keymap.click.js
+www/static/keymap.click/keyboard.ergodox.js: keyboard.ergodox/dist/keyboard.ergodox.js
+	mkdir -p www/static/keymap.click
+	cp keyboard.ergodox/dist/keyboard.ergodox.js www/static/keymap.click/keyboard.ergodox.js
 
-www/staticdist/keyboard.ergodox.js: keyboard.ergodox/dist/keyboard.ergodox.js www/staticdist
-	cp keyboard.ergodox/dist/keyboard.ergodox.js www/staticdist/keyboard.ergodox.js
+www/static/keymap.click/layout.mrlergo.js: layout.mrlergo/dist/layout.mrlergo.js
+	mkdir -p www/static/keymap.click
+	cp layout.mrlergo/dist/layout.mrlergo.js www/static/keymap.click/layout.mrlergo.js
 
-www/staticdist/layout.mrlergo.js: layout.mrlergo/dist/layout.mrlergo.js www/staticdist
-	cp layout.mrlergo/dist/layout.mrlergo.js www/staticdist/layout.mrlergo.js
-
-www/dist: www/package.json www/node_modules www/staticdist/keymap.click.js www/staticdist/keyboard.ergodox.js www/staticdist/layout.mrlergo.js $(WWW_SOURCES)
+www/dist: www/package.json www/node_modules www/static/keymap.click/keymap.click.js www/static/keymap.click/keyboard.ergodox.js www/static/keymap.click/layout.mrlergo.js $(WWW_SOURCES)
 	cd ./www && npm run build:prod
 	touch www/dist
 
