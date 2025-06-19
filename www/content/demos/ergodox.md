@@ -2,8 +2,9 @@
 layout: site.njk
 demo: true
 eleventyNavigation:
-  title: ErgoDox demo
+  title: ErgoDox
   parent: demos
+  order: 5
 ---
 
 This is a demo of `@keymap.click/ui` showing an ErgoDox keyboard with my layout.

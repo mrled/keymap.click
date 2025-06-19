@@ -1,5 +1,4 @@
 import { KeymapKeyboardTitleBarElement } from "~/webcomponents/keymap-keyboard-title-bar";
-import { KeymapKeyboardTitleScreenElement } from "~/webcomponents/keymap-keyboard-title-screen";
 import { KeymapKeygridElement } from "~/webcomponents/keymap-keygrid";
 import { KeymapKeyHandleElement } from "~/webcomponents/keymap-key-handle";
 import { KeymapIndicatorElement } from "~/webcomponents/keymap-indicator";
@@ -15,7 +14,6 @@ const allWebComponents = [
   KeymapKeyHandleElement,
   KeymapIndicatorElement,
   KeymapKeyboardTitleBarElement,
-  KeymapKeyboardTitleScreenElement,
   KeymapNavbarElement,
   KeymapUIElement,
 ];

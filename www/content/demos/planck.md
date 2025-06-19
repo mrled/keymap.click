@@ -2,12 +2,14 @@
 layout: site.njk
 demo: true
 eleventyNavigation:
-  title: Empty UI
+  title: Planck
   parent: demos
-  order: 3
+  order: 2
 ---
 
-This is a demo of the `@keymap.click/ui` without adding any models or layouts.
+This is a demo of `@keymap.click/ui` with the Planck 48 keyboard model.
+
+We just use a demo layout to show you the board.
 
 Toggle debug controls on all KeymapUI elements on this page:
 <button onclick="toggleAllKeymapUiDebug()">Toggle Debug Controls</button>
@@ -15,12 +17,13 @@ Toggle debug controls on all KeymapUI elements on this page:
 <div id="app"></div>
 
 <script type="module">
-  import "@keymap.click/ui";
+  import { Planck48ExampleLayout } from "/keymaps/planck48-example-layout.js";
   const app = document.getElementById("app");
   const keymapUi = document.createElement("keymap-ui");
-  keymapUi.setAttribute("id", "keymap-empty");
+  const availableKeymaps = [Planck48ExampleLayout];
+  keymapUi.setAttribute("id", "keymap-title");
   keymapUi.setAttribute("show-debug", "true");
   keymapUi.setAttribute("query-prefix", "keymap");
-  keymapUi.setModelsAndMaps([]);
+  keymapUi.setModelsAndMaps(availableKeymaps);
   app.appendChild(keymapUi);
 </script>

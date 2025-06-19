@@ -62,7 +62,6 @@ import { KeyboardModel } from "./KeyboardModel";
 import { IStateObserver, StateChange, StateChangeMap } from "./State";
 import { ConnectionPair } from "./DiagramConnections";
 import { GuideStep, KeymapLayout, KeymapGuide, KeymapLayer } from "./Layout";
-import { KeymapTitleScreenLayoutOldVersion } from "./keymaps/KeymapTitleScreenLayoutOldVersion";
 
 /* A map of uniqueID strings to Keymap objects
  */
@@ -155,7 +154,7 @@ export class KeymapUIState {
   notify(stateChanges: StateChange<KeymapUIState>[]): void {
     if (stateChanges.length === 0) return;
     const stateChangeMap = new KeymapUIStateChangeMap(
-      stateChanges.map((change) => [change.key, change])
+      stateChanges.map((change) => [change.key, change]),
     );
     for (const observer of this.observers) {
       observer.update(stateChangeMap as StateChangeMap<KeymapUIState>);
@@ -225,20 +224,11 @@ export class KeymapUIState {
 
   /* All keymaps that we know about
    *
-   * We guarantee that this is never empty.
-   *
    * The _kbModels property returns the models for all the keymaps found in this list.
    * The kbModel and keymap properties are guaranteed to exist inside this list.
    */
   private _keymaps: LayoutMap = new Map();
   public get keymaps(): LayoutMap {
-    if (this._keymaps.size === 0) {
-      this._keymaps.set(
-        KeymapTitleScreenLayoutOldVersion.uniqueId,
-        KeymapTitleScreenLayoutOldVersion
-      );
-      this.notify([new KeymapUIStateChange("keymaps", [], this._keymaps)]);
-    }
     return this._keymaps;
   }
   public set keymaps(value: LayoutMap) {
@@ -253,8 +243,6 @@ export class KeymapUIState {
    * If the state is loaded without otherwise specifying a keymap,
    * such as by the query string or having the user select one,
    * it will default to the first entry in the keymaps.
-   *
-   * We know at least the empty keymap will exist.
    */
   public get defaultKeymap(): KeymapLayout {
     const firstKeymap: KeymapLayout = this.keymaps.values().next().value!;
@@ -367,12 +355,16 @@ export class KeymapUIState {
     }
     if (oldGuideStep) {
       changes.push(
-        new KeymapUIStateChange("guideStep", oldGuideStep, this._guideStep)
+        new KeymapUIStateChange("guideStep", oldGuideStep, this._guideStep),
       );
     }
     if (oldSelectedKey) {
       changes.push(
-        new KeymapUIStateChange("selectedKey", oldSelectedKey, this.selectedKey)
+        new KeymapUIStateChange(
+          "selectedKey",
+          oldSelectedKey,
+          this.selectedKey,
+        ),
       );
     }
 
@@ -426,7 +418,7 @@ export class KeymapUIState {
           .map((m) => m.uniqueId)
           .join(", ");
         console.error(
-          `No keymap found unique ID: ${keymapId} among known keymaps: ${knownMaps}`
+          `No keymap found unique ID: ${keymapId} among known keymaps: ${knownMaps}`,
         );
         return;
       }
@@ -534,7 +526,7 @@ export class KeymapUIState {
 
     if (queryPrefix !== undefined) {
       changes.push(
-        new KeymapUIStateChange("queryPrefix", this.queryPrefix, queryPrefix)
+        new KeymapUIStateChange("queryPrefix", this.queryPrefix, queryPrefix),
       );
       this._queryPrefix = queryPrefix;
     }
@@ -556,14 +548,18 @@ export class KeymapUIState {
 
     if (changedGuideStep) {
       changes.push(
-        new KeymapUIStateChange("guideStep", oldGuideStep, newGuideStep)
+        new KeymapUIStateChange("guideStep", oldGuideStep, newGuideStep),
       );
       this._guideStep = newGuideStep;
     }
 
     if (changedSelectedKey) {
       changes.push(
-        new KeymapUIStateChange("selectedKey", oldSelectedKey, newSelectedKeyId)
+        new KeymapUIStateChange(
+          "selectedKey",
+          oldSelectedKey,
+          newSelectedKeyId,
+        ),
       );
       this._selectedKey = newSelectedKeyId;
     }

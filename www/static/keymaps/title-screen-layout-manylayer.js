@@ -1,7 +1,9 @@
-import { KeyboardModelTitleScreen } from "~/webcomponents/keymap-keyboard-title-screen";
-import { KeymapLayout, KeymapKey, KeymapLayer } from "~/lib/Layout";
+import { KeyboardModelTitleScreen } from "./title-screen-keyboard.js";
+import { KeymapLayout, KeymapKey, KeymapLayer } from "@keymap.click/ui";
 
-function generateLayer(layerIdx: number): KeymapLayer {
+/* A dumb function to generate a layer, for testing a board with lots of layers
+ */
+function generateLayer(layerIdx) {
   const keyLegends = "KEYMAP.CLICK";
   const shortName = `layer${layerIdx}`;
   return KeymapLayer.fromKeyList({
@@ -19,11 +21,13 @@ function generateLayer(layerIdx: number): KeymapLayer {
           info: [
             `This is the <kbd>${keyLegends[idx]}</kbd> key on <code>${shortName}</code>.`,
           ],
-        })
+        }),
     ),
   });
 }
 
+/* A board with lots of layers, for testing purposes.
+ */
 export const KeymapTitleScreenLayoutManyLayer = new KeymapLayout({
   displayName: "Title Screen Map Many Layer",
   uniqueId: "title-screen-map-many-layer",

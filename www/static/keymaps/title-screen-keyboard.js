@@ -1,12 +1,16 @@
-import { PhysicalKey } from "~/lib/PhysicalKey";
-import { KeymapKeyboardElement } from "~/webcomponents/keymap-keyboard";
-import { KeymapKey } from "~/lib/Layout";
-import { Point, Size } from "~/lib/Geometry";
-import { KeymapKeygridElement } from "~/webcomponents/keymap-keygrid";
-import { KeyboardModel } from "~/lib/KeyboardModel";
+import {
+  KeyboardModel,
+  KeymapKeyboardElement,
+  KeymapKeygridElement,
+  PhysicalKey,
+  Point,
+  Size,
+} from "@keymap.click/ui";
 
-export const KeyboardModelTitleScreen = new KeyboardModel(
-  "keymap-keyboard-title-screen",
+/* The title screen keyboard model
+ */
+const KeyboardModelTitleScreen = new KeyboardModel(
+  "title-screen-keyboard",
   "keymap.click Title Screen Keyboard",
   new Point(2, 2),
   new Size(2, 2),
@@ -23,37 +27,31 @@ export const KeyboardModelTitleScreen = new KeyboardModel(
     new PhysicalKey("title-screen", new Point(19, 1), new Size(2, 2)), // I
     new PhysicalKey("title-screen", new Point(21, 1), new Size(2, 2)), // C
     new PhysicalKey("title-screen", new Point(23, 1), new Size(2, 2)), // K
-  ]
+  ],
 );
 
-/* An ErgoDox keyboard.
+/* The title screen keyboard element
  */
-export class KeymapKeyboardTitleScreenElement extends KeymapKeyboardElement {
-  static readonly elementName = "keymap-keyboard-title-screen";
-  readonly elementName = KeymapKeyboardTitleScreenElement.elementName;
+class KeymapKeyboardTitleScreenElement extends KeymapKeyboardElement {
+  static elementName = "title-screen-keyboard";
+  elementName = KeymapKeyboardTitleScreenElement.elementName;
 
   constructor() {
     super();
   }
 
-  readonly model = KeyboardModelTitleScreen;
+  model = KeyboardModelTitleScreen;
 
   /* Create keygrid and key elements from key data for this board.
    */
-  createChildren(keys: KeymapKey[]) {
+  createChildren(keys) {
     this.removeAllChildren();
-
-    const title = document.createElement("h2");
-    title.textContent = "Title Board";
-    this.appendChild(title);
 
     const gridContainer = document.createElement("div");
     gridContainer.className = "keygrid-container";
     this.appendChild(gridContainer);
 
-    const keygrid = document.createElement(
-      KeymapKeygridElement.elementName
-    ) as KeymapKeygridElement;
+    const keygrid = document.createElement(KeymapKeygridElement.elementName);
     keygrid.setAttribute("name", "title-screen");
     keygrid.setAttribute("cols", "24");
     keygrid.setAttribute("rows", "2");
@@ -61,3 +59,12 @@ export class KeymapKeyboardTitleScreenElement extends KeymapKeyboardElement {
     gridContainer.appendChild(keygrid);
   }
 }
+
+if (!customElements.get(KeymapKeyboardTitleScreenElement.elementName)) {
+  customElements.define(
+    KeymapKeyboardTitleScreenElement.elementName,
+    KeymapKeyboardTitleScreenElement,
+  );
+}
+
+export { KeymapKeyboardTitleScreenElement, KeyboardModelTitleScreen };

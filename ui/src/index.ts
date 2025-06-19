@@ -8,8 +8,6 @@
  */
 
 import { KeymapUIElement } from "~/webcomponents/keymap-ui";
-import { KeymapTitleScreenLayoutOldVersion } from "~/lib/keymaps/KeymapTitleScreenLayoutOldVersion";
-import { KeymapTitleScreenLayoutManyLayer } from "~/lib/keymaps/KeymapTitleScreenLayoutManyLayer";
 import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
 
 import { PhysicalKey } from "~/lib/PhysicalKey";
@@ -25,8 +23,6 @@ registerAllKeymapClickWebComponents();
 export {
   // Used by consumers
   KeymapUIElement,
-  KeymapTitleScreenLayoutManyLayer,
-  KeymapTitleScreenLayoutOldVersion,
   // Used by authors of keyboard models and layouts
   PhysicalKey,
   KeymapKeyboardElement,

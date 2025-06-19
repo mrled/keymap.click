@@ -1,12 +1,14 @@
-import { KeyboardModelTitleScreen } from "~/webcomponents/keymap-keyboard-title-screen";
-import { KeymapLayout, KeymapKey, KeymapLayer } from "~/lib/Layout";
+import { KeyboardModelTitleScreen } from "./title-screen-keyboard.js";
+import { KeymapLayout, KeymapKey, KeymapLayer } from "@keymap.click/ui";
 
 const keyInfoLayer0 = ["K E Y M A P . C L I C K"];
 const keyInfoLayer1 = ["I just picked some random words for this layer."];
 
-export const KeymapTitleScreenLayoutOldVersion = new KeymapLayout({
-  displayName: "Title Screen Map (Old Version)",
-  uniqueId: "title-screen-map-old",
+/* A simple title screen layout with two layers, for demos
+ */
+export const KeymapTitleScreenLayoutSimple = new KeymapLayout({
+  displayName: "Title Screen Map (Simple)",
+  uniqueId: "title-screen-map-simple",
   model: KeyboardModelTitleScreen,
   layers: [
     KeymapLayer.fromKeyList({

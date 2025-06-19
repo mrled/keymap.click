@@ -2,8 +2,9 @@
 layout: site.njk
 demo: true
 eleventyNavigation:
-  title: Multi demo
+  title: Multiple Boards
   parent: demos
+  order: 4
 ---
 
 This is a demo of `@keymap.click/ui` with a bunch of different layouts and models to choose from --
@@ -15,8 +16,8 @@ Toggle debug controls on all KeymapUI elements on this page:
 <div id="app"></div>
 
 <script type="module">
-  import { KeymapTitleScreenLayoutManyLayer } from "@keymap.click/ui";
-  import { Planck48ExampleLayout } from "/keymaps/planck48-example.js";
+  import { KeymapTitleScreenLayoutManyLayer } from "/keymaps/title-screen-layout-manylayer.js";
+  import { Planck48ExampleLayout } from "/keymaps/planck48-example-layout.js";
   import "@keymap.click/keyboard.ergodox";
   import { MicahErgodoxLayout } from "@keymap.click/layout.mrlergo";
   const app = document.getElementById("app");
