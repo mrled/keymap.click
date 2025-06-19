@@ -257,7 +257,7 @@ export class KeymapNavbarElement
       this._guidePrevButton = document.createElement("button");
       this._guidePrevButton.setAttribute("id", Slctr.GuidePrev.r);
       this._guidePrevButton.classList.add("control-button");
-      this._guidePrevButton.textContent = "<";
+      this._guidePrevButton.innerHTML = "&larr;";
       this._guidePrevButton.ariaLabel = "Previous step";
       this._guidePrevButton.addEventListener("click", () => {
         if (this.state.guideStep && !this.state.guideStep.isFirstStep) {
@@ -276,7 +276,7 @@ export class KeymapNavbarElement
       this._guideNextButton = document.createElement("button");
       this._guideNextButton.setAttribute("id", Slctr.GuideNext.r);
       this._guideNextButton.classList.add("control-button");
-      this._guideNextButton.textContent = ">";
+      this._guideNextButton.innerHTML = "&rarr;";
       this._guideNextButton.ariaLabel = "Next step";
       this._guideNextButton.addEventListener("click", () => {
         if (this.state.guideStep && !this.state.guideStep.isLastStep) {
