@@ -14,7 +14,7 @@ Toggle debug controls on all KeymapUI elements on this page:
 <div id="app"></div>
 
 <script type="module">
-  import { KeymapTitleScreenLayout } from "/keymap.click.js";
+  import { KeymapTitleScreenLayout } from "@keymap.click/ui";
   const app = document.getElementById("app");
   const keymapUi = document.createElement("keymap-ui");
   const availableKeymaps = [KeymapTitleScreenLayout];
