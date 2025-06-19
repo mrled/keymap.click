@@ -307,6 +307,9 @@ export class KeymapNavbarElement
         const tabButton = document.createElement("button");
         tabButton.textContent = layer.shortName;
         tabButton.classList.add("layer-tab-button");
+        if (layer === this.state.layer) {
+          tabButton.classList.add("active");
+        }
         const li = document.createElement("li");
         tabButton.addEventListener("click", () => {
           this.state.setStatesByIds({ layerIdx: idx, selectedKey: "" });
