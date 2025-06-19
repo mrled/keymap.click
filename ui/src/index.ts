@@ -10,7 +10,6 @@
 import { KeymapUIElement } from "~/webcomponents/keymap-ui";
 import { KeymapTitleScreenLayoutOldVersion } from "~/lib/keymaps/KeymapTitleScreenLayoutOldVersion";
 import { KeymapTitleScreenLayoutManyLayer } from "~/lib/keymaps/KeymapTitleScreenLayoutManyLayer";
-import { KeymapTitleScreenLayout } from "~/lib/keymaps/Planck48TitleScreenKeymap";
 import { registerAllKeymapClickWebComponents } from "~/webcomponents/registerall";
 
 import { PhysicalKey } from "~/lib/PhysicalKey";
@@ -26,7 +25,6 @@ registerAllKeymapClickWebComponents();
 export {
   // Used by consumers
   KeymapUIElement,
-  KeymapTitleScreenLayout,
   KeymapTitleScreenLayoutManyLayer,
   KeymapTitleScreenLayoutOldVersion,
   // Used by authors of keyboard models and layouts

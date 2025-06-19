@@ -10,7 +10,7 @@ import {
 
 /* A Planck keyboard with 48 keys (all 1U keys, no 2U keys).
  */
-export const KeyboardModelPlanck48 = new KeyboardModel(
+const KeyboardModelPlanck48 = new KeyboardModel(
   "keymap-keyboard-planck48",
   "Planck 48",
   new Point(2, 2),
@@ -68,12 +68,12 @@ export const KeyboardModelPlanck48 = new KeyboardModel(
     new PhysicalKey("planck", new Point(19, 7), new Size(2, 2)),
     new PhysicalKey("planck", new Point(21, 7), new Size(2, 2)),
     new PhysicalKey("planck", new Point(23, 7), new Size(2, 2)),
-  ]
+  ],
 );
 
-/* An ErgoDox keyboard.
+/* A 48-key Planck keyboard.
  */
-export class KeymapKeyboardPlanck48Element extends KeymapKeyboardElement {
+class KeymapKeyboardPlanck48Element extends KeymapKeyboardElement {
   static readonly elementName: string = "keymap-keyboard-planck48";
   readonly elementName = KeymapKeyboardPlanck48Element.elementName;
 
@@ -96,7 +96,7 @@ export class KeymapKeyboardPlanck48Element extends KeymapKeyboardElement {
     this.appendChild(gridContainer);
 
     const keyGrid = document.createElement(
-      KeymapKeygridElement.elementName
+      KeymapKeygridElement.elementName,
     ) as KeymapKeygridElement;
     keyGrid.setAttribute("name", "planck48");
     keyGrid.setAttribute("cols", this.columns.toString());
@@ -112,3 +112,12 @@ export class KeymapKeyboardPlanck48Element extends KeymapKeyboardElement {
     this.style.height = `calc(${this.rows} * ${keyboardGridUnit})`;
   }
 }
+
+if (!customElements.get(KeymapKeyboardPlanck48Element.elementName)) {
+  customElements.define(
+    KeymapKeyboardPlanck48Element.elementName,
+    KeymapKeyboardPlanck48Element,
+  );
+}
+
+export { KeymapKeyboardPlanck48Element, KeyboardModelPlanck48 };

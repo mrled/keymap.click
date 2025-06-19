@@ -99,6 +99,7 @@ www.serve: ## Run the keymap.click website in development mode, automatically wa
 	@\
 		npm run keymap.click.watch -w ui & \
 		npm run keymap.click.watch -w keyboard.ergodox & \
+		npm run keymap.click.watch -w keyboard.planck48 & \
 		npm run keymap.click.watch -w layout.mrlergo & \
 		npm run serve:dev -w www & \
 		wait

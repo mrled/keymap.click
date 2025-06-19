@@ -14,10 +14,10 @@ Toggle debug controls on all KeymapUI elements on this page:
 <div id="app"></div>
 
 <script type="module">
-  import { KeymapTitleScreenLayout } from "@keymap.click/ui";
+  import { Planck48ExampleLayout } from "/keymaps/planck48-example.js";
   const app = document.getElementById("app");
   const keymapUi = document.createElement("keymap-ui");
-  const availableKeymaps = [KeymapTitleScreenLayout];
+  const availableKeymaps = [Planck48ExampleLayout];
   keymapUi.setAttribute("id", "keymap-title");
   keymapUi.setAttribute("show-debug", "true");
   keymapUi.setAttribute("query-prefix", "keymap");
