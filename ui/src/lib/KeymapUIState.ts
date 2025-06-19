@@ -62,6 +62,7 @@ import { KeyboardModel } from "./KeyboardModel";
 import { IStateObserver, StateChange, StateChangeMap } from "./State";
 import { ConnectionPair } from "./DiagramConnections";
 import { GuideStep, KeymapLayout, KeymapGuide, KeymapLayer } from "./Layout";
+import { DefaultLayout } from "~/default-keyboard/DefaultLayout";
 
 /* A map of uniqueID strings to Keymap objects
  */
@@ -224,11 +225,17 @@ export class KeymapUIState {
 
   /* All keymaps that we know about
    *
+   * We guarantee that this is never empty.
+   *
    * The _kbModels property returns the models for all the keymaps found in this list.
    * The kbModel and keymap properties are guaranteed to exist inside this list.
    */
   private _keymaps: LayoutMap = new Map();
   public get keymaps(): LayoutMap {
+    if (this._keymaps.size === 0) {
+      this._keymaps.set(DefaultLayout.uniqueId, DefaultLayout);
+      this.notify([new KeymapUIStateChange("keymaps", [], this._keymaps)]);
+    }
     return this._keymaps;
   }
   public set keymaps(value: LayoutMap) {
@@ -243,6 +250,8 @@ export class KeymapUIState {
    * If the state is loaded without otherwise specifying a keymap,
    * such as by the query string or having the user select one,
    * it will default to the first entry in the keymaps.
+   *
+   * We know at least the empty keymap will exist.
    */
   public get defaultKeymap(): KeymapLayout {
     const firstKeymap: KeymapLayout = this.keymaps.values().next().value!;
