@@ -44,27 +44,27 @@ clean: ## Clean up
 
 UI_SOURCES = $(shell find ui/src -type f)
 
-ui/node_modules: ui/package.json ui/package-lock.json
+ui/node_modules/.installed: ui/package.json ui/package-lock.json
 	cd ./ui && npm install
-	touch ui/node_modules
+	touch ui/node_modules/.installed
 
-ui/dist/keymap.click.js: ui/node_modules $(UI_SOURCES)
+ui/dist/keymap.click.js: ui/node_modules/.installed $(UI_SOURCES)
 	cd ./ui && npm run build
 
 .PHONY: ui
-ui: ui/node_modules ui/dist/keymap.click.js ## Build the ui
+ui: ui/node_modules/.installed ui/dist/keymap.click.js ## Build the ui
 
 #endregion
 
 #region keyboard.ergodox
 
-KEYBOARD_ERGODOX_SOURCES = $(shell find keyboard.ergodox/ -type f -not \( -path "www/dist" -o -path "www/node_modules" \))
+KEYBOARD_ERGODOX_SOURCES = $(shell find keyboard.ergodox/ -type f -maxdepth 1)
 
-keyboard.ergodox/node_modules: keyboard.ergodox/package.json
+keyboard.ergodox/node_modules/.installed: keyboard.ergodox/package.json
 	cd ./keyboard.ergodox && npm install
-	touch keyboard.ergodox/node_modules
+	touch keyboard.ergodox/node_modules/.installed
 
-keyboard.ergodox/dist/keyboard.ergodox.js: keyboard.ergodox/node_modules ui/dist/keymap.click.js $(KEYBOARD_ERGODOX_SOURCES)
+keyboard.ergodox/dist/keyboard.ergodox.js: keyboard.ergodox/node_modules/.installed ui/dist/keymap.click.js $(KEYBOARD_ERGODOX_SOURCES)
 	cd ./keyboard.ergodox && npm run build
 
 .PHONY: keyboard.ergodox
@@ -74,13 +74,13 @@ keyboard.ergodox: keyboard.ergodox/dist/keyboard.ergodox.js ## Build the keyboar
 
 #region layout.mrlergo
 
-LAYOUT_MRLERGO_SOURCES = $(shell find layout.mrlergo/ -type f -not \( -path "www/dist" -o -path "www/node_modules" \))
+LAYOUT_MRLERGO_SOURCES = $(shell find layout.mrlergo/ -type f -maxdepth 1)
 
-layout.mrlergo/node_modules: layout.mrlergo/package.json
+layout.mrlergo/node_modules/.installed: layout.mrlergo/package.json
 	cd ./layout.mrlergo && npm install
-	touch layout.mrlergo/node_modules
+	touch layout.mrlergo/node_modules/.installed
 
-layout.mrlergo/dist/layout.mrlergo.js: layout.mrlergo/node_modules ui/dist/keymap.click.js keyboard.ergodox/dist/keyboard.ergodox.js $(LAYOUT_MRLERGO_SOURCES)
+layout.mrlergo/dist/layout.mrlergo.js: layout.mrlergo/node_modules/.installed ui/dist/keymap.click.js keyboard.ergodox/dist/keyboard.ergodox.js $(LAYOUT_MRLERGO_SOURCES)
 	cd ./layout.mrlergo && npm run build
 
 .PHONY: layout.mrlergo
@@ -90,11 +90,11 @@ layout.mrlergo: layout.mrlergo/dist/layout.mrlergo.js ## Build the layout.mrlerg
 
 #region keymap.click.www
 
-WWW_SOURCES = $(shell find www -type f -not \( -path "www/dist" -o -path "www/node_modules" \))
+WWW_SOURCES = $(shell find www -type f -maxdepth 1)
 
-www/node_modules: www/package.json
+www/node_modules/.installed: www/package.json
 	cd ./www && npm install
-	touch www/node_modules
+	touch www/node_modules/.installed
 
 www/static/keymap.click/keymap.click.js: ui/dist/keymap.click.js
 	mkdir -p www/static/keymap.click
@@ -108,31 +108,33 @@ www/static/keymap.click/layout.mrlergo.js: layout.mrlergo/dist/layout.mrlergo.js
 	mkdir -p www/static/keymap.click
 	cp layout.mrlergo/dist/layout.mrlergo.js www/static/keymap.click/layout.mrlergo.js
 
-www/dist: www/package.json www/node_modules www/static/keymap.click/keymap.click.js www/static/keymap.click/keyboard.ergodox.js www/static/keymap.click/layout.mrlergo.js $(WWW_SOURCES)
+WWW_BUILT_DEPS = www/static/keymap.click/keymap.click.js www/static/keymap.click/keyboard.ergodox.js www/static/keymap.click/layout.mrlergo.js
+
+www/_site/.build: www/package.json www/node_modules/.installed $(WWW_BUILT_DEPS) $(WWW_SOURCES)
 	cd ./www && npm run build:prod
-	touch www/dist
+	touch www/_site/.build
 
 .PHONY: www
-www: www/node_modules www/dist ## Build the keymap.click website in production mode
+www: www/node_modules/.installed www/_site/.build ## Build the keymap.click website in production mode
 
 # Watch the ui web component for changes and copy the output to www/public/keymap.click.js.
 .PHONY: www.ui.watch
-www.ui.watch: ui/node_modules
+www.ui.watch: ui/node_modules/.installed
 	cd ./ui && npm run keymap.click.watch
 
 # Watch the keyboard.ergodox web component for changes and copy the output to www/public/keyboard.ergodox.js.
 .PHONY: www.keyboard.ergodox.watch
-www.keyboard.ergodox.watch: keyboard.ergodox/node_modules
+www.keyboard.ergodox.watch: keyboard.ergodox/node_modules/.installed
 	cd ./keyboard.ergodox && npm run keymap.click.watch
 
 # Watch the layout.mrlergo web component for changes and copy the output to www/public/layout.mrlergo.js.
 .PHONY: www.layout.mrlergo.watch
-www.layout.mrlergo.watch: layout.mrlergo/node_modules
+www.layout.mrlergo.watch: layout.mrlergo/node_modules/.installed
 	cd ./layout.mrlergo && npm run keymap.click.watch
 
 # Watch the keymap.click website for changes and run the eleventy server in dev mode
 .PHONY: www.watch
-www.watch: www/node_modules
+www.watch: www/node_modules/.installed
 	cd ./www && npm run serve:dev
 
 .PHONY: www.serve
