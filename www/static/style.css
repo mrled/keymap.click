@@ -80,6 +80,13 @@ div.site-footer {
   margin: 2rem;
   cursor: pointer;
   font-size: 1rem;
+
+  /* On mobile, without this, there is a slight delay before elements receive click events,
+   * apparently to allow time for double-tap.
+   * This tells the browser that the touch action is a single tap,
+   * so the element will receive click events immediately.
+   */
+  touch-action: manipulation;
 }
 
 /* Before changing the max-width value, test it with a wide keyboard like the ErgoDox
