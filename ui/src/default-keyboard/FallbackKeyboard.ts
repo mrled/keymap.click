@@ -13,18 +13,23 @@ const KeyboardModelFallback = new KeyboardModel(
   new Point(2, 2),
   new Size(2, 2),
   [
-    new PhysicalKey("fallback-keyboard", new Point(1, 1), new Size(2, 2)), // K
-    new PhysicalKey("fallback-keyboard", new Point(3, 1), new Size(2, 2)), // E
-    new PhysicalKey("fallback-keyboard", new Point(5, 1), new Size(2, 2)), // Y
-    new PhysicalKey("fallback-keyboard", new Point(7, 1), new Size(2, 2)), // M
-    new PhysicalKey("fallback-keyboard", new Point(9, 1), new Size(2, 2)), // A
-    new PhysicalKey("fallback-keyboard", new Point(11, 1), new Size(2, 2)), // P
-    new PhysicalKey("fallback-keyboard", new Point(13, 1), new Size(2, 2)), // .
-    new PhysicalKey("fallback-keyboard", new Point(15, 1), new Size(2, 2)), // C
-    new PhysicalKey("fallback-keyboard", new Point(17, 1), new Size(2, 2)), // L
-    new PhysicalKey("fallback-keyboard", new Point(19, 1), new Size(2, 2)), // I
-    new PhysicalKey("fallback-keyboard", new Point(21, 1), new Size(2, 2)), // C
-    new PhysicalKey("fallback-keyboard", new Point(23, 1), new Size(2, 2)), // K
+    new PhysicalKey("fallback-keyboard", new Point(1, 1), new Size(2, 2)), // F
+    new PhysicalKey("fallback-keyboard", new Point(3, 1), new Size(2, 2)), // A
+    new PhysicalKey("fallback-keyboard", new Point(5, 1), new Size(2, 2)), // L
+    new PhysicalKey("fallback-keyboard", new Point(7, 1), new Size(2, 2)), // L
+    new PhysicalKey("fallback-keyboard", new Point(9, 1), new Size(2, 2)), // B
+    new PhysicalKey("fallback-keyboard", new Point(11, 1), new Size(2, 2)), // A
+    new PhysicalKey("fallback-keyboard", new Point(13, 1), new Size(2, 2)), // C
+    new PhysicalKey("fallback-keyboard", new Point(15, 1), new Size(2, 2)), // K
+
+    new PhysicalKey("fallback-keyboard", new Point(1, 3), new Size(2, 2)), // K
+    new PhysicalKey("fallback-keyboard", new Point(3, 3), new Size(2, 2)), // E
+    new PhysicalKey("fallback-keyboard", new Point(5, 3), new Size(2, 2)), // Y
+    new PhysicalKey("fallback-keyboard", new Point(7, 3), new Size(2, 2)), // B
+    new PhysicalKey("fallback-keyboard", new Point(9, 3), new Size(2, 2)), // O
+    new PhysicalKey("fallback-keyboard", new Point(11, 3), new Size(2, 2)), // A
+    new PhysicalKey("fallback-keyboard", new Point(13, 3), new Size(2, 2)), // R
+    new PhysicalKey("fallback-keyboard", new Point(15, 3), new Size(2, 2)), // D
   ],
 );
 
