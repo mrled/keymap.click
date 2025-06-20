@@ -83,7 +83,7 @@ export interface IKeymapUIStateIdArgs {
   queryPrefix?: string;
   keymapId?: string;
   layerIdx?: number;
-  guideId?: string;
+  guideId?: string | null;
   guideStepIdx?: number;
   selectedKey?: string;
 }
@@ -463,7 +463,7 @@ export class KeymapUIState {
     if (specifiedGuide) {
       // A null guide is valid as-is, and means no guide is selected;
       // a non-null guide ID must be validated.
-      if (guideId === "") {
+      if (guideId === "" || guideId === null) {
         newGuide = null;
       } else {
         newGuide = newKeymap.guides.find((g) => g.id === guideId);

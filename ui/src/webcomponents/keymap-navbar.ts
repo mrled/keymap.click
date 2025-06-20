@@ -402,25 +402,29 @@ export class KeymapNavbarElement
 
       // We only have UI for a single guide currently
       const guide = this.state.keymap.guides[0] || null;
+      const guideActive = this.state.guide?.id === guide?.id;
       if (guide) {
-        const tabButton = document.createElement("button");
-        if (guide.id === this.state.guide?.id) {
-          tabButton.textContent = `Restart ${guide.shortName}`;
+        const actionButton = document.createElement("button");
+        actionButton.classList.add("guide-tab-button");
+        if (guideActive) {
+          actionButton.textContent = `Exit Guide`;
+          actionButton.addEventListener("click", () => {
+            this.state.setStatesByIds({
+              guideId: null,
+            });
+          });
         } else {
-          tabButton.textContent = `Start ${guide.shortName}`;
+          actionButton.textContent = `Start ${guide.shortName}`;
+          actionButton.addEventListener("click", () => {
+            this.state.setStatesByIds({
+              guideId: guide.id,
+              guideStepIdx: 0,
+            });
+          });
         }
-        if (this.state.guideStep?.index === 0) {
-          tabButton.disabled = true;
-        } else {
-          tabButton.disabled = false;
-        }
-        tabButton.classList.add("guide-tab-button");
         const li = document.createElement("li");
-        tabButton.addEventListener("click", () => {
-          this.state.setStatesByIds({ guideId: guide.id });
-        });
         li.classList.add("guide-tab");
-        li.appendChild(tabButton);
+        li.appendChild(actionButton);
         this._guideList.append(li);
       } else {
         this._guideList.classList.add("hidden");
