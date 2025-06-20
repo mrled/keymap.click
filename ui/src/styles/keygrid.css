@@ -112,7 +112,7 @@ keymap-key {
   }
 
   /* An image used as a legend for a key */
-  > img {
+  & > img {
     width: 1rem;
     height: 1rem;
   }

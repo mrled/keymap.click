@@ -55,7 +55,7 @@ const drawVisualDebugInfo = (
     context.beginPath();
     context.strokeStyle = diagramLineColors.debugCenterLine;
     context.moveTo(keyboardCenter, 0);
-    var idx = 0;
+    let idx = 0;
     while (idx <= document.documentElement.scrollHeight) {
       context.lineTo(keyboardCenter + 10, idx);
       context.moveTo(keyboardCenter, idx);
@@ -299,8 +299,8 @@ export const drawDiagram = (
   const sourceYInsetTickSize = 3;
 
   // Arrays of Y coordinates in the margins that have already been drawn on.
-  let leftDiagramYCoordinates: number[] = [];
-  let rightDiagramYCoordinates: number[] = [];
+  const leftDiagramYCoordinates: number[] = [];
+  const rightDiagramYCoordinates: number[] = [];
 
   connections.forEach((connection: Connection) => {
     if (debug) {

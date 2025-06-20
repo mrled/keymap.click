@@ -78,7 +78,11 @@ export class KeymapKeyboardTitleBarElement extends KeymapKeyboardElement {
 
   connectedCallback() {}
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {}
+  attributeChangedCallback(
+    _name: string,
+    _oldValue: string,
+    _newValue: string,
+  ) {}
 
   /* Update the selected key.
    *
@@ -147,7 +151,7 @@ export class KeymapKeyboardTitleBarElement extends KeymapKeyboardElement {
     return this.keymapKey;
   }
 
-  createChildren(keys: KeymapKey[]) {
+  createChildren(_keys: KeymapKey[]) {
     // TODO: handle this more elegantly
     throw new Error(
       "You don't want to call createChildren() on KeymapKeyboardTitleBarElement; use updateSelectedKey() instead.",

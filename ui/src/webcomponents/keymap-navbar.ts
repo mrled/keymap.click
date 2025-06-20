@@ -87,7 +87,7 @@ export class KeymapNavbarElement
     referenceModel: KeyboardModel,
     selectedKeyId: string,
   ) {
-    const modifiedKey = this.titleBoard.updateSelectedKey(
+    this.titleBoard.updateSelectedKey(
       keymapLayer,
       referenceModel,
       selectedKeyId,

@@ -30,8 +30,8 @@ keymap-navbar {
     vertical-align: middle;
   }
 
-  > ul.layer-tabs,
-  > ul.guide-list {
+  & > ul.layer-tabs,
+  & > ul.guide-list {
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -88,7 +88,7 @@ keymap-navbar {
     padding: 0.5em;
     margin: 0.5em;
 
-    > * {
+    & > * {
       margin: 0 1em;
     }
   }

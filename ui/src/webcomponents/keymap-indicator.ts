@@ -20,7 +20,11 @@ export class KeymapIndicatorElement extends HTMLElement {
     this.updateComponent();
   }
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+  attributeChangedCallback(
+    _name: string,
+    _oldValue: string,
+    _newValue: string,
+  ) {
     this.updateComponent();
   }
 

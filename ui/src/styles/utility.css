@@ -1,7 +1,7 @@
 .hidden {
-  display: none !important;
+  display: none !important; /* eslint-disable-line css/no-important */
 }
 
 .invisible {
-  visibility: hidden !important;
+  visibility: hidden !important; /* eslint-disable-line css/no-important */
 }

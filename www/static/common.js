@@ -3,7 +3,7 @@
 
 /* Toggle debugging for all KeymapUI elements on the page
  */
-function toggleAllKeymapUiDebug() {
+window.toggleAllKeymapUiDebug = function () {
   document.querySelectorAll("keymap-ui").forEach((keymapUi) => {
     const currentVal = parseInt(keymapUi.getAttribute("debug"), 10);
     if (currentVal > 0) {
@@ -12,7 +12,7 @@ function toggleAllKeymapUiDebug() {
       keymapUi.setAttribute("debug", "1");
     }
   });
-}
+};
 
 /* Menu toggle for responsive navigation */
 document.addEventListener("DOMContentLoaded", () => {

@@ -3,6 +3,7 @@
 // but is required for dts-bundle-generator.
 // <https://github.com/timocov/dts-bundle-generator/issues/227>
 //
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../types/styles.d.ts" />
 //
 // WARNING: triple-slash directives must be at the top of the file.
@@ -529,7 +530,7 @@ export class KeymapUIElement
   #updateInfoProsePanelFromState() {
     let activeKeyId: string = "";
     let keySelection: string[] = [];
-    let proseTitleElement = document.createElement("h3");
+    const proseTitleElement = document.createElement("h3");
     let proseTextElements: HTMLParagraphElement[] = [];
     const indicatedElementsById: {
       [key: string]: KeymapKeyHandleElement;
@@ -708,7 +709,7 @@ export class KeymapUIElement
    * 'this' will refer to the ResizeObserver, when called by it,
    * so 'this.state' from the KeymapUIElement instance will not be available.
    */
-  #resizeCanvas(state: KeymapUIState) {
+  #resizeCanvas(_state: KeymapUIState) {
     this.diagram.resize(
       this.kidContainer.offsetWidth,
       this.kidContainer.offsetHeight,

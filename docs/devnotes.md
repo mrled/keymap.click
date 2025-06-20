@@ -640,11 +640,8 @@ Example:
 
 #### `~/components/appDebugContext.jsx`
 
-```
-import {
-  createContext,
-  useState,
-} from "react";
+```jsx
+import { createContext, useState } from "react";
 
 export const AppDebugContext = createContext({ debugLevel: 0 });
 ```
@@ -653,7 +650,7 @@ export const AppDebugContext = createContext({ debugLevel: 0 });
 
 Originally this just returned a Component:
 
-```
+```js
 function App({ Component, pageProps }) {
   ...
   return <>
@@ -664,7 +661,7 @@ function App({ Component, pageProps }) {
 
 But now it has to manage the state, and wrap its component in a context provider:
 
-```
+```js
 import { AppDebugContext } from "~/components/appDebugContext";
 function App({ Component, pageProps }) {
   const [appDebug, setAppDebug] = useState({ debugLevel: 0 });

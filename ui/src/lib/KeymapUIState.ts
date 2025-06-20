@@ -205,7 +205,7 @@ export class KeymapUIState {
   public get kbModels(): KeyboardModel[] {
     // Construct a list of keyboard models from the keymaps with no duplicates.
     const result: KeyboardModel[] = [];
-    this.keymaps.forEach((keymap, keymapId) => {
+    this.keymaps.forEach((keymap, _keymapId) => {
       if (keymap && !result.includes(keymap.model)) {
         result.push(keymap.model);
       }

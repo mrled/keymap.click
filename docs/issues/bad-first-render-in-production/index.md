@@ -4,7 +4,7 @@
 
 Only visible in production/release mode, not in dev mode.
 
-```
+```sh
 # You'll never see it here:
 npx next dev
 
@@ -20,7 +20,7 @@ When the bug is triggered, all the diagram lines are drawn totally wrong. They s
 
 Here's what it looks like:
 
-<img src="bug-no-debugging.png">
+<img src="bug-no-debugging.png" alt="Screenshot">
 
 ## The solution
 
@@ -104,7 +104,7 @@ Here's what it looks like.
 
 Here's what my app looks like when everything is working properly. Note the green lines connecting the keys in the text below to the corresponding keys on the board map above.
 
-<img src="intended-behavior-no-debugging.png">
+<img src="intended-behavior-no-debugging.png" alt="Screenshot">
 
 ### Intended behavior with visual debugging enabled
 
@@ -112,7 +112,7 @@ Here's that correct view again, this time with visual debugging enabled. The lig
 
 Note that the keyboard/panel is centered, with two reddish divs on either side -- the reddish color is a CSS `background-color` on that div. Note also the left rectangle has an inset limegreen box drawn over it, the right rectangle has an inset red box drawn over it, and the keyboard/info center section has a khaki box drawn over it -- these boxes are drawn on the canvas.
 
-<img src="intended-behavior-debugging.png">
+<img src="intended-behavior-debugging.png" alt="Screenshot">
 
 ### Bug behavior with visual debugging enabled
 
@@ -120,4 +120,4 @@ This is what it looks like when I trigger the bug with visual debugging enabled.
 
 Of course, the green and orange lines which should connect references in the panel below to locations in the board above are wildly off as well.
 
-<img src="bug-debugging.png">
+<img src="bug-debugging.png" alt="Screenshot">

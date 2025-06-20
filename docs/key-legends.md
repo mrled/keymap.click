@@ -7,7 +7,7 @@
 ## Fonts
 
 - [GNU FreeFont](https://www.gnu.org/software/freefont/), especially the Mono
-- [Roboto Mono]https://fonts.google.com/specimen/Roboto+Mono
+- [Roboto Mono](https://fonts.google.com/specimen/Roboto+Mono)
 
 Use something like
 [font-blast](https://www.npmjs.com/package/font-blast)
