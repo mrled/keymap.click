@@ -13,3 +13,25 @@ function toggleAllKeymapUiDebug() {
     }
   });
 }
+
+/* Menu toggle for responsive navigation */
+document.addEventListener("DOMContentLoaded", () => {
+  const menuToggle = document.querySelector(".menu-toggle");
+  const sidebar = document.querySelector("#sidebar");
+
+  if (menuToggle && sidebar) {
+    menuToggle.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+      const isOpen = sidebar.classList.contains("open");
+      menuToggle.setAttribute("aria-expanded", isOpen);
+    });
+
+    // Close menu when clicking a link
+    sidebar.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+  }
+});
