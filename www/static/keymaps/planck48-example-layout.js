@@ -4,12 +4,12 @@ import { KeyboardModelPlanck48 } from "@keymap.click/keyboard.planck48";
 const keyInfoLayer0 = ["K E Y M A P . C L I C K"];
 
 export const Planck48ExampleLayout = new KeymapLayout({
-  displayName: "Title Screen Map",
-  uniqueId: "title-screen-map",
+  displayName: "Planck 48 Example",
+  uniqueId: "planck48-example-layout",
   model: KeyboardModelPlanck48,
   layers: [
     KeymapLayer.fromKeyList({
-      displayName: "Title Screen Main Layer",
+      displayName: "Planck 48 Main Layer",
       shortName: "Main",
       welcome: [
         `Hello, and welcome to the key map viewer!`,

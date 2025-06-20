@@ -34,6 +34,6 @@ Toggle debug controls on all KeymapUI elements on this page:
   keymapUi.setAttribute("show-debug", "true");
   keymapUi.setAttribute("query-prefix", "keymap");
   keymapUi.setModelsAndMaps(availableKeymaps);
-  keymapUi.setAttribute("keymap-id", "title-screen-map");
+  keymapUi.setAttribute("keymap-id", "title-screen-map-simple");
   app.appendChild(keymapUi);
 </script>

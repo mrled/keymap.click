@@ -27,7 +27,7 @@ import { KeymapTitleScreenLayoutSimple } from "/keymaps/title-screen-layout-simp
 let keymapUi = document.createElement("keymap-ui");
 keymapUi.setAttribute("id", "keymap-title");
 keymapUi.setModelsAndMaps([KeymapTitleScreenLayoutSimple]);
-keymapUi.setAttribute("keymap-id", "title-screen-map");
+keymapUi.setAttribute("keymap-id", "title-screen-map-simple");
 keymapUi.setAttribute("query-prefix", "keymap");
 
 let keymapContainer = document.querySelector("#keymap-container")
