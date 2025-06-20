@@ -255,7 +255,7 @@ const extraFeaturesSelection = [
 function newQwertyKey(
   name: string,
   physicalKeyId: string,
-  textLegend?: string
+  textLegend?: string,
 ) {
   return new KeymapKey({
     name,
@@ -815,6 +815,13 @@ export const MicahErgodoxLayout = new KeymapLayout({
           info: arrowKeyInfo,
           selection: arrowKeySelection,
         }),
+        new KeymapKey({
+          textLegend: "←↓↑→",
+          name: "arrow layer",
+          id: "l-f-8-9",
+          info: arrowLayerKeyInfo,
+          selection: arrowLayerKeySelection,
+        }),
 
         new KeymapKey({
           textLegend: "↑",
@@ -843,6 +850,13 @@ export const MicahErgodoxLayout = new KeymapLayout({
           id: "r-f-9-5",
           info: arrowKeyInfo,
           selection: arrowKeySelection,
+        }),
+        new KeymapKey({
+          textLegend: "←↓↑→",
+          name: "arrow layer",
+          id: "r-f-7-9",
+          info: arrowLayerKeyInfo,
+          selection: arrowLayerKeySelection,
         }),
       ],
     }),
@@ -981,7 +995,10 @@ export const MicahErgodoxLayout = new KeymapLayout({
           selection: extraFeaturesSelection,
         },
         { keyId: "l-f-2-9" },
-        { keyId: "r-f-7-9" },
+        {
+          keyId: "r-f-7-9",
+          layerId: 1,
+        },
         { keyId: "r-f-1-1" },
         { keyId: "r-f-1-3" },
         {
