@@ -1,6 +1,12 @@
 /* Root styles: should be imported before other styles
  */
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 * {
   margin: 0;
 }
