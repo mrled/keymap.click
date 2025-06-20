@@ -392,20 +392,12 @@ export class KeymapNavbarElement
       labelLi.textContent = "Guide";
       this._guideList.append(labelLi);
 
-      const controlsLi = document.createElement("li");
-      controlsLi.classList.add("guide-tab");
-      controlsLi.append(this.guidePrevButton, this.guideNextButton);
-      if (this.state.guide === null) {
-        controlsLi.classList.add("hidden");
-      }
-      this._guideList.append(controlsLi);
-
       // We only have UI for a single guide currently
       const guide = this.state.keymap.guides[0] || null;
       const guideActive = this.state.guide?.id === guide?.id;
       if (guide) {
         const actionButton = document.createElement("button");
-        actionButton.classList.add("guide-tab-button");
+        actionButton.classList.add("control-button");
         if (guideActive) {
           actionButton.textContent = `Exit Guide`;
           actionButton.addEventListener("click", () => {
@@ -422,14 +414,20 @@ export class KeymapNavbarElement
             });
           });
         }
-        const li = document.createElement("li");
-        li.classList.add("guide-tab");
-        li.appendChild(actionButton);
-        this._guideList.append(li);
+        this._guideList.append(actionButton);
       } else {
         this._guideList.classList.add("hidden");
       }
     }
+
+    const controlsLi = document.createElement("li");
+    controlsLi.classList.add("guide-tab");
+    controlsLi.append(this.guidePrevButton, this.guideNextButton);
+    if (this.state.guide === null) {
+      controlsLi.classList.add("hidden");
+    }
+    this._guideList.append(controlsLi);
+
     return this._guideList;
   }
   recreateGuideList() {
