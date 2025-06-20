@@ -119,6 +119,63 @@ const KeyboardModelErgodox = new KeyboardModel(
   ],
 );
 
+/* Custom stylesheet for the ErgoDox keyboard.
+ */
+const ergodoxStyleSheet = `
+/* A sub-keyboard is a contiguous set of keys
+ *
+ * Each sub-board contains one or more keygrids.
+ * A sub-board is independently positionable on the screen.
+ *
+ * It is made up of a title and a div containing the keygrids.
+ */
+div.keyboard-sub-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0;
+  > h2 {
+    font-size: 1.125rem;
+  }
+  > .keygrid-container {
+    display: flex;
+  }
+}
+div.keyboard-sub-board-left {
+  > h2 {
+    margin-right: auto;
+  }
+  > .keygrid-container {
+    flex-direction: row;
+  }
+}
+div.keyboard-sub-board-right {
+  > h2 {
+    margin-left: auto;
+  }
+  > .keygrid-container {
+    flex-direction: row-reverse;
+  }
+}
+
+/* Left and right thumb clusters of an ErgoDox keyboard */
+keymap-keygrid[name="ergodox-left-thumb"] {
+  transform: translateX(calc(var(--keyboard-grid-unit) * -2))
+    translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(25deg);
+  transform-origin: 0 calc(var(--keyboard-grid-unit) * 2);
+  padding-bottom: calc(var(--keyboard-grid-unit) * 9);
+}
+keymap-keygrid[name="ergodox-right-thumb"] {
+  transform: translateX(calc(var(--keyboard-grid-unit) * 2))
+    translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(-25deg);
+  transform-origin: calc(var(--keyboard-grid-unit) * 6)
+    calc(var(--keyboard-grid-unit) * 2);
+  padding-bottom: calc(var(--keyboard-grid-unit) * 9);
+}
+
+`;
+
 /* An ErgoDox keyboard.
  */
 class KeymapKeyboardErgodoxElement extends KeymapKeyboardElement {
@@ -135,6 +192,10 @@ class KeymapKeyboardErgodoxElement extends KeymapKeyboardElement {
    */
   createChildren(keys: KeymapKey[]) {
     this.removeAllChildren();
+
+    const style = document.createElement("style");
+    style.textContent = ergodoxStyleSheet;
+    this.appendChild(style);
 
     const leftSubBoard = document.createElement("div");
     leftSubBoard.className = "keyboard-sub-board keyboard-sub-board-left";
