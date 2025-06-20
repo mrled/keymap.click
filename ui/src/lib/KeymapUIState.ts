@@ -324,7 +324,6 @@ export class KeymapUIState {
    */
   setModelsAndMaps(keymaps: KeymapLayout[]) {
     if (keymaps.length === 0) {
-      console.error("No keymaps provided");
       return;
     }
 
