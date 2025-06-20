@@ -318,6 +318,9 @@ export class KeymapNavbarElement
         li.appendChild(tabButton);
         return li;
       });
+      if (this.state.keymap.layers.length < 2) {
+        this._layerTabs.classList.add("invisible");
+      }
       this._layerTabs.append(...layerItems);
     }
     return this._layerTabs;
