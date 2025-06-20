@@ -22,11 +22,11 @@ For more information, see the [about page](/about).
 Thanks for all the clicks.
 
 <script type="module">
-import { KeymapTitleScreenLayout } from "@keymap.click/ui";
+import { KeymapTitleScreenLayoutSimple } from "/keymaps/title-screen-layout-simple.js";
 
 let keymapUi = document.createElement("keymap-ui");
 keymapUi.setAttribute("id", "keymap-title");
-keymapUi.setModelsAndMaps([KeymapTitleScreenLayout]);
+keymapUi.setModelsAndMaps([KeymapTitleScreenLayoutSimple]);
 keymapUi.setAttribute("keymap-id", "title-screen-map");
 keymapUi.setAttribute("query-prefix", "keymap");
 
