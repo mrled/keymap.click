@@ -61,7 +61,7 @@ import utilityStyleStr from "~/styles/utility.css?inline";
  *   and attributeChangedCallback() should only set the attribute and not call layOutIdempotently().
  *
  * Attributes:
- * show-debug           Show checkbox to display debug information on the diagram and in the console.
+ * debug                Enable debug messages and borders
  * keymap-id            The name of one of the passed-in keymaps to use.
  * layer                The layer number to use.
  * selected-key         The id of the key that is selected.
@@ -141,6 +141,14 @@ export class KeymapUIElement
   // #region Public API methods
   //
 
+  /* Retrieve the debug level from the attribute
+   */
+  get debugLevel(): number {
+    const debug = parseInt(this.getAttribute("debug") || "0", 10);
+    if (Number.isNaN(debug)) return 0;
+    return debug;
+  }
+
   /* Removes all keymaps and replaces them with the given keymaps.
    *
    * Removes all boards and adds boards referenced by the given keymaps.
@@ -160,11 +168,7 @@ export class KeymapUIElement
    * Run whether the element is created from HTML or from JavaScript.
    */
   connectedCallback() {
-    // The show-debug attribute doesn't set debug level in the state,
-    // just whether the debug checkbox is shown.
-    // It's not part of the query string stuff.
-    const showDebug = this.getAttribute("show-debug") || "false";
-    this.keyInfoNavbar.setAttribute("show-debug", showDebug);
+    this.state.debug = this.debugLevel;
 
     // Set the initial state from the query string and attributes
     setStateFromQsAndAttrib({
@@ -185,7 +189,7 @@ export class KeymapUIElement
    * (changes to other attributes are ignored).
    */
   static get observedAttributes() {
-    return ["show-debug", "keymap-id", "layer", "query-prefix", "selected-key"];
+    return ["debug", "keymap-id", "layer", "query-prefix", "selected-key"];
   }
 
   /* Run this code when an attribute is changed from JavaScript.
@@ -201,8 +205,8 @@ export class KeymapUIElement
 
     // TODO: sync the state names with the element names for a better time
     switch (name) {
-      case "show-debug":
-        this.keyInfoNavbar.setAttribute("show-debug", newValue);
+      case "debug":
+        this.state.debug = this.debugLevel;
         break;
       case "keymap-id":
         this.state.setStatesByIds({

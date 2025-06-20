@@ -38,7 +38,6 @@ class Selector {
  * But they do include selectors that we use in JavaScript.
  */
 const Slctr = {
-  Debug: new Selector("debug"),
   Keymap: new Selector("keymap"),
   Guide: new Selector("guide"),
   CtrlButtons: new Selector("control-buttons"),
@@ -69,8 +68,6 @@ export class KeymapNavbarElement
 
   static readonly elementName = "keymap-navbar";
 
-  static readonly observedAttributes = ["show-debug"];
-
   constructor() {
     super();
   }
@@ -78,21 +75,6 @@ export class KeymapNavbarElement
   connectedCallback() {
     this.updateAll();
     this.layoutIdempotently();
-  }
-
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    switch (name) {
-      case "show-debug":
-        this.showHideElement(this.debugPair, this.showDebug);
-        break;
-      default:
-        console.error(`Unknown attribute ${name}`);
-        break;
-    }
-  }
-
-  get showDebug(): boolean {
-    return this.getAttribute("show-debug") === "true";
   }
 
   // #endregion
@@ -152,9 +134,6 @@ export class KeymapNavbarElement
    * update the selected layer and guide.
    */
   update(stateChanges: KeymapUIStateChangeMap) {
-    if (stateChanges.get("debug")) {
-      this.updateDebugSelector();
-    }
     if (stateChanges.get("keymaps") || stateChanges.get("keymap")) {
       this.recreateKeymapSelector();
     }
@@ -175,7 +154,6 @@ export class KeymapNavbarElement
   }
 
   private updateAll() {
-    this.updateDebugSelector();
     this.recreateKeymapSelector();
     this.recreateLayerTabs();
     this.recreateGuideList();
@@ -189,17 +167,6 @@ export class KeymapNavbarElement
       keymapId: result.value,
     });
   };
-
-  /* Update the debug checkbox.
-   * Called when the debug state changes.
-   */
-  private updateDebugSelector() {
-    const debugCheckbox = this.querySelector(Slctr.Debug.i) as HTMLInputElement;
-    if (!debugCheckbox) {
-      return;
-    }
-    debugCheckbox.checked = this.state.debug === 1;
-  }
 
   /* Update the guide step controls
    */
@@ -224,32 +191,6 @@ export class KeymapNavbarElement
   // #endregion
 
   // #region Child elements
-
-  /* Debug pair (checkbox and label)
-   */
-  private _debugPair: HTMLSpanElement | null = null;
-  get debugPair(): HTMLSpanElement {
-    if (!this._debugPair) {
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.setAttribute("id", Slctr.Debug.r);
-      // checkbox.id = SelectId.Debug;
-      checkbox.addEventListener("change", () => {
-        this.state.debug = checkbox.checked ? 1 : 0;
-      });
-      const label = document.createElement("label");
-      label.htmlFor = Slctr.Debug.r;
-      label.textContent = "Debug ";
-
-      this._debugPair = document.createElement("span");
-      this._debugPair.setAttribute("id", "debug-pair");
-      this._debugPair.classList.add("controls-pair");
-      this._debugPair.append(label, checkbox);
-
-      this.showHideElement(this._debugPair, this.showDebug);
-    }
-    return this._debugPair;
-  }
 
   private _guidePrevButton: HTMLButtonElement | null = null;
   get guidePrevButton(): HTMLButtonElement {
@@ -461,7 +402,7 @@ export class KeymapNavbarElement
     }
     const titleKeyRow = document.createElement("div");
     titleKeyRow.classList.add("title-key-row");
-    titleKeyRow.append(this.titleBoard, this.debugPair);
+    titleKeyRow.append(this.titleBoard);
     this.append(titleKeyRow, this.layerTabs, this.keymapPair, this.guideList);
     this.updateAll();
   }
