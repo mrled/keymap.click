@@ -39,6 +39,10 @@ keymap-navbar {
 
     overflow-x: auto; /* Allow tabs to scroll horizontally */
 
+    &.hidden {
+      display: none;
+    }
+
     li {
       padding: 0.5em 1em;
       vertical-align: bottom;

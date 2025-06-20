@@ -295,11 +295,6 @@ export class KeymapNavbarElement
     if (!this._layerTabs) {
       this._layerTabs = document.createElement("ul") as HTMLUListElement;
       this._layerTabs.classList.add("layer-tabs");
-      // Don't hide the list of layer buttons even if there's just one layer,
-      // because clicking on a layer button takes you to the layer's welcome page.
-      // if (this.state.keymap.layers.length <= 1) {
-      //   this._layerTabs.classList.add("hidden");
-      // }
       const labelLi = document.createElement("li");
       labelLi.textContent = "Layers";
       this._layerTabs.append(labelLi);
@@ -318,8 +313,8 @@ export class KeymapNavbarElement
         li.appendChild(tabButton);
         return li;
       });
-      if (this.state.keymap.layers.length < 2) {
-        this._layerTabs.classList.add("invisible");
+      if (this.state.keymap.layers.length <= 1) {
+        this._layerTabs.classList.add("hidden");
       }
       this._layerTabs.append(...layerItems);
     }
@@ -430,6 +425,9 @@ export class KeymapNavbarElement
         return li;
       });
       this._guideList.append(...guideItems);
+      if (this.state.keymap.guides.length < 1) {
+        this._guideList.classList.add("hidden");
+      }
     }
     return this._guideList;
   }
