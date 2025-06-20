@@ -68,6 +68,7 @@ export class KeymapKey {
  */
 export interface IGuideStep {
   keyId?: string;
+  layerId?: number;
   title?: string;
   text?: string[];
   selection?: string[];
