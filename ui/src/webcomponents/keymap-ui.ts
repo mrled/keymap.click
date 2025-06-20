@@ -718,7 +718,11 @@ export class KeymapUIElement
     const e = event as CustomEvent;
     const keyId = e.detail;
     // TODO: should we have the key set the state directly instead of doing it here?
-    this.state.setStatesByIds({ selectedKey: keyId });
+    if (keyId === this.state.selectedKey) {
+      this.state.setStatesByIds({ selectedKey: "" });
+    } else {
+      this.state.setStatesByIds({ selectedKey: keyId });
+    }
   }
 
   // #endregion
