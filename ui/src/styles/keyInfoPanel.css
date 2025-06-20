@@ -62,9 +62,6 @@ keymap-navbar {
         font-weight: bold;
       }
     }
-    &.hidden {
-      display: none;
-    }
   }
 
   > div.title-key-row {
@@ -90,7 +87,7 @@ keymap-navbar {
     }
 
     /* Override display:inline-block by selecting for .hidden here again --
-     * even though we already have a separate .hidden selector outside of span.controls-pair.
+     * even though we already have a separate .hidden selector in utility.css.
      */
     &.hidden {
       display: none;
@@ -101,10 +98,6 @@ keymap-navbar {
     display: inline-block;
     margin: 0;
     padding: 0;
-  }
-
-  .hidden {
-    display: none;
   }
 }
 

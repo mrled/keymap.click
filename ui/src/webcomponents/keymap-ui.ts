@@ -36,6 +36,7 @@ import rootStyleStr from "~/styles/root.css?inline";
 import diagramStyleStr from "~/styles/diagram.css?inline";
 import keygridStyleStr from "~/styles/keygrid.css?inline";
 import keyInfoPanelStyleStr from "~/styles/keyInfoPanel.css?inline";
+import utilityStyleStr from "~/styles/utility.css?inline";
 
 /* The UI of the keymap, including a keyboard, an info panel, and the canvas diagram.
  *
@@ -255,6 +256,7 @@ export class KeymapUIElement
         diagramStyleStr,
         keygridStyleStr,
         keyInfoPanelStyleStr,
+        utilityStyleStr,
       ];
       this._styling.textContent = styleContents.join("\n");
     }
