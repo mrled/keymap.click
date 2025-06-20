@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "format": "prettier --write \"./**/*.{ts,js,json,css,html,md}\" --ignore-path .gitignore"
+    "format": "prettier --write \"./**/*.{ts,js,json,css,html,md}\" --ignore-path .gitignore",
+    "lint": "eslint ."
   },
   "workspaces": [
     "ui",
@@ -13,9 +14,15 @@
     "www"
   ],
   "devDependencies": {
+    "@eslint/css": "^0.9.0",
+    "@eslint/js": "^9.29.0",
+    "@eslint/json": "^0.12.0",
+    "@eslint/markdown": "^6.6.0",
     "esbuild": "^0.25.5",
     "eslint": "^9.29.0",
+    "globals": "^16.2.0",
     "prettier": "3.5.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.34.1"
   }
 }
