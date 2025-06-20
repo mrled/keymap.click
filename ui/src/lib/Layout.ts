@@ -88,6 +88,7 @@ export class GuideStep implements IGuideStep {
   readonly keyId?: string;
   readonly title?: string;
   readonly text?: string[];
+  readonly layerId?: number;
   readonly selection?: string[];
 
   constructor({
@@ -96,6 +97,7 @@ export class GuideStep implements IGuideStep {
     keyId,
     title,
     text,
+    layerId,
     selection,
   }: {
     guide: KeymapGuide;
@@ -103,13 +105,14 @@ export class GuideStep implements IGuideStep {
     keyId?: string;
     title?: string;
     text?: string[];
+    layerId?: number;
     selection?: string[];
   }) {
     this.guide = guide;
     this.index = index;
     if (keyId) {
       if (title || text) {
-        throw new Error("Key ID must be the only parameter if provided.");
+        throw new Error("Cannot pass Key ID and title or text parameters.");
       }
       this.keyId = keyId;
     } else {
@@ -119,6 +122,7 @@ export class GuideStep implements IGuideStep {
       this.title = title;
       this.text = text;
     }
+    this.layerId = layerId || 0;
     this.selection = selection || [];
   }
 
@@ -158,7 +162,7 @@ export class KeymapGuide {
     this.shortName = shortName;
     this.id = id;
     this.steps = steps.map(
-      (step, index) => new GuideStep({ guide: this, index, ...step })
+      (step, index) => new GuideStep({ guide: this, index, ...step }),
     );
   }
 }
@@ -170,7 +174,7 @@ export class KeymapLayer {
     public readonly displayName: string,
     public readonly shortName: string,
     public readonly welcome: string[],
-    public readonly keys: Map<string, KeymapKey>
+    public readonly keys: Map<string, KeymapKey>,
   ) {}
 
   /* Create a new layer from a list of keys.
@@ -201,7 +205,7 @@ export class KeymapLayer {
       throw new Error(
         `Duplicate key IDs in key map: ${duplicateKeys
           .map((key) => key.id)
-          .join(", ")}`
+          .join(", ")}`,
       );
     }
 
@@ -261,19 +265,19 @@ export class KeymapLayout {
               id: key.id,
               info: [],
               unset: true,
-            })
+            }),
           );
         }
       });
 
       // Check for any keys in the layer that are not on the keyboard
       const invalidKeys = Array.from(layer.keys.values()).filter(
-        (key) => !model.physicalKeymap[key.id]
+        (key) => !model.physicalKeymap[key.id],
       );
       if (invalidKeys.length > 0) {
         const invalidKeysListStr = invalidKeys.map((key) => key.id).join(", ");
         throw new Error(
-          `Invalid key IDs in key map ${this.displayName} on layer ${layerIdx}: ${invalidKeysListStr}`
+          `Invalid key IDs in key map ${this.displayName} on layer ${layerIdx}: ${invalidKeysListStr}`,
         );
       }
     });

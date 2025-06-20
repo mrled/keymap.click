@@ -436,27 +436,6 @@ export class KeymapUIState {
     }
     const changedKeymap = newKeymap !== oldKeymap;
 
-    const specifiedLayer = layerIdx !== undefined;
-    const oldLayer = this.layer;
-    let newLayer: KeymapLayer | undefined = undefined;
-    if (specifiedLayer) {
-      if (layerIdx < 0 || layerIdx >= newKeymap.layers.length) {
-        console.error(`Invalid layer index: ${layerIdx}`);
-        return;
-      }
-      newLayer = newKeymap.layers[layerIdx];
-    } else if (changedKeymap) {
-      // If we don't specify a layer by index, but the keymap changed,
-      // use the first layer of the new keymap.
-      newLayer = newKeymap.layers[0];
-    } else {
-      // If a layer, keymap, or keyboard were not specified, the layer will not change.
-      newLayer = this.layer;
-    }
-    // We have to check for a changed keymap (which will also be true if the keyboard changed)
-    // because the layer is a value type and layer 0 of one map is not the same as layer 0 of another.
-    const changedLayer = newLayer !== oldLayer || changedKeymap;
-
     const specifiedGuide = guideId !== undefined;
     const oldGuide = this.guide;
     let newGuide: KeymapGuide | undefined | null = undefined;
@@ -500,6 +479,31 @@ export class KeymapUIState {
       newGuideStep = null;
     }
     let changedGuideStep = newGuideStep !== oldGuideStep;
+
+    const specifiedLayer = layerIdx !== undefined;
+    const oldLayer = this.layer;
+    let newLayer: KeymapLayer | undefined = undefined;
+    if (specifiedLayer) {
+      if (layerIdx < 0 || layerIdx >= newKeymap.layers.length) {
+        console.error(`Invalid layer index: ${layerIdx}`);
+        return;
+      }
+      newLayer = newKeymap.layers[layerIdx];
+    } else if (changedKeymap) {
+      // If we don't specify a layer by index, but the keymap changed,
+      // use the first layer of the new keymap.
+      newLayer = newKeymap.layers[0];
+    } else if (newGuide && changedGuideStep) {
+      // If we've just gone from one step to another in an active guide,
+      // use the layer of the new guide step.
+      newLayer = newKeymap.layers[newGuideStep!.layerId!];
+    } else {
+      // If a layer, keymap, or keyboard were not specified, the layer will not change.
+      newLayer = this.layer;
+    }
+    // We have to check for a changed keymap (which will also be true if the keyboard changed)
+    // because the layer is a value type and layer 0 of one map is not the same as layer 0 of another.
+    const changedLayer = newLayer !== oldLayer || changedKeymap;
 
     const specifiedSelectedKey = selectedKey !== undefined;
     const oldSelectedKey = this.selectedKey;
