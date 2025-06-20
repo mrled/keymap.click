@@ -1,6 +1,6 @@
 ---
 layout: site.njk
-title: ErgoDox
+title: About the ErgoDox
 eleventyNavigation:
   title: About the ErgoDox
   key: ErgoDox
@@ -8,8 +8,6 @@ eleventyNavigation:
   order: 2
 ---
 
-
-<h1>ErgoDox keyboards</h1>
 <p>
   ErgoDox keyboards are open source keyboards that are designed with
   ergonomics in mind and are entirely customizable. See the homepage of the

@@ -3,6 +3,7 @@ layout: site.njk
 eleventyNavigation:
   key: index
   title: Home
+  order: 0
 ---
 
 keymap.click is a tool for visualizing keymaps.

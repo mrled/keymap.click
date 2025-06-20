@@ -1,6 +1,7 @@
 ---
 layout: site.njk
 demo: true
+title: Empty UI Demo
 eleventyNavigation:
   title: Empty UI
   parent: demos

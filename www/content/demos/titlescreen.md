@@ -1,6 +1,7 @@
 ---
 layout: site.njk
 demo: true
+title: Title Screen Demo
 eleventyNavigation:
   title: Title Screen
   parent: demos

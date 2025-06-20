@@ -6,7 +6,7 @@ eleventyNavigation:
   parent: index
   order: 1
 ---
-<h1>What is this?</h1>
+
 <p>This site is a visual explanation of my keyboard layout.</p>
 <p>
   The keyboard, an <a href="/ergodox">ErgoDox-EZ</a>, has been a huge part

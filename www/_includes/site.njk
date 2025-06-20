@@ -32,6 +32,7 @@ title: keymap.click
       {{ collections.all | eleventyNavigation | eleventyNavigationToHtml | safe }}
     </nav>
     <main id="content">
+      <h1>{{ title | safe }}</h1>
       {{ content | safe }}
     </main>
   </body>

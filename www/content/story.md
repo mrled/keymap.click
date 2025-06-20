@@ -7,8 +7,6 @@ eleventyNavigation:
   order: 3
 ---
 
-
-<h1>Personal history</h1>
 <p>
   In 2019, I started to feel pain when typing. I had had typing related
   repetitive stress injury (RSI) pain almost a decade before, and became
