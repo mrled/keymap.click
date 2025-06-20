@@ -8,7 +8,17 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  --color-foreground: black;
+  --color-background: white;
   --color-primary: #c05621;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-foreground: white;
+    --color-background: black;
+    --color-primary: #f6ad55;
+  }
 }
 
 *,
@@ -20,6 +30,8 @@
 body {
   margin: 0;
   display: flex;
+  color: var(--color-foreground);
+  background-color: var(--color-background);
 }
 
 h1 {

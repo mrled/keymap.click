@@ -79,3 +79,54 @@
     --keyboard-grid-unit: 1.25rem;
   }
 }
+
+/* Dark mode colors */
+@media (prefers-color-scheme: dark) {
+  :root,
+  :host {
+    /* Button colors */
+    --button-border-color: #4b5563;
+    --button-text-enabled: #f3f4f6;
+    --button-text-disabled: #6b7280;
+    --button-bg-enabled: #374151;
+    --button-bg-hover: #4b5563;
+    --button-bg-active: #1e3a5f;
+
+    /* Key colors */
+    --key-fg: #f3f4f6;
+    --key-bg: #374151;
+    --key-border: #6b7280;
+    --key-hover-bg: #4b5563;
+    --key-active-bg: #dc7d1f;
+    --key-active-border: #b45309;
+    --key-active-hover-bg: #c2691e;
+    --key-related-active-bg: #7c3f0f;
+    --key-related-active-border: #dc7d1f;
+    --key-related-active-hover-bg: #92622c;
+    --key-diagram-target-bg: #1e4e31;
+    --key-diagram-target-border: #34d399;
+    --key-diagram-target-hover-bg: #15803d;
+    --key-focus-bg: #4b5563;
+    --key-active-focus-bg: #c2691e;
+    --key-related-active-focus-bg: #92622c;
+    --key-diagram-target-focus-bg: #22754a;
+
+    /* Kbd element colors */
+    --kbd-fg: #f3f4f6;
+    --kbd-border-color: #6b7280;
+    --kbd-background: linear-gradient(
+      180deg,
+      #374151,
+      #374151,
+      #374151,
+      #1f2937
+    );
+
+    /* Diagram colors */
+    --diagram-line-textref-color: #34d399ff;
+    --diagram-line-selected-color: #f59e0bcc;
+
+    /* Other colors */
+    --link-fg: #60a5fa;
+  }
+}
