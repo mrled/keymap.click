@@ -64,8 +64,9 @@ keymap-navbar {
     }
   }
 
-  > div.title-key-row {
+  .title-key-row {
     display: flex;
+    align-items: center;
     padding: 0.5em;
     margin: 0.5em;
 
@@ -74,8 +75,15 @@ keymap-navbar {
     }
   }
 
-  span.controls-pair {
-    display: inline-block;
+  .layer-tabs,
+  .guide-list {
+    display: flex;
+    align-items: center;
+  }
+
+  .controls-pair {
+    display: flex;
+    align-items: center;
     padding: 0.5em;
     select {
       margin-left: 1em;
