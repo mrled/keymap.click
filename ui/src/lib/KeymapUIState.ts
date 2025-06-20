@@ -62,7 +62,7 @@ import { KeyboardModel } from "./KeyboardModel";
 import { IStateObserver, StateChange, StateChangeMap } from "./State";
 import { ConnectionPair } from "./DiagramConnections";
 import { GuideStep, KeymapLayout, KeymapGuide, KeymapLayer } from "./Layout";
-import { DefaultLayout } from "~/default-keyboard/DefaultLayout";
+import { FallbackLayout } from "~/default-keyboard/FallbackLayout";
 
 /* A map of uniqueID strings to Keymap objects
  */
@@ -233,7 +233,7 @@ export class KeymapUIState {
   private _keymaps: LayoutMap = new Map();
   public get keymaps(): LayoutMap {
     if (this._keymaps.size === 0) {
-      this._keymaps.set(DefaultLayout.uniqueId, DefaultLayout);
+      this._keymaps.set(FallbackLayout.uniqueId, FallbackLayout);
       this.notify([new KeymapUIStateChange("keymaps", [], this._keymaps)]);
     }
     return this._keymaps;
