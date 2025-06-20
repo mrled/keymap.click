@@ -39,10 +39,6 @@ keymap-navbar {
 
     overflow-x: auto; /* Allow tabs to scroll horizontally */
 
-    &.hidden {
-      display: none;
-    }
-
     li {
       padding: 0.5em 1em;
       vertical-align: bottom;
@@ -88,13 +84,6 @@ keymap-navbar {
     select#keymap {
       max-width: 15em;
       text-overflow: ellipsis;
-    }
-
-    /* Override display:inline-block by selecting for .hidden here again --
-     * even though we already have a separate .hidden selector in utility.css.
-     */
-    &.hidden {
-      display: none;
     }
   }
 
