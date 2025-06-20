@@ -11,10 +11,9 @@ export const DefaultLayout = new KeymapLayout({
   model: KeyboardModelDefault,
   layers: [
     KeymapLayer.fromKeyList({
-      displayName: "Default Layer",
+      displayName: "ERROR: No keyboard available",
       shortName: "Default",
       welcome: [
-        `ERROR: No keyboard available.`,
         `If you see this, you need to pass a keyboard model to the keymap-ui element.`,
       ],
       keys: [
