@@ -17,7 +17,7 @@ export class PhysicalKey {
   constructor(
     readonly boardId: string,
     readonly position: Point,
-    readonly size: Size
+    readonly size: Size,
   ) {}
 
   get id() {

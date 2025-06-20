@@ -298,10 +298,8 @@ Here's what I'm doing now:
 
 ```css
 .keyboard-left-thumb-cluster {
-  transform: translateX(calc(var(--keyboard-grid-unit) * -2)) translateY(
-      calc(var(--keyboard-grid-unit) * 6)
-    )
-    rotate(25deg);
+  transform: translateX(calc(var(--keyboard-grid-unit) * -2))
+    translateY(calc(var(--keyboard-grid-unit) * 6)) rotate(25deg);
   transform-origin: 0 calc(var(--keyboard-grid-unit) * 2);
 }
 ```
@@ -388,7 +386,7 @@ useEffect(() => {
     const gbrbi = (id) => {
       const br = document.getElementById(id).getBoundingClientRect();
       return `${id}: ${r(br.x)},${r(br.y)} (${r(br.width)}x${r(
-        br.height
+        br.height,
       )}) ([${r(br.left)}..${r(br.right)}]x[${r(br.top)}..${r(br.bottom)}])`;
     };
     console.log(gbrbi("keyblay-debug-canvas"));

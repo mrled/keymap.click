@@ -10,7 +10,7 @@ export class DiagramLineColors {
     public debugCenterLine: string,
     public debugKeyboard: string,
     public debugLeft: string,
-    public debugRight: string
+    public debugRight: string,
   ) {}
 
   /* Get the diagram line colors from CSS variables in the context root
@@ -25,7 +25,7 @@ export class DiagramLineColors {
       rootStyle.getPropertyValue("--diagram-debug-center-line-color"),
       rootStyle.getPropertyValue("--diagram-debug-keyboard-color"),
       rootStyle.getPropertyValue("--diagram-debug-left-color"),
-      rootStyle.getPropertyValue("--diagram-debug-right-color")
+      rootStyle.getPropertyValue("--diagram-debug-right-color"),
     );
   }
 }
@@ -38,7 +38,7 @@ const drawVisualDebugInfo = (
   keyboardCenter: number,
   keyboardAndPanelRect: DOMRect,
   diamargLeftRect: DOMRect,
-  diamargRightRect: DOMRect
+  diamargRightRect: DOMRect,
 ) => {
   console.log(`diagram: visual debugging enabled`);
   context.lineWidth = 2;
@@ -50,7 +50,7 @@ const drawVisualDebugInfo = (
   if (keyboardAndPanelRect) {
     console.log(
       `Drawing into the keyboard/panel rectangle`,
-      keyboardAndPanelRect
+      keyboardAndPanelRect,
     );
     context.beginPath();
     context.strokeStyle = diagramLineColors.debugCenterLine;
@@ -70,7 +70,7 @@ const drawVisualDebugInfo = (
     context.stroke();
   } else {
     console.log(
-      `diagram: could not draw center line because there was no keyboardAndPanelRect`
+      `diagram: could not draw center line because there was no keyboardAndPanelRect`,
     );
   }
 
@@ -125,7 +125,7 @@ const drawDiagramLineTextref = (
   diamargRightRect: DOMRect,
   diamargLeftRect: DOMRect,
   marginInsetTickSize: number,
-  debug: boolean
+  debug: boolean,
 ) => {
   const source = connection.sourceCoords;
   const target = connection.targetCoords;
@@ -150,7 +150,7 @@ const drawDiagramLineTextref = (
   alreadySeenCoords.push(sourceInsetY);
   if (debug) {
     console.log(
-      `Selected source Y coordinate of ${sourceInsetY} from initial value of ${source.y}`
+      `Selected source Y coordinate of ${sourceInsetY} from initial value of ${source.y}`,
     );
   }
 
@@ -179,7 +179,7 @@ const drawDiagramLineTextref = (
 const drawDiagramLineSelected = (
   context: CanvasRenderingContext2D,
   connection: Connection,
-  diagramLineColors: DiagramLineColors
+  diagramLineColors: DiagramLineColors,
   // keyInfoTop,
 ) => {
   const source = connection.sourceCoords;
@@ -225,7 +225,7 @@ export const drawDiagram = (
   diamargRightRect: DOMRect,
   keyInfoContainerRect: DOMRect,
   diagramLineColors: DiagramLineColors,
-  debug: boolean
+  debug: boolean,
 ) => {
   const context = canvas.getContext("2d");
   if (!context) {
@@ -288,7 +288,7 @@ export const drawDiagram = (
       keyboardCenter,
       keyboardAndPanelRect,
       diamargLeftRect,
-      diamargRightRect
+      diamargRightRect,
     );
   }
 
@@ -319,7 +319,7 @@ export const drawDiagram = (
         diamargRightRect,
         diamargLeftRect,
         marginInsetTickSize,
-        debug
+        debug,
       );
     } else if (connection.connectionType == KeyInfoConnectType.Selected) {
       drawDiagramLineSelected(context, connection, diagramLineColors);

@@ -116,7 +116,7 @@ const KeyboardModelErgodox = new KeyboardModel(
     new PhysicalKey("r-t", new Point(3, 3), new Size(2, 4)), // D
     new PhysicalKey("r-t", new Point(5, 3), new Size(2, 4)), // E
     new PhysicalKey("r-t", new Point(1, 5), new Size(2, 2)), // F
-  ]
+  ],
 );
 
 /* An ErgoDox keyboard.
@@ -149,25 +149,25 @@ class KeymapKeyboardErgodoxElement extends KeymapKeyboardElement {
     leftSubBoard.appendChild(leftGridContainer);
 
     const leftFingerGrid = document.createElement(
-      KeymapKeygridElement.elementName
+      KeymapKeygridElement.elementName,
     ) as KeymapKeygridElement;
     leftFingerGrid.setAttribute("name", "ergodox-left-finger");
     leftFingerGrid.setAttribute("cols", "15");
     leftFingerGrid.setAttribute("rows", "10");
     const leftFingerKeys = keys.filter(
-      (key) => this.model.getPhysicalKey(key.id).boardId === "l-f"
+      (key) => this.model.getPhysicalKey(key.id).boardId === "l-f",
     );
     leftFingerGrid.createKeys(this, leftFingerKeys);
     leftGridContainer.appendChild(leftFingerGrid);
 
     const leftThumbGrid = document.createElement(
-      KeymapKeygridElement.elementName
+      KeymapKeygridElement.elementName,
     ) as KeymapKeygridElement;
     leftThumbGrid.setAttribute("name", "ergodox-left-thumb");
     leftThumbGrid.setAttribute("cols", "6");
     leftThumbGrid.setAttribute("rows", "6");
     const leftThumbKeys = keys.filter(
-      (key) => this.model.getPhysicalKey(key.id).boardId === "l-t"
+      (key) => this.model.getPhysicalKey(key.id).boardId === "l-t",
     );
     leftThumbGrid.createKeys(this, leftThumbKeys);
     leftGridContainer.appendChild(leftThumbGrid);
@@ -185,25 +185,25 @@ class KeymapKeyboardErgodoxElement extends KeymapKeyboardElement {
     rightSubBoard.appendChild(rightGridContainer);
 
     const rightFingerGrid = document.createElement(
-      KeymapKeygridElement.elementName
+      KeymapKeygridElement.elementName,
     ) as KeymapKeygridElement;
     rightFingerGrid.setAttribute("name", "ergodox-right-finger");
     rightFingerGrid.setAttribute("cols", "15");
     rightFingerGrid.setAttribute("rows", "10");
     const rightFingerKeys = keys.filter(
-      (key) => this.model.getPhysicalKey(key.id).boardId === "r-f"
+      (key) => this.model.getPhysicalKey(key.id).boardId === "r-f",
     );
     rightFingerGrid.createKeys(this, rightFingerKeys);
     rightGridContainer.appendChild(rightFingerGrid);
 
     const rightThumbGrid = document.createElement(
-      KeymapKeygridElement.elementName
+      KeymapKeygridElement.elementName,
     ) as KeymapKeygridElement;
     rightThumbGrid.setAttribute("name", "ergodox-right-thumb");
     rightThumbGrid.setAttribute("cols", "6");
     rightThumbGrid.setAttribute("rows", "6");
     const rightThumbKeys = keys.filter(
-      (key) => this.model.getPhysicalKey(key.id).boardId === "r-t"
+      (key) => this.model.getPhysicalKey(key.id).boardId === "r-t",
     );
     rightThumbGrid.createKeys(this, rightThumbKeys);
     rightGridContainer.appendChild(rightThumbGrid);
@@ -213,7 +213,7 @@ class KeymapKeyboardErgodoxElement extends KeymapKeyboardElement {
 if (!customElements.get(KeymapKeyboardErgodoxElement.elementName)) {
   customElements.define(
     KeymapKeyboardErgodoxElement.elementName,
-    KeymapKeyboardErgodoxElement
+    KeymapKeyboardErgodoxElement,
   );
 }
 

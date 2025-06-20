@@ -24,7 +24,7 @@ export class KeyboardModel {
     public readonly maxKeySize: Size = new Size(4, 4),
 
     // A list of physical key objects on the board
-    public readonly physicalKeys: PhysicalKey[] = []
+    public readonly physicalKeys: PhysicalKey[] = [],
   ) {}
 
   /* A map of string key IDs to PhysicalKey objects.
@@ -37,7 +37,7 @@ export class KeyboardModel {
           acc[key.id] = key;
           return acc;
         },
-        {}
+        {},
       );
     }
     return this._physicalKeymap;
@@ -49,7 +49,7 @@ export class KeyboardModel {
     const key = this.physicalKeymap[id];
     if (!key) {
       throw new Error(
-        `Physical key not found with id '${id}' on board '${this.keyboardElementName}'`
+        `Physical key not found with id '${id}' on board '${this.keyboardElementName}'`,
       );
     }
     return key;
@@ -59,7 +59,7 @@ export class KeyboardModel {
    */
   get blankKeymapKeys(): KeymapKey[] {
     return this.physicalKeys.map(
-      (key) => new KeymapKey({ name: "", id: key.id, info: [""], unset: true })
+      (key) => new KeymapKey({ name: "", id: key.id, info: [""], unset: true }),
     );
   }
 

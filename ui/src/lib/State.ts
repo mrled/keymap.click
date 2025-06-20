@@ -7,7 +7,7 @@ export class StateChange<T> {
   constructor(
     public key: keyof T,
     public oldValue: T[keyof T] | null,
-    public newValue: T[keyof T]
+    public newValue: T[keyof T],
   ) {}
 
   toString() {

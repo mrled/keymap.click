@@ -67,7 +67,7 @@ export class KeymapKeygridElement extends HTMLElement {
    */
   get keyElements(): KeymapKeyElement[] {
     return Array.from(
-      this.querySelectorAll(KeymapKeyElement.elementName)
+      this.querySelectorAll(KeymapKeyElement.elementName),
     ) as KeymapKeyElement[];
   }
 
@@ -118,7 +118,7 @@ export class KeymapKeygridElement extends HTMLElement {
           bubbles: true, // Allow event to bubble up to parent elements
           composed: true, // Allow event to pass through shadow DOM boundaries
           detail: key.id,
-        })
+        }),
       );
     };
 

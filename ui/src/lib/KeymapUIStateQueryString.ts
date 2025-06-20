@@ -40,7 +40,7 @@ export function setStateFromQsAndAttrib({
     if (keymapUi.hasAttribute("layer")) {
       currentAttributes.layerIdx = parseInt(
         keymapUi.getAttribute("layer") || "0",
-        10
+        10,
       );
     }
     if (keymapUi.hasAttribute("selected-key")) {
@@ -109,7 +109,7 @@ export function setStateFromQsAndAttrib({
  */
 export function setQueryStringFromState(
   state: KeymapUIState,
-  keymapUi: KeymapUIElement
+  keymapUi: KeymapUIElement,
 ) {
   const queryPrefix = state.queryPrefix;
 

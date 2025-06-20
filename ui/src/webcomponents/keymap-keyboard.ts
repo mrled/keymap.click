@@ -12,7 +12,7 @@ export abstract class KeymapKeyboardElement extends HTMLElement {
    * and recalculate the size of the board.
    */
   resizeObserver: ResizeObserver = new ResizeObserver(() =>
-    this.calculateSize()
+    this.calculateSize(),
   );
 
   constructor() {
@@ -55,7 +55,7 @@ export abstract class KeymapKeyboardElement extends HTMLElement {
    */
   get keyElements() {
     return Array.from(
-      this.querySelectorAll(KeymapKeyElement.elementName)
+      this.querySelectorAll(KeymapKeyElement.elementName),
     ) as KeymapKeyElement[];
   }
 

@@ -88,7 +88,8 @@ import utilityStyleStr from "~/styles/utility.css?inline";
 
 export class KeymapUIElement
   extends HTMLElement
-  implements IStateObserver<KeymapUIState> {
+  implements IStateObserver<KeymapUIState>
+{
   //
 
   /* The element name to register with customElements.define().
@@ -128,7 +129,7 @@ export class KeymapUIElement
      * to watch for changes in the size of the element that the canvas should completely cover
      */
     this.resizeObserver = new ResizeObserver(() =>
-      this.#resizeCanvas(this.state)
+      this.#resizeCanvas(this.state),
     );
 
     /* Listen for this event emitted by any child element.
@@ -271,17 +272,17 @@ export class KeymapUIElement
   get keyInfoNavbar(): KeymapNavbarElement {
     if (!this._keyInfoNavbar) {
       this._keyInfoNavbar = this.shadow.querySelector(
-        KeymapNavbarElement.elementName
+        KeymapNavbarElement.elementName,
       ) as KeymapNavbarElement;
     }
     if (!this._keyInfoNavbar) {
       this._keyInfoNavbar = document.createElement(
-        KeymapNavbarElement.elementName
+        KeymapNavbarElement.elementName,
       ) as KeymapNavbarElement;
       this._keyInfoNavbar.updateTitleKey(
         this.state.layer,
         this.state.keymap.model,
-        this.state.selectedKey
+        this.state.selectedKey,
       );
     }
     if (!this._keyInfoNavbar.state.initialized) {
@@ -306,7 +307,7 @@ export class KeymapUIElement
   get diamargRight(): HTMLElement {
     if (!this._diamargRight) {
       this._diamargRight = this.shadow.querySelector(
-        ".keymap-ui-diamarg-right"
+        ".keymap-ui-diamarg-right",
       );
     }
     if (!this._diamargRight) {
@@ -333,7 +334,7 @@ export class KeymapUIElement
   get kidContainer(): HTMLElement {
     if (!this._kidContainer) {
       this._kidContainer = this.shadow.querySelector(
-        ".keymap-ui-kid-container"
+        ".keymap-ui-kid-container",
       );
     }
     if (!this._kidContainer) {
@@ -349,7 +350,7 @@ export class KeymapUIElement
     if (!this._keyboard) {
       // First, try to find a keyboard in the DOM
       this._keyboard = this.shadow.querySelector(
-        "#keyboard"
+        "#keyboard",
       ) as KeymapKeyboardElement;
       needsCreate = true;
     }
@@ -358,11 +359,11 @@ export class KeymapUIElement
       const kbElementName = this.state.keymap.model.keyboardElementName;
       if (!customElements.get(kbElementName)) {
         throw new Error(
-          `KeymapUIElement: Keyboard element ${kbElementName} not found`
+          `KeymapUIElement: Keyboard element ${kbElementName} not found`,
         );
       }
       this._keyboard = document.createElement(
-        kbElementName
+        kbElementName,
       ) as KeymapKeyboardElement;
       this._keyboard.setAttribute("id", "keyboard");
       this._keyboard.classList.add("keymap-keyboard");
@@ -377,7 +378,7 @@ export class KeymapUIElement
   get infoContainer(): HTMLElement {
     if (!this._infoContainer) {
       this._infoContainer = this.shadow.querySelector(
-        ".keymap-ui-keyinfo-container"
+        ".keymap-ui-keyinfo-container",
       );
     }
     if (!this._infoContainer) {
@@ -403,12 +404,12 @@ export class KeymapUIElement
   get diagram(): KeymapDiagramElement {
     if (!this._diagram) {
       this._diagram = this.shadow.querySelector(
-        KeymapDiagramElement.elementName
+        KeymapDiagramElement.elementName,
       ) as KeymapDiagramElement;
     }
     if (!this._diagram) {
       this._diagram = document.createElement(
-        KeymapDiagramElement.elementName
+        KeymapDiagramElement.elementName,
       ) as KeymapDiagramElement;
     }
     if (!this._diagram.readyToDraw) {
@@ -430,7 +431,7 @@ export class KeymapUIElement
    */
   private setChildrenIdempotently(
     parent: HTMLElement | ShadowRoot,
-    children: HTMLElement[]
+    children: HTMLElement[],
   ) {
     if (!children.every((c) => parent.contains(c))) {
       while (parent.firstChild) {
@@ -494,7 +495,7 @@ export class KeymapUIElement
 
       if (oldKeyboard.elementName != newKeymap.model.keyboardElementName) {
         this._keyboard = document.createElement(
-          newKeymap.model.keyboardElementName
+          newKeymap.model.keyboardElementName,
         ) as KeymapKeyboardElement;
         this.keyInfoNavbar.setAttribute("key-id", "");
 
@@ -555,7 +556,7 @@ export class KeymapUIElement
       const keyData = this.state.layer.keys.get(activeKeyId);
       if (!keyData) {
         console.error(
-          `KeymapUIElement: Key ${activeKeyId} not found in key map '${this.state.keymap.uniqueId}'`
+          `KeymapUIElement: Key ${activeKeyId} not found in key map '${this.state.keymap.uniqueId}'`,
         );
         return;
       }
@@ -595,11 +596,11 @@ export class KeymapUIElement
     this.infoProse.append(...proseTextElements);
 
     proseKeyIndicators = Array.from(
-      this.infoProse.querySelectorAll(KeymapIndicatorElement.elementName)
+      this.infoProse.querySelectorAll(KeymapIndicatorElement.elementName),
     );
     // Construct a list of all keys indicated in the prose
     indicatedKeyIds = proseKeyIndicators.map(
-      (indicator) => indicator.getAttribute("id") || ""
+      (indicator) => indicator.getAttribute("id") || "",
     );
 
     // Clear any existing connections that back the diagram lines
@@ -609,12 +610,12 @@ export class KeymapUIElement
     this.keyInfoNavbar.updateTitleKey(
       this.state.layer,
       this.state.keymap.model,
-      activeKeyId
+      activeKeyId,
     );
     // this.keyInfoNavbar might not be in the DOM on initial load, so we have to lay out here.
     this.layOutIdempotently();
     const navBarHandle = this.keyInfoNavbar.querySelector(
-      KeymapKeyHandleElement.elementName
+      KeymapKeyHandleElement.elementName,
     );
 
     // Update every key on the board
@@ -633,7 +634,7 @@ export class KeymapUIElement
       key.setAttribute("target-of-indicator", indicatorTarget.toString());
 
       const keyHandle = key.querySelector(
-        KeymapKeyHandleElement.elementName
+        KeymapKeyHandleElement.elementName,
       ) as KeymapKeyHandleElement;
       if (!keyHandle) return;
 
@@ -643,8 +644,8 @@ export class KeymapUIElement
           new ConnectionPair(
             navBarHandle,
             keyHandle,
-            KeyInfoConnectType.Selected
-          )
+            KeyInfoConnectType.Selected,
+          ),
         );
       } else if (indicatorTarget) {
         // Store the key handle for making a connection later
@@ -664,12 +665,12 @@ export class KeymapUIElement
       const indicated = indicatedElementsById[indicatorId];
       if (!indicated) {
         console.error(
-          `KeymapUIElement: Key indicator has no target: ${indicatorId}`
+          `KeymapUIElement: Key indicator has no target: ${indicatorId}`,
         );
         return;
       }
       connectionPairs.push(
-        new ConnectionPair(indicator, indicated, KeyInfoConnectType.TextRef)
+        new ConnectionPair(indicator, indicated, KeyInfoConnectType.TextRef),
       );
     });
 
@@ -684,7 +685,7 @@ export class KeymapUIElement
       // Remove all old query parameters with the old prefix
       const [params, newQs] = KeymapUIOptions.parseQueryString(
         change.oldValue as string,
-        window.location.search
+        window.location.search,
       );
       const newUrl = params.any
         ? `${window.location.pathname}?${newQs.toString()}`
@@ -710,7 +711,7 @@ export class KeymapUIElement
   #resizeCanvas(state: KeymapUIState) {
     this.diagram.resize(
       this.kidContainer.offsetWidth,
-      this.kidContainer.offsetHeight
+      this.kidContainer.offsetHeight,
     );
   }
 

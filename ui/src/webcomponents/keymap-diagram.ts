@@ -7,7 +7,8 @@ import { DiagramLineColors, drawDiagram } from "~/lib/DiagramDrawing";
 
 export class KeymapDiagramElement
   extends HTMLElement
-  implements IStateObserver<KeymapUIState> {
+  implements IStateObserver<KeymapUIState>
+{
   //
 
   static readonly elementName = "keymap-diagram";
@@ -84,7 +85,7 @@ export class KeymapDiagramElement
       this.diamargRight!.getBoundingClientRect(),
       this.infoProse!.getBoundingClientRect(),
       DiagramLineColors.fromContextRootVars(this),
-      debug > 0
+      debug > 0,
     );
   }
 

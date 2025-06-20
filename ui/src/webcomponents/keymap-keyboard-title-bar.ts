@@ -26,7 +26,7 @@ export class KeymapKeyboardTitleBarElement extends KeymapKeyboardElement {
       "title-bar",
       new Point(0, 0),
       // This doesn't matter; it will be set in updateSelectedKey()
-      new Size(1, 1)
+      new Size(1, 1),
     );
     this._physicalKeys = [this.titleKey];
     this._model = new KeyboardModel(
@@ -34,7 +34,7 @@ export class KeymapKeyboardTitleBarElement extends KeymapKeyboardElement {
       "TitleBar",
       new Point(2, 2),
       new Size(2, 2),
-      this._physicalKeys
+      this._physicalKeys,
     );
   }
 
@@ -54,7 +54,7 @@ export class KeymapKeyboardTitleBarElement extends KeymapKeyboardElement {
         model.displayName,
         model.defaultBlankKeySize,
         model.maxKeySize,
-        this._physicalKeys
+        this._physicalKeys,
       );
     }
   }
@@ -63,12 +63,12 @@ export class KeymapKeyboardTitleBarElement extends KeymapKeyboardElement {
   get grid(): KeymapKeygridElement {
     if (!this._grid) {
       this._grid = this.querySelector(
-        KeymapKeygridElement.elementName
+        KeymapKeygridElement.elementName,
       ) as KeymapKeygridElement;
     }
     if (!this._grid) {
       this._grid = document.createElement(
-        KeymapKeygridElement.elementName
+        KeymapKeygridElement.elementName,
       ) as KeymapKeygridElement;
       this.appendChild(this._grid);
       this.grid.setAttribute("name", "title-bar");
@@ -94,7 +94,7 @@ export class KeymapKeyboardTitleBarElement extends KeymapKeyboardElement {
   updateSelectedKey(
     keymapLayer: KeymapLayer,
     referenceModel: KeyboardModel,
-    selectedKeyId: string
+    selectedKeyId: string,
   ): KeymapKey {
     this.grid.setAttribute("cols", this.model.maxKeySize.x.toString());
     this.grid.setAttribute("rows", this.model.maxKeySize.y.toString());
@@ -114,7 +114,7 @@ export class KeymapKeyboardTitleBarElement extends KeymapKeyboardElement {
       this.titleKey = new PhysicalKey(
         "title-bar",
         new Point(0, 0),
-        this.model.defaultBlankKeySize
+        this.model.defaultBlankKeySize,
       );
     } else {
       const selectedKey = keymapLayer.keys.get(selectedKeyId);
@@ -150,7 +150,7 @@ export class KeymapKeyboardTitleBarElement extends KeymapKeyboardElement {
   createChildren(keys: KeymapKey[]) {
     // TODO: handle this more elegantly
     throw new Error(
-      "You don't want to call createChildren() on KeymapKeyboardTitleBarElement; use updateSelectedKey() instead."
+      "You don't want to call createChildren() on KeymapKeyboardTitleBarElement; use updateSelectedKey() instead.",
     );
   }
 

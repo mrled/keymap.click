@@ -45,12 +45,12 @@ const Slctr = {
   GuidePrev: new Selector("guide-prev-step"),
   LayerHome: new Selector("layer-home"),
 } as const;
-type Sels = typeof Slctr[keyof typeof Slctr];
+type Sels = (typeof Slctr)[keyof typeof Slctr];
 
 type ChangeListenerFunction = (
   e: Event,
   selectId: string,
-  selectElement: HTMLSelectElement
+  selectElement: HTMLSelectElement,
 ) => void;
 
 // #endregion
@@ -61,7 +61,8 @@ type ChangeListenerFunction = (
  */
 export class KeymapNavbarElement
   extends HTMLElement
-  implements IStateObserver<KeymapUIState> {
+  implements IStateObserver<KeymapUIState>
+{
   //
 
   // #region Constructor and lifecycle
@@ -84,12 +85,12 @@ export class KeymapNavbarElement
   updateTitleKey(
     keymapLayer: KeymapLayer,
     referenceModel: KeyboardModel,
-    selectedKeyId: string
+    selectedKeyId: string,
   ) {
     const modifiedKey = this.titleBoard.updateSelectedKey(
       keymapLayer,
       referenceModel,
-      selectedKeyId
+      selectedKeyId,
     );
   }
 
@@ -282,7 +283,7 @@ export class KeymapNavbarElement
         this._keymapSelector.disabled = true;
       }
       const options: HTMLOptionElement[] = Array.from(
-        this.state.keymaps.values()
+        this.state.keymaps.values(),
       ).map((keymap) => {
         const option = document.createElement("option");
         option.value = keymap.uniqueId;
@@ -316,7 +317,7 @@ export class KeymapNavbarElement
       this._keymapPair.classList.add("controls-pair");
       this._keymapPair.append(
         this.getLabel(Slctr.Keymap, "Keymap"),
-        this.keymapSelector
+        this.keymapSelector,
       );
     }
     return this._keymapPair;
@@ -384,7 +385,7 @@ export class KeymapNavbarElement
    */
   private getLabel(forItem: Sels, text: string): HTMLLabelElement {
     let result = this.querySelector(
-      `label[for="${forItem}"]`
+      `label[for="${forItem}"]`,
     ) as HTMLLabelElement;
     if (!result) {
       result = document.createElement("label");
@@ -411,12 +412,12 @@ export class KeymapNavbarElement
   get titleBoard(): KeymapKeyboardTitleBarElement {
     if (!this._titleBoard) {
       this._titleBoard = this.querySelector(
-        KeymapKeyboardTitleBarElement.elementName
+        KeymapKeyboardTitleBarElement.elementName,
       ) as KeymapKeyboardTitleBarElement;
     }
     if (!this._titleBoard) {
       this._titleBoard = document.createElement(
-        KeymapKeyboardTitleBarElement.elementName
+        KeymapKeyboardTitleBarElement.elementName,
       ) as KeymapKeyboardTitleBarElement;
     }
     return this._titleBoard;

@@ -6,11 +6,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": false,
-    "lib": [
-      "ES2016",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2016", "DOM", "DOM.Iterable"],
     "allowJs": true,
     "incremental": true,
     "moduleResolution": "node",
@@ -21,23 +17,14 @@
     "rootDir": "./src",
     "typeRoots": ["./src/types"],
     "paths": {
-      "~/*": [
-        "src/*"
-      ]
+      "~/*": ["src/*"]
     },
 
     "noEmit": false,
     "emitDeclarationOnly": true,
     "declaration": true,
-    "outDir": "./dist/types",
-
+    "outDir": "./dist/types"
   },
-  "include": [
-    "./src/**/*.js",
-    "./src/**/*.ts",
-    "./src/**/*.cjs",
-  ],
-  "exclude": [
-    "node_modules"
-  ],
+  "include": ["./src/**/*.js", "./src/**/*.ts", "./src/**/*.cjs"],
+  "exclude": ["node_modules"]
 }

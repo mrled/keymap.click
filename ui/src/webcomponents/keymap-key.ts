@@ -141,7 +141,7 @@ export class KeymapKeyElement extends HTMLElement {
 
     if (!this.keyHandleElement) {
       this.keyHandleElement = document.createElement(
-        KeymapKeyHandleElement.elementName
+        KeymapKeyHandleElement.elementName,
       );
       this.appendChild(this.keyHandleElement);
     }

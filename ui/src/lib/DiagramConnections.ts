@@ -13,7 +13,7 @@ export class Connection {
   constructor(
     sourceCoords: Point,
     targetCoords: Point,
-    connectionType: KeyInfoConnectType
+    connectionType: KeyInfoConnectType,
   ) {
     this.sourceCoords = sourceCoords;
     this.targetCoords = targetCoords;

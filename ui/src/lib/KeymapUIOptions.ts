@@ -35,7 +35,7 @@ export class KeymapUIOptions {
    */
   static parseQueryString(
     prefix: string,
-    queryString: string
+    queryString: string,
   ): [KeymapUIOptions, URLSearchParams] {
     const params = new URLSearchParams(queryString);
     const newParams = new URLSearchParams();

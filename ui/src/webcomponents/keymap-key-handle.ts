@@ -51,12 +51,8 @@ export class KeymapKeyHandleElement extends HTMLElement {
   }
 
   updateComponent() {
-    const {
-      keyId,
-      colStart,
-      handleTop,
-      extraClasses,
-    } = this.retrieveAttributes();
+    const { keyId, colStart, handleTop, extraClasses } =
+      this.retrieveAttributes();
 
     if (!keyId) {
       return;

@@ -6,11 +6,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "lib": [
-      "ES2016",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2016", "DOM", "DOM.Iterable"],
     "allowJs": true,
     "noEmit": true,
     "incremental": true,
@@ -19,14 +15,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "allowImportingTsExtensions": true,
-    "baseUrl": ".",
+    "baseUrl": "."
   },
-  "include": [
-    "**/*.js",
-    "**/*.ts",
-    "**/*.cjs",
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["**/*.js", "**/*.ts", "**/*.cjs"],
+  "exclude": ["node_modules"]
 }
