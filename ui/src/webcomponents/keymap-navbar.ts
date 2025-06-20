@@ -389,11 +389,8 @@ export class KeymapNavbarElement
       this._guideList.classList.add("guide-list");
 
       const labelLi = document.createElement("li");
-      labelLi.textContent = "Guides";
+      labelLi.textContent = "Guide";
       this._guideList.append(labelLi);
-      if (this.state.keymap.guides.length < 1) {
-        this._guideList.classList.add("hidden");
-      }
 
       const controlsLi = document.createElement("li");
       controlsLi.classList.add("guide-tab");
@@ -403,7 +400,9 @@ export class KeymapNavbarElement
       }
       this._guideList.append(controlsLi);
 
-      const guideItems = this.state.keymap.guides.map((guide) => {
+      // We only have UI for a single guide currently
+      const guide = this.state.keymap.guides[0] || null;
+      if (guide) {
         const tabButton = document.createElement("button");
         if (guide.id === this.state.guide?.id) {
           tabButton.textContent = `Restart ${guide.shortName}`;
@@ -422,10 +421,8 @@ export class KeymapNavbarElement
         });
         li.classList.add("guide-tab");
         li.appendChild(tabButton);
-        return li;
-      });
-      this._guideList.append(...guideItems);
-      if (this.state.keymap.guides.length < 1) {
+        this._guideList.append(li);
+      } else {
         this._guideList.classList.add("hidden");
       }
     }
