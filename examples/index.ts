@@ -1,1 +1,1 @@
-export { MicahErgodoxLayout } from './MicahErgodoxLayout';
+export { MicahErgodoxLayout } from "./MicahErgodoxLayout";
