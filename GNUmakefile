@@ -27,7 +27,7 @@ SHELL := /bin/bash
 help: ## Show this help
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-node_modules/.installed: package.json package-lock.json */package.json */package-lock.json
+node_modules/.installed: package.json package-lock.json */package.json
 	npm install
 	touch node_modules/.installed
 
