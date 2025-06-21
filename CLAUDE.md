@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-keymap.click is a web application for visualizing and explaining keyboard layouts, specifically showing how an ErgoDox keyboard helped with RSI (Repetitive Strain Injury). The project is currently migrating from React/Next.js to vanilla JavaScript with web components.
+KeymapKit is a web application for visualizing and explaining keyboard layouts, specifically showing how an ErgoDox keyboard helped with RSI (Repetitive Strain Injury). The project is currently migrating from React/Next.js to vanilla JavaScript with web components.
 
 ## Build Commands
 
@@ -43,9 +43,9 @@ The project is migrating from React/Next.js to vanilla JavaScript web components
 
 The codebase consists of three main TypeScript modules with file-based dependencies:
 
-1. `@keymap.click/ui` - Core UI components and utilities
-2. `@keymap.click/keyboard.ergodox` - ErgoDox keyboard model (depends on ui)
-3. `@keymap.click/layout.mrlergo` - Custom layout definitions (depends on ui and keyboard.ergodox)
+1. `@keymapkit/ui` - Core UI components and utilities
+2. `@keymapkit/keyboard.ergodox` - ErgoDox keyboard model (depends on ui)
+3. `@keymapkit/layout.mrlergo` - Custom layout definitions (depends on ui and keyboard.ergodox)
 
 ### Build System
 

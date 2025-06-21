@@ -8,7 +8,7 @@ eleventyNavigation:
   order: 3
 ---
 
-This is a demo of the `@keymap.click/ui` without adding any models or layouts.
+This is a demo of the `@keymapkit/ui` without adding any models or layouts.
 
 Toggle debug controls on all KeymapUI elements on this page:
 <button onclick="toggleAllKeymapUiDebug()">Toggle Debug Controls</button>
@@ -16,7 +16,7 @@ Toggle debug controls on all KeymapUI elements on this page:
 <div id="app"></div>
 
 <script type="module">
-  import "@keymap.click/ui";
+  import "@keymapkit/ui";
   const app = document.getElementById("app");
   const keymapUi = document.createElement("keymap-ui");
   keymapUi.setAttribute("id", "keymap-empty");

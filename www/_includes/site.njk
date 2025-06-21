@@ -1,5 +1,5 @@
 ---
-title: keymap.click
+title: KeymapKit
 ---
 <!doctype html>
 <html lang="en">
@@ -12,10 +12,10 @@ title: keymap.click
     <script type="importmap">
     {
       "imports": {
-        "@keymap.click/ui": "/keymap.click/keymap.click.js",
-        "@keymap.click/keyboard.ergodox": "/keymap.click/keyboard.ergodox.js",
-        "@keymap.click/keyboard.planck48": "/keymap.click/keyboard.planck48.js",
-        "@keymap.click/examples": "/keymap.click/examples.js"
+        "@keymapkit/ui": "/keymapkit/keymapkit.js",
+        "@keymapkit/keyboard.ergodox": "/keymapkit/keyboard.ergodox.js",
+        "@keymapkit/keyboard.planck48": "/keymapkit/keyboard.planck48.js",
+        "@keymapkit/examples": "/keymapkit/examples.js"
       }
     }
     </script>
@@ -28,7 +28,7 @@ title: keymap.click
   <body>
     <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
     <nav id="sidebar">
-      <h1><a href="/">keymap.click</a></h1>
+      <h1><a href="/">KeymapKit</a></h1>
       {{ collections.all | eleventyNavigation | eleventyNavigationToHtml | safe }}
     </nav>
     <main id="content">

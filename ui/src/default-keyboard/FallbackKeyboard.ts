@@ -5,11 +5,11 @@ import { PhysicalKey } from "~/lib/PhysicalKey";
 import { KeymapKeyboardElement } from "~/webcomponents/keymap-keyboard";
 import { KeymapKeygridElement } from "~/webcomponents/keymap-keygrid";
 
-/* The title screen keyboard model
+/* The fallback keyboard model
  */
 const KeyboardModelFallback = new KeyboardModel(
   "fallback-keyboard",
-  "keymap.click Title Screen Keyboard",
+  "KeymapKit Fallback Keyboard",
   new Point(2, 2),
   new Size(2, 2),
   [
@@ -33,7 +33,7 @@ const KeyboardModelFallback = new KeyboardModel(
   ],
 );
 
-/* The title screen keyboard element
+/* The fallback keyboard element
  */
 class FallbackKeyboardElement extends KeymapKeyboardElement {
   static elementName = "fallback-keyboard";

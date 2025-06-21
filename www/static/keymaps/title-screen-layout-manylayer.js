@@ -4,7 +4,7 @@ import {
   KeymapLayout,
   KeymapKey,
   KeymapLayer,
-} from "@keymap.click/ui";
+} from "@keymapkit/ui";
 
 /* A dumb function to generate a layer, for testing a board with lots of layers
  */

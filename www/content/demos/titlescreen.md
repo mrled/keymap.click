@@ -8,7 +8,7 @@ eleventyNavigation:
   order: 1
 ---
 
-This is a demo of `@keymap.click/ui` with the example title screen keyboard model.
+This is a demo of `@keymapkit/ui` with the example title screen keyboard model.
 
 Toggle debug controls on all KeymapUI elements on this page:
 <button onclick="toggleAllKeymapUiDebug()">Toggle Debug Controls</button>

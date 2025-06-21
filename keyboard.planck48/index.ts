@@ -6,7 +6,7 @@ import {
   PhysicalKey,
   Point,
   Size,
-} from "@keymap.click/ui";
+} from "@keymapkit/ui";
 
 /* A Planck keyboard with 48 keys (all 1U keys, no 2U keys).
  */

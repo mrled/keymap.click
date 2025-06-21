@@ -8,7 +8,7 @@ eleventyNavigation:
   order: 4
 ---
 
-This is a demo of `@keymap.click/ui` with a bunch of different layouts and models to choose from --
+This is a demo of `@keymapkit/ui` with a bunch of different layouts and models to choose from --
 more than most normal sites would use.
 
 Toggle debug controls on all KeymapUI elements on this page:
@@ -20,8 +20,8 @@ Toggle debug controls on all KeymapUI elements on this page:
   import { KeymapTitleScreenLayoutSimple } from "/keymaps/title-screen-layout-simple.js";
   import { KeymapTitleScreenLayoutManyLayer } from "/keymaps/title-screen-layout-manylayer.js";
   import { Planck48ExampleLayout } from "/keymaps/planck48-example-layout.js";
-  import "@keymap.click/keyboard.ergodox";
-  import { MicahErgodoxLayout } from "@keymap.click/examples";
+  import "@keymapkit/keyboard.ergodox";
+  import { MicahErgodoxLayout } from "@keymapkit/examples";
   const app = document.getElementById("app");
   const keymapUi = document.createElement("keymap-ui");
   const availableKeymaps = [

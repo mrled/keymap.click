@@ -8,7 +8,7 @@ eleventyNavigation:
   order: 5
 ---
 
-This is a demo of `@keymap.click/ui` showing an ErgoDox keyboard with my layout.
+This is a demo of `@keymapkit/ui` showing an ErgoDox keyboard with my layout.
 
 Toggle debug controls on all KeymapUI elements on this page:
 <button onclick="toggleAllKeymapUiDebug()">Toggle Debug Controls</button>
@@ -16,9 +16,9 @@ Toggle debug controls on all KeymapUI elements on this page:
 <div id="app"></div>
 
 <script type="module">
-  import "@keymap.click/ui";
-  import "@keymap.click/keyboard.ergodox";
-  import { MicahErgodoxLayout } from "@keymap.click/examples";
+  import "@keymapkit/ui";
+  import "@keymapkit/keyboard.ergodox";
+  import { MicahErgodoxLayout } from "@keymapkit/examples";
   const app = document.getElementById("app");
   const keymapUi = document.createElement("keymap-ui");
   const availableKeymaps = [MicahErgodoxLayout];

@@ -6,7 +6,7 @@ import {
   KeymapKeygridElement,
   KeyboardModel,
   KeymapKey,
-} from "@keymap.click/ui";
+} from "@keymapkit/ui";
 
 const KeyboardModelErgodox = new KeyboardModel(
   "keymap-keyboard-ergodox",

@@ -27,6 +27,9 @@ SHELL := /bin/bash
 help: ## Show this help
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
+package-lock.json: package.json
+	npm install --package-lock-only
+
 node_modules/.installed: package.json package-lock.json */package.json
 	npm install
 	touch node_modules/.installed
@@ -45,68 +48,68 @@ clean: ## Clean up
 	rm -rf keyboard.ergodox/dist
 	rm -rf examples/dist
 	rm -rf www/_site
-	rm -rf www/static/keymap.click/*
+	rm -rf www/static/keymapkit/*
 
 
-## @keymap.click/ui
+# @keymapkit/ui
 UI_SOURCES = $(shell find ui/src -type f)
-ui/dist/keymap.click.js: node_modules/.installed $(UI_SOURCES)
+ui/dist/keymapkit.js: node_modules/.installed $(UI_SOURCES)
 	npm run build -w ui
 .PHONY: ui
-ui: ui/dist/keymap.click.js ## Build the ui
+ui: ui/dist/keymapkit.js ## Build @keymapkit/ui
 
 
-## @keymap.click/keyboard.ergodox
+# @keymapkit/keyboard.ergodox
 KEYBOARD_ERGODOX_SOURCES = $(shell find keyboard.ergodox/ -type f -maxdepth 1)
-keyboard.ergodox/dist/keyboard.ergodox.js: node_modules/.installed ui/dist/keymap.click.js $(KEYBOARD_ERGODOX_SOURCES)
+keyboard.ergodox/dist/keyboard.ergodox.js: node_modules/.installed ui/dist/keymapkit.js $(KEYBOARD_ERGODOX_SOURCES)
 	npm run build -w keyboard.ergodox
 .PHONY: keyboard.ergodox
-keyboard.ergodox: keyboard.ergodox/dist/keyboard.ergodox.js ## Build the keyboard.ergodox package
+keyboard.ergodox: keyboard.ergodox/dist/keyboard.ergodox.js ## Build @keymapkit/keyboard.ergodox
 
 
-## @keymap.click/keyboard.planck48
+# @keymapkit/keyboard.planck48
 KEYBOARD_PLANCK48_SOURCES = $(shell find keyboard.planck48/ -type f -maxdepth 1)
-keyboard.planck48/dist/keyboard.planck48.js: node_modules/.installed ui/dist/keymap.click.js $(KEYBOARD_PLANCK48_SOURCES)
+keyboard.planck48/dist/keyboard.planck48.js: node_modules/.installed ui/dist/keymapkit.js $(KEYBOARD_PLANCK48_SOURCES)
 	npm run build -w keyboard.planck48
 .PHONY: keyboard.planck48
-keyboard.planck48: keyboard.planck48/dist/keyboard.planck48.js ## Build the keyboard.planck48 package
+keyboard.planck48: keyboard.planck48/dist/keyboard.planck48.js ## Build @keymapkit/keyboard.planck48
 
 
-## @keymap.click/examples
+## @keymapkit/examples
 EXAMPLES_SOURCES = $(shell find examples/ -type f -maxdepth 1)
-examples/dist/examples.js: node_modules/.installed ui/dist/keymap.click.js keyboard.ergodox/dist/keyboard.ergodox.js $(EXAMPLES_SOURCES)
+examples/dist/examples.js: node_modules/.installed ui/dist/keymapkit.js keyboard.ergodox/dist/keyboard.ergodox.js $(EXAMPLES_SOURCES)
 	npm run build -w examples
 .PHONY: examples
-examples: examples/dist/examples.js ## Build the examples package
+examples: examples/dist/examples.js ## Build the @keymapkit/examples
 
 
-## @keymap.click/www
+# @keymapkit/www
 WWW_SOURCES = $(shell find www -type f -maxdepth 1)
-www/static/keymap.click/keymap.click.js: ui/dist/keymap.click.js
-	mkdir -p www/static/keymap.click
-	cp ui/dist/keymap.click.js www/static/keymap.click/keymap.click.js
-www/static/keymap.click/keyboard.ergodox.js: keyboard.ergodox/dist/keyboard.ergodox.js
-	mkdir -p www/static/keymap.click
-	cp keyboard.ergodox/dist/keyboard.ergodox.js www/static/keymap.click/keyboard.ergodox.js
-www/static/keymap.click/keyboard.planck48.js: keyboard.planck48/dist/keyboard.planck48.js
-	mkdir -p www/static/keymap.click
-	cp keyboard.planck48/dist/keyboard.planck48.js www/static/keymap.click/keyboard.planck48.js
-www/static/keymap.click/examples.js: examples/dist/examples.js
-	mkdir -p www/static/keymap.click
-	cp examples/dist/examples.js www/static/keymap.click/examples.js
-WWW_BUILT_DEPS = www/static/keymap.click/keymap.click.js www/static/keymap.click/keyboard.ergodox.js www/static/keymap.click/keyboard.planck48.js www/static/keymap.click/examples.js
+www/static/keymapkit/keymapkit.js: ui/dist/keymapkit.js
+	mkdir -p www/static/keymapkit
+	cp ui/dist/keymapkit.js www/static/keymapkit/keymapkit.js
+www/static/keymapkit/keyboard.ergodox.js: keyboard.ergodox/dist/keyboard.ergodox.js
+	mkdir -p www/static/keymapkit
+	cp keyboard.ergodox/dist/keyboard.ergodox.js www/static/keymapkit/keyboard.ergodox.js
+www/static/keymapkit/keyboard.planck48.js: keyboard.planck48/dist/keyboard.planck48.js
+	mkdir -p www/static/keymapkit
+	cp keyboard.planck48/dist/keyboard.planck48.js www/static/keymapkit/keyboard.planck48.js
+www/static/keymapkit/examples.js: examples/dist/examples.js
+	mkdir -p www/static/keymapkit
+	cp examples/dist/examples.js www/static/keymapkit/examples.js
+WWW_BUILT_DEPS = www/static/keymapkit/keymapkit.js www/static/keymapkit/keyboard.ergodox.js www/static/keymapkit/keyboard.planck48.js www/static/keymapkit/examples.js
 www/_site/.build: www/package.json $(WWW_BUILT_DEPS) $(WWW_SOURCES)
 	npm run build:prod -w www
 	touch www/_site/.build
 .PHONY: www
-www: www/_site/.build ## Build the keymap.click website in production mode
+www: www/_site/.build ## Build the KeymapKit website in production mode
 .PHONY: www.serve
-www.serve: ## Run the keymap.click website in development mode with hot reloading
+www.serve: ## Run the KeymapKit website in development mode with hot reloading
 	@\
-		npm run keymap.click.watch -w ui & \
-		npm run keymap.click.watch -w keyboard.ergodox & \
-		npm run keymap.click.watch -w keyboard.planck48 & \
-		npm run keymap.click.watch -w examples & \
+		npm run keymapkit.watch -w ui & \
+		npm run keymapkit.watch -w keyboard.ergodox & \
+		npm run keymapkit.watch -w keyboard.planck48 & \
+		npm run keymapkit.watch -w examples & \
 		npm run serve:dev -w www & \
 		wait
 

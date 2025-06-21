@@ -29,7 +29,7 @@ eleventyNavigation:
 <p>This is a work in progress.</p>
 <p>
   I&apos;m building it
-  <a href="https://github.com/mrled/keymap.click">on GitHub</a>. Issues and
+  <a href="https://github.com/mrled/KeymapKit">on GitHub</a>. Issues and
   contributions welcome.
 </p>
 <p>

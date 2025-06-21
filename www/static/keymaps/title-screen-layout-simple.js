@@ -1,5 +1,5 @@
 import { KeyboardModelTitleScreen } from "./title-screen-keyboard.js";
-import { KeymapLayout, KeymapKey, KeymapLayer } from "@keymap.click/ui";
+import { KeymapLayout, KeymapKey, KeymapLayer } from "@keymapkit/ui";
 
 const keyInfoLayer0 = ["K E Y M A P . C L I C K"];
 const keyInfoLayer1 = ["I just picked some random words for this layer."];

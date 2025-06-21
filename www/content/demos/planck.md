@@ -8,7 +8,7 @@ eleventyNavigation:
   order: 2
 ---
 
-This is a demo of `@keymap.click/ui` with the Planck 48 keyboard model.
+This is a demo of `@keymapkit/ui` with the Planck 48 keyboard model.
 
 We just use a demo layout to show you the board.
 

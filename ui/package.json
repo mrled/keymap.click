@@ -1,14 +1,14 @@
 {
-  "name": "@keymap.click/ui",
+  "name": "@keymapkit/ui",
   "version": "2.0.1",
   "private": false,
   "type": "module",
-  "main": "dist/keymap.click.js",
-  "types": "dist/keymap.click.d.ts",
+  "main": "dist/keymapkit.js",
+  "types": "dist/keymapkit.d.ts",
   "scripts": {
-    "build": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --outfile=dist/keymap.click.js src/index.ts",
+    "build": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --outfile=dist/keymapkit.js src/index.ts",
     "postbuild": "tsc --project tsconfig.json && dts-bundle-generator --config dts-bundle-generator.json",
-    "keymap.click.watch": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --outfile=../www/static/keymap.click/keymap.click.js src/index.ts --watch=forever"
+    "keymapkit.watch": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --outfile=../www/static/keymapkit/keymapkit.js src/index.ts --watch=forever"
   },
   "devDependencies": {
     "@types/node": "^24.0.3",

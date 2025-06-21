@@ -14,7 +14,7 @@ export default defineConfig([
       "**/package-lock.json",
       "**/.vscode",
       "www/_site",
-      "www/static/keymap.click",
+      "www/static/keymapkit",
     ],
   },
   ...tseslint.configs.recommended,

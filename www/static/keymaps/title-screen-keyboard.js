@@ -5,13 +5,13 @@ import {
   PhysicalKey,
   Point,
   Size,
-} from "@keymap.click/ui";
+} from "@keymapkit/ui";
 
 /* The title screen keyboard model
  */
 const KeyboardModelTitleScreen = new KeyboardModel(
   "title-screen-keyboard",
-  "keymap.click Title Screen Keyboard",
+  "KeymapKit Title Screen Keyboard",
   new Point(2, 2),
   new Size(2, 2),
   [

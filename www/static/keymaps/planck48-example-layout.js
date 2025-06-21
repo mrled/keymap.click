@@ -1,5 +1,5 @@
-import { KeymapLayout, KeymapKey, KeymapLayer } from "@keymap.click/ui";
-import { KeyboardModelPlanck48 } from "@keymap.click/keyboard.planck48";
+import { KeymapLayout, KeymapKey, KeymapLayer } from "@keymapkit/ui";
+import { KeyboardModelPlanck48 } from "@keymapkit/keyboard.planck48";
 
 const keyInfoLayer0 = ["K E Y M A P . C L I C K"];
 

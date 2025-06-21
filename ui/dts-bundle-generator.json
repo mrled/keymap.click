@@ -6,7 +6,7 @@
   "entries": [
     {
       "filePath": "./src/index.ts",
-      "outFile": "./dist/keymap.click.d.ts",
+      "outFile": "./dist/keymapkit.d.ts",
       "output": {
         "noBanner": true,
         "sortNodes": true,

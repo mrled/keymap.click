@@ -1,17 +1,17 @@
 {
-  "name": "@keymap.click/keyboard.ergodox",
+  "name": "@keymapkit/keyboard.ergodox",
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "build": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --external:@keymap.click/ui --outfile=dist/keyboard.ergodox.js index.ts",
+    "build": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --external:@keymapkit/ui --outfile=dist/keyboard.ergodox.js index.ts",
     "postbuild": "tsc --project tsconfig.json && dts-bundle-generator --project=tsconfig.json --no-banner --sort --export-referenced-types=false --out-file=dist/keyboard.ergodox.d.ts index.ts",
-    "keymap.click.watch": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --external:@keymap.click/ui --outfile=../www/static/keymap.click/keyboard.ergodox.js index.ts --watch=forever"
+    "keymapkit.watch": "esbuild --bundle --sourcemap --format=esm --loader:.css=text --minify --external:@keymapkit/ui --outfile=../www/static/keymapkit/keyboard.ergodox.js index.ts --watch=forever"
   },
   "author": "Micah R Ledbetter",
   "license": "Unlicense",
   "dependencies": {
-    "@keymap.click/ui": "*"
+    "@keymapkit/ui": "*"
   },
   "devDependencies": {
     "dts-bundle-generator": "^9.5.1"

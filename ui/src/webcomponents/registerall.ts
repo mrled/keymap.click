@@ -18,7 +18,7 @@ const allWebComponents = [
   KeymapUIElement,
 ];
 
-/* Register all keymap.click web components
+/* Register all KeymapKit web components
  *
  * This should be called before using any of the web components we define.
  * There seems to be no way to assure that all web components are registered automatically,

@@ -3,8 +3,8 @@ import {
   KeymapGuide,
   KeymapKey,
   KeymapLayer,
-} from "@keymap.click/ui";
-import { KeyboardModelErgodox } from "@keymap.click/keyboard.ergodox";
+} from "@keymapkit/ui";
+import { KeyboardModelErgodox } from "@keymapkit/keyboard.ergodox";
 
 const normalLayoutInfo = [`Unchanged from normal QWERTY keyboard layout`];
 
