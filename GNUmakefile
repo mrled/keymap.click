@@ -63,7 +63,7 @@ keyboard.ergodox: keyboard.ergodox/dist/keyboard.ergodox.js ## Build the keyboar
 
 ## @keymap.click/keyboard.planck48
 KEYBOARD_PLANCK48_SOURCES = $(shell find keyboard.planck48/ -type f -maxdepth 1)
-keyboard.planck48/dist/keyboard.planck48.js: keyboard.planck48/node_modules/.installed ui/dist/keymap.click.js $(KEYBOARD_PLANCK48_SOURCES)
+keyboard.planck48/dist/keyboard.planck48.js: node_modules/.installed ui/dist/keymap.click.js $(KEYBOARD_PLANCK48_SOURCES)
 	npm run build -w keyboard.planck48
 .PHONY: keyboard.planck48
 keyboard.planck48: keyboard.planck48/dist/keyboard.planck48.js ## Build the keyboard.planck48 package
@@ -85,10 +85,13 @@ www/static/keymap.click/keymap.click.js: ui/dist/keymap.click.js
 www/static/keymap.click/keyboard.ergodox.js: keyboard.ergodox/dist/keyboard.ergodox.js
 	mkdir -p www/static/keymap.click
 	cp keyboard.ergodox/dist/keyboard.ergodox.js www/static/keymap.click/keyboard.ergodox.js
+www/static/keymap.click/keyboard.planck48.js: keyboard.planck48/dist/keyboard.planck48.js
+	mkdir -p www/static/keymap.click
+	cp keyboard.planck48/dist/keyboard.planck48.js www/static/keymap.click/keyboard.planck48.js
 www/static/keymap.click/examples.js: examples/dist/examples.js
 	mkdir -p www/static/keymap.click
 	cp examples/dist/examples.js www/static/keymap.click/examples.js
-WWW_BUILT_DEPS = www/static/keymap.click/keymap.click.js www/static/keymap.click/keyboard.ergodox.js www/static/keymap.click/examples.js
+WWW_BUILT_DEPS = www/static/keymap.click/keymap.click.js www/static/keymap.click/keyboard.ergodox.js www/static/keymap.click/keyboard.planck48.js www/static/keymap.click/examples.js
 www/_site/.build: www/package.json $(WWW_BUILT_DEPS) $(WWW_SOURCES)
 	npm run build:prod -w www
 	touch www/_site/.build
