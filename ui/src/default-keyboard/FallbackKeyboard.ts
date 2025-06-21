@@ -58,8 +58,8 @@ class FallbackKeyboardElement extends KeymapKeyboardElement {
       KeymapKeygridElement.elementName,
     ) as KeymapKeygridElement;
     keygrid.setAttribute("name", "fallback-keyboard");
-    keygrid.setAttribute("cols", "24");
-    keygrid.setAttribute("rows", "2");
+    keygrid.setAttribute("cols", "16");
+    keygrid.setAttribute("rows", "4");
     keygrid.createKeys(this, keys);
     gridContainer.appendChild(keygrid);
   }
