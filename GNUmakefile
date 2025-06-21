@@ -101,7 +101,7 @@ www/_site/.build: www/package.json $(WWW_BUILT_DEPS) $(WWW_SOURCES)
 .PHONY: www
 www: www/_site/.build ## Build the keymap.click website in production mode
 .PHONY: www.serve
-www.serve: ## Run the keymap.click website in development mode, automatically watching for changes and rebuilding
+www.serve: ## Run the keymap.click website in development mode with hot reloading
 	@\
 		npm run keymap.click.watch -w ui & \
 		npm run keymap.click.watch -w keyboard.ergodox & \
