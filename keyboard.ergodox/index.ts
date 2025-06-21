@@ -135,26 +135,26 @@ div.keyboard-sub-board {
   align-items: center;
   justify-content: center;
   margin-top: 0;
-  > h2 {
+  & > h2 {
     font-size: 1.125rem;
   }
-  > .keygrid-container {
+  & > .keygrid-container {
     display: flex;
   }
 }
 div.keyboard-sub-board-left {
-  > h2 {
+  & > h2 {
     margin-right: auto;
   }
-  > .keygrid-container {
+  & > .keygrid-container {
     flex-direction: row;
   }
 }
 div.keyboard-sub-board-right {
-  > h2 {
+  & > h2 {
     margin-left: auto;
   }
-  > .keygrid-container {
+  & > .keygrid-container {
     flex-direction: row-reverse;
   }
 }
