@@ -120,7 +120,7 @@ keymap-navbar {
   }
 }
 
-@media (max-width: 768px) {
+@container (max-width: 650px) {
   keymap-navbar {
     flex-direction: column;
   }

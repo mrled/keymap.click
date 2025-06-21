@@ -66,16 +66,17 @@
   --kid-diamarg-width: calc(var(--keyboard-grid-unit) * 2);
 }
 
-@media (min-width: 600px) {
-  :root,
-  :host {
+/* Scale with container queries.
+ * These are relative to the closest ancestor with container-type:inline-size,
+ * which we have set on :host.
+ */
+@container (min-width: 540px) {
+  .keymap-ui-kid-container {
     --keyboard-grid-unit: 1rem;
   }
 }
-
-@media (min-width: 900px) {
-  :root,
-  :host {
+@container (min-width: 768px) {
+  .keymap-ui-kid-container {
     --keyboard-grid-unit: 1.25rem;
   }
 }
