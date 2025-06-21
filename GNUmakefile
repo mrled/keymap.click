@@ -33,8 +33,11 @@ node_modules/.installed: package.json package-lock.json */package.json */package
 
 .PHONY: lint
 lint: node_modules/.installed ## Run eslint
-	cd ./ui && npx eslint .
-	cd ./www && npx eslint .
+	npm run lint
+
+.PHONY: format
+format: node_modules/.installed ## Run prettier
+	npm run format
 
 .PHONY: clean
 clean: ## Clean up
