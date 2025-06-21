@@ -59,10 +59,25 @@
    */
   --link-fg: rgba(49, 130, 206, 1);
 
-  /* Key, board, and grid styles
-   * We use a base --keyboard-grid-unit variable, which lets us scale easily
+  /* The --keyboard-grid-unit variable is used to scale the size of the whole UI.
+   *
+   * We use @container queries (see next section) to provide a default set of sizes for keyboard keys.
+   * When writing a new keyboard that inherits from KeymapKeyboardElement,
+   * you may include a <style> element that overrides this variable
+   * targeted to :host and/or @container queries,
+   * and it will override the defaults here.
+   * (This is because this stylesheet is imported into the keymap-ui shadow DOM first,
+   * and keyboard elements are added to the same shadow DOM later,
+   * and later styles override earlier ones.)
+   *
+   * This unit MUST only be used for **children** of :host,
+   * because @container queries are used to scale it,
+   * and the :host element sets container-type:inline-size.
    */
   --keyboard-grid-unit: 0.75rem;
+
+  /* Calculations based on --keyboard-grid-unit.
+   */
   --kid-diamarg-width: calc(var(--keyboard-grid-unit) * 2);
 }
 
