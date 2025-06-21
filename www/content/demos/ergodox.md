@@ -18,7 +18,7 @@ Toggle debug controls on all KeymapUI elements on this page:
 <script type="module">
   import "@keymap.click/ui";
   import "@keymap.click/keyboard.ergodox";
-  import { MicahErgodoxLayout } from "@keymap.click/layout.mrlergo";
+  import { MicahErgodoxLayout } from "@keymap.click/examples";
   const app = document.getElementById("app");
   const keymapUi = document.createElement("keymap-ui");
   const availableKeymaps = [MicahErgodoxLayout];

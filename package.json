@@ -10,7 +10,7 @@
     "ui",
     "keyboard.ergodox",
     "keyboard.planck48",
-    "layout.mrlergo",
+    "examples",
     "www"
   ],
   "devDependencies": {

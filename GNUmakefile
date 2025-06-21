@@ -40,7 +40,7 @@ lint: node_modules/.installed ## Run eslint
 clean: ## Clean up
 	rm -rf ui/dist
 	rm -rf keyboard.ergodox/dist
-	rm -rf layout.mrlergo/dist
+	rm -rf examples/dist
 	rm -rf www/_site
 	rm -rf www/static/keymap.click/*
 
@@ -69,12 +69,12 @@ keyboard.planck48/dist/keyboard.planck48.js: keyboard.planck48/node_modules/.ins
 keyboard.planck48: keyboard.planck48/dist/keyboard.planck48.js ## Build the keyboard.planck48 package
 
 
-## @keymap.click/layout.mrlergo
-LAYOUT_MRLERGO_SOURCES = $(shell find layout.mrlergo/ -type f -maxdepth 1)
-layout.mrlergo/dist/layout.mrlergo.js: node_modules/.installed ui/dist/keymap.click.js keyboard.ergodox/dist/keyboard.ergodox.js $(LAYOUT_MRLERGO_SOURCES)
-	npm run build -w layout.mrlergo
-.PHONY: layout.mrlergo
-layout.mrlergo: layout.mrlergo/dist/layout.mrlergo.js ## Build the layout.mrlergo package
+## @keymap.click/examples
+EXAMPLES_SOURCES = $(shell find examples/ -type f -maxdepth 1)
+examples/dist/examples.js: node_modules/.installed ui/dist/keymap.click.js keyboard.ergodox/dist/keyboard.ergodox.js $(EXAMPLES_SOURCES)
+	npm run build -w examples
+.PHONY: examples
+examples: examples/dist/examples.js ## Build the examples package
 
 
 ## @keymap.click/www
@@ -85,10 +85,10 @@ www/static/keymap.click/keymap.click.js: ui/dist/keymap.click.js
 www/static/keymap.click/keyboard.ergodox.js: keyboard.ergodox/dist/keyboard.ergodox.js
 	mkdir -p www/static/keymap.click
 	cp keyboard.ergodox/dist/keyboard.ergodox.js www/static/keymap.click/keyboard.ergodox.js
-www/static/keymap.click/layout.mrlergo.js: layout.mrlergo/dist/layout.mrlergo.js
+www/static/keymap.click/examples.js: examples/dist/examples.js
 	mkdir -p www/static/keymap.click
-	cp layout.mrlergo/dist/layout.mrlergo.js www/static/keymap.click/layout.mrlergo.js
-WWW_BUILT_DEPS = www/static/keymap.click/keymap.click.js www/static/keymap.click/keyboard.ergodox.js www/static/keymap.click/layout.mrlergo.js
+	cp examples/dist/examples.js www/static/keymap.click/examples.js
+WWW_BUILT_DEPS = www/static/keymap.click/keymap.click.js www/static/keymap.click/keyboard.ergodox.js www/static/keymap.click/examples.js
 www/_site/.build: www/package.json $(WWW_BUILT_DEPS) $(WWW_SOURCES)
 	npm run build:prod -w www
 	touch www/_site/.build
@@ -100,7 +100,7 @@ www.serve: ## Run the keymap.click website in development mode, automatically wa
 		npm run keymap.click.watch -w ui & \
 		npm run keymap.click.watch -w keyboard.ergodox & \
 		npm run keymap.click.watch -w keyboard.planck48 & \
-		npm run keymap.click.watch -w layout.mrlergo & \
+		npm run keymap.click.watch -w examples & \
 		npm run serve:dev -w www & \
 		wait
 
