@@ -1,5 +1,14 @@
 # keymap.click
 
+> [!WARNING]
+> This repository is deprecated.
+>
+> See [mrled/KeymapKit](https://github.com/mrled/KeymapKit) for its successor,
+> which will let you write your own keymaps and host them yourself.
+>
+> The original site <https://keymap.click> will eventually expire,
+> but a [permanent archive](https://me.micahrl.com/warchive/20250621-210129-keymapdotclick/) will stay online.
+
 A visual keymap explanation --
 how an ErgoDox keyboard helped my RSI.
 
